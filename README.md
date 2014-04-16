@@ -1,6 +1,11 @@
 Rhizi
 =====
 
+How to Run
+----------
+
+Run `npm install` then run `node server/web.js`.
+
 Folder Directory
 ----------------
 
