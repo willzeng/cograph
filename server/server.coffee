@@ -7,9 +7,9 @@ module.exports = class MyApp
 
     app = express()
 
-    app.set 'views', __dirname + '/..'
+    app.set 'views', __dirname + '/../views'
     app.set 'view options', layout:false
-    app.use express.static(__dirname+'/../views')
+    app.use express.static(__dirname+'/../assets')
 
     app.get('/', (request, response)->
       response.render('index.jade')

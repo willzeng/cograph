@@ -4,7 +4,11 @@ Rhizi
 How to Run
 ----------
 
-Run `npm install` then run `node server/web.js`.
+`npm install` should install your node modules in the `node_modules/` folder. 
+
+`bower install` should install your front end models in the `assets/libs/` folder. 
+
+Then you should be able to run `node server/web` to get the server running.
 
 Folder Directory
 ----------------
