@@ -1,32 +1,4 @@
-doctype html
-html(lang="en")
-  head
-    title Rhizi
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(href='libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
-    link(href='libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+extends layout
 
-
-    //script(type='text/javascript', data-main="main", src="/lib/require.js") //loads main.js
-
-  body
-    nav.navbar.navbar-default(role="navigation")
-      .container-fluid
-        .navbar-header
-          a.navbar-brand(href="http://www.rhizi.org") R
-        form.navbar-form.navbar-left
-          .form-group
-            input.form-control(type="text", placeholder="Enter a term")
-          button.btn.btn-default(type="submit")
-            i.fa.fa-search
-        form.navbar-form.navbar-right
-          .form-group
-            input.form-control(type="text", placeholder="Add something")
-          button.btn.btn-default(type="submit")
-            i.fa.fa-plus
-    .main
-
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
-    script(src='libs/bootstrap/dist/js/bootstrap.min.js')
+block content
+  h1 Hello!
