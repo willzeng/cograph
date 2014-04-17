@@ -10,3 +10,15 @@ class GraphModel extends Backbone.Model
 
   getConnections: ->
     return @get "links"
+
+  putNode: (node) ->
+    @pushDatum "nodes", node
+
+  putLink: (link) ->
+    @pushDatum "links", link
+
+  pushDatum: (attr, datum) ->
+    data = @get(attr)
+    data.push datum
+    @set attr, data
+
