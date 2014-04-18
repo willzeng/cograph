@@ -1,24 +1,31 @@
-class GraphModel extends Backbone.Model
-  initialize: ->
-    nodes = Backbone.Collection.extend model: Node
-    connections = Backbone.Collection.extend model: Connection
-    @set "nodes", nodes
-    @set "connections", connections
+define ['js/NodeModel','js/ConnectionModel'], (NodeModel, ConnectionModel) ->
 
-  getNodes: ->
-    return @get "nodes"
+  class GraphModel extends Backbone.Model
+    init: ->
+      #@nodes = Backbone.Collection.extend model: NodeModel
+      nodes = []
+      connections = Backbone.Collection.extend model: ConnectionModel
+      @set "nodes", nodes
+      @set "connections", connections
 
-  getConnections: ->
-    return @get "links"
+    getNodes: ->
+      return @get "nodes"
 
-  putNode: (node) ->
-    @pushDatum "nodes", node
+    getConnections: ->
+      return @get "links"
 
-  putLink: (link) ->
-    @pushDatum "links", link
+    putNode: (node) ->
+      data = @get("nodes")
+      data.push node
+      @set "nodes", data
+      @trigger "change"
 
-  pushDatum: (attr, datum) ->
-    data = @get(attr)
-    data.push datum
-    @set attr, data
+    # putLink: (link) ->
+    #   @pushDatum "links", link
 
+    # pushDatum: (attr, datum) ->
+    #   console.log "push the following", attr, datum
+    #   data = @get(attr)
+    #   console.log "data", data
+    #   data.push datum
+    #   @set attr, data

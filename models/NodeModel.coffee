@@ -1,5 +1,7 @@
-class NodeModel extends Backbone.Model
-  defaults:
-    name: ''
-    description: ''
-    url: ''
+define [], () ->
+
+	class NodeModel extends Backbone.Model
+	  defaults:
+	    name: ''
+	    # description: ''
+	    # url: ''
