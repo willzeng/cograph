@@ -7,10 +7,8 @@ graphDb = new neo4js.GraphDatabase4Node(url);
 express = require 'express'
 path = require 'path'
 favicon = require 'static-favicon'
-redis = require 'redis'
 routes = require './routes/routes'
 
-db = redis.createClient()
 app = express()
 
 app.set 'views', __dirname + '/public'
