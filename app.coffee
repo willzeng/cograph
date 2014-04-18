@@ -8,12 +8,14 @@ express = require 'express'
 path = require 'path'
 favicon = require 'static-favicon'
 routes = require './routes/routes'
+logger = require 'morgan'
 
 app = express()
 
 app.set 'views', __dirname + '/public'
 app.set 'view engine', 'jade'
 
+app.use logger()
 app.use '/', routes
 app.use favicon(path.join(__dirname, '/assets/images/rhizi.ico'))
 app.use require('less-middleware')(path.join(__dirname, '/assets/') )
