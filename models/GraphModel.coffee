@@ -1,21 +1,19 @@
 define ['backbone', 'js/NodeModel','js/ConnectionModel'], (Backbone, NodeModel, ConnectionModel) ->
+  class ConnectionCollection extends Backbone.Collection
+    model: ConnectionModel
+
+  class NodeCollection extends Backbone.Collection
+    model: NodeModel
 
   class GraphModel extends Backbone.Model
     initialize: ->
-      nodes = []
-      connections = Backbone.Collection.extend model: ConnectionModel
-      @set "nodes", nodes
-      @set "connections", connections
+      @nodes = new NodeCollection()
+      @connections = new ConnectionCollection()
 
-    getNodes: ->
-      return @get "nodes"
+    putNode: (name) ->
+      console.log "Added node with name #{name}"
+      @nodes.add {'name': name}
 
-    getConnections: ->
-      return @get "links"
-
-    putNode: (node) ->
-      data = @get("nodes")
-      data.push node
-      @set "nodes", data
-      console.log 'triggering change'
-      @trigger 'change'
+    putConnection: (name) ->
+      console.log "Added connection with name #{name}"
+      @connections.add {'name': name}

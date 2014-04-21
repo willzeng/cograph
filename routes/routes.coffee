@@ -4,6 +4,7 @@ define ['jquery', 'underscore', 'backbone', 'js/GraphModel', 'js/GraphView'],
       initialize: ->
         @graphModel = new GraphModel()
         @graphView = new GraphView model: @graphModel
+        window.gm = @graphModel
         Backbone.history.start()
 
       routes:

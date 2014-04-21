@@ -1,16 +1,14 @@
-define ['jquery', 'backbone'], ($, Backbone) ->
+define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
 
   GraphView = Backbone.View.extend
 
     el: $ '#main-area'
 
     initialize: ->
-      @model.on 'change', @update, this
+      @model.nodes.on 'add', @update, this
 
-    update: ->
-      $(@el).html("") #clears html
-      for node in @model.getNodes()
-        $("<div>#{node}</div>").appendTo $(@el)
+    update: (node) ->
+      $("<div>#{node.get('name')}</div>").appendTo $(@el)
 
     render: ->
       $(@el).append '<h2>More Header</h2>'
