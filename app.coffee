@@ -1,8 +1,8 @@
 url = 'http://wikinets-edge:wiKnj2gYeYOlzWPUcKYb@wikinetsedge.sb01.stations.graphenedb.com:24789';
 
 # load node_modules/neo4js folder
-neo4js = require(__dirname + '/node_modules/neo4js');
-graphDb = new neo4js.GraphDatabase4Node(url);
+neo4js = require(__dirname + '/node_modules/neo4js')
+graphDb = new neo4js.GraphDatabase4Node(url)
 
 express = require 'express'
 path = require 'path'
