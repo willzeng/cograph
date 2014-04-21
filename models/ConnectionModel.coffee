@@ -1,5 +1,4 @@
-define [], () ->
-
+define ['backbone'], (Backbone) ->
 	class ConnectionModel extends Backbone.Model
 	  defaults:
 	    name: ''

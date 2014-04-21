@@ -9,5 +9,7 @@ coffee --watch --compile -o assets/js/ Rhizi.coffee &
 
 coffee --watch --compile -o assets/js/ main.coffee &
 
+coffee --watch --compile -o assets/js/ routes/routes.coffee &
+
 # statically serve files out of ./bin/www
 node bin/www

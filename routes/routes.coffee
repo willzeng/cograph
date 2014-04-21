@@ -1,8 +1,13 @@
-express = require 'express'
-router = express.Router()
+define ['jquery', 'underscore', 'backbone', 'js/GraphModel', 'js/GraphView'],
+  ($, _, Backbone, GraphModel, GraphView) ->
+    class Router extends Backbone.Router
+      initialize: ->
+        @graphModel = new GraphModel()
+        @graphView = new GraphView model: @graphModel
+        Backbone.history.start()
 
-router.get('/test_route', (req, res) ->
-  res.render('test.jade')
-  )
+      routes:
+        '': 'home'
 
-module.exports = router
+      'home': ->
+        @graphView.render()

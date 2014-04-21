@@ -1,8 +1,7 @@
-define ['js/NodeModel','js/ConnectionModel'], (NodeModel, ConnectionModel) ->
+define ['backbone', 'js/NodeModel','js/ConnectionModel'], (Backbone, NodeModel, ConnectionModel) ->
 
   class GraphModel extends Backbone.Model
-    init: ->
-      #@nodes = Backbone.Collection.extend model: NodeModel
+    initialize: ->
       nodes = []
       connections = Backbone.Collection.extend model: ConnectionModel
       @set "nodes", nodes
@@ -18,14 +17,5 @@ define ['js/NodeModel','js/ConnectionModel'], (NodeModel, ConnectionModel) ->
       data = @get("nodes")
       data.push node
       @set "nodes", data
-      @trigger "change"
-
-    # putLink: (link) ->
-    #   @pushDatum "links", link
-
-    # pushDatum: (attr, datum) ->
-    #   console.log "push the following", attr, datum
-    #   data = @get(attr)
-    #   console.log "data", data
-    #   data.push datum
-    #   @set attr, data
+      console.log 'triggering change'
+      @trigger 'change'

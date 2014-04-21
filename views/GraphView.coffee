@@ -1,13 +1,16 @@
-define [], () ->
+define ['jquery', 'backbone'], ($, Backbone) ->
 
-  class GraphView extends Backbone.View
+  GraphView = Backbone.View.extend
 
-    init: (instances) ->
-      @model = instances['js/GraphModel']
-      @model.on "change", @update
+    el: $ '#main-area'
 
-    update: =>
-      container = $('body')
+    initialize: ->
+      @model.on 'change', @update, this
+
+    update: ->
+      $(@el).html("") #clears html
       for node in @model.getNodes()
-        $("<div>#{node}</div>").appendTo container
+        $("<div>#{node}</div>").appendTo $(@el)
 
+    render: ->
+      $(@el).append '<h2>More Header</h2>'
