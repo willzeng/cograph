@@ -1,14 +1,18 @@
-define ['jquery', 'underscore', 'backbone', 'text!templates/node.html'], ($, _, Backbone, nodeTemplate) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
+  'text!templates/node_circle.html'],
+  ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate) ->
+    GraphView = Backbone.View.extend
 
-  GraphView = Backbone.View.extend
+      el: $ '#main-area'
+      graph: $ '#graph'
 
-    el: $ '#main-area'
+      initialize: ->
+        @model.nodes.on 'add', @update, this
 
-    initialize: ->
-      @model.nodes.on 'add', @update, this
+      update: (node) ->
+        $(@el).append _.template(nodeTemplate, node.attributes)
+        nodeCircle = $ _.template(nodeCircleTemplate, node.attributes)
+        $(@graph).append nodeCircle
 
-    update: (node) ->
-      $(@el).append _.template(nodeTemplate, node.attributes)
-
-    render: ->
-      $(@el).append '<h2>More Header</h2>'
+      render: ->
+        $(@el).append '<h2>More Header</h2>'

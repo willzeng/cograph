@@ -4,7 +4,8 @@ requirejs.config({
     'jquery': '/assets/libs/jquery/dist/jquery.min',
     'underscore': '/assets/libs/underscore/underscore',
     'backbone': '/assets/libs/backbone/backbone',
-    'text': '/assets/libs/requirejs-text/text'
+    'text': '/assets/libs/requirejs-text/text',
+    'd3': '/assets/libs/d3/d3.min'
   },
   shim: {
     'backbone': {
