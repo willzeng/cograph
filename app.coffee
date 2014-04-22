@@ -10,16 +10,15 @@ favicon = require 'static-favicon'
 
 app = express()
 
-app.set 'views', __dirname + '/public'
+app.set 'views', __dirname + '/app/public'
 app.set 'view engine', 'jade'
 
-app.use favicon(path.join(__dirname, '/assets/images/rhizi.ico'))
-app.use require('less-middleware')(path.join(__dirname, '/assets/') )
+app.use favicon(path.join(__dirname, '/app/assets/images/rhizi.ico'))
+app.use require('less-middleware')(path.join(__dirname, '/app/assets/') )
 
 # this line must be after the less-middleware declaration
 # http://stackoverflow.com/questions/19489681/node-js-less-middleware-not-auto-compiling
-app.use express.static(path.join(__dirname+'/assets'))
-app.use express.static(path.join(__dirname+'/templates'))
+app.use express.static(path.join(__dirname, '/app'))
 
 app.get('/', (request, response)->
   response.render('index.jade')

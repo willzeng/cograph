@@ -1,0 +1,18 @@
+{
+  "name": "require-cs",
+  "version": "0.4.4",
+  "dependencies": {
+    "coffee-script": "https://raw.github.com/jashkenas/coffee-script/1.6.2/extras/coffee-script.js"
+  },
+  "homepage": "https://github.com/jrburke/require-cs",
+  "_release": "0.4.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.4.4",
+    "commit": "d4fd32d3a664d440df9f9e7e12b6c738818728d6"
+  },
+  "_source": "git://github.com/jrburke/require-cs.git",
+  "_target": "~0.4.4",
+  "_originalSource": "require-cs",
+  "_direct": true
+}
