@@ -12,3 +12,6 @@ define ['jquery', 'underscore', 'backbone', 'js/GraphModel', 'js/GraphView'],
 
       'home': ->
         @graphView.render()
+        gm.nodes.add
+          name: 'one'
+          description: 'The first one'

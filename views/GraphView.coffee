@@ -1,4 +1,4 @@
-define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
+define ['jquery', 'underscore', 'backbone', 'text!node.html'], ($, _, Backbone, nodeTemplate) ->
 
   GraphView = Backbone.View.extend
 
@@ -8,7 +8,7 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
       @model.nodes.on 'add', @update, this
 
     update: (node) ->
-      $("<div>#{node.get('name')}</div>").appendTo $(@el)
+      $(@el).append _.template(nodeTemplate, node.attributes)
 
     render: ->
       $(@el).append '<h2>More Header</h2>'
