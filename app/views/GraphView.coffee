@@ -11,7 +11,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       update: (node) ->
         $(@el).append _.template(nodeTemplate, node.attributes)
-        nodeCircle = $ _.template(nodeCircleTemplate, node.attributes)
+        nodeCircle = $ _.template(nodeCircleTemplate, node)
         $(@graph).append nodeCircle
 
       render: ->
