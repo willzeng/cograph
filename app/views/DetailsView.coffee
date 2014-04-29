@@ -8,9 +8,6 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
       events:
         'click .node': 'update'
 
-      initialize: ->
-        $(@viewBox).append $("<div class='details-container'>jdskjdskjds</div>")
-
       update: (clickedDOM) ->
         $(".details-container").empty()
 
