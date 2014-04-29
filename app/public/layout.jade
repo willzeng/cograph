@@ -1,0 +1,18 @@
+doctype html
+html(lang="en")
+  head
+    title Rhizi
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+    link(href='/assets/stylesheets/custom.css', rel='stylesheet')
+    script(type='text/javascript', data-main="main", src="/assets/libs/requirejs/require.js") //loads main.js
+
+  body
+    include header
+    block content
+
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js')
+    script(src='/assets/libs/bootstrap/dist/js/bootstrap.min.js')

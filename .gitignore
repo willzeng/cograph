@@ -1,4 +1,4 @@
 node_modules/
-assets/libs/*
+app/assets/libs/*
 .ackrc
 **/Thumbs.db

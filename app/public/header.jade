@@ -2,13 +2,13 @@ nav.navbar.navbar-default(role="navigation")
   .container-fluid
     .navbar-header
       a.navbar-brand(href="http://www.rhizi.org") R
-    form.navbar-form.navbar-left
+    form#search-form.navbar-form.navbar-left
       .form-group
-        input.form-control(type="text", placeholder="Enter a term")
+        input.form-control(type="text", name='search-term' placeholder="Enter a term")
       button.btn.btn-default(type="submit")
         i.fa.fa-search
-    form.navbar-form.navbar-right
+    form#add-node-form.navbar-form.navbar-right
       .form-group
-        input.form-control(type="text", placeholder="Add something")
+        input.form-control(type="text", name='node-name', placeholder="Add something")
       button.btn.btn-default(type="submit")
         i.fa.fa-plus

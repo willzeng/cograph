@@ -22,6 +22,10 @@
   "dependencies": {
     "bootstrap": "~3.1.1",
     "fontawesome": "~4.0.3",
-    "backbone": "~1.1.2"
+    "backbone": "~1.1.2",
+    "requirejs": "~2.1.11",
+    "requirejs-text": "~2.0.12",
+    "require-cs": "~0.4.4",
+    "d3": "~3.4.6"
   }
 }

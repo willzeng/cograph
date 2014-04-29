@@ -11,13 +11,14 @@
     "static-favicon": "~1.0.2",
     "debug": "~0.8.0",
     "bower": "~1.3.2",
-    "morgan": "~1.0.0"
-  },
-  "devDependencies": {
     "coffee-script": "1.2.0"
   },
+  "devDependencies": {
+    "coffeelint": "~1.3.0",
+    "grunt": "~0.4.4"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
