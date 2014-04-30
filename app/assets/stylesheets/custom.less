@@ -1,24 +1,59 @@
-// just test code to make sure less is working
-@nice-blue: #5B83AD;
-@light-blue: @nice-blue + #111;
-@pink: rgb(255, 130, 189);
+// See http://clrs.cc/
+@import "_links";
+@import "_skins";
+@import "_variables";
 
-@node-color: @nice-blue;
+// just test code to make sure less is working
+// @nice-blue: #5B83AD;
+// @light-blue: @nice-blue + #111;
+// @pink: rgb(255, 130, 189);
+//@node-color: @nice-blue;
+@node-color: @gray;
+@text-color: @silver;
+@selected-color: @blue;
+
 
 .node circle {
   cursor: pointer;
   stroke: @node-color;
-  stroke-width: 3px;
+  stroke-width: 2px;
+  fill:@node-color;
+
+  .selected {
+    stroke: @selected-color;
+  }
 }
 
 .node text {
   font: 14px sans-serif;
   pointer-events: none;
   text-anchor: middle;
+  fill:@text-color;
 }
 
 .connection {
-  stroke: grey;
-  stroke-width: 8px;
+  stroke: lightgray;
+  stroke-width: 2px;
   opacity: 0.5;
+}
+
+// General Classes
+
+// Layout
+
+html,body {
+  overflow: hidden;
+}
+
+#main-area svg {
+  width:100%;
+  height: 100%;
+  background: rgba(12,16,33,1);
+}
+
+
+// Overriding Bootstrap defaults
+
+.navbar {
+  margin-bottom:0px;
 }

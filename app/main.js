@@ -21,9 +21,9 @@ requirejs.config({
       name: 'coffee-script',
       location: '/assets/libs/coffee-script',
       main: 'index'
-    }]
-  });
+  }]
+});
 
 require(['cs!Rhizi'], function(Rhizi){
   Rhizi.initialize()
-  });
+});
