@@ -47,8 +47,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .data connections, (connection) -> connection.name
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
-          .attr("stroke", "grey")
-          .attr("stroke-width", "8px")
 
         node = d3.select(@el)
           .select(".node-container")
