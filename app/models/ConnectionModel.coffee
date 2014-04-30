@@ -4,5 +4,5 @@ define ['backbone'], (Backbone) ->
       name: ''
       description: ''
       url: ''
-      node1: undefined
-      node2: undefined
+      source: undefined
+      target: undefined

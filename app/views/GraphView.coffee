@@ -8,6 +8,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       initialize: ->
         @model.nodes.on 'add', @update, this
+        @model.connections.on 'add', @update, this
 
       render: ->
         width = 600
@@ -36,9 +37,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       update: ->
         nodes = @model.nodes.models
-        connections = {}
+        connections = (connection.attributes for connection in @model.connections.models)
 
         @force.nodes(nodes).links(connections).start()
+
+        connection = d3.select(@el)
+          .select(".connection-container")
+          .selectAll(".connection")
+          .data connections, (connection) -> connection.name
+        connectionEnter = connection.enter().append("line")
+          .attr("class", "connection")
 
         node = d3.select(@el)
           .select(".node-container")
@@ -54,5 +62,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .attr("r", 5)
 
         tick = ->
+          connection
+            .attr("x1", (d) -> d.source.x)
+            .attr("y1", (d) -> d.source.y)
+            .attr("x2", (d) -> d.target.x)
+            .attr("y2", (d) -> d.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
         @force.on "tick", tick
