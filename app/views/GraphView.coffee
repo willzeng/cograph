@@ -35,7 +35,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         workspace.append("svg:g").classed("node-container", true)
 
       update: ->
-        nodes = ({name:node.attributes.name} for node in @model.nodes.models)
+        nodes = @model.nodes.models
         connections = {}
 
         @force.nodes(nodes).links(connections).start()
@@ -43,13 +43,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         node = d3.select(@el)
           .select(".node-container")
           .selectAll(".node")
-          .data(nodes, (node) -> node.name)
+          .data(nodes, (node) -> node.get('name'))
         nodeEnter = node.enter()
           .append("g")
           .attr("class", "node")
         nodeEnter.append("text")
           .attr("dy", "20px")
-          .text((d) -> d.name)
+          .text((d) -> d.get('name'))
         nodeEnter.append("circle")
           .attr("r", 5)
 
