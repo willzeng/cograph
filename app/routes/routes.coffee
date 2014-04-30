@@ -19,3 +19,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
           name: 'one'
           description: 'The first one'
           tags: ["lux", "et", "veritas"]
+
+        gm.nodes.add
+          name: 'two'

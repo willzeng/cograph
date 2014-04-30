@@ -1,15 +1,14 @@
 // just test code to make sure less is working
 @nice-blue: #5B83AD;
 @light-blue: @nice-blue + #111;
+@pink: rgb(255, 130, 189);
 
-h1 {
-  color: @light-blue;
-}
+@node-color: @nice-blue;
 
 .node circle {
   cursor: pointer;
-  stroke: #3182bd;
-  stroke-width: 1.5px;
+  stroke: @node-color;
+  stroke-width: 3px;
 }
 
 .node text {
