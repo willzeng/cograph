@@ -36,9 +36,21 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       update: ->
         nodes = @model.nodes.models
-        connections = {}
+        if nodes.length > 1
+          connections = [{source:0, target:1, name:"links"}]
+        else
+          connections = {}
 
         @force.nodes(nodes).links(connections).start()
+
+        connection = d3.select(@el)
+          .select(".connection-container")
+          .selectAll(".connection")
+          .data connections, (connection) -> connection.name
+        connectionEnter = connection.enter().append("line")
+          .attr("class", "connection")
+          .attr("stroke", "grey")
+          .attr("stroke-width", "8px")
 
         node = d3.select(@el)
           .select(".node-container")
@@ -54,5 +66,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .attr("r", 5)
 
         tick = ->
+          connection.attr("x1", (d) ->
+            d.source.x
+          ).attr("y1", (d) ->
+            d.source.y
+          ).attr("x2", (d) ->
+            d.target.x
+          ).attr("y2", (d) ->
+            d.target.y
+          )
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
         @force.on "tick", tick
