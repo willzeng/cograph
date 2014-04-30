@@ -27,4 +27,3 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
           name: 'related to'
           source: 0
           target: 1
-          
