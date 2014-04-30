@@ -37,7 +37,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       update: ->
         nodes = @model.nodes.models
-        connections = ({name:connection.get('name'), source:connection.get('source'), target:connection.get('target')} for connection in @model.connections.models)
+        connections = (connection.attributes for connection in @model.connections.models)
 
         @force.nodes(nodes).links(connections).start()
 
