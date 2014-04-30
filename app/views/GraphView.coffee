@@ -3,8 +3,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
   ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate) ->
     class GraphView extends Backbone.View
 
-      el: $ '#main-area'
-      graph: $ '#graph'
+      el: $ '#graph'   
 
       initialize: ->
         @model.nodes.on 'add', @update, this
@@ -17,7 +16,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                   .nodes([])
                   .links([])
                   .size([width, height])
-                  .charge(-3000)
+                  .charge(-5000)
                   .gravity(0.2)
 
         zoomed = ->
