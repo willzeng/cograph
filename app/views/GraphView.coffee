@@ -8,6 +8,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       initialize: ->
         @model.nodes.on 'add', @update, this
+        @model.connections.on 'add', @update, this
 
       render: ->
         width = 600
@@ -36,10 +37,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       update: ->
         nodes = @model.nodes.models
-        if nodes.length > 1
-          connections = [{source:0, target:1, name:"links"}]
-        else
-          connections = {}
+        connections = ({name:connection.get('name'), source:connection.get('source'), target:connection.get('target')} for connection in @model.connections.models)
 
         @force.nodes(nodes).links(connections).start()
 
