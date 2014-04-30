@@ -64,14 +64,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .attr("r", 5)
 
         tick = ->
-          connection.attr("x1", (d) ->
-            d.source.x
-          ).attr("y1", (d) ->
-            d.source.y
-          ).attr("x2", (d) ->
-            d.target.x
-          ).attr("y2", (d) ->
-            d.target.y
-          )
+          connection
+            .attr("x1", (d) -> d.source.x)
+            .attr("y1", (d) -> d.source.y)
+            .attr("x2", (d) -> d.target.x)
+            .attr("y2", (d) -> d.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
         @force.on "tick", tick
