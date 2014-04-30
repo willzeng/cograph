@@ -23,4 +23,3 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
           $("#sidebar").removeClass("selected")
         else
           $("#sidebar").addClass("selected")
-        
