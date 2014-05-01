@@ -6,7 +6,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
       el: $ '#graph'   
 
       events:
-        'click #sidebar-button': 'toggleSidebar'
+        'click #sidebar-toggle': 'toggleSidebar'
 
       initialize: ->
         @model.nodes.on 'add', @update, this
