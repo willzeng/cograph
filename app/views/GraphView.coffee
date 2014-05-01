@@ -3,7 +3,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
   ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate) ->
     class GraphView extends Backbone.View
 
-      el: $ '#graph'   
+      el: $ '#graph';   
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'
