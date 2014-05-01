@@ -7,8 +7,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
 
       events:
         'click .node': 'update'
-        'click #togglesidebar' : 'togglesidebar'
-
+      
       update: (clickedDOM) ->
         $(".details-container").empty()
 
@@ -16,10 +15,3 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
         clickedNode = @model.nodes.get(clickedID)
 
         $(".details-container").append _.template(detailsTemplate, clickedNode)
-
-      togglesidebar: ->
-        console.log('toggling sidebar');
-        if($("#sidebar").hasClass("selected"))
-          $("#sidebar").removeClass("selected")
-        else
-          $("#sidebar").addClass("selected")
