@@ -7,7 +7,6 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
 
       events:
         'click .node': 'update'
-      
       update: (clickedDOM) ->
         $(".details-container").empty()
 
