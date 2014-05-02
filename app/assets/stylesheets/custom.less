@@ -5,7 +5,6 @@
 @stroke-color: @lime;
 @selected-color: @blue;
 @text-color: @gray;
-@graph-bg: rgba(12,16,33,1);
 
 .node circle {
   cursor: pointer;
@@ -31,64 +30,44 @@
   opacity: 0.5;
 }
 
-// General Classes
-
-// Layout
-
 html, body {
   overflow: hidden;
-  background: @graph-bg;
+  background: @white;
+  height: 100%;
 }
 
 #main-container {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+
+svg {
+  width:100%;
+  height:100%;
+}
+
+#toolbar {
+  position: absolute;
+  padding: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+#graph {
   width:100%;
   height: 100%;
-  z-index:10;
+}
 
-  svg {
-    width:100%;
-    height:100%;
-    z-index:2;
-  }
+#sidebar {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 100%;
+  color:@silver;
 
-  #toolbar {
-    position: absolute;
-    padding:10px;
-    overflow:hidden;
-    width: auto;
-  }
-
-  #graph {
-    width:100%;
-    height: 100%;
-  }
-
-  #sidebar-container {
-    pointer-events:none;
-    position:absolute;
-    right:0px;
-    top:30px;
-    height:100%;
-    width:800px;
-    box-sizing:border-box;
-    color:@silver;
-    
-    #add-container {
-      padding:10px;
-      position: relative;
-      float: right;
-      pointer-events:auto;
-    }
-    
-    #sidebar {
-      width:300px;
-      height:100%;
-      background:@navy;
-      padding:5px 10px;
-      float:right;
-      pointer-events:auto;
-    }   
-  }
+  width:300px;
+  background:@navy;
 }
 
 // Overriding Bootstrap defaults

@@ -2,7 +2,17 @@ extends layout
 
 block content
   #graph
+    #toolbar
+      form#search-form.navbar-form.navbar-left
+        .form-group
+          input.form-control(type="text", name='search-term' placeholder="Search...")
+        button.btn.btn-default(type="submit")
+          i.fa.fa-search
+      form#add-node-form.navbar-form.navbar-right
+        .form-group
+          input.form-control(type="text", name='node-name', placeholder="Add something")
+        button.btn.btn-default(type="submit")
+          i.fa.fa-plus
+      button#sidebar-toggle.btn.btn-default.navbar-right Toggle Sidebar
 
-
-      
-  
+  #sidebar
