@@ -3,11 +3,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
     class DetailsView extends Backbone.View
 
       el: $ '#graph'
-      viewBox: $ '#main-area'
+      viewBox: $ '#main-container'
 
       events:
         'click .node': 'update'
-
+      
       update: (clickedDOM) ->
         $(".details-container").empty()
 

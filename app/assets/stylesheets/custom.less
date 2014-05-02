@@ -1,24 +1,95 @@
-// just test code to make sure less is working
-@nice-blue: #5B83AD;
-@light-blue: @nice-blue + #111;
-@pink: rgb(255, 130, 189);
+@import "colors";
 
-@node-color: @nice-blue;
+@node-color: @gray;
+@connection-color: @gray;
+@stroke-color: @lime;
+@selected-color: @blue;
+@text-color: @gray;
 
 .node circle {
   cursor: pointer;
-  stroke: @node-color;
-  stroke-width: 3px;
+  stroke: @stroke-color;
+  stroke-width: 2px;
+  fill: @node-color;
+
+  .selected {
+    stroke: @selected-color;
+  }
 }
 
 .node text {
   font: 14px sans-serif;
   pointer-events: none;
   text-anchor: middle;
+  fill: @text-color;
 }
 
 .connection {
-  stroke: grey;
-  stroke-width: 8px;
+  stroke: @connection-color;
+  stroke-width: 2px;
   opacity: 0.5;
+}
+
+html, body {
+  overflow: hidden;
+  background: @white;
+  height: 100%;
+}
+
+#main-container {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+
+svg {
+  width:100%;
+  height:100%;
+}
+
+#toolbar {
+  position: absolute;
+  padding: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+#graph {
+  width:100%;
+  height: 100%;
+}
+
+#sidebar {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  height: 100%;
+  color:@silver;
+
+  width:300px;
+  background:@navy;
+}
+
+// Overriding Bootstrap defaults
+
+.navbar {
+  margin-bottom:0px;
+  min-height:0px;
+  background:@silver;
+  border:0px;
+  border-radius: 0px;
+}
+
+.navbar-brand {
+  padding:5px;
+  height:auto;
+}
+
+.navbar-form {
+  padding:0px;
+  margin:0px;
+}
+
+.navbar-form.navbar-right:last-child{
+  margin-right:0px;
 }
