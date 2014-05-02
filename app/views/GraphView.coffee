@@ -3,22 +3,27 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
   ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate) ->
     class GraphView extends Backbone.View
 
-      el: $ '#main-area'
-      graph: $ '#graph'
+      el: $ '#graph'
+
+      events:
+        'click #sidebar-button': 'toggleSidebar'
 
       initialize: ->
         @model.nodes.on 'add', @update, this
         @model.connections.on 'add', @update, this
 
+      toggleSidebar: ->
+        $('#sidebar').toggle()
+
       render: ->
-        width = 600
-        height = 300
+        width = $(@el).width()
+        height = $(@el).height()
         @force = d3.layout.force()
                   .nodes([])
                   .links([])
                   .size([width, height])
-                  .charge(-500)
-                  .gravity(0.5)
+                  .charge(-5000)
+                  .gravity(0.2)
 
         zoomed = ->
           workspace.attr "transform",
