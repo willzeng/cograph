@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
-  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/SidebarView'],
-  ($, _, Backbone, GraphModel, GraphView, AddNodeView, DetailsView, SidebarView) ->
+  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView'],
+  ($, _, Backbone, GraphModel, GraphView, AddNodeView, DetailsView) ->
     class Router extends Backbone.Router
       initialize: ->
         @graphModel = new GraphModel()
