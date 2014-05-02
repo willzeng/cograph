@@ -7,7 +7,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
         @detailsView = new DetailsView model: @graphModel
-        @sidebarView = new SidebarView model: @graphModel
         window.gm = @graphModel
         Backbone.history.start()
 
