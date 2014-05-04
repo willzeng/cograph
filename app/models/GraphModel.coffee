@@ -10,6 +10,8 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       @nodes = new NodeCollection()
       @connections = new ConnectionCollection()
 
+      @selectedNode = {}
+
     putNode: (name) ->
       console.log "Added node with name #{name}"
       @nodes.add {'name': name}
@@ -17,3 +19,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     putConnection: (name) ->
       console.log "Added connection with name #{name}"
       @connections.add {'name': name}
+
+    selectNode: (node) ->
+      @selectedNode = node
+      @trigger "select:node", node
