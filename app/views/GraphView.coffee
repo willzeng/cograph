@@ -3,7 +3,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
   ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate) ->
     class GraphView extends Backbone.View
 
-      el: $ '#graph';   
+      el: $ '#graph'
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'
@@ -12,8 +12,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         @model.nodes.on 'add', @update, this
         @model.connections.on 'add', @update, this
 
+        @sidebarShown = false
+
       toggleSidebar: ->
-        $('#sidebar').toggle()
+        if @sidebarShown
+          $('#sidebar').animate 'width': '0%'
+          $('#graph').animate 'width': '100%'
+        else
+          $('#sidebar').animate 'width': '30%'
+          $('#graph').animate 'width': '70%'
+        @sidebarShown = !@sidebarShown
 
       render: ->
         width = $(@el).width()
