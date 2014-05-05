@@ -35,9 +35,21 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                   .gravity(0.2)
 
         zoomed = ->
+          return if translateLock
           workspace.attr "transform",
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
         zoom = d3.behavior.zoom().on('zoom', zoomed)
+
+        # ignore panning and zooming when dragging node
+        translateLock = false
+        # store the current zoom to undo changes from dragging a node
+        currentZoom = undefined
+        @force.drag().on "dragstart", ->
+          translateLock = true
+          currentZoom = zoom.translate()
+        .on "dragend", ->
+          zoom.translate currentZoom
+          translateLock = false
 
         svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -69,6 +81,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter = node.enter()
           .append("g")
           .attr("class", "node")
+          .call(@force.drag)
         nodeEnter.append("text")
           .attr("dy", "40px")
           .text((d) -> d.get('name'))
