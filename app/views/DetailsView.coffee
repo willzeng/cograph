@@ -4,12 +4,12 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
 
       el: $ '#graph'
 
-      events: 
+      events:
         'click .close' : 'closeDetail'
 
       initialize: ->
         @model.nodes.on 'change', @update, this
-      
+
       update: ->
         selectedNode = @model.nodes.findWhere {'selected':true}
 
@@ -17,7 +17,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
 
         if selectedNode
           $("#details-container").append _.template(detailsTemplate, selectedNode)
-      
-      closeDetail: (e) ->
-        $(e.target).closest('.panel').remove()
-        #TODO deselect node
+
+      closeDetail: () ->
+        $('#details-container').empty()
+        # TODO deselect node
