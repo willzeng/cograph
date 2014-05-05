@@ -15,16 +15,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
         @sidebarShown = false
 
-      toggleSidebar: ->
-        if @sidebarShown
-          $('#sidebar').animate 'width': '0%'
-          $('#graph').animate 'width': '100%'
-        else
-          $('#sidebar').animate 'width': '30%'
-          $('#graph').animate 'width': '70%'
-        @sidebarShown = !@sidebarShown
-
-      render: ->
         width = $(@el).width()
         height = $(@el).height()
 
@@ -52,27 +42,34 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           zoom.translate currentZoom
           translateLock = false
 
-        svg = d3.select(@el).append("svg:svg")
+        @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)
                 .attr('height', height)
                 .call(zoom)
-        @svg = svg
 
-        workspace = svg.append("svg:g")
+        workspace = @svg.append("svg:g")
         workspace.append("svg:g").classed("connection-container", true)
         workspace.append("svg:g").classed("node-container", true)
 
-        drag_line = svg.append('svg:path')
+        @drag_line = @svg.append('svg:line')
                       .attr('class', 'link dragline')
-                      .attr('d', 'M0,0L0,0')
+                      .attr('x1', '0')
+                      .attr('y1', '0')
+                      .attr('x2', '50')
+                      .attr('y2', '50')
+
         @mousedown_node = {x:0,y:0}
         @creatingConnection = true
-        that = this
-        svg.on 'mousemove', () ->
-          console.log "that.mousedown", that.mousedown
-          if that.creatingConnection
-            drag_line.attr('d', 'M' + that.mousedown_node.x + ',' + that.mousedown_node.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1])
+
+      toggleSidebar: ->
+        if @sidebarShown
+          $('#sidebar').animate 'width': '0%'
+          $('#graph').animate 'width': '100%'
+        else
+          $('#sidebar').animate 'width': '30%'
+          $('#graph').animate 'width': '70%'
+        @sidebarShown = !@sidebarShown
 
       update: ->
         nodes = @model.nodes.models
@@ -104,10 +101,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter.on "click", (datum, index) =>
           @model.selectNode datum
           @trigger "node:click", datum
-        nodeEnter.on "mousedown", (d) ->
+
+        nodeEnter.on "mousedown", (d) =>
           @creatingConnection = true
           @mousedown_node = {x:d.x,y:d.y}
-          console.log "set down to:", @mousedown_node
+          @drag_line.attr('x1', d.x).attr('y1', d.y)
+
+        that = this
+        @svg.on "mousemove", () ->
+          that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
         tick = ->
           connection
