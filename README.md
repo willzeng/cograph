@@ -44,10 +44,6 @@ Folder Directory
 	+ *Stylesheets*
 	+ *Libraries*
 + *Testing*
-+ *Templates*
-	+ details_box.html
-	+ node.html
-	+ node_circle.html
 + License.txt
 + README.md
 
