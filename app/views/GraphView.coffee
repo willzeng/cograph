@@ -99,7 +99,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .attr("r", 25)
         nodeEnter.on "click", (d) =>
           @model.selectNode d
-        .on "dblclick", (d) =>
+        .on "contextmenu", (d) =>
+          d3.event.preventDefault()
           @creatingConnection = !@creatingConnection
           if @creatingConnection
             @translateLock = true
