@@ -5,13 +5,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
       el: $ '#graph'
       viewBox: $ '#main-container'
 
-      events:
-        'click .node': 'update'
+      initialize: ->
+        @model.on 'select:node', (datum) => 
+          @update datum
       
-      update: (clickedDOM) ->
+      update: (clickedNode) ->
         $(".details-container").empty()
-
-        clickedID = $(clickedDOM.currentTarget).data("node-id")
-        clickedNode = @model.nodes.get(clickedID)
 
         $(".details-container").append _.template(detailsTemplate, clickedNode)

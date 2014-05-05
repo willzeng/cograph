@@ -87,6 +87,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .text((d) -> d.get('name'))
         nodeEnter.append("circle")
           .attr("r", 25)
+        nodeEnter.on "click", (datum, index) =>
+          @model.selectNode datum
+          @trigger "node:click", datum
+
 
         tick = ->
           connection
