@@ -16,12 +16,15 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
       home: ->
         @graphView.render()
         gm.nodes.add
-          name: 'one'
-          description: 'The first one'
-          tags: ["lux", "et", "veritas"]
+          name: 'Oxford'
+          description: 'A City in the UK'
+          tags: ["croquet", "rowing", "university"]
 
         gm.nodes.add
-          name: 'two'
+          name: 'David'
+
+        gm.nodes.add
+          name: 'Victor'
 
         gm.connections.add
           name: 'related to'
