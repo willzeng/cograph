@@ -11,7 +11,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
         @model.nodes.on 'change', @update, this
 
       update: ->
-        selectedNode = @model.nodes.findWhere {'selected':true}
+        selectedNode = @getSelectedNode()
 
         $("#details-container").empty()
 
@@ -20,3 +20,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
 
       closeDetail: () ->
         $('#details-container').empty()
+        @getSelectedNode().set 'selected', false
+
+      getSelectedNode: ->
+        selectedNode = @model.nodes.findWhere {'selected': true}
