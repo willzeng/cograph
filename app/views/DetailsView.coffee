@@ -3,13 +3,14 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
     class DetailsView extends Backbone.View
 
       el: $ '#graph'
-      viewBox: $ '#main-container'
 
       initialize: ->
-        @model.on 'select:node', (datum) => 
-          @update datum
+        @model.nodes.on 'change', @update, this
       
-      update: (clickedNode) ->
+      update: ->
+        selectedNode = @model.nodes.findWhere {'selected':true}
+
         $(".details-container").empty()
 
-        $(".details-container").append _.template(detailsTemplate, clickedNode)
+        if selectedNode
+          $(".details-container").append _.template(detailsTemplate, selectedNode)
