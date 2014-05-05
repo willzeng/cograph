@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
-  'text!templates/node_circle.html'],
-  ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate) ->
+  'text!templates/node_circle.html','text!templates/data_tooltip.html'],
+  ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate, dataTooltipTemplate) ->
     class GraphView extends Backbone.View
 
       el: $ '#graph'
@@ -92,7 +92,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter.on "click", (datum, index) =>
           @model.selectNode datum
           @trigger "node:click", datum
-
+        nodeEnter.on "mouseover", (datum, index) =>
+          $(".data-tooltip-container").css('left',datum.x).css('top',datum.y).append _.template(dataTooltipTemplate, datum)
+        nodeEnter.on "mouseout", (datum, index) =>
+          $(".data-tooltip-container").empty()
 
         tick = ->
           connection
