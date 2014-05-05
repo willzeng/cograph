@@ -59,6 +59,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                       .attr('x2', '50')
                       .attr('y2', '50')
                       .data([{anchor:{x:0,y:0}}])
+        @creatingConnection = false
 
       toggleSidebar: ->
         if @sidebarShown
@@ -78,7 +79,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         connection = d3.select(@el)
           .select(".connection-container")
           .selectAll(".connection")
-          .data connections, (connection) -> connection.name
+          .data connections, (connection) -> connection.cid
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
 
@@ -90,7 +91,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter = node.enter()
           .append("g")
           .attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
-          # .call(@force.drag)
+          .call(@force.drag)
         nodeEnter.append("text")
           .attr("dy", "40px")
           .text((d) -> d.get('name'))
@@ -99,9 +100,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter.on "click", (d) =>
           @model.selectNode d
         .on "dblclick", (d) =>
-          @translateLock = true
-          @drag_line.attr('class', 'dragline')
-            .data [{anchor:d}]
+          @creatingConnection = !@creatingConnection
+          if @creatingConnection
+            @translateLock = true
+            @drag_line.attr('class', 'dragline')
+              .data [{anchor:d}]
+          else
+            @translateLock = false
+            @drag_line.attr('class', 'dragline hidden')
+            console.log "source is ", @drag_line.data()[0].anchor
+            console.log "target is ", d
+            @model.putConnection "links to", @drag_line.data()[0].anchor, d
 
         that = this
         @svg.on "mousemove", () ->
