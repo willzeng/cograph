@@ -10,6 +10,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       initialize: ->
         @model.nodes.on 'add', @update, this
+        @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
 
         @sidebarShown = false
@@ -77,10 +78,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         node = d3.select(@el)
           .select(".node-container")
           .selectAll(".node")
-          .data(nodes, (node) -> node.get('name'))
+          .data(nodes, (node) -> node.cid)
+          .attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
         nodeEnter = node.enter()
           .append("g")
-          .attr("class", "node")
+          .attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
           .call(@force.drag)
         nodeEnter.append("text")
           .attr("dy", "40px")
