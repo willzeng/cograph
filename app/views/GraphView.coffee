@@ -25,22 +25,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                   .charge(-5000)
                   .gravity(0.2)
 
-        zoomed = ->
-          return if translateLock
+        zoomed = =>
+          return if @translateLock
           workspace.attr "transform",
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
         zoom = d3.behavior.zoom().on('zoom', zoomed)
 
         # ignore panning and zooming when dragging node
-        translateLock = false
+        @translateLock = false
         # store the current zoom to undo changes from dragging a node
         currentZoom = undefined
-        @force.drag().on "dragstart", ->
-          translateLock = true
+        @force.drag().on "dragstart", =>
+          @translateLock = true
           currentZoom = zoom.translate()
-        .on "dragend", ->
+        .on "dragend", =>
           zoom.translate currentZoom
-          translateLock = false
+          @translateLock = false
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -58,9 +58,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                       .attr('y1', '0')
                       .attr('x2', '50')
                       .attr('y2', '50')
-
-        @mousedown_node = {x:0,y:0}
-        @creatingConnection = true
+                      .data([{anchor:{x:0,y:0}}])
 
       toggleSidebar: ->
         if @sidebarShown
@@ -100,22 +98,23 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .attr("r", 25)
         nodeEnter.on "click", (datum, index) =>
           @model.selectNode datum
-          @trigger "node:click", datum
 
         nodeEnter.on "mousedown", (d) =>
-          @creatingConnection = true
-          @mousedown_node = {x:d.x,y:d.y}
-          @drag_line.attr('x1', d.x).attr('y1', d.y)
+          @translateLock = true
+          @drag_line.data [{anchor:d}]
 
         that = this
         @svg.on "mousemove", () ->
           that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
-        tick = ->
+        tick = =>
           connection
             .attr("x1", (d) -> d.source.x)
             .attr("y1", (d) -> d.source.y)
             .attr("x2", (d) -> d.target.x)
             .attr("y2", (d) -> d.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
+          @drag_line
+            .attr("x1", (d) -> d.anchor.x)
+            .attr("y1", (d) -> d.anchor.y)
         @force.on "tick", tick
