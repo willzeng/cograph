@@ -53,7 +53,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         workspace.append("svg:g").classed("node-container", true)
 
         @drag_line = @svg.append('svg:line')
-                      .attr('class', 'link dragline')
+                      .attr('class', 'dragline hidden')
                       .attr('x1', '0')
                       .attr('y1', '0')
                       .attr('x2', '50')
@@ -100,7 +100,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           @model.selectNode d
         .on "dblclick", (d) =>
           @translateLock = true
-          @drag_line.data [{anchor:d}]
+          @drag_line.attr('class', 'dragline')
+            .data [{anchor:d}]
 
         that = this
         @svg.on "mousemove", () ->
