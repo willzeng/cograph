@@ -7,6 +7,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'
+        'click #zoom-in-button': 'scaleZoom'
+        'click #zoom-out-button': 'scaleZoom'
 
       initialize: ->
         @model.nodes.on 'add', @update, this
@@ -35,11 +37,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                   .charge(-5000)
                   .gravity(0.2)
 
-        zoomed = ->
+        zoomed = =>
           return if translateLock
-          workspace.attr "transform",
+          @workspace.attr "transform",
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
         zoom = d3.behavior.zoom().on('zoom', zoomed)
+        @zoom = zoom
 
         # ignore panning and zooming when dragging node
         translateLock = false
@@ -58,9 +61,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                 .attr('height', height)
                 .call(zoom)
 
-        workspace = svg.append("svg:g")
-        workspace.append("svg:g").classed("connection-container", true)
-        workspace.append("svg:g").classed("node-container", true)
+        @workspace = svg.append("svg:g")
+        @workspace.append("svg:g").classed("connection-container", true)
+        @workspace.append("svg:g").classed("node-container", true)
 
       update: ->
         nodes = @model.nodes.models
@@ -102,3 +105,33 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
             .attr("y2", (d) -> d.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
         @force.on "tick", tick
+
+      scaleZoom: (event) ->
+        if $(event.currentTarget).attr('id') is 'zoom-in-button'
+          scale = 1.3
+        else if $(event.currentTarget).attr('id') is 'zoom-out-button'
+          scale = 1/1.3
+        else
+         scale = 1
+
+        #find the current view and viewport settings
+        center = [$(@el).width(), $(@el).height()]
+        translate = @zoom.translate()
+        view = {x: translate[0], y: translate[1], k: @zoom.scale()}
+
+        #set the new scale factor
+        newScale = view.k*scale
+
+        #calculate offset to zoom in center
+        translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k]
+        view.k = newScale
+        diff = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y]
+        view.x += center[0] - diff[0]
+        view.y += center[1] - diff[1]
+
+        #update zoom values
+        @zoom.translate([view.x,view.y])
+        @zoom.scale(newScale)
+
+        #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
