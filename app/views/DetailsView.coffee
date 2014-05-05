@@ -20,4 +20,3 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/details_box.html'],
 
       closeDetail: () ->
         $('#details-container').empty()
-        # TODO deselect node
