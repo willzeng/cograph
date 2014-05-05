@@ -14,7 +14,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
         @model.nodes.on 'change', @update, this
 
       update: ->
-        selectedNode = @model.nodes.findWhere {'selected': true}
+        selectedNode = @getSelectedNode()
 
         $("#details-container").empty()
 
@@ -23,6 +23,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
 
       closeDetail: () ->
         $('#details-container').empty()
+        @getSelectedNode().set 'selected', false
 
       editNode: () ->
         selectedNode = @model.nodes.findWhere {'selected': true}
@@ -38,3 +39,6 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
         @nodeForm.commit()
         @update()
         false
+
+      getSelectedNode: ->
+        selectedNode = @model.nodes.findWhere {'selected': true}
