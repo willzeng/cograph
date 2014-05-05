@@ -70,27 +70,32 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           .select(".connection-container")
           .selectAll(".connection")
           .data connections, (connection) -> connection.name
-        connectionEnter = connection.enter().append("line")
+        connection.enter().append("line")
           .attr("class", "connection")
 
-        node = d3.select(@el)
-          .select(".node-container")
+        # old elements
+        node = d3.select(".node-container")
           .selectAll(".node")
           .data(nodes, (node) -> node.cid)
-          .attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
-        nodeEnter = node.enter()
-          .append("g")
-          .attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
-          .call(@force.drag)
+
+        # new elements
+        nodeEnter = node.enter().append("g")
         nodeEnter.append("text")
           .attr("dy", "40px")
-          .text((d) -> d.get('name'))
         nodeEnter.append("circle")
           .attr("r", 25)
         nodeEnter.on "click", (datum, index) =>
           @model.selectNode datum
           @trigger "node:click", datum
 
+        # update old and new elements
+        node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
+          .call(@force.drag)
+        node.select('text')
+          .text((d) -> d.get('name'))
+
+        # delete unmatching elements
+        node.exit().remove()
 
         tick = ->
           connection
