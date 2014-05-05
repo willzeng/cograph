@@ -56,10 +56,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
                 .attr('width', width)
                 .attr('height', height)
                 .call(zoom)
+        @svg = svg
 
         workspace = svg.append("svg:g")
         workspace.append("svg:g").classed("connection-container", true)
         workspace.append("svg:g").classed("node-container", true)
+
+        drag_line = svg.append('svg:path')
+                      .attr('class', 'link dragline')
+                      .attr('d', 'M0,0L0,0')
+        @mousedown_node = {x:0,y:0}
+        @creatingConnection = true
+        that = this
+        svg.on 'mousemove', () ->
+          console.log "that.mousedown", that.mousedown
+          if that.creatingConnection
+            drag_line.attr('d', 'M' + that.mousedown_node.x + ',' + that.mousedown_node.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1])
 
       update: ->
         nodes = @model.nodes.models
@@ -81,7 +93,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter = node.enter()
           .append("g")
           .attr("class", "node")
-          .call(@force.drag)
+          #.call(@force.drag)
         nodeEnter.append("text")
           .attr("dy", "40px")
           .text((d) -> d.get('name'))
@@ -90,7 +102,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter.on "click", (datum, index) =>
           @model.selectNode datum
           @trigger "node:click", datum
-
+        nodeEnter.on "mousedown", (d) ->
+          @creatingConnection = true
+          @mousedown_node = {x:d.x,y:d.y}
+          console.log "set down to:", @mousedown_node
 
         tick = ->
           connection

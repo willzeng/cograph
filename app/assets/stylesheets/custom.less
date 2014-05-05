@@ -30,6 +30,21 @@
   opacity: 0.5;
 }
 
+path.link {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+  cursor: default;
+}
+
+path.link.dragline {
+  pointer-events: none;
+}
+
+path.link.hidden {
+  stroke-width: 0;
+}
+
 html, body {
   overflow: hidden;
   background: @white;
