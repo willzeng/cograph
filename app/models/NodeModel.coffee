@@ -4,3 +4,4 @@ define ['backbone'], (Backbone) ->
     defaults:
       name: ''
       tags: []
+      description: ''

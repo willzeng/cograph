@@ -17,6 +17,10 @@
   }
 }
 
+.node.selected circle {
+  fill: @selected-color;
+}
+
 .node text {
   font: 14px sans-serif;
   pointer-events: none;
@@ -58,8 +62,8 @@ html, body {
 }
 
 svg {
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
 }
 
 #toolbar {
@@ -70,46 +74,54 @@ svg {
 }
 
 #graph {
-  width:100%;
+  width: 100%;
   height: 100%;
+}
+
+#zoom-controls {
+  position: absolute;
+  bottom: 40px;
+  left: 10px;
 }
 
 #sidebar {
   position: absolute;
-  right: 0px;
-  top: 0px;
+  right: 0;
+  top: 0;
   height: 100%;
   color: @silver;
 
-  width: 0px;
+  width: 0;
   background: @navy;
 }
 
-.details-container {
-  position:relative;
+#details-container {
+  position: absolute;
   top: 60px;
+  width: 250px;
+  left: 10px;
 }
 
 // Overriding Bootstrap defaults
 
 .navbar {
-  margin-bottom:0px;
-  min-height:0px;
-  background:@silver;
-  border:0px;
-  border-radius: 0px;
+  margin-bottom: 0;
+  min-height: 0;
+  background: @silver;
+  border: 0;
+  border-radius: 0;
 }
 
 .navbar-brand {
-  padding:5px;
-  height:auto;
+  padding: 5px;
+  height: auto;
 }
 
 .navbar-form {
-  padding:0px;
-  margin:0px;
+  padding: 0;
+  margin: 0;
 }
 
 .navbar-form.navbar-right:last-child{
-  margin-right:0px;
+  margin-right: 0;
 }
