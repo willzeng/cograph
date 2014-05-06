@@ -1,14 +1,17 @@
 define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel'], ($, Backbone, Bloodhound, typeahead, GraphModel) ->
   class SearchView extends Backbone.View
+    map = {}
     initialize: ->
       $('#search-form #search-input').on('typeahead:selected', 
-        (e, sugg, dataset) -> 
+        (e, sugg, dataset) => 
           console.log sugg
-          @model.selectNode datum
+          @model.selectNode map[sugg.value]
+          $('#search-form #search-input').val('')
           return
       )
       $('#search-form').submit =>
         return false
+    render: ->
       substringMatcher = (query) ->
         findMatches = (q, cb) ->
           matches = undefined
@@ -22,6 +25,10 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
           return
 
       nodes = _.map(@model.nodes.models, (d) -> return d.attributes.name)
+      
+      _.each(@model.nodes.models, (d) ->
+        map[d.attributes.name] = d
+      )
       $('#search-form #search-input').typeahead({
         hint: true,
         highlight: true,
@@ -30,10 +37,5 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
       },
       {
         name: 'matching-nodes',
-        source: substringMatcher(nodes),
-        #updater: 
-        templates: {
-          empty: (o) -> 
-            return '<p class="add-new-tt"><a id="add-new-tt"><i style="font-size:18px;position:relative;top:2px;margin-right:5px;" class="ion-ios7-plus-empty"></i>Add as a new node</a></p>'
-        }
+        source: substringMatcher(nodes)
       })

@@ -7,7 +7,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
         @detailsView = new DetailsView model: @graphModel
-        
+        @searchView = new SearchView model: @graphModel
         window.gm = @graphModel
         Backbone.history.start()
 
@@ -31,4 +31,5 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
           name: 'related to'
           source: 0
           target: 1
-        @searchView = new SearchView model: @graphModel
+        @searchView.render()
+        
