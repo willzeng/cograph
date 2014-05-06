@@ -79,7 +79,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         connection = d3.select(@el)
           .select(".connection-container")
           .selectAll(".connection")
-          .data connections, (connection) -> connection.cid
+          .data connections
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
 
