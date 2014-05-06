@@ -1,6 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
-  'text!templates/node_circle.html','text!templates/data_tooltip.html'],
-  ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate, dataTooltipTemplate) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html'],
+  ($, _, Backbone, d3, dataTooltipTemplate) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
