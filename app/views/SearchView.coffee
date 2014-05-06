@@ -9,8 +9,6 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
           $('#search-form #search-input').val('')
           return
       )
-      $('#search-form').submit =>
-        return false
     render: ->
       substringMatcher = (query) ->
         findMatches = (q, cb) ->
