@@ -49,7 +49,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           translateLock = true
           currentZoom = zoom.translate()
         .on "dragend", ->
-          zoom.translate currentZoom
+          @zoom.translate currentZoom
           translateLock = false
 
         svg = d3.select(@el).append("svg:svg")
