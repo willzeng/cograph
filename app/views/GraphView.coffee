@@ -45,10 +45,10 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         translateLock = false
         # store the current zoom to undo changes from dragging a node
         currentZoom = undefined
-        @force.drag().on "dragstart", ->
+        @force.drag().on "dragstart", =>
           translateLock = true
-          currentZoom = zoom.translate()
-        .on "dragend", ->
+          currentZoom = @zoom.translate()
+        .on "dragend", =>
           @zoom.translate currentZoom
           translateLock = false
 
