@@ -115,7 +115,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
          scale = 1
 
         #find the current view and viewport settings
-        center = [$(@el).width(), $(@el).height()]
+        center = [$(@el).width()/2, $(@el).height()/2]
         translate = @zoom.translate()
         view = {x: translate[0], y: translate[1], k: @zoom.scale()}
 
