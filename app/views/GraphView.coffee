@@ -98,12 +98,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter.on "mouseover", (datum, index) =>
           if(!$(".data-tooltip-container .panel").get(0))
             $(".data-tooltip-container")
-              .css('left',datum.x)
-              .css('top',datum.y)
+              .css('left',datum.x+16)
+              .css('top',datum.y+16)
               .append _.template(dataTooltipTemplate, datum)
         nodeEnter.on "mouseout", (datum, index) =>
-          if(!$(".data-tooltip-container:focus"))
-            $(".data-tooltip-container").empty()
+          $(".data-tooltip-container").empty()
         
         tick = ->
           connection
