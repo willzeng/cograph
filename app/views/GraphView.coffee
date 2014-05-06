@@ -39,8 +39,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           return if translateLock
           @workspace.attr "transform",
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
-        zoom = d3.behavior.zoom().on('zoom', zoomed)
-        @zoom = zoom
+        @zoom = d3.behavior.zoom().on('zoom', zoomed)
 
         # ignore panning and zooming when dragging node
         translateLock = false
