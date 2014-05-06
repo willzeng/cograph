@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "homepage": "https://github.com/Rhizi/rhizi-client",
   "authors": [
-    "Victor Pontis <vpontis@gmail.com>"
+    "Victor Pontis <vpontis@gmail.com>",
+    "Will Zeng <zeng.will@gmail.com>",
+    "David Furlong <dvfurlong@gmail.com>"
   ],
   "description": "Rhizi allows you to explore graphs.",
   "keywords": [
@@ -27,6 +29,7 @@
     "requirejs-text": "~2.0.12",
     "require-cs": "~0.4.4",
     "d3": "~3.4.6",
-    "backbone-forms": "~0.14.0"
+    "backbone-forms": "~0.14.0",
+    "typeahead.js": "~0.10.2"
   }
 }
