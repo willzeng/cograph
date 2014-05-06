@@ -35,10 +35,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
         $('#details-container .panel-body').empty().append(@nodeForm.el)
 
       saveNode: (e) ->
-        e.preventDefault()
         @nodeForm.commit()
         @update()
-        false
 
       getSelectedNode: ->
         selectedNode = @model.nodes.findWhere {'selected': true}
