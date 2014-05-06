@@ -90,8 +90,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           @model.selectNode datum
           @trigger "node:click", datum
 
-        hoveringNode = false
-        hoveringDataTooltip = false
         nodeEnter.on "mouseover", (datum, index) =>
           if(!$(".data-tooltip-container .panel").get(0))
             $(".data-tooltip-container")
