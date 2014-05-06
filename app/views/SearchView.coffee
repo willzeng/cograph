@@ -37,5 +37,9 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
       },
       {
         name: 'matching-nodes',
-        source: substringMatcher(nodes)
+        source: substringMatcher(nodes),
+        templates: {
+          empty: (o) -> 
+            return '<div style="color: grey;margin-left: 20px;padding: 3px 0px;"><i>No matches found</i></div>'
+        }
       })
