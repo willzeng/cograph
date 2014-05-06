@@ -56,7 +56,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
                 .attr("pointer-events", "all")
                 .attr('width', width)
                 .attr('height', height)
-                .call(zoom)
+                .call(@zoom)
 
         @workspace = svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
