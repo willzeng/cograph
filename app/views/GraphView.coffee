@@ -117,15 +117,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         #find the current view and viewport settings
         center = [$(@el).width()/2, $(@el).height()/2]
         translate = @zoom.translate()
-        view = {x: translate[0], y: translate[1], k: @zoom.scale()}
+        view = {x: translate[0], y: translate[1]}
 
         #set the new scale factor
-        newScale = view.k*scale
+        newScale = @zoom.scale()*scale
 
         #calculate offset to zoom in center
-        translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k]
-        view.k = newScale
-        diff = [translate0[0] * view.k + view.x, translate0[1] * view.k + view.y]
+        translate_orig = [(center[0] - view.x) / @zoom.scale(), (center[1] - view.y) / @zoom.scale()]
+        diff = [translate_orig[0] * newScale + view.x, translate_orig[1] * newScale + view.y]
         view.x += center[0] - diff[0]
         view.y += center[1] - diff[1]
 
