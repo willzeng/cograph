@@ -5,6 +5,7 @@
 @stroke-color: @lime;
 @selected-color: @blue;
 @text-color: @gray;
+@data-tooltip-color: rgba(0,31,63,0.8);
 
 .node circle {
   cursor: pointer;
@@ -85,6 +86,19 @@ svg {
   top: 60px;
   width: 250px;
   left: 10px;
+}
+
+.data-tooltip-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.data-tooltip {
+  background: @data-tooltip-color;
+  color: @white;
+  border: 1px solid @black;
+  max-width: 300px;
 }
 
 // Overriding Bootstrap defaults

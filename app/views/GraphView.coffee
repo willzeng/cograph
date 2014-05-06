@@ -1,5 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3'],
-  ($, _, Backbone, d3) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
+  'text!templates/node_circle.html','text!templates/data_tooltip.html'],
+  ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate, dataTooltipTemplate) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -89,6 +90,17 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         nodeEnter.on "click", (datum, index) =>
           @model.selectNode datum
           @trigger "node:click", datum
+
+        hoveringNode = false
+        hoveringDataTooltip = false
+        nodeEnter.on "mouseover", (datum, index) =>
+          if(!$(".data-tooltip-container .panel").get(0))
+            $(".data-tooltip-container")
+              .css('left',datum.x+16)
+              .css('top',datum.y+16)
+              .append _.template(dataTooltipTemplate, datum)
+        nodeEnter.on "mouseout", (datum, index) =>
+          $(".data-tooltip-container").empty()
 
         # update old and new elements
         node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
