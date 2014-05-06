@@ -92,11 +92,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         nodeEnter.on "click", (datum, index) =>
           @model.selectNode datum
           @trigger "node:click", datum
-        nodeEnter.on "mouseover", (datum, index) =>
-          $(".data-tooltip-container").css('left',datum.x).css('top',datum.y).append _.template(dataTooltipTemplate, datum)
-        nodeEnter.on "mouseout", (datum, index) =>
-          $(".data-tooltip-container").empty()
 
+        hoveringNode = false
+        hoveringDataTooltip = false
+        nodeEnter.on "mouseover", (datum, index) =>
+          if(!$(".data-tooltip-container .panel").get(0))
+            $(".data-tooltip-container")
+              .css('left',datum.x)
+              .css('top',datum.y)
+              .append _.template(dataTooltipTemplate, datum)
+        nodeEnter.on "mouseout", (datum, index) =>
+          if(!$(".data-tooltip-container:focus"))
+            $(".data-tooltip-container").empty()
+        
         tick = ->
           connection
             .attr("x1", (d) -> d.source.x)
