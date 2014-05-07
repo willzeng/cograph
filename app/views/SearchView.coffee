@@ -2,13 +2,18 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
   class SearchView extends Backbone.View
     map = {}
     initialize: ->
-      $('#search-form #search-input').on('typeahead:selected', 
+      $('#search-input').on('typeahead:selected', 
         (e, sugg, dataset) => 
-          console.log sugg
           @model.selectNode map[sugg.value]
-          $('#search-form #search-input').val('')
+          $('#search-input').val('')
           return
       )
+      $('#search-form').submit (e) =>
+        e.preventDefault()
+        console.log $('#search-input').val()
+        @model.selectNode map[$('#search-input').val()]
+        $('#search-input').val('') 
+        return
     render: ->
       substringMatcher = (query) ->
         findMatches = (q, cb) ->
@@ -26,8 +31,9 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
       
       _.each(@model.nodes.models, (d) ->
         map[d.attributes.name] = d
+        map[d.attributes.name.toLowerCase()] = d
       )
-      $('#search-form #search-input').typeahead({
+      $('#search-input').typeahead({
         hint: true,
         highlight: true,
         minLength: 1,
