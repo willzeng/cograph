@@ -5,7 +5,9 @@ requirejs.config({
     'underscore': '/assets/libs/underscore/underscore',
     'backbone': '/assets/libs/backbone/backbone',
     'text': '/assets/libs/requirejs-text/text',
-    'd3': '/assets/libs/d3/d3.min'
+    'd3': '/assets/libs/d3/d3.min',
+    'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
+    'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min'
   },
   shim: {
     'backbone': {

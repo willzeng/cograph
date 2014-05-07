@@ -5,3 +5,8 @@ define ['backbone'], (Backbone) ->
       name: ''
       tags: []
       description: ''
+
+    schema:
+      name: 'Text',
+      description: 'TextArea'
+      tags: { type: 'List', itemType: 'Text' }

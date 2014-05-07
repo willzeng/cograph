@@ -1,12 +1,12 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
-  'text!templates/node_circle.html'],
-  ($, _, Backbone, d3, nodeTemplate, nodeCircleTemplate) ->
+define ['jquery', 'underscore', 'backbone', 'd3'],
+  ($, _, Backbone, d3) ->
     class GraphView extends Backbone.View
-
       el: $ '#graph'
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'
+        'click #zoom-in-button': 'scaleZoom'
+        'click #zoom-out-button': 'scaleZoom'
 
       initialize: ->
         @model.nodes.on 'add', @update, this
@@ -27,9 +27,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
 
         zoomed = =>
           return if @translateLock
-          workspace.attr "transform",
+          @workspace.attr "transform",
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
-        zoom = d3.behavior.zoom().on('zoom', zoomed)
+        @zoom = d3.behavior.zoom().on('zoom', zoomed)
 
         # ignore panning and zooming when dragging node
         @translateLock = false
@@ -37,20 +37,20 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
         currentZoom = undefined
         @force.drag().on "dragstart", =>
           @translateLock = true
-          currentZoom = zoom.translate()
+          currentZoom = @zoom.translate()
         .on "dragend", =>
-          zoom.translate currentZoom
-          @translateLock = false
+          @zoom.translate currentZoom
+          translateLock = false
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)
                 .attr('height', height)
-                .call(zoom)
+                .call(@zoom)
 
-        workspace = @svg.append("svg:g")
-        workspace.append("svg:g").classed("connection-container", true)
-        workspace.append("svg:g").classed("node-container", true)
+        @workspace = @svg.append("svg:g")
+        @workspace.append("svg:g").classed("connection-container", true)
+        @workspace.append("svg:g").classed("node-container", true)
 
         @drag_line = @svg.append('svg:line')
                       .attr('class', 'dragline hidden')
@@ -80,23 +80,21 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           .select(".connection-container")
           .selectAll(".connection")
           .data connections
-        connectionEnter = connection.enter().append("line")
+        connection.enter().append("line")
           .attr("class", "connection")
 
-        node = d3.select(@el)
-          .select(".node-container")
+        # old elements
+        node = d3.select(".node-container")
           .selectAll(".node")
           .data(nodes, (node) -> node.cid)
-          .attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
-        nodeEnter = node.enter()
-          .append("g")
-          .attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
-          .call(@force.drag)
+
+        # new elements
+        nodeEnter = node.enter().append("g")
         nodeEnter.append("text")
           .attr("dy", "40px")
-          .text((d) -> d.get('name'))
         nodeEnter.append("circle")
           .attr("r", 25)
+
         nodeEnter.on "click", (d) =>
           @model.selectNode d
         .on "contextmenu", (d) =>
@@ -109,9 +107,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
           else
             @translateLock = false
             @drag_line.attr('class', 'dragline hidden')
-            console.log "source is ", @drag_line.data()[0].anchor
-            console.log "target is ", d
             @model.putConnection "links to", @drag_line.data()[0].anchor, d
+
+        # update old and new elements
+        node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
+          .call(@force.drag)
+        node.select('text')
+          .text((d) -> d.get('name'))
+
+        # delete unmatching elements
+        node.exit().remove()
 
         that = this
         @svg.on "mousemove", () ->
@@ -128,3 +133,32 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/node.html',
             .attr("x1", (d) -> d.anchor.x)
             .attr("y1", (d) -> d.anchor.y)
         @force.on "tick", tick
+
+      scaleZoom: (event) ->
+        if $(event.currentTarget).attr('id') is 'zoom-in-button'
+          scale = 1.3
+        else if $(event.currentTarget).attr('id') is 'zoom-out-button'
+          scale = 1/1.3
+        else
+         scale = 1
+
+        #find the current view and viewport settings
+        center = [$(@el).width()/2, $(@el).height()/2]
+        translate = @zoom.translate()
+        view = {x: translate[0], y: translate[1]}
+
+        #set the new scale factor
+        newScale = @zoom.scale()*scale
+
+        #calculate offset to zoom in center
+        translate_orig = [(center[0] - view.x) / @zoom.scale(), (center[1] - view.y) / @zoom.scale()]
+        diff = [translate_orig[0] * newScale + view.x, translate_orig[1] * newScale + view.y]
+        view.x += center[0] - diff[0]
+        view.y += center[1] - diff[1]
+
+        #update zoom values
+        @zoom.translate([view.x,view.y])
+        @zoom.scale(newScale)
+
+        #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
