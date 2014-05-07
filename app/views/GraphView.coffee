@@ -99,16 +99,17 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           @model.selectNode d
         .on "contextmenu", (d) =>
           d3.event.preventDefault()
-          @creatingConnection = !@creatingConnection
+
           if @creatingConnection
-            @translateLock = true
-            @drag_line.attr('class', 'dragline')
-              .data [{anchor:d}]
-          else
             @translateLock = false
             @drag_line.attr('class', 'dragline hidden')
             @model.putConnection "links to", @drag_line.data()[0].anchor, d
-
+          else
+            @translateLock = true
+            @drag_line.attr('class', 'dragline')
+              .data [{anchor:d}]
+          @creatingConnection = !@creatingConnection
+          
         # update old and new elements
         node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
           .call(@force.drag)
