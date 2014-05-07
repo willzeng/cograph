@@ -14,6 +14,10 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       console.log "Added node with name #{name}"
       @nodes.add {'name': name}
 
+    removeNode: (model) ->
+      console.log "Removed node"
+      @nodes.remove model
+
     putConnection: (name) ->
       console.log "Added connection with name #{name}"
       @connections.add {'name': name}

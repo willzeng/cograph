@@ -48,7 +48,12 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @force.drag().on "dragstart", =>
           translateLock = true
           currentZoom = @zoom.translate()
-        .on "dragend", =>
+        .on "dragend", (e) =>
+          if (e.x < $('#trash-bin').offset().left+$('#trash-bin').width() &&
+          e.x > $('#trash-bin').offset().left &&
+          e.y > $('#trash-bin').offset().top &&
+          e.y < $('#trash-bin').offset().top+$('#trash-bin').height())
+            @model.removeNode e
           @zoom.translate currentZoom
           translateLock = false
 
