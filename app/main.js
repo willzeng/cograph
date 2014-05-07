@@ -9,7 +9,8 @@ requirejs.config({
     'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
     'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min',
     'typeahead': '/assets/libs/typeahead.js/dist/typeahead.jquery.min',
-    'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min'
+    'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
+    'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min'
   },
   shim: {
     'backbone': {

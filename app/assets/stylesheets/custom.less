@@ -34,6 +34,21 @@
   opacity: 0.5;
 }
 
+line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 4px;
+  cursor: default;
+}
+
+line.dragline {
+  pointer-events: none;
+}
+
+line.hidden {
+  stroke-width: 0;
+}
+
 html, body {
   overflow: hidden;
   background: @white;

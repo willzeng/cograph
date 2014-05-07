@@ -15,16 +15,6 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
         @sidebarShown = false
 
-      toggleSidebar: ->
-        if @sidebarShown
-          $('#sidebar').animate 'width': '0%'
-          $('#graph').animate 'width': '100%'
-        else
-          $('#sidebar').animate 'width': '30%'
-          $('#graph').animate 'width': '70%'
-        @sidebarShown = !@sidebarShown
-
-      render: ->
         width = $(@el).width()
         height = $(@el).height()
 
@@ -36,31 +26,49 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
                   .gravity(0.2)
 
         zoomed = =>
-          return if translateLock
+          return if @translateLock
           @workspace.attr "transform",
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
         @zoom = d3.behavior.zoom().on('zoom', zoomed)
 
         # ignore panning and zooming when dragging node
-        translateLock = false
+        @translateLock = false
         # store the current zoom to undo changes from dragging a node
         currentZoom = undefined
         @force.drag().on "dragstart", =>
-          translateLock = true
+          @translateLock = true
           currentZoom = @zoom.translate()
         .on "dragend", =>
           @zoom.translate currentZoom
           translateLock = false
 
-        svg = d3.select(@el).append("svg:svg")
+        @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)
                 .attr('height', height)
                 .call(@zoom)
 
-        @workspace = svg.append("svg:g")
+        @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
         @workspace.append("svg:g").classed("node-container", true)
+
+        @drag_line = @svg.append('svg:line')
+                      .attr('class', 'dragline hidden')
+                      .attr('x1', '0')
+                      .attr('y1', '0')
+                      .attr('x2', '50')
+                      .attr('y2', '50')
+                      .data([{anchor:{x:0,y:0}}])
+        @creatingConnection = false
+
+      toggleSidebar: ->
+        if @sidebarShown
+          $('#sidebar').animate 'width': '0%'
+          $('#graph').animate 'width': '100%'
+        else
+          $('#sidebar').animate 'width': '30%'
+          $('#graph').animate 'width': '70%'
+        @sidebarShown = !@sidebarShown
 
       update: ->
         nodes = @model.nodes.models
@@ -71,7 +79,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         connection = d3.select(@el)
           .select(".connection-container")
           .selectAll(".connection")
-          .data connections, (connection) -> connection.name
+          .data connections
         connection.enter().append("line")
           .attr("class", "connection")
 
@@ -86,10 +94,22 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           .attr("dy", "40px")
         nodeEnter.append("circle")
           .attr("r", 25)
-        nodeEnter.on "click", (datum, index) =>
-          @model.selectNode datum
-          @trigger "node:click", datum
 
+        nodeEnter.on "click", (d) =>
+          @model.selectNode d
+        .on "contextmenu", (d) =>
+          d3.event.preventDefault()
+
+          if @creatingConnection
+            @translateLock = false
+            @drag_line.attr('class', 'dragline hidden')
+            @model.putConnection "links to", @drag_line.data()[0].anchor, d
+          else
+            @translateLock = true
+            @drag_line.attr('class', 'dragline')
+              .data [{anchor:d}]
+          @creatingConnection = !@creatingConnection
+          
         # update old and new elements
         node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
           .call(@force.drag)
@@ -99,13 +119,20 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         # delete unmatching elements
         node.exit().remove()
 
-        tick = ->
+        that = this
+        @svg.on "mousemove", () ->
+          that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
+
+        tick = =>
           connection
             .attr("x1", (d) -> d.source.x)
             .attr("y1", (d) -> d.source.y)
             .attr("x2", (d) -> d.target.x)
             .attr("y2", (d) -> d.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
+          @drag_line
+            .attr("x1", (d) -> d.anchor.x)
+            .attr("y1", (d) -> d.anchor.y)
         @force.on "tick", tick
 
       scaleZoom: (event) ->
