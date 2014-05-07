@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<style>
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  width: 960px;
+  height: 500px;
+  position: relative;
+}
+
+circle {
+  cursor: pointer;
+  stroke: yellow;
+  stroke-width: 2px;
+  fill: black;
+}
+
+
+</style>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+</head>
+<body>
+  <h1>Hello</h1>
+
+  <script>
+    data = ['yellow'];
+
+    svg = d3.select('body').append('svg:svg');
+    circle = svg.selectAll('circle')
+        .data(data);
+
+    enter = circle.enter().append('circle');
+
+    enter.attr('r', '10')
+          .attr('cx', '40').attr('cy', '40')
+          .style('fill', function(d) {return d;})
+
+    circle.exit().remove()
+  </script>
+</body>
