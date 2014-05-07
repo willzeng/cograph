@@ -1,4 +1,4 @@
-define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbone, NodeModel, ConnectionModel) ->
+define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], (Backbone, NodeModel, ConnectionModel, FilterModel) ->
   class ConnectionCollection extends Backbone.Collection
     model: ConnectionModel
 
@@ -9,6 +9,8 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     initialize: ->
       @nodes = new NodeCollection()
       @connections = new ConnectionCollection()
+
+      @filterModel = new FilterModel {nodes:@nodes}
 
     putNode: (name) ->
       console.log "Added node with name #{name}"
@@ -22,3 +24,6 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       @nodes.each (d) ->
         d.set('selected', false)
       @nodes.get(node).set 'selected', true
+
+    getFilter: () ->
+      @filterModel
