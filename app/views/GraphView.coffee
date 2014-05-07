@@ -12,7 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @model.nodes.on 'add', @update, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
-
+        @dataToolTipShown = false
         @sidebarShown = false
 
       toggleSidebar: ->
@@ -91,12 +91,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           @trigger "node:click", datum
 
         nodeEnter.on "mouseover", (datum, index) =>
-          if(!$(".data-tooltip-container .panel").get(0))
+          if(!@dataToolTipShown)
             $(".data-tooltip-container")
               .css('left',datum.x+16)
               .css('top',datum.y+16)
               .append _.template(dataTooltipTemplate, datum)
         nodeEnter.on "mouseout", (datum, index) =>
+          @dataToolTipShown = false
           $(".data-tooltip-container").empty()
 
         # update old and new elements
