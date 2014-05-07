@@ -83,7 +83,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         # new elements
         nodeEnter = node.enter().append("g")
         nodeEnter.append("text")
-          .attr("dy", "40px")
+          .attr("dy", "50px")
         nodeEnter.append("circle")
           .attr("r", 25)
         nodeEnter.on "click", (datum, index) =>

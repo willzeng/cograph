@@ -2,14 +2,14 @@
 
 @node-color: @gray;
 @connection-color: @gray;
-@stroke-color: @lime;
-@selected-color: @blue;
-@text-color: @gray;
+@stroke-color: @node-color;
+@selected-color: @maroon;
+@text-color: #333;
 
 .node circle {
   cursor: pointer;
   stroke: @stroke-color;
-  stroke-width: 2px;
+  stroke-width: 4px;
   fill: @node-color;
 
   .selected {
@@ -18,11 +18,14 @@
 }
 
 .node.selected circle {
+  stroke: @selected-color;
+}
+.node.selected text {
   fill: @selected-color;
 }
 
 .node text {
-  font: 14px sans-serif;
+  font: 16px sans-serif;
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
@@ -75,9 +78,26 @@ svg {
   top: 0;
   height: 100%;
   color: @silver;
-
   width: 0;
   background: @navy;
+}
+
+#trash-bin {
+  height: 68px;
+  width: 200px;
+  font-size: 26pt;
+  color: lightgray;
+  position: absolute;
+  bottom: 40px;
+  left: 60px;
+  padding-top:10px;
+  text-align: center;
+  border: 4px dashed lightgray;
+  border-radius: 4px;
+
+  .selected {
+
+  }
 }
 
 #details-container {
