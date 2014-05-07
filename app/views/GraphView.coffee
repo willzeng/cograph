@@ -10,8 +10,10 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
       initialize: ->
         @model.nodes.on 'add', @update, this
+        @model.nodes.on 'remove', @update, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
+        @model.connections.on 'remove', @update, this
 
         @sidebarShown = false
 
@@ -49,11 +51,15 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           translateLock = true
           currentZoom = @zoom.translate()
         .on "dragend", (e) =>
-          if (e.x < $('#trash-bin').offset().left+$('#trash-bin').width() &&
+          if (e.x < $('#trash-bin').offset().left + $('#trash-bin').width() &&
           e.x > $('#trash-bin').offset().left &&
           e.y > $('#trash-bin').offset().top &&
-          e.y < $('#trash-bin').offset().top+$('#trash-bin').height())
+          e.y < $('#trash-bin').offset().top + $('#trash-bin').height())
             @model.removeNode e
+            $.each(@model.connections.models, (i, model) =>
+              if model.attributes.source.cid == e.cid || model.attributes.target.cid == e.cid
+                @model.removeConnection model
+            )
           @zoom.translate currentZoom
           translateLock = false
 
@@ -68,6 +74,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @workspace.append("svg:g").classed("node-container", true)
 
       update: ->
+        console.log "updating GraphView"
         nodes = @model.nodes.models
         connections = (connection.attributes for connection in @model.connections.models)
 
@@ -103,6 +110,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
         # delete unmatching elements
         node.exit().remove()
+        connection.exit().remove()
 
         tick = ->
           connection
