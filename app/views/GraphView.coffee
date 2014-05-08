@@ -1,5 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'd3'],
-  ($, _, Backbone, d3) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html'],
+  ($, _, Backbone, d3, dataTooltipTemplate) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -7,13 +7,17 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         'click #sidebar-toggle': 'toggleSidebar'
         'click #zoom-in-button': 'scaleZoom'
         'click #zoom-out-button': 'scaleZoom'
+        'mousemove svg' : 'trackCursor'
 
       initialize: ->
         @model.nodes.on 'add', @update, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
-
+        @model.connections.on 'change', @update, this
+        @dataToolTipShown = false
         @sidebarShown = false
+        @translateLock = false
+        @isHoveringANode = false
 
         width = $(@el).width()
         height = $(@el).height()
@@ -40,7 +44,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           currentZoom = @zoom.translate()
         .on "dragend", =>
           @zoom.translate currentZoom
-          translateLock = false
+          @translateLock = false
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -72,12 +76,11 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
       update: ->
         nodes = @model.nodes.models
-        connections = (connection.attributes for connection in @model.connections.models)
+        connections = @model.connections.models
 
-        @force.nodes(nodes).links(connections).start()
+        @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
 
-        connection = d3.select(@el)
-          .select(".connection-container")
+        connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
         connection.enter().append("line")
@@ -99,6 +102,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           @model.selectNode d
         .on "contextmenu", (d) =>
           d3.event.preventDefault()
+          $(".data-tooltip-container").empty()
 
           if @creatingConnection
             @translateLock = false
@@ -109,12 +113,55 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
             @drag_line.attr('class', 'dragline')
               .data [{anchor:d}]
           @creatingConnection = !@creatingConnection
-          
+
+        nodeEnter.on "mouseover", (datum, index) =>
+          if @creatingConnection then return
+          if !@dataToolTipShown
+            @isHoveringANode=setTimeout( () =>
+              @dataToolTipShown = true
+              $(".data-tooltip-container")
+                .append _.template(dataTooltipTemplate, datum)
+            ,200)
+          nodesToHL = []
+          connectionsToHL = []
+          _.each(@model.connections.models, (c, i) =>
+            if(c.attributes.source.cid is datum.cid) or (c.attributes.target.cid is datum.cid)
+              connectionsToHL.push c
+              nodesToHL.push _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
+              nodesToHL.push _.findWhere(@model.nodes.models, {cid: c.attributes.source.cid})
+          )
+          nodesToHL.push datum
+
+          @model.highlightNodes(nodesToHL)
+          @model.highlightConnections(connectionsToHL)
+
+        nodeEnter.on "mouseout", (datum, index) =>
+          window.clearTimeout(@isHoveringANode)
+          if !@translateLock
+            @model.dehighlightConnections()
+            @model.dehighlightNodes()
+            @dataToolTipShown = false
+            $(".data-tooltip-container").empty()
+
         # update old and new elements
-        node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
+        node.attr("class", (d) -> 
+          if d.get('dim')
+            return 'node dim'
+          else if d.get('selected')
+            return 'node selected' 
+          else 
+            return 'node'
+        )
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
+
+        connection.attr("class", (d) ->
+          if d.get('dim')
+            return 'connection dim' 
+          else 
+            return 'connection'
+        )
 
         # delete unmatching elements
         node.exit().remove()
@@ -125,10 +172,10 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
         tick = =>
           connection
-            .attr("x1", (d) -> d.source.x)
-            .attr("y1", (d) -> d.source.y)
-            .attr("x2", (d) -> d.target.x)
-            .attr("y2", (d) -> d.target.y)
+            .attr("x1", (d) -> d.attributes.source.x)
+            .attr("y1", (d) -> d.attributes.source.y)
+            .attr("x2", (d) -> d.attributes.target.x)
+            .attr("y2", (d) -> d.attributes.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @drag_line
             .attr("x1", (d) -> d.anchor.x)
@@ -163,3 +210,8 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
+
+      trackCursor: (event) ->
+        $(".data-tooltip-container")
+              .css('left',event.clientX)
+              .css('top',event.clientY-20)
