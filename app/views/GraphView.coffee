@@ -7,6 +7,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         'click #sidebar-toggle': 'toggleSidebar'
         'click #zoom-in-button': 'scaleZoom'
         'click #zoom-out-button': 'scaleZoom'
+        'mousemove svg' : 'trackCursor'
 
       initialize: ->
         @model.nodes.on 'add', @update, this
@@ -14,6 +15,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @model.connections.on 'add', @update, this
         @dataToolTipShown = false
         @sidebarShown = false
+        @translateLock = false
+        @isHoveringANode = false
 
       toggleSidebar: ->
         if @sidebarShown
@@ -36,21 +39,21 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
                   .gravity(0.2)
 
         zoomed = =>
-          return if translateLock
+          return if @translateLock
           @workspace.attr "transform",
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
         @zoom = d3.behavior.zoom().on('zoom', zoomed)
 
         # ignore panning and zooming when dragging node
-        translateLock = false
+        @translateLock = false
         # store the current zoom to undo changes from dragging a node
         currentZoom = undefined
         @force.drag().on "dragstart", =>
-          translateLock = true
+          @translateLock = true
           currentZoom = @zoom.translate()
         .on "dragend", =>
           @zoom.translate currentZoom
-          translateLock = false
+          @translateLock = false
 
         svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -92,13 +95,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
         nodeEnter.on "mouseover", (datum, index) =>
           if(!@dataToolTipShown)
+            @dataToolTipShown = true
             $(".data-tooltip-container")
-              .css('left',datum.x+16)
-              .css('top',datum.y+16)
               .append _.template(dataTooltipTemplate, datum)
+          _.each(@model.connections.models, (c, i) =>
+            if(c.attributes.source.cid == datum.cid)
+              console.log _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
+          )
         nodeEnter.on "mouseout", (datum, index) =>
-          @dataToolTipShown = false
-          $(".data-tooltip-container").empty()
+          if !@translateLock
+            @dataToolTipShown = false
+            $(".data-tooltip-container").empty()
 
         # update old and new elements
         node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
@@ -146,3 +153,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
+
+      trackCursor: (event) ->
+        $(".data-tooltip-container")
+              .css('left',event.clientX)
+              .css('top',event.clientY-20)

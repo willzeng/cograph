@@ -27,12 +27,17 @@
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
 .connection {
   stroke: @connection-color;
   stroke-width: 2px;
   opacity: 0.5;
+
+  .dashed {
+    stroke-dasharray: 0,2 1;
+  }
 }
 
 html, body {
