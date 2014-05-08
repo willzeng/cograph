@@ -13,6 +13,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @model.nodes.on 'add', @update, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
+        @model.connections.on 'change', @update, this
         @dataToolTipShown = false
         @sidebarShown = false
         @translateLock = false
@@ -67,14 +68,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
       update: ->
         nodes = @model.nodes.models
-        connections = (connection.attributes for connection in @model.connections.models)
+        connections = @model.connections.models
 
-        @force.nodes(nodes).links(connections).start()
+        @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
 
-        connection = d3.select(@el)
-          .select(".connection-container")
+        connection = d3.select(".connection-container")
           .selectAll(".connection")
-          .data connections, (connection) -> connection.name
+          .data(connections, (connection) -> connection.cid)            
         connection.enter().append("line")
           .attr("class", "connection")
 
@@ -100,16 +100,20 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
               $(".data-tooltip-container")
                 .append _.template(dataTooltipTemplate, datum)
             ,200)
-          cumulator = []
+          nodesToHL = []
+          connectionsToHL = []
           _.each(@model.connections.models, (c, i) =>
             if(c.attributes.source.cid == datum.cid)
-              cumulator.push _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
+              connectionsToHL.push c
+              nodesToHL.push _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
           )
-          cumulator.push datum
-          @model.highlightNodes(cumulator)
+          nodesToHL.push datum
+          @model.highlightNodes(nodesToHL)
+          @model.highlightConnections(connectionsToHL)
         nodeEnter.on "mouseout", (datum, index) =>
           window.clearTimeout(@isHoveringANode)
           if !@translateLock
+            @model.dehighlightConnections()
             @model.dehighlightNodes()
             @dataToolTipShown = false
             $(".data-tooltip-container").empty()
@@ -127,15 +131,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         node.select('text')
           .text((d) -> d.get('name'))
 
+        connection.attr("class", (d) ->
+          if d.get('dim')
+            return 'connection dim' 
+          else 
+            return 'connection'
+        )
+
         # delete unmatching elements
         node.exit().remove()
 
         tick = ->
           connection
-            .attr("x1", (d) -> d.source.x)
-            .attr("y1", (d) -> d.source.y)
-            .attr("x2", (d) -> d.target.x)
-            .attr("y2", (d) -> d.target.y)
+            .attr("x1", (d) -> d.attributes.source.x)
+            .attr("y1", (d) -> d.attributes.source.y)
+            .attr("x2", (d) -> d.attributes.target.x)
+            .attr("y2", (d) -> d.attributes.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
         @force.on "tick", tick
 
