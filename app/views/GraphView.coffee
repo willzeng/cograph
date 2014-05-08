@@ -122,15 +122,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
               $(".data-tooltip-container")
                 .append _.template(dataTooltipTemplate, datum)
             ,200)
-          nodesToHL = []
-          connectionsToHL = []
-          _.each(@model.connections.models, (c, i) =>
-            if(c.attributes.source.cid is datum.cid) or (c.attributes.target.cid is datum.cid)
-              connectionsToHL.push c
-              nodesToHL.push _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
-              nodesToHL.push _.findWhere(@model.nodes.models, {cid: c.attributes.source.cid})
-          )
-          nodesToHL.push datum
+
+          connectionsToHL = @model.connections.filter (c) ->
+            (c.get('source').cid is datum.cid) or (c.get('target').cid is datum.cid)
+
+          nodesToHL = @model.nodes.filter (n) ->
+            sources = (c.get('source') for c in connectionsToHL)
+            targets = (c.get('target') for c in connectionsToHL)
+            (_.contains sources, n) or (_.contains targets, n) or (n is datum)
 
           @model.highlightNodes(nodesToHL)
           @model.highlightConnections(connectionsToHL)

@@ -26,7 +26,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     highlightNodes: (nodesToHL) ->
       @nodes.each (d) ->
         d.set('dim',true)
-      $.each(nodesToHL,(i,d) =>
+      _.each(nodesToHL,(d) =>
         @nodes.get(d).set 'dim', false
       )
 
@@ -37,7 +37,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     highlightConnections: (connectionsToHL) ->
       @connections.each (d) ->
         d.set('dim', true)
-      $.each(connectionsToHL,(i,d) =>
+      _.each(connectionsToHL,(d) =>
         @connections.get(d).set 'dim', false
       )
 
