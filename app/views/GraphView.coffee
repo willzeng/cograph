@@ -95,14 +95,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
         nodeEnter.on "mouseover", (datum, index) =>
           if(!@dataToolTipShown)
-            @dataToolTipShown = true
-            $(".data-tooltip-container")
-              .append _.template(dataTooltipTemplate, datum)
+            @isHoveringANode=setTimeout(()=>
+              @dataToolTipShown = true
+              $(".data-tooltip-container")
+                .append _.template(dataTooltipTemplate, datum)
+            ,200)
           _.each(@model.connections.models, (c, i) =>
             if(c.attributes.source.cid == datum.cid)
               console.log _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
           )
         nodeEnter.on "mouseout", (datum, index) =>
+          window.clearTimeout(@isHoveringANode)
           if !@translateLock
             @dataToolTipShown = false
             $(".data-tooltip-container").empty()
