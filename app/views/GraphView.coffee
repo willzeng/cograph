@@ -100,18 +100,29 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
               $(".data-tooltip-container")
                 .append _.template(dataTooltipTemplate, datum)
             ,200)
+          cumulator = []
           _.each(@model.connections.models, (c, i) =>
             if(c.attributes.source.cid == datum.cid)
-              console.log _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
+              cumulator.push _.findWhere(@model.nodes.models, {cid: c.attributes.target.cid})
           )
+          cumulator.push datum
+          @model.highlightNodes(cumulator)
         nodeEnter.on "mouseout", (datum, index) =>
           window.clearTimeout(@isHoveringANode)
           if !@translateLock
+            @model.dehighlightNodes()
             @dataToolTipShown = false
             $(".data-tooltip-container").empty()
 
         # update old and new elements
-        node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
+        node.attr("class", (d) -> 
+          if d.get('dim')
+            return 'node dim'
+          else if d.get('selected')
+            return 'node selected' 
+          else 
+            return 'node'
+        )
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))

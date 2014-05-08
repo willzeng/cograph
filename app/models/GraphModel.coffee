@@ -22,3 +22,15 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       @nodes.each (d) ->
         d.set('selected', false)
       @nodes.get(node).set 'selected', true
+
+    highlightNodes: (nodesToHL) ->
+      @nodes.each (d) ->
+        d.set('dim',true)
+      $.each(nodesToHL,(i,d) =>
+        console.log i
+        @nodes.get(d).set 'dim', false
+      )
+
+    dehighlightNodes: () ->
+      @nodes.each (d) ->
+        d.set('dim',false)
