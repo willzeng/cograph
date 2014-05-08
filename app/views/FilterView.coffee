@@ -4,8 +4,8 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
 
       el: $ '#filters-container'
 
-      initialize: -> 
-         @model.on 'change', @update, this
+      initialize: ->
+        @model.on 'change', @update, this
 
       update: ->
         $(@el).empty()
