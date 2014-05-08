@@ -11,15 +11,12 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       @connections = new ConnectionCollection()
 
     putNode: (name) ->
-      console.log "Added node with name #{name}"
       @nodes.add {'name': name}
 
     removeNode: (model) ->
-      console.log "Removed node"
       @nodes.remove model
 
     putConnection: (name, source, target) ->
-      console.log "Added connection with name #{name}"
       @connections.add {'name': name, 'source': source, 'target': target}
 
     selectNode: (node) ->
@@ -28,5 +25,4 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       @nodes.get(node).set 'selected', true
 
     removeConnection: (model) ->
-      console.log "Removed connection"
       @connections.remove model

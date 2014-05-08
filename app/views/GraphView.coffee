@@ -40,14 +40,11 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @force.drag().on "dragstart", =>
           @translateLock = true
           currentZoom = @zoom.translate()
-        .on "dragend", (e) =>
-          if (e.x < $('#trash-bin').offset().left + $('#trash-bin').width() &&
-          e.x > $('#trash-bin').offset().left &&
-          e.y > $('#trash-bin').offset().top &&
-          e.y < $('#trash-bin').offset().top + $('#trash-bin').height())
-            @model.removeNode e
+        .on "dragend", (node) =>
+          if @isContainedIn node, $('#trash-bin')
+            @model.removeNode node
             $.each(@model.connections.models, (i, model) =>
-              if model.attributes.source.cid == e.cid || model.attributes.target.cid == e.cid
+              if model.attributes.source.cid == node.cid || model.attributes.target.cid == node.cid
                 @model.removeConnection model
             )
           @zoom.translate currentZoom
@@ -82,7 +79,6 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @sidebarShown = !@sidebarShown
 
       update: ->
-        console.log "updating GraphView"
         nodes = @model.nodes.models
         connections = (connection.attributes for connection in @model.connections.models)
 
@@ -176,3 +172,9 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
+
+      isContainedIn: (node, element) ->
+        node.x < element.offset().left + element.width() &&
+          node.x > element.offset().left &&
+          node.y > element.offset().top &&
+          node.y < element.offset().top + element.height()
