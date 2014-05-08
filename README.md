@@ -8,4 +8,4 @@ How to Run
 
 `bower install` should install your front end models in the `assets/libs/` folder.
 
-Then you should be able to run `./bin/www` to get the server running.
+Then you should be able to run `./bin/www` to get the server running at `localhost:3000/`

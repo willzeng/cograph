@@ -16,9 +16,9 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       console.log "Added node with name #{name}"
       @nodes.add {'name': name}
 
-    putConnection: (name) ->
+    putConnection: (name, source, target) ->
       console.log "Added connection with name #{name}"
-      @connections.add {'name': name}
+      @connections.add {'name': name, 'source': source, 'target': target}
 
     selectNode: (node) ->
       @nodes.each (d) ->

@@ -31,5 +31,5 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
 
         gm.connections.add
           name: 'related to'
-          source: 0
-          target: 1
+          source: gm.nodes.where({name:'Oxford'})
+          target: gm.nodes.where({name:'David'})

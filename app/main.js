@@ -7,7 +7,8 @@ requirejs.config({
     'text': '/assets/libs/requirejs-text/text',
     'd3': '/assets/libs/d3/d3.min',
     'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
-    'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min'
+    'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min',
+    'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min'
   },
   shim: {
     'backbone': {
