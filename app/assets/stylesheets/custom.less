@@ -5,6 +5,7 @@
 @stroke-color: @lime;
 @selected-color: @blue;
 @text-color: @gray;
+@data-tooltip-color: rgba(0,31,63,0.8);
 
 .node circle {
   cursor: pointer;
@@ -17,6 +18,10 @@
   }
 }
 
+.node.dim {
+  opacity: 0.3;
+}
+
 .node.selected circle {
   fill: @selected-color;
 }
@@ -26,12 +31,17 @@
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
 .connection {
   stroke: @connection-color;
   stroke-width: 2px;
   opacity: 0.5;
+}
+
+.connection.dim {
+  opacity: 0.1;
 }
 
 line {
@@ -89,7 +99,6 @@ svg {
   top: 0;
   height: 100%;
   color: @silver;
-
   width: 0;
   background: @navy;
 }
@@ -99,6 +108,19 @@ svg {
   top: 60px;
   width: 250px;
   left: 10px;
+}
+
+.data-tooltip-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.data-tooltip {
+  background: @data-tooltip-color;
+  color: @white;
+  border: 1px solid @black;
+  max-width: 300px;
 }
 
 // Overriding Bootstrap defaults

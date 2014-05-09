@@ -1,0 +1,18 @@
+<div class="panel panel-info data-tooltip">
+  <div class="panel-body">
+    <b><%= attributes.name %></b>
+    <span>
+      <% if(attributes.description != null){ %>
+        </br>
+        <i><%= attributes.description %></i>   
+      <% } %>
+      <% if(_.some(attributes.tags)){ %>
+      </br>
+      Tags:  
+      <% _.each(attributes.tags, function(tag) { %>
+        <span><%= tag %>; </span>
+      <% }); %>
+      <% } %>
+    </span>
+  </div>
+</div>
