@@ -16,7 +16,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
 
       home: ->
         @graphView.render()
-        num = Math.round(Math.random()*30)
+        num = Math.round(3+Math.random()*15)
         iter = 0
         n = []
         while (iter<num)
@@ -29,7 +29,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
             description: d + " is a wonderful number"
             tags: [d,d+"-ness",d+"-tags"]
         )
-        x = Math.round((n.length)*(n.length-1)/2*Math.random())
+        x = Math.round(1+(n.length)*(n.length-1)/2*Math.random()/5)
         i = 0;
         while(i<x)
           t = Math.round((n.length-1)*Math.random())
