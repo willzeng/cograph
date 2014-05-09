@@ -11,9 +11,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
       initialize: ->
         @model.nodes.on 'add', @update, this
+        @model.nodes.on 'remove', @update, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
         @model.connections.on 'change', @update, this
+        @model.connections.on 'remove', @update, this
         @dataToolTipShown = false
         @sidebarShown = false
         @translateLock = false
@@ -42,7 +44,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @force.drag().on "dragstart", =>
           @translateLock = true
           currentZoom = @zoom.translate()
-        .on "dragend", =>
+        .on "dragend", (node) =>
+          if @isContainedIn node, $('#trash-bin')
+            @model.removeNode node
+            $.each(@model.connections.models, (i, model) =>
+              if model.attributes.source.cid == node.cid || model.attributes.target.cid == node.cid
+                @model.removeConnection model
+            )
           @zoom.translate currentZoom
           @translateLock = false
 
@@ -94,7 +102,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         # new elements
         nodeEnter = node.enter().append("g")
         nodeEnter.append("text")
-          .attr("dy", "40px")
+          .attr("dy", "50px")
         nodeEnter.append("circle")
           .attr("r", 25)
 
@@ -160,6 +168,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
         # delete unmatching elements
         node.exit().remove()
+        connection.exit().remove()
 
         that = this
         @svg.on "mousemove", () ->
@@ -206,6 +215,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
 
+      isContainedIn: (node, element) ->
+        node.x < element.offset().left + element.width() &&
+          node.x > element.offset().left &&
+          node.y > element.offset().top &&
+          node.y < element.offset().top + element.height()
       trackCursor: (event) ->
         $(".data-tooltip-container")
               .css('left',event.clientX)
