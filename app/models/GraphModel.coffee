@@ -30,7 +30,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     highlightNodes: (nodesToHL) ->
       @nodes.each (d) ->
         d.set('dim',true)
-      _.each nodesToHL, (d) =>
+      _.each nodesToHL, (d) ->
         d.set 'dim', false
 
     dehighlightNodes: () ->
@@ -40,7 +40,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     highlightConnections: (connectionsToHL) ->
       @connections.each (d) ->
         d.set('dim', true)
-      _.each connectionsToHL, (d) =>
+      _.each connectionsToHL, (d) ->
         d.set 'dim', false
 
     dehighlightConnections: () ->

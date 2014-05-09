@@ -194,7 +194,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         else if $(event.currentTarget).attr('id') is 'zoom-out-button'
           scale = 1/1.3
         else
-         scale = 1
+          scale = 1
 
         #find the current view and viewport settings
         center = [$(@el).width()/2, $(@el).height()/2]

@@ -30,7 +30,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
             tags: [d,d+"-ness",d+"-tags"]
         )
         x = Math.round(1+(n.length)*(n.length-1)/2*Math.random()/5)
-        i = 0;
+        i = 0
         while(i<x)
           t = Math.round((n.length-1)*Math.random())
           s = Math.round((n.length-1)*Math.random())
