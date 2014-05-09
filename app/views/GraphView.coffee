@@ -24,6 +24,8 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
                   .size([width, height])
                   .charge(-5000)
                   .gravity(0.2)
+                  .distance(200)
+                  .friction(0.8)
 
         zoomed = =>
           return if @translateLock
@@ -73,7 +75,6 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
       update: ->
         nodes = @model.nodes.models
         connections = (connection.attributes for connection in @model.connections.models)
-
         @force.nodes(nodes).links(connections).start()
 
         connection = d3.select(@el)

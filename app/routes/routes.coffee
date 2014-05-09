@@ -16,18 +16,22 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
 
       home: ->
         @graphView.render()
-        gm.nodes.add
-          name: 'Oxford'
-          description: 'A City in the UK'
-          tags: ["croquet", "rowing", "university"]
 
-        gm.nodes.add
-          name: 'David'
+        n = ['A','B','C','D','E','F','G','H','I','J','K']
+        _.each(n, (d) ->
+          gm.nodes.add
+            name: d
+            description: d + " is a wonderful letter"
+            tags: [d,d+"-ness",d+"-tags"]
+        )
+        x = Math.round((n.length)*(n.length-1)/2*Math.random())
+        i = 0;
+        while(i<x)
+          t = Math.round((n.length-1)*Math.random())
+          s = Math.round((n.length-1)*Math.random())
+          gm.connections.add
+            name: 'related to'+t+s
+            source: gm.nodes.findWhere({name:n[s]})
+            target: gm.nodes.findWhere({name:n[t]})
+          i++
 
-        gm.nodes.add
-          name: 'Victor'
-
-        gm.connections.add
-          name: 'related to'
-          source: gm.nodes.findWhere({name:'Oxford'})
-          target: gm.nodes.findWhere({name:'David'})
