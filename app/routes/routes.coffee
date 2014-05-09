@@ -1,15 +1,14 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/FilterModel'
-  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView'],
-  ($, _, Backbone, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView) ->
+  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView','cs!views/SearchView'],
+  ($, _, Backbone, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView) ->
     class Router extends Backbone.Router
       initialize: ->
         @graphModel = new GraphModel()
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
         @detailsView = new DetailsView model: @graphModel
-
         @filterView = new FilterView {model: @graphModel.getFilter()}
-
+        @searchView = new SearchView model: @graphModel
         window.gm = @graphModel
         Backbone.history.start()
 
@@ -31,5 +30,5 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
 
         gm.connections.add
           name: 'related to'
-          source: gm.nodes.where({name:'Oxford'})
-          target: gm.nodes.where({name:'David'})
+          source: gm.nodes.findWhere({name:'Oxford'})
+          target: gm.nodes.findWhere({name:'David'})
