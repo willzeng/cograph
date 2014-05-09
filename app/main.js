@@ -8,12 +8,20 @@ requirejs.config({
     'd3': '/assets/libs/d3/d3.min',
     'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
     'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min',
+    'typeahead': '/assets/libs/typeahead.js/dist/typeahead.jquery.min',
+    'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
     'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min'
   },
   shim: {
     'backbone': {
       deps: ['underscore', 'jquery'],
       exports: 'Backbone'
+    },
+    'typeahead': {
+      deps: ['jquery']
+    },
+    'bloodhound': {
+      deps: ['jquery']
     }
   },
   packages: [{

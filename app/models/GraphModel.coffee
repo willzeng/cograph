@@ -26,3 +26,25 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
 
     removeConnection: (model) ->
       @connections.remove model
+        d.set 'selected', false
+      node.set 'selected', true
+
+    highlightNodes: (nodesToHL) ->
+      @nodes.each (d) ->
+        d.set('dim',true)
+      _.each nodesToHL, (d) =>
+        d.set 'dim', false
+
+    dehighlightNodes: () ->
+      @nodes.each (d) ->
+        d.set 'dim', false
+
+    highlightConnections: (connectionsToHL) ->
+      @connections.each (d) ->
+        d.set('dim', true)
+      _.each connectionsToHL, (d) =>
+        d.set 'dim', false
+
+    dehighlightConnections: () ->
+      @connections.each (d) ->
+        d.set 'dim', false
