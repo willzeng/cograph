@@ -1,5 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'd3'],
-  ($, _, Backbone, d3) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html'],
+  ($, _, Backbone, d3, dataTooltipTemplate) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -7,13 +7,19 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         'click #sidebar-toggle': 'toggleSidebar'
         'click #zoom-in-button': 'scaleZoom'
         'click #zoom-out-button': 'scaleZoom'
+        'mousemove svg' : 'trackCursor'
 
       initialize: ->
         @model.nodes.on 'add', @update, this
+        @model.nodes.on 'remove', @update, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
-
+        @model.connections.on 'change', @update, this
+        @model.connections.on 'remove', @update, this
+        @dataToolTipShown = false
         @sidebarShown = false
+        @translateLock = false
+        @isHoveringANode = false
 
         width = $(@el).width()
         height = $(@el).height()
@@ -24,6 +30,8 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
                   .size([width, height])
                   .charge(-5000)
                   .gravity(0.2)
+                  .distance(200)
+                  .friction(0.4)
 
         zoomed = =>
           return if @translateLock
@@ -38,9 +46,15 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @force.drag().on "dragstart", =>
           @translateLock = true
           currentZoom = @zoom.translate()
-        .on "dragend", =>
+        .on "dragend", (node) =>
+          if @isContainedIn node, $('#trash-bin')
+            @model.removeNode node
+            $.each(@model.connections.models, (i, model) =>
+              if model.attributes.source.cid == node.cid || model.attributes.target.cid == node.cid
+                @model.removeConnection model
+            )
           @zoom.translate currentZoom
-          translateLock = false
+          @translateLock = false
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -72,12 +86,11 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
       update: ->
         nodes = @model.nodes.models
-        connections = (connection.attributes for connection in @model.connections.models)
+        connections = @model.connections.models
 
-        @force.nodes(nodes).links(connections).start()
+        @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
 
-        connection = d3.select(@el)
-          .select(".connection-container")
+        connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
         connection.enter().append("line")
@@ -91,7 +104,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         # new elements
         nodeEnter = node.enter().append("g")
         nodeEnter.append("text")
-          .attr("dy", "40px")
+          .attr("dy", "50px")
         nodeEnter.append("circle")
           .attr("r", 25)
 
@@ -99,6 +112,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           @model.selectNode d
         .on "contextmenu", (d) =>
           d3.event.preventDefault()
+          $(".data-tooltip-container").empty()
 
           if @creatingConnection
             @translateLock = false
@@ -109,15 +123,54 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
             @drag_line.attr('class', 'dragline')
               .data [{anchor:d}]
           @creatingConnection = !@creatingConnection
-          
+
+        nodeEnter.on "mouseover", (datum, index) =>
+          if @creatingConnection then return
+          if !@dataToolTipShown
+            @isHoveringANode=setTimeout( () =>
+              @dataToolTipShown = true
+              $(".data-tooltip-container")
+                .append _.template(dataTooltipTemplate, datum)
+            ,200)
+
+          connectionsToHL = @model.connections.filter (c) ->
+            (c.get('source').cid is datum.cid) or (c.get('target').cid is datum.cid)
+
+          nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
+          nodesToHL.push datum
+
+          @model.highlightNodes(nodesToHL)
+          @model.highlightConnections(connectionsToHL)
+
+        nodeEnter.on "mouseout", (datum, index) =>
+          window.clearTimeout(@isHoveringANode)
+          if !@translateLock
+            @model.dehighlightConnections()
+            @model.dehighlightNodes()
+            @dataToolTipShown = false
+            $(".data-tooltip-container").empty()
+
         # update old and new elements
-        node.attr("class", (d) -> if d.get('selected') then 'node selected' else 'node')
-          .call(@force.drag)
-        node.select('text')
+        node.attr "class", (d) ->
+          if d.get('dim')
+            return 'node dim'
+          else if d.get('selected')
+            return 'node selected'
+          else
+            return 'node'
+        node.call(@force.drag)
+          .select('text')
           .text((d) -> d.get('name'))
+
+        connection.attr "class", (d) ->
+          if d.get('dim')
+            return 'connection dim'
+          else
+            return 'connection'
 
         # delete unmatching elements
         node.exit().remove()
+        connection.exit().remove()
 
         that = this
         @svg.on "mousemove", () ->
@@ -125,10 +178,10 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
         tick = =>
           connection
-            .attr("x1", (d) -> d.source.x)
-            .attr("y1", (d) -> d.source.y)
-            .attr("x2", (d) -> d.target.x)
-            .attr("y2", (d) -> d.target.y)
+            .attr("x1", (d) -> d.attributes.source.x)
+            .attr("y1", (d) -> d.attributes.source.y)
+            .attr("x2", (d) -> d.attributes.target.x)
+            .attr("y2", (d) -> d.attributes.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @drag_line
             .attr("x1", (d) -> d.anchor.x)
@@ -163,3 +216,13 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
+
+      isContainedIn: (node, element) ->
+        node.x < element.offset().left + element.width() &&
+          node.x > element.offset().left &&
+          node.y > element.offset().top &&
+          node.y < element.offset().top + element.height()
+      trackCursor: (event) ->
+        $(".data-tooltip-container")
+              .css('left',event.clientX)
+              .css('top',event.clientY-20)

@@ -5,8 +5,8 @@ block content
     #toolbar
       form#search-form.navbar-form.navbar-left
         .form-group
-          input.form-control(type="text", name='search-term' placeholder="Search...")
-        button.btn.btn-default(type="submit")
+          input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
+        button.btn.btn-default(type="button")
           i.fa.fa-search
       form#add-node-form.navbar-form.navbar-right
         .form-group
@@ -19,6 +19,9 @@ block content
         i.glyphicon.glyphicon-plus
       button#zoom-out-button.btn.btn-default
         i.glyphicon.glyphicon-minus
+    #trash-bin
+      i.glyphicon.glyphicon-trash
     #details-container
   #sidebar
     #filters-container
+  .data-tooltip-container

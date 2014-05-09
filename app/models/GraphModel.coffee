@@ -13,17 +13,41 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @filterModel = new FilterModel {nodes:@nodes}
 
     putNode: (name) ->
-      console.log "Added node with name #{name}"
       @nodes.add {'name': name}
 
     putConnection: (name, source, target) ->
-      console.log "Added connection with name #{name}"
       @connections.add {'name': name, 'source': source, 'target': target}
+
+    removeNode: (model) ->
+      @nodes.remove model
+
+    removeConnection: (model) ->
+      @connections.remove model
 
     selectNode: (node) ->
       @nodes.each (d) ->
         d.set('selected', false)
-      @nodes.get(node).set 'selected', true
+      node.set 'selected', true
+
+    highlightNodes: (nodesToHL) ->
+      @nodes.each (d) ->
+        d.set('dim',true)
+      _.each nodesToHL, (d) =>
+        d.set 'dim', false
+
+    dehighlightNodes: () ->
+      @nodes.each (d) ->
+        d.set 'dim', false
+
+    highlightConnections: (connectionsToHL) ->
+      @connections.each (d) ->
+        d.set('dim', true)
+      _.each connectionsToHL, (d) =>
+        d.set 'dim', false
+
+    dehighlightConnections: () ->
+      @connections.each (d) ->
+        d.set 'dim', false
 
     getFilter: () ->
       @filterModel
