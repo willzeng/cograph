@@ -29,5 +29,5 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
 
         gm.connections.add
           name: 'related to'
-          source: gm.nodes.where({name:'Oxford'})
-          target: gm.nodes.where({name:'David'})
+          source: gm.nodes.findWhere({name:'Oxford'})
+          target: gm.nodes.findWhere({name:'David'})
