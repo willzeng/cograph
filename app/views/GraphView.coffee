@@ -141,24 +141,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
             $(".data-tooltip-container").empty()
 
         # update old and new elements
-        node.attr("class", (d) -> 
+        node.attr "class", (d) ->
           if d.get('dim')
             return 'node dim'
           else if d.get('selected')
-            return 'node selected' 
-          else 
+            return 'node selected'
+          else
             return 'node'
-        )
-          .call(@force.drag)
-        node.select('text')
+        node.call(@force.drag)
+          .select('text')
           .text((d) -> d.get('name'))
 
-        connection.attr("class", (d) ->
+        connection.attr "class", (d) ->
           if d.get('dim')
-            return 'connection dim' 
-          else 
+            return 'connection dim'
+          else
             return 'connection'
-        )
 
         # delete unmatching elements
         node.exit().remove()
