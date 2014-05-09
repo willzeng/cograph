@@ -126,10 +126,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           connectionsToHL = @model.connections.filter (c) ->
             (c.get('source').cid is datum.cid) or (c.get('target').cid is datum.cid)
 
-          nodesToHL = @model.nodes.filter (n) ->
-            sources = (c.get('source') for c in connectionsToHL)
-            targets = (c.get('target') for c in connectionsToHL)
-            (_.contains sources, n) or (_.contains targets, n) or (n is datum)
+          nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
+          nodesToHL.push datum
 
           @model.highlightNodes(nodesToHL)
           @model.highlightConnections(connectionsToHL)
