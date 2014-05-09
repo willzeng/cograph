@@ -16,12 +16,17 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
 
       home: ->
         @graphView.render()
+        num = Math.round(Math.random()*30)
+        iter = 0
+        n = []
+        while (iter<num)
+          n.push(iter.toString())
+          iter++
 
-        n = ['A','B','C','D','E','F','G','H','I','J','K']
         _.each(n, (d) ->
           gm.nodes.add
             name: d
-            description: d + " is a wonderful letter"
+            description: d + " is a wonderful number"
             tags: [d,d+"-ness",d+"-tags"]
         )
         x = Math.round((n.length)*(n.length-1)/2*Math.random())
