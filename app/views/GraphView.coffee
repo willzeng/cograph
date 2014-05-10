@@ -12,6 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
       initialize: ->
         @model.nodes.on 'add', @update, this
         @model.nodes.on 'remove', @update, this
+        @model.nodes.on 'remove', @emptyTooltip, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
         @model.connections.on 'change', @update, this
@@ -222,7 +223,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           node.x > element.offset().left &&
           node.y > element.offset().top &&
           node.y < element.offset().top + element.height()
+
       trackCursor: (event) ->
         $(".data-tooltip-container")
               .css('left',event.clientX)
               .css('top',event.clientY-20)
+
+      emptyTooltip: ->
+        @dataToolTipShown = false
+        $(".data-tooltip-container").empty()
