@@ -4,6 +4,7 @@
 @connection-color: @gray;
 @stroke-color: @lime;
 @selected-color: @blue;
+@fixed-color: orange;
 @text-color: @gray;
 @data-tooltip-color: rgba(0,31,63,0.8);
 
@@ -26,6 +27,10 @@
   fill: @selected-color;
 }
 
+.node.fixed circle {
+  stroke: @fixed-color;
+}
+
 .node text {
   font: 14px sans-serif;
   pointer-events: none;
@@ -36,7 +41,7 @@
 
 .connection {
   stroke: @connection-color;
-  stroke-width: 2px;
+  stroke-width: 8px;
   opacity: 0.5;
 }
 

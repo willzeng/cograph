@@ -10,6 +10,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         'mousemove svg' : 'trackCursor'
 
       initialize: ->
+        that = this
         @model.nodes.on 'add', @update, this
         @model.nodes.on 'change', @update, this
         @model.connections.on 'add', @update, this
@@ -26,8 +27,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
                   .nodes([])
                   .links([])
                   .size([width, height])
-                  .charge(-5000)
+                  .charge(-4000 )
                   .gravity(0.2)
+                  .distance(40)
 
         zoomed = =>
           return if @translateLock
@@ -39,9 +41,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @translateLock = false
         # store the current zoom to undo changes from dragging a node
         currentZoom = undefined
-        @force.drag().on "dragstart", =>
-          @translateLock = true
-          currentZoom = @zoom.translate()
+        @force.drag().on "dragstart", (d) ->
+          that.translateLock = true
+          currentZoom = that.zoom.translate()
+          d3.select(this).classed("fixed", d.fixed = true)
+
         .on "dragend", =>
           @zoom.translate currentZoom
           @translateLock = false
@@ -75,6 +79,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @sidebarShown = !@sidebarShown
 
       update: ->
+        that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
 
@@ -98,7 +103,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         nodeEnter.append("circle")
           .attr("r", 25)
 
-        nodeEnter.on "click", (d) =>
+        nodeEnter
+        .on "dblclick", (d) ->
+          d3.select(this).classed("fixed", d.fixed = false)
+        .on "click", (d) =>
           @model.selectNode d
         .on "contextmenu", (d) =>
           d3.event.preventDefault()
@@ -113,8 +121,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
             @drag_line.attr('class', 'dragline')
               .data [{anchor:d}]
           @creatingConnection = !@creatingConnection
-
-        nodeEnter.on "mouseover", (datum, index) =>
+        .on "mouseover", (datum, index) =>
           if @creatingConnection then return
           if !@dataToolTipShown
             @isHoveringANode=setTimeout( () =>
@@ -133,8 +140,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
           @model.highlightNodes(nodesToHL)
           @model.highlightConnections(connectionsToHL)
-
-        nodeEnter.on "mouseout", (datum, index) =>
+        .on "mouseout", (datum, index) =>
           window.clearTimeout(@isHoveringANode)
           if !@translateLock
             @model.dehighlightConnections()
@@ -144,12 +150,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
         # update old and new elements
         node.attr("class", (d) -> 
+          c = 'node'
           if d.get('dim')
-            return 'node dim'
-          else if d.get('selected')
-            return 'node selected' 
-          else 
-            return 'node'
+            c += ' dim'
+          if d.get('selected')
+            c += ' selected'
+          if d.fixed
+            c += ' fixed'
+          return c
         )
           .call(@force.drag)
         node.select('text')
@@ -165,7 +173,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         # delete unmatching elements
         node.exit().remove()
 
-        that = this
+        
         @svg.on "mousemove", () ->
           that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
@@ -214,3 +222,4 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         $(".data-tooltip-container")
               .css('left',event.clientX)
               .css('top',event.clientY-20)
+
