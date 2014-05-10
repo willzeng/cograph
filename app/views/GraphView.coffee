@@ -88,7 +88,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
-        connection.enter().append("line")
+        connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
 
         # old elements
@@ -103,6 +103,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         nodeEnter.append("circle")
           .attr("r", 25)
 
+        connectionEnter
+        .on "click", (d) =>
+          @model.selectConnection d
+          
         nodeEnter
         .on "dblclick", (d) ->
           d3.select(this).classed("fixed", d.fixed = false)
@@ -164,10 +168,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           .text((d) -> d.get('name'))
 
         connection.attr("class", (d) ->
+          c = 'connection'
           if d.get('dim')
-            return 'connection dim' 
-          else 
-            return 'connection'
+            c += ' dim'
+          if d.get('selected')
+            c += ' selected'
+          return c
         )
 
         # delete unmatching elements

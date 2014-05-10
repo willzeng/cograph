@@ -21,7 +21,17 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     selectNode: (node) ->
       @nodes.each (d) ->
         d.set('selected', false)
+      @connections.each (d) ->
+        d.set('selected', false)
       @nodes.get(node).set 'selected', true
+
+    selectConnection: (connection) ->
+      @connections.each (d) ->
+        d.set('selected', false)
+      @nodes.each (d) ->
+        d.set('selected', false)
+      @connections.get(connection).set 'selected', true
+
 
     highlightNodes: (nodesToHL) ->
       @nodes.each (d) ->

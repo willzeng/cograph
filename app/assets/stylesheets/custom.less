@@ -13,10 +13,6 @@
   stroke: @stroke-color;
   stroke-width: 2px;
   fill: @node-color;
-
-  .selected {
-    stroke: @selected-color;
-  }
 }
 
 .node.dim {
@@ -43,6 +39,11 @@
   stroke: @connection-color;
   stroke-width: 8px;
   opacity: 0.5;
+}
+
+.connection.selected {
+  stroke: @selected-color;
+  opacity: 1;
 }
 
 .connection.dim {
