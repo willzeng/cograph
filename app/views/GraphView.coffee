@@ -128,7 +128,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         .on "mouseover", (datum, index) =>
           if @creatingConnection then return
           if !@dataToolTipShown
-            @isHoveringANode=setTimeout( () =>
+            @isHoveringANode = setTimeout( () =>
               @dataToolTipShown = true
               $(".data-tooltip-container")
                 .append _.template(dataTooltipTemplate, datum)

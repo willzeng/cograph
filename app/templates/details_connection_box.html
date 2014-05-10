@@ -1,0 +1,22 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+      <a data-toggle="collapse" data-parent="#details-container" href="#collapse-one">
+        <%= attributes.name %>
+      </a>
+      <div class="pull-right">
+        <button type="button" class="close" aria-hidden="true">
+          <i class='fa fa-times'></i>
+        </button>
+      </div>
+    </h4>
+  </div>
+
+  <div id="collapse-one" class="panel-collapse collapse in">
+    <div class="panel-body">
+      <p class="lead"><%= attributes.description %></p>
+      <button id="edit-connection-button" class="btn btn-default">Edit</button>
+    </div>
+  </div>
+
+</div>

@@ -6,3 +6,9 @@ define ['backbone'], (Backbone) ->
       url: ''
       source: undefined
       target: undefined
+      color: 'grey'
+
+    schema:
+      name: 'Text',
+      description: 'TextArea',
+      url: 'Text'

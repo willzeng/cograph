@@ -32,7 +32,6 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
         d.set('selected', false)
       @connections.get(connection).set 'selected', true
 
-
     highlightNodes: (nodesToHL) ->
       @nodes.each (d) ->
         d.set('dim',true)

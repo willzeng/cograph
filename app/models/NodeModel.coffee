@@ -5,6 +5,9 @@ define ['backbone'], (Backbone) ->
       name: ''
       tags: []
       description: ''
+      url: ''
+      size: ''
+      color: ''
 
     schema:
       name: 'Text',
