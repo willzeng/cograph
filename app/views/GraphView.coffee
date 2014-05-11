@@ -41,11 +41,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @translateLock = false
         # store the current zoom to undo changes from dragging a node
         currentZoom = undefined
-        @force.drag().on "dragstart", (d) ->
+
+        @force.drag()
+        .on "dragstart", (d) ->
           that.translateLock = true
           currentZoom = that.zoom.translate()
           d3.select(this).classed("fixed", d.fixed = true)
-
         .on "dragend", =>
           @zoom.translate currentZoom
           @translateLock = false
@@ -111,6 +112,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         .on "dblclick", (d) ->
           d3.select(this).classed("fixed", d.fixed = false)
         .on "click", (d) =>
+          if (d3.event.defaultPrevented) 
+            return
           @model.selectNode d
         .on "contextmenu", (d) =>
           d3.event.preventDefault()
