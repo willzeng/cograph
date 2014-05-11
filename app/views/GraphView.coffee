@@ -56,6 +56,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
                 .attr('width', width)
                 .attr('height', height)
                 .call(@zoom)
+                .on("dblclick.zoom", null)
 
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
