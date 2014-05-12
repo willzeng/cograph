@@ -157,33 +157,21 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
             $(".data-tooltip-container").empty()
 
         # update old and new elements
-        node.attr("class", (d) -> 
-          c = 'node'
-          if d.get('dim')
-            c += ' dim'
-          if d.get('selected')
-            c += ' selected'
-          if d.fixed
-            c += ' fixed'
-          return c
-        )
+        node.attr('class', 'node')
+          .classed('dim', (d) -> d.get('dim'))
+          .classed('selected', (d) -> d.get('selected'))
+          .classed('fixed', (d) -> d.fixed)
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
 
-        connection.attr("class", (d) ->
-          c = 'connection'
-          if d.get('dim')
-            c += ' dim'
-          if d.get('selected')
-            c += ' selected'
-          return c
-        )
+        connection.attr("class", "connection")
+          .classed('dim', (d) -> d.get('dim'))
+          .classed('selected', (d) -> d.get('selected'))
 
         # delete unmatching elements
         node.exit().remove()
 
-        
         @svg.on "mousemove", () ->
           that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
