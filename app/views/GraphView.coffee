@@ -10,10 +10,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         'mousemove svg' : 'trackCursor'
 
       initialize: ->
+        that = this
         @model.nodes.on 'add change remove', @update, this
         @model.nodes.on 'remove', @emptyTooltip, this
         @model.connections.on 'add change remove', @update, this
-
+        that = this
         @dataToolTipShown = @sidebarShown = false
         @translateLock = @isHoveringANode = false
 
