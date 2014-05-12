@@ -41,7 +41,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @translateLock = false
         # store the current zoom to undo changes from dragging a node
         currentZoom = undefined
-
         @force.drag()
         .on "dragstart", (d) ->
           that.translateLock = true
@@ -123,7 +122,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           if @creatingConnection
             @translateLock = false
             @drag_line.attr('class', 'dragline hidden')
-            @model.putConnection "links to", @drag_line.data()[0].anchor, d
+            @model.selectConnection @model.putConnection "links to", @drag_line.data()[0].anchor, d
           else
             @translateLock = true
             @drag_line.attr('class', 'dragline')

@@ -12,11 +12,11 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
 
     putNode: (name) ->
       console.log "Added node with name #{name}"
-      @nodes.add {'name': name}
+      return @nodes.add {'name': name}
 
     putConnection: (name, source, target) ->
       console.log "Added connection with name #{name}"
-      @connections.add {'name': name, 'source': source, 'target': target}
+      return @connections.add {'name': name, 'source': source, 'target': target}
 
     selectNode: (node) ->
       @nodes.each (d) ->
