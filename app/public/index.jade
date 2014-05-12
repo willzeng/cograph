@@ -2,12 +2,13 @@ extends layout
 
 block content
   #graph
-    #toolbar
+    #toolbar-left
       form#search-form.navbar-form.navbar-left
         .form-group
           input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
         button.btn.btn-default(type="button")
           i.fa.fa-search
+    #toolbar-right
       form#add-node-form.navbar-form.navbar-right
         .form-group
           input.form-control(type="text", name='node-name', placeholder="Add something")
