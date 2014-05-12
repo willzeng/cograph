@@ -15,7 +15,18 @@
   <div id="collapse-one" class="panel-collapse collapse in">
     <div class="panel-body">
       <p class="lead"><%= attributes.description %></p>
-      <button id="edit-connection-button" class="btn btn-default">Edit</button>
+      <p>
+        <ul class="list-group">
+          <% _.each(attributes.tags, function(tag) { %>
+            <li class="list-group-item"><%= tag %></li>
+          <% }); %>
+        </ul>
+      </p>
+      <% if (constructor.name === "NodeModel") {%>
+        <button id="edit-node-button" class="btn btn-default">Edit</button>
+      <% } else { %>
+        <button id="edit-connection-button" class="btn btn-default">Edit</button>
+      <% } %>
     </div>
   </div>
 

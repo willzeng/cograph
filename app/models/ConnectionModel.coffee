@@ -7,8 +7,9 @@ define ['backbone'], (Backbone) ->
       source: undefined
       target: undefined
       color: 'grey'
+      tags: []
 
     schema:
       name: 'Text',
-      description: 'TextArea',
-      url: 'Text'
+      description: 'TextArea'
+      tags: { type: 'List', itemType: 'Text' }

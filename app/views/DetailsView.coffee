@@ -1,16 +1,14 @@
 define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
- 'text!templates/details_node_box.html', 'text!templates/details_connection_box.html', 'text!templates/edit_node_form.html', 'text!templates/edit_connection_form.html'],
-  ($, _, Backbone, bbf, list, nodeDetailsTemplate, connectionDetailsTemplate, nodeEditFormTemplate, connectionEditFormTemplate) ->
+ 'text!templates/details_box.html', 'text!templates/edit_form.html'],
+  ($, _, Backbone, bbf, list, detailsTemplate, editFormTemplate) ->
     class DetailsView extends Backbone.View
-
       el: $ '#graph'
 
       events:
         'click .close' : 'closeDetail'
         'click #edit-node-button': 'editNode'
-        'click #save-node-button': 'saveNode'
         'click #edit-connection-button': 'editConnection'
-        'click #save-connection-button': 'saveConnection'
+        'click #save-node-connection-button': 'saveNodeConnection'
 
       initialize: ->
         @model.nodes.on 'change', @update, this
@@ -23,9 +21,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
         $("#details-container").empty()
 
         if selectedNode
-          $("#details-container").append _.template(nodeDetailsTemplate, selectedNode)
+          $("#details-container").append _.template(detailsTemplate, selectedNode)
         if selectedConnection
-          $("#details-container").append _.template(connectionDetailsTemplate, selectedConnection)
+          $("#details-container").append _.template(detailsTemplate, selectedConnection)
 
       closeDetail: () ->
         $('#details-container').empty()
@@ -35,29 +33,21 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
           @getSelectedConnection().set 'selected', false
 
       editNode: () ->
-        selectedNode = @model.nodes.findWhere {'selected': true}
-        @nodeForm = new Backbone.Form(
-          model: selectedNode
-          template: _.template(nodeEditFormTemplate)
-        ).render()
-
-        $('#details-container .panel-body').empty().append(@nodeForm.el)
+        @editNodeConnection @getSelectedNode()
 
       editConnection: () ->
-        selectedConnection = @model.connections.findWhere {'selected': true}
-        @connectionForm = new Backbone.Form(
-          model: selectedConnection
-          template: _.template(connectionEditFormTemplate)
+        @editNodeConnection @getSelectedConnection()
+
+      editNodeConnection: (nodeConnection) ->
+        @nodeConnectionForm = new Backbone.Form(
+          model: nodeConnection
+          template: _.template(editFormTemplate)
         ).render()
-        console.log @connectionForm
-        $('#details-container .panel-body').empty().append(@connectionForm.el)
 
-      saveNode: (e) ->
-        @nodeForm.commit()
-        @update()
+        $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
 
-      saveConnection: (e) ->
-        @connectionForm.commit()
+      saveNodeConnection: ->
+        @nodeConnectionForm.commit()
         @update()
 
       getSelectedNode: ->
