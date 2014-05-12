@@ -2,7 +2,7 @@
 
 @node-color: @gray;
 @connection-color: @gray;
-@stroke-color: @lime;
+@stroke-color: @white;
 @selected-color: @blue;
 @fixed-color: orange;
 @text-color: @gray;
@@ -20,7 +20,7 @@
 }
 
 .node.selected circle {
-  stroke: @selected-color;
+  fill: @selected-color;
 }
 .node.selected text {
   fill: @selected-color;
@@ -28,6 +28,7 @@
 
 .node.fixed circle {
   stroke: @fixed-color;
+  stroke-dasharray:10;
 }
 
 .node text {
