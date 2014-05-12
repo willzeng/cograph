@@ -5,8 +5,13 @@ define ['backbone'], (Backbone) ->
       name: ''
       tags: []
       description: ''
+      url: ''
+      size: ''
+      color: ''
 
     schema:
-      name: 'Text',
+      name: 'Text'
+      url: 'Text'
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
+     

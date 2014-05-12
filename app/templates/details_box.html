@@ -16,13 +16,18 @@
     <div class="panel-body">
       <p class="lead"><%= attributes.description %></p>
       <p>
+        <%= attributes.url %><br/>
         <ul class="list-group">
           <% _.each(attributes.tags, function(tag) { %>
             <li class="list-group-item"><%= tag %></li>
           <% }); %>
         </ul>
       </p>
-      <button id="edit-node-button" class="btn btn-default">Edit</button>
+      <% if (constructor.name === "NodeModel") {%>
+        <button id="edit-node-button" class="btn btn-default">Edit</button>
+      <% } else { %>
+        <button id="edit-connection-button" class="btn btn-default">Edit</button>
+      <% } %>
     </div>
   </div>
 
