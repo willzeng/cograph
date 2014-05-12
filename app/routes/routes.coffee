@@ -39,4 +39,3 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
             source: gm.nodes.findWhere({name:n[s]})
             target: gm.nodes.findWhere({name:n[t]})
           i++
-
