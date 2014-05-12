@@ -10,8 +10,8 @@ define ['backbone'], (Backbone) ->
       color: ''
 
     schema:
-      name: 'Text'
-      url: 'Text'
+      name: { type: 'Text', validators: ['required'] }
+      url: { type: 'Text', validators: ['url'] }
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
 
