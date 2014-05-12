@@ -1,12 +1,13 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
-  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView'],
-  ($, _, Backbone, GraphModel, GraphView, AddNodeView, DetailsView) ->
+  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/SearchView'],
+  ($, _, Backbone, GraphModel, GraphView, AddNodeView, DetailsView, SearchView) ->
     class Router extends Backbone.Router
       initialize: ->
         @graphModel = new GraphModel()
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
         @detailsView = new DetailsView model: @graphModel
+        @searchView = new SearchView model: @graphModel
         window.gm = @graphModel
         Backbone.history.start()
 
@@ -15,18 +16,26 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel',
 
       home: ->
         @graphView.render()
-        gm.nodes.add
-          name: 'Oxford'
-          description: 'A City in the UK'
-          tags: ["croquet", "rowing", "university"]
+        num = Math.round(3+Math.random()*15)
+        iter = 0
+        n = []
+        while (iter<num)
+          n.push(iter.toString())
+          iter++
 
-        gm.nodes.add
-          name: 'David'
-
-        gm.nodes.add
-          name: 'Victor'
-
-        gm.connections.add
-          name: 'related to'
-          source: gm.nodes.findWhere({name:'Oxford'})
-          target: gm.nodes.findWhere({name:'David'})
+        _.each(n, (d) ->
+          gm.nodes.add
+            name: d
+            description: d + " is a wonderful number"
+            tags: [d,d+"-ness",d+"-tags"]
+        )
+        x = Math.round(1+(n.length)*(n.length-1)/2*Math.random()/5)
+        i = 0
+        while(i<x)
+          t = Math.round((n.length-1)*Math.random())
+          s = Math.round((n.length-1)*Math.random())
+          gm.connections.add
+            name: 'related to'+t+s
+            source: gm.nodes.findWhere({name:n[s]})
+            target: gm.nodes.findWhere({name:n[t]})
+          i++
