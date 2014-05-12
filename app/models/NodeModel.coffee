@@ -14,4 +14,7 @@ define ['backbone'], (Backbone) ->
       url: 'Text'
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
-     
+
+    validate: ->
+      if !@get('name')
+        'Your node must have a name.'
