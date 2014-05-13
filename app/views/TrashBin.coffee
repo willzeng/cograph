@@ -1,5 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'd3'],
-  ($, _, Backbone, d3) ->
+define ['jquery', 'underscore', 'backbone'],
+  ($, _, Backbone) ->
     class TrashBin extends Backbone.View
       el: $ '#graph'
 
