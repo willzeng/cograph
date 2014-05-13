@@ -62,6 +62,20 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
                 .call(@zoom)
                 .on("dblclick.zoom", null)
 
+        #Per-type markers, as they dont inherit styles.
+        @svg.append("defs").append("marker")
+            #.data(["suit", "licensing", "resolved"])
+          #.enter().append("marker")
+            .attr("id", "arrowhead")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 27)
+            .attr("refY", 0)
+            .attr("markerWidth", 2)
+            .attr("markerHeight", 2)
+            .attr("orient", "auto")
+            .append("path")
+              .attr("d", "M0,-5L10,0L0,5")
+
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
         @workspace.append("svg:g").classed("node-container", true)
@@ -94,8 +108,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
-        connectionEnter = connection.enter().append("line")
+        connectionEnter = connection.enter().append("g")
+        connectionEnter.append("line")
           .attr("class", "connection")
+          .attr("marker-end", "url(#arrowhead)")
 
         # old elements
         node = d3.select(".node-container")
