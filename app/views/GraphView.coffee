@@ -105,6 +105,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
                       .attr('y1', '0')
                       .attr('x2', '50')
                       .attr('y2', '50')
+                      .attr('stroke-linecap', 'round')
                       .attr("marker-end", "url(#draghead)")
                       .data([{anchor:{x:0,y:0}}])
         @creatingConnection = false
