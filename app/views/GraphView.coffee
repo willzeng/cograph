@@ -4,15 +4,12 @@ define ['jquery', 'underscore', 'backbone', 'd3',
     class GraphView extends Backbone.View
       el: $ '#graph'
 
-      events:
-        'click #sidebar-toggle': 'toggleSidebar'
-
       initialize: ->
         that = this
         @model.nodes.on 'add change remove', @update, this
         @model.connections.on 'add change remove', @update, this
 
-        @sidebarShown = @translateLock = false
+        @translateLock = false
 
         width = $(@el).width()
         height = $(@el).height()
@@ -71,15 +68,6 @@ define ['jquery', 'underscore', 'backbone', 'd3',
 
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
-
-      toggleSidebar: ->
-        if @sidebarShown
-          $('#sidebar').animate 'width': '0%'
-          $('#graph').animate 'width': '100%'
-        else
-          $('#sidebar').animate 'width': '30%'
-          $('#graph').animate 'width': '70%'
-        @sidebarShown = !@sidebarShown
 
       update: ->
         that = this
