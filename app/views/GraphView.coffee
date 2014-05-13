@@ -1,5 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html'],
-  ($, _, Backbone, d3, dataTooltipTemplate) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html', 'cs!views/ConnectionAdder'],
+  ($, _, Backbone, d3, dataTooltipTemplate, ConnectionAdder) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -66,14 +66,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @workspace.append("svg:g").classed("connection-container", true)
         @workspace.append("svg:g").classed("node-container", true)
 
-        @drag_line = @svg.append('svg:line')
-                      .attr('class', 'dragline hidden')
-                      .attr('x1', '0')
-                      .attr('y1', '0')
-                      .attr('x2', '50')
-                      .attr('y2', '50')
-                      .data([{anchor:{x:0,y:0}}])
-        @creatingConnection = false
+        @connectionAdder = new ConnectionAdder
+          model: @model
+          attributes: {force: @force, svg: @svg, graphView: this}
 
       toggleSidebar: ->
         if @sidebarShown
@@ -122,17 +117,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           @model.selectNode d
         .on "contextmenu", (d) =>
           d3.event.preventDefault()
+          @trigger 'node:right-click', d
           $(".data-tooltip-container").empty()
 
-          if @creatingConnection
-            @translateLock = false
-            @drag_line.attr('class', 'dragline hidden')
-            @model.selectConnection @model.putConnection "links to", @drag_line.data()[0].anchor, d
-          else
-            @translateLock = true
-            @drag_line.attr('class', 'dragline')
-              .data [{anchor:d}]
-          @creatingConnection = !@creatingConnection
         .on "mouseover", (datum, index) =>
           if @creatingConnection then return
           if !@dataToolTipShown
@@ -175,9 +162,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         node.exit().remove()
         connection.exit().remove()
 
-        @svg.on "mousemove", () ->
-          that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
-
         tick = =>
           connection
             .attr("x1", (d) -> d.attributes.source.x)
@@ -185,9 +169,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
             .attr("x2", (d) -> d.attributes.target.x)
             .attr("y2", (d) -> d.attributes.target.y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
-          @drag_line
-            .attr("x1", (d) -> d.anchor.x)
-            .attr("y1", (d) -> d.anchor.y)
+          @connectionAdder.tick()
         @force.on "tick", tick
 
       scaleZoom: (event) ->
