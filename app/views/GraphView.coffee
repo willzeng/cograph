@@ -132,7 +132,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         connectionEnter
         .on "click", (d) =>
           @model.selectConnection d
-          
+        .on "mouseover", (datum, index)  =>
+          if !@dataToolTipShown
+            @isHoveringANode = setTimeout( () =>
+              @dataToolTipShown = true
+              $(".data-tooltip-container")
+                .append _.template(dataTooltipTemplate, datum)
+            ,200)
+        .on "mouseout", (datum, index) =>
+          window.clearTimeout(@isHoveringANode)
+          @dataToolTipShown = false
+          $(".data-tooltip-container").empty()
+
         nodeEnter
         .on "dblclick", (d) ->
           d3.select(this).classed("fixed", d.fixed = false)
