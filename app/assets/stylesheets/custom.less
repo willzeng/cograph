@@ -4,8 +4,8 @@
 @connection-color: @gray;
 @stroke-color: @white;
 @selected-color: @blue;
-@fixed-color: orange;
-@text-color: @gray;
+@fixed-color: @orange;
+@text-color: @black;
 @data-tooltip-color: rgba(0,31,63,0.8);
 
 .node circle {
@@ -22,13 +22,12 @@
 .node.selected circle {
   fill: @selected-color;
 }
-.node.selected text {
-  fill: @selected-color;
-}
 
 .node.fixed circle {
   stroke: @fixed-color;
   stroke-dasharray:10;
+  stroke-width:2px;
+  stroke-location:outside;
 }
 
 .node text {
