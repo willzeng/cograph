@@ -1,14 +1,11 @@
 define ['jquery', 'underscore', 'backbone', 'd3',
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip'],
-  ($, _, Backbone, d3, ConnectionAdder, TrashBin, DataTooltip) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons'],
+  ($, _, Backbone, d3, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'
-        'click #zoom-in-button': 'scaleZoom'
-        'click #zoom-out-button': 'scaleZoom'
-        'mousemove svg' : 'trackCursor'
 
       initialize: ->
         that = this
@@ -71,6 +68,9 @@ define ['jquery', 'underscore', 'backbone', 'd3',
         @dataTooltip = new DataTooltip
           model: @model
           attributes: {graphView: this}
+
+        @zoomButtons = new ZoomButtons
+          attributes: {zoom: @zoom, workspace: @workspace}
 
       toggleSidebar: ->
         if @sidebarShown
@@ -163,42 +163,8 @@ define ['jquery', 'underscore', 'backbone', 'd3',
           @connectionAdder.tick()
         @force.on "tick", tick
 
-      scaleZoom: (event) ->
-        if $(event.currentTarget).attr('id') is 'zoom-in-button'
-          scale = 1.3
-        else if $(event.currentTarget).attr('id') is 'zoom-out-button'
-          scale = 1/1.3
-        else
-          scale = 1
-
-        #find the current view and viewport settings
-        center = [$(@el).width()/2, $(@el).height()/2]
-        translate = @zoom.translate()
-        view = {x: translate[0], y: translate[1]}
-
-        #set the new scale factor
-        newScale = @zoom.scale()*scale
-
-        #calculate offset to zoom in center
-        translate_orig = [(center[0] - view.x) / @zoom.scale(), (center[1] - view.y) / @zoom.scale()]
-        diff = [translate_orig[0] * newScale + view.x, translate_orig[1] * newScale + view.y]
-        view.x += center[0] - diff[0]
-        view.y += center[1] - diff[1]
-
-        #update zoom values
-        @zoom.translate([view.x,view.y])
-        @zoom.scale(newScale)
-
-        #translate workspace
-        @workspace.transition().ease("linear").attr "transform", "translate(#{[view.x,view.y]}) scale(#{newScale})"
-
       isContainedIn: (node, element) ->
         node.x < element.offset().left + element.width() &&
           node.x > element.offset().left &&
           node.y > element.offset().top &&
           node.y < element.offset().top + element.height()
-
-      trackCursor: (event) ->
-        $(".data-tooltip-container")
-              .css('left',event.clientX)
-              .css('top',event.clientY-20)
