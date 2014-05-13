@@ -44,6 +44,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           that.translateLock = true
           currentZoom = that.zoom.translate()
           d3.select(this).classed("fixed", d.fixed = true)
+        .on "drag", (d)=>
+          if @isContainedIn d, $('#trash-bin')
+            $("#trash-bin").addClass('selected')
+          else
+            $("#trash-bin").removeClass('selected')
         .on "dragend", (node) =>
           if @isContainedIn node, $('#trash-bin')
             @model.removeNode node
@@ -103,7 +108,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
-        console.log connections
         @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
 
         connection = d3.select(".connection-container")
