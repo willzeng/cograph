@@ -3,6 +3,9 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
     class DataTooltip extends Backbone.View
       el: $ '#graph'
 
+      events:
+        'mousemove svg' : 'trackCursor'
+
       initialize: ->
         @graphView = @attributes.graphView
         @model.nodes.on 'remove', @emptyTooltip, this
@@ -26,6 +29,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
             @model.dehighlightConnections()
             @model.dehighlightNodes()
             @emptyTooltip()
+
+      trackCursor: (event) ->
+        $(".data-tooltip-container")
+              .css('left',event.clientX)
+              .css('top',event.clientY-20)
 
       emptyTooltip: ->
         @dataToolTipShown = false
