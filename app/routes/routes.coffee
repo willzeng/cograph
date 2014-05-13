@@ -32,7 +32,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
             tags: [d,d+"-ness",d+"-tags"]
         )
         x = Math.round(1+(n.length)*(n.length-1)/2*Math.random()/5)
-        i = 0;
+        i = 0
         while(i<x)
           t = Math.round((n.length-1)*Math.random())
           s = Math.round((n.length-1)*Math.random())
@@ -41,4 +41,3 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
             source: gm.nodes.findWhere({name:n[s]})
             target: gm.nodes.findWhere({name:n[t]})
           i++
-

@@ -27,12 +27,21 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     selectNode: (node) ->
       @nodes.each (d) ->
         d.set('selected', false)
+      @connections.each (d) ->
+        d.set('selected', false)
       node.set 'selected', true
+
+    selectConnection: (connection) ->
+      @connections.each (d) ->
+        d.set('selected', false)
+      @nodes.each (d) ->
+        d.set('selected', false)
+      connection.set 'selected', true
 
     highlightNodes: (nodesToHL) ->
       @nodes.each (d) ->
         d.set('dim',true)
-      _.each nodesToHL, (d) =>
+      _.each nodesToHL, (d) ->
         d.set 'dim', false
 
     dehighlightNodes: () ->
@@ -42,7 +51,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     highlightConnections: (connectionsToHL) ->
       @connections.each (d) ->
         d.set('dim', true)
-      _.each connectionsToHL, (d) =>
+      _.each connectionsToHL, (d) ->
         d.set 'dim', false
 
     dehighlightConnections: () ->
