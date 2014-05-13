@@ -51,6 +51,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
             $("#trash-bin").removeClass('selected')
         .on "dragend", (node) =>
           if @isContainedIn node, $('#trash-bin')
+            $("#trash-bin").removeClass('selected')
             @model.removeNode node
             $.each(@model.connections.models, (i, model) =>
               if model.attributes.source.cid == node.cid || model.attributes.target.cid == node.cid
