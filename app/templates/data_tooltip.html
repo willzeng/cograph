@@ -8,9 +8,9 @@
       <% } %>
       <% if(_.some(attributes.tags)){ %>
       </br>
-      Tags:  
+      <i class="fa fa-tags"></i>
       <% _.each(attributes.tags, function(tag) { %>
-        <span><%= tag %>; </span>
+        <span><%= tag %>, </span>
       <% }); %>
       <% } %>
     </span>

@@ -121,7 +121,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         # new elements
         nodeEnter = node.enter().append("g")
         nodeEnter.append("text")
-          .attr("dy", "50px")
+          .attr("dy", "40px")
         nodeEnter.append("circle")
           .attr("r", 25)
 
