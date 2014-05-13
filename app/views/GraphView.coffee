@@ -1,6 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html',
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin'],
-  ($, _, Backbone, d3, dataTooltipTemplate, ConnectionAdder, TrashBin) ->
+define ['jquery', 'underscore', 'backbone', 'd3',
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip'],
+  ($, _, Backbone, d3, ConnectionAdder, TrashBin, DataTooltip) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -13,11 +13,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
       initialize: ->
         that = this
         @model.nodes.on 'add change remove', @update, this
-        @model.nodes.on 'remove', @emptyTooltip, this
         @model.connections.on 'add change remove', @update, this
 
-        @dataToolTipShown = @sidebarShown = false
-        @translateLock = @isHoveringANode = false
+        @sidebarShown = @translateLock = false
 
         width = $(@el).width()
         height = $(@el).height()
@@ -70,6 +68,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           model: @model
           attributes: {graphView: this}
 
+        @dataTooltip = new DataTooltip
+          model: @model
+          attributes: {graphView: this}
+
       toggleSidebar: ->
         if @sidebarShown
           $('#sidebar').animate 'width': '0%'
@@ -118,32 +120,21 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         .on "contextmenu", (d) =>
           d3.event.preventDefault()
           @trigger 'node:right-click', d
-          $(".data-tooltip-container").empty()
 
-        .on "mouseover", (datum, index) =>
+        .on "mouseover", (node) =>
           if @creatingConnection then return
-          if !@dataToolTipShown
-            @isHoveringANode = setTimeout( () =>
-              @dataToolTipShown = true
-              $(".data-tooltip-container")
-                .append _.template(dataTooltipTemplate, datum)
-            ,200)
+          @trigger "node:mouseover", node
 
           connectionsToHL = @model.connections.filter (c) ->
-            (c.get('source').cid is datum.cid) or (c.get('target').cid is datum.cid)
+            (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
 
           nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
-          nodesToHL.push datum
+          nodesToHL.push node
 
           @model.highlightNodes(nodesToHL)
           @model.highlightConnections(connectionsToHL)
-        .on "mouseout", (datum, index) =>
-          window.clearTimeout(@isHoveringANode)
-          if !@translateLock
-            @model.dehighlightConnections()
-            @model.dehighlightNodes()
-            @dataToolTipShown = false
-            $(".data-tooltip-container").empty()
+        .on "mouseout", (node) =>
+          @trigger "node:mouseout", node
 
         # update old and new elements
         node.attr('class', 'node')
@@ -211,7 +202,3 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         $(".data-tooltip-container")
               .css('left',event.clientX)
               .css('top',event.clientY-20)
-
-      emptyTooltip: ->
-        @dataToolTipShown = false
-        $(".data-tooltip-container").empty()
