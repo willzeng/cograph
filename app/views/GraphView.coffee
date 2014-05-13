@@ -64,15 +64,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
 
         #Per-type markers, as they dont inherit styles.
         @svg.append("defs").append("marker")
-            #.data(["suit", "licensing", "resolved"])
-          #.enter().append("marker")
             .attr("id", "arrowhead")
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 27)
+            .attr("refX", 16)
             .attr("refY", 0)
-            .attr("markerWidth", 2)
-            .attr("markerHeight", 2)
+            .attr("markerWidth", 3)
+            .attr("markerHeight", 3)
             .attr("orient", "auto")
+            .attr("fill", "gray")
+            .attr("stroke","white")
+            .attr("stroke-width","4px")
+            .attr("stroke-location","outside")
             .append("path")
               .attr("d", "M0,-5L10,0L0,5")
 
@@ -102,14 +104,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
-
+        console.log connections
         @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
 
         connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
-        connectionEnter = connection.enter().append("g")
-        connectionEnter.append("line")
+        connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
           .attr("marker-end", "url(#arrowhead)")
 
