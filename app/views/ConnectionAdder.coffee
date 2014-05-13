@@ -21,7 +21,7 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @svg.on "mousemove", () ->
           that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
-        @graphView.on 'node:right-click', (node) => 
+        @graphView.on 'node:right-click', (node) =>
           if @creatingConnection
             @graphView.translateLock = false
             @drag_line.attr('class', 'dragline hidden')
@@ -33,6 +33,6 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           @creatingConnection = !@creatingConnection
 
       tick: =>
-          @drag_line
-            .attr("x1", (d) -> d.anchor.x)
-            .attr("y1", (d) -> d.anchor.y)
+        @drag_line
+          .attr("x1", (d) -> d.anchor.x)
+          .attr("y1", (d) -> d.anchor.y)

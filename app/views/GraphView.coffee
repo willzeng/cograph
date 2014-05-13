@@ -1,5 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html', 'cs!views/ConnectionAdder'],
-  ($, _, Backbone, d3, dataTooltipTemplate, ConnectionAdder) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.html',
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin'],
+  ($, _, Backbone, d3, dataTooltipTemplate, ConnectionAdder, TrashBin) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -46,12 +47,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
           currentZoom = that.zoom.translate()
           d3.select(this).classed("fixed", d.fixed = true)
         .on "dragend", (node) =>
-          if @isContainedIn node, $('#trash-bin')
-            @model.removeNode node
-            $.each(@model.connections.models, (i, model) =>
-              if model.attributes.source.cid == node.cid || model.attributes.target.cid == node.cid
-                @model.removeConnection model
-            )
+          @trigger "node:dragend", node
           @zoom.translate currentZoom
           @translateLock = false
 
@@ -69,6 +65,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
         @connectionAdder = new ConnectionAdder
           model: @model
           attributes: {force: @force, svg: @svg, graphView: this}
+
+        @trashBin = new TrashBin
+          model: @model
+          attributes: {graphView: this}
 
       toggleSidebar: ->
         if @sidebarShown
