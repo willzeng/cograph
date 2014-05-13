@@ -27,8 +27,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/data_tooltip.h
                   .size([width, height])
                   .charge(-4000 )
                   .gravity(0.2)
-                  .distance(200)
-                  .friction(0.4)
+                  .friction(0.6)
 
         zoomed = =>
           return if @translateLock
