@@ -36,4 +36,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
           $('#search-input').val('')
 
       findNode: (name) ->
-        @model.nodes.findWhere name: name
+        regex = new RegExp(name,'i') #this is to do a case insensitive match
+        allNames = @model.nodes.pluck 'name'
+        firstMatchedNodeName = (regex.exec allNames)[0]
+        @model.nodes.findWhere name: firstMatchedNodeName
