@@ -28,7 +28,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
 
         _.each(n, (d) ->
           gm.nodes.add
-            name: d
+            name: Math.random().toString(36).substring(7)
             description: d + " is a wonderful number"
             tags: [d,d+"-ness",d+"-tags"]
         )
@@ -39,6 +39,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
           s = Math.round((n.length-1)*Math.random())
           gm.connections.add
             name: 'related to'+t+s
-            source: gm.nodes.findWhere({name:n[s]})
-            target: gm.nodes.findWhere({name:n[t]})
+            source: gm.nodes.models[t]
+            target: gm.nodes.models[s]
           i++
