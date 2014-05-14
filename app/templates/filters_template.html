@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4 class="panel-title">
+        Node Filters
+    </h4>
+  </div>
+
+  <div class="panel-body">
+    <p>
+      <ul class="list-group">
+        <% _.each(tags, function(tag) { %>
+          <li class="list-group-item"><%= tag %></li>
+        <% }); %>
+      </ul>
+    </p>
+  </div>
+
+</div>
