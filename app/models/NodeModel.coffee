@@ -10,8 +10,8 @@ define ['backbone'], (Backbone) ->
       color: ''
 
     schema:
-      name: 'Text'
-      url: 'Text'
+      name: { type: 'Text', validators: ['required'] }
+      url: { type: 'Text', validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ] }
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
 
