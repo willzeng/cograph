@@ -11,7 +11,7 @@ define ['backbone'], (Backbone) ->
 
     schema:
       name: { type: 'Text', validators: ['required'] }
-      url: { type: 'Text', validators: ['url'] }
+      url: { type: 'Text', validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ] }
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
 
