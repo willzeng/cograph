@@ -1,4 +1,4 @@
-define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbone, NodeModel, ConnectionModel) ->
+define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], (Backbone, NodeModel, ConnectionModel, FilterModel) ->
   class ConnectionCollection extends Backbone.Collection
     model: ConnectionModel
 
@@ -10,14 +10,19 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       @nodes = new NodeCollection()
       @connections = new ConnectionCollection()
 
+      @filterModel = new FilterModel {nodes:@nodes}
+
     putNode: (name) ->
       @nodes.add {'name': name}
+
+    putConnection: (name, source, target) ->
+      @connections.add {'name': name, 'source': source, 'target': target}
 
     removeNode: (model) ->
       @nodes.remove model
 
-    putConnection: (name, source, target) ->
-      @connections.add {'name': name, 'source': source, 'target': target}
+    removeConnection: (model) ->
+      @connections.remove model
 
     selectNode: (node) ->
       @nodes.each (d) ->
@@ -25,9 +30,6 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
       @connections.each (d) ->
         d.set('selected', false)
       node.set 'selected', true
-
-    removeConnection: (model) ->
-      @connections.remove model
 
     selectConnection: (connection) ->
       @connections.each (d) ->
@@ -55,3 +57,6 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel'], (Backbon
     dehighlightConnections: () ->
       @connections.each (d) ->
         d.set 'dim', false
+
+    getFilter: () ->
+      @filterModel
