@@ -6,6 +6,12 @@ define ['jquery', 'underscore', 'backbone'],
       initialize: ->
         @graphView = @attributes.graphView
 
+        @graphView.on "node:drag", (node) =>
+          if @graphView.isContainedIn node, $('#trash-bin')
+            $("#trash-bin").addClass('selected')
+          else
+            $("#trash-bin").removeClass('selected')
+
         @graphView.on "node:dragend", (node) =>
           if @graphView.isContainedIn node, $('#trash-bin')
             @model.removeNode node

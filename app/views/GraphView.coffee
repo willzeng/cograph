@@ -37,11 +37,8 @@ define ['jquery', 'underscore', 'backbone', 'd3',
           that.translateLock = true
           currentZoom = that.zoom.translate()
           d3.select(this).classed("fixed", d.fixed = true)
-        .on "drag", (d)=>
-          if @isContainedIn d, $('#trash-bin')
-            $("#trash-bin").addClass('selected')
-          else
-            $("#trash-bin").removeClass('selected')
+        .on "drag", (d) =>
+          @trigger "node:drag", d
         .on "dragend", (node) =>
           @trigger "node:dragend", node
           @zoom.translate currentZoom
