@@ -10,7 +10,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @nodes = new NodeCollection()
       @connections = new ConnectionCollection()
 
-      @filterModel = new FilterModel {nodes:@nodes}
+      @filterModel = new FilterModel {'node_tags':['theorem','proof','conjecture','citation']}
 
     putNode: (name) ->
       @nodes.add {'name': name}

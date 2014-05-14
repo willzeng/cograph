@@ -6,6 +6,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
 
       initialize: ->
         @model.on 'change', @update, this
+        $(@el).append _.template(filtersTemplate, {tags:@model.get 'node_tags'})
 
       update: ->
         $(@el).empty()
