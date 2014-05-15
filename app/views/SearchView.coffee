@@ -7,11 +7,9 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
         'click button': 'search'
 
       initialize: ->
-        substringMatcher = (gm) ->
-          findMatches = (q, cb) ->
-            substrRegex = new RegExp(q, "i")
-            names = gm.nodes.pluck 'name'
-            matches = _.filter(names, (name) -> substrRegex.test(name))
+        substringMatcher = (gm) =>
+          findMatches = (q, cb) =>
+            matches = @findMatchingNames q, gm.nodes.pluck('name')
             matches = _.map matches, (name) -> value: name
             cb matches
 
@@ -36,4 +34,9 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
           $('#search-input').val('')
 
       findNode: (name) ->
-        @model.nodes.findWhere name: name
+        matchedNames = @findMatchingNames(name, @model.nodes.pluck('name'))
+        @model.nodes.findWhere name: matchedNames[0]
+
+      findMatchingNames: (query, allNames) ->
+        regex = new RegExp(query,'i')
+        _.filter(allNames, (name) -> regex.test(name))

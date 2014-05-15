@@ -34,5 +34,5 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
 
       tick: =>
         @drag_line
-          .attr("x1", (d) -> d.anchor.x)
-          .attr("y1", (d) -> d.anchor.y)
+          .attr("x1", (d) => d.anchor.x+@graphView.zoom.translate()[0])
+          .attr("y1", (d) => d.anchor.y+@graphView.zoom.translate()[1])
