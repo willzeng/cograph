@@ -67,18 +67,6 @@ define ['jquery', 'underscore', 'backbone', 'd3',
             .append("path")
               .attr("d", "M0,-5L10,0L0,5")
 
-        @svg.append("defs").append("marker")
-            .attr("id", "draghead")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 5)
-            .attr("refY", 0)
-            .attr("markerWidth", 3)
-            .attr("markerHeight", 3)
-            .attr("orient", "auto")
-            .attr("fill", "black")
-            .append("path")
-              .attr("d", "M0,-5L10,0L0,5")
-
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
         @workspace.append("svg:g").classed("node-container", true)
