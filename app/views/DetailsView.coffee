@@ -9,6 +9,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
         'click #edit-node-button': 'editNode'
         'click #edit-connection-button': 'editConnection'
         'submit form': 'saveNodeConnection'
+        'click #delete-node-button': 'deleteNode'
+        'click #delete-connection-button': 'deleteConnection'
 
       initialize: ->
         @model.nodes.on 'change', @update, this
@@ -37,6 +39,14 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
 
       editConnection: () ->
         @editNodeConnection @getSelectedConnection()
+
+      deleteNode: () ->
+        @model.removeNode @getSelectedNode()
+        @closeDetail()
+
+      deleteConnection: () ->
+        @model.removeConnection @getSelectedConnection
+        @closeDetail()
 
       editNodeConnection: (nodeConnection) ->
         @nodeConnectionForm = new Backbone.Form(

@@ -20,6 +20,8 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
 
     removeNode: (model) ->
       @nodes.remove model
+      @connections.remove @connections.where {'source':model}
+      @connections.remove @connections.where {'target':model}
 
     removeConnection: (model) ->
       @connections.remove model
