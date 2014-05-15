@@ -11,6 +11,13 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @connections = new ConnectionCollection()
       @filterModel = new FilterModel @get 'initial_tags'
 
+      @filterModel.on "change", @filter
+
+    filter: =>
+      for node in @nodes.models
+        if !(@filterModel.passes node)
+          @nodes.remove node
+
     putNode: (nodeModel) ->
       if @filterModel.passes nodeModel
         @nodes.add nodeModel

@@ -25,7 +25,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Gr
         testNode = new NodeModel {name: "Fermat's Last Theorem", tags: ["theorem", "famous"]}
         gm.putNode testNode
 
-        @randomPopulate()
+
+        gm.putNode new NodeModel {name: "Poincare Conjecture", tags: ["conjecture", "famous"]}
+
+        #@randomPopulate()
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
