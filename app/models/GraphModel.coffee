@@ -9,11 +9,11 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     initialize: ->
       @nodes = new NodeCollection()
       @connections = new ConnectionCollection()
+      @filterModel = new FilterModel @get 'initial_tags'
 
-      @filterModel = new FilterModel {'node_tags':['theorem','proof','conjecture','citation']}
-
-    putNode: (name) ->
-      @nodes.add {'name': name}
+    putNode: (nodeModel) ->
+      if @filterModel.passes nodeModel
+        @nodes.add nodeModel
 
     putConnection: (name, source, target) ->
       @connections.add {'name': name, 'source': source, 'target': target}
