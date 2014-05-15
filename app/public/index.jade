@@ -6,18 +6,20 @@ block content
       form#search-form.navbar-form.navbar-left
         .form-group
           input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-        button.btn.btn-default(type="button")
+        button.btn.btn-primary(type="button")
           i.fa.fa-search
-      form#add-node-form.navbar-form.navbar-right
-        .form-group
-          input.form-control(type="text", name='node-name', placeholder="Add something")
-        button.btn.btn-default(type="submit")
-          i.fa.fa-plus
-      button#sidebar-toggle.btn.btn-default.navbar-right Toggle Sidebar
+      div.navbar-right.navbar-form
+        form#add-node-form
+          .form-group
+            input.form-control(type="text", name='node-name', placeholder="Add something")
+          button.btn.btn-primary(type="submit")
+            i.fa.fa-plus
+        button#sidebar-toggle.btn.btn-default.navbar-right
+          i.fa.fa-arrows-h
     #zoom-controls.btn-group-vertical
-      button#zoom-in-button.btn.btn-default
+      button#zoom-in-button.btn.btn-primary
         i.glyphicon.glyphicon-plus
-      button#zoom-out-button.btn.btn-default
+      button#zoom-out-button.btn.btn-primary
         i.glyphicon.glyphicon-minus
     #trash-bin
       i.glyphicon.glyphicon-trash

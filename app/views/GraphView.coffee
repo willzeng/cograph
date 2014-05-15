@@ -20,8 +20,7 @@ define ['jquery', 'underscore', 'backbone', 'd3',
                   .size([width, height])
                   .charge(-4000 )
                   .gravity(0.2)
-                  .distance(200)
-                  .friction(0.4)
+                  .friction(0.6)
 
         zoomed = =>
           return if @translateLock
@@ -38,6 +37,8 @@ define ['jquery', 'underscore', 'backbone', 'd3',
           that.translateLock = true
           currentZoom = that.zoom.translate()
           d3.select(this).classed("fixed", d.fixed = true)
+        .on "drag", (d) =>
+          @trigger "node:drag", d
         .on "dragend", (node) =>
           @trigger "node:dragend", node
           @zoom.translate currentZoom
@@ -49,6 +50,22 @@ define ['jquery', 'underscore', 'backbone', 'd3',
                 .attr('height', height)
                 .call(@zoom)
                 .on("dblclick.zoom", null)
+
+        #Per-type markers, as they dont inherit styles.
+        @svg.append("defs").append("marker")
+            .attr("id", "arrowhead")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 16)
+            .attr("refY", 0)
+            .attr("markerWidth", 3)
+            .attr("markerHeight", 3)
+            .attr("orient", "auto")
+            .attr("fill", "gray")
+            .attr("stroke","white")
+            .attr("stroke-width","4px")
+            .attr("stroke-location","outside")
+            .append("path")
+              .attr("d", "M0,-5L10,0L0,5")
 
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
@@ -73,7 +90,6 @@ define ['jquery', 'underscore', 'backbone', 'd3',
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
-
         @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
 
         connection = d3.select(".connection-container")
@@ -81,6 +97,7 @@ define ['jquery', 'underscore', 'backbone', 'd3',
           .data connections
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
+          .attr("marker-end", "url(#arrowhead)")
 
         # old elements
         node = d3.select(".node-container")
@@ -90,14 +107,25 @@ define ['jquery', 'underscore', 'backbone', 'd3',
         # new elements
         nodeEnter = node.enter().append("g")
         nodeEnter.append("text")
-          .attr("dy", "50px")
+          .attr("dy", "40px")
         nodeEnter.append("circle")
           .attr("r", 25)
 
         connectionEnter
         .on "click", (d) =>
           @model.selectConnection d
-          
+        .on "mouseover", (datum, index)  =>
+          if !@dataToolTipShown
+            @isHoveringANode = setTimeout( () =>
+              @dataToolTipShown = true
+              $(".data-tooltip-container")
+                .append _.template(dataTooltipTemplate, datum)
+            ,200)
+        .on "mouseout", (datum, index) =>
+          window.clearTimeout(@isHoveringANode)
+          @dataToolTipShown = false
+          $(".data-tooltip-container").empty()
+
         nodeEnter
         .on "dblclick", (d) ->
           d3.select(this).classed("fixed", d.fixed = false)

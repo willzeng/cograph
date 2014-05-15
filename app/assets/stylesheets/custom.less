@@ -2,10 +2,10 @@
 
 @node-color: @gray;
 @connection-color: @gray;
-@stroke-color: @lime;
-@selected-color: @blue;
-@fixed-color: orange;
-@text-color: @gray;
+@stroke-color: @white;
+@selected-color: #3498db;
+@fixed-color: @orange;
+@text-color: @black;
 @data-tooltip-color: rgba(0,31,63,0.8);
 
 .node circle {
@@ -20,14 +20,13 @@
 }
 
 .node.selected circle {
-  stroke: @selected-color;
-}
-.node.selected text {
   fill: @selected-color;
 }
 
 .node.fixed circle {
   stroke: @fixed-color;
+  stroke-dasharray:10;
+  stroke-location:outside;
 }
 
 .node text {
@@ -41,7 +40,9 @@
 .connection {
   stroke: @connection-color;
   stroke-width: 8px;
+  stroke-linecap:round;
   opacity: 0.5;
+  cursor: pointer;
 }
 
 .connection.selected {
@@ -126,6 +127,10 @@ svg {
   border: 4px dashed lightgray;
   border-radius: 4px;
 }
+#trash-bin.selected {
+  border-color:@selected-color;
+  color:@selected-color;
+}
 
 #details-container {
   position: absolute;
@@ -148,6 +153,10 @@ svg {
 }
 
 // Overriding Bootstrap defaults
+
+.btn {
+  outline:none !important;
+}
 
 .navbar {
   margin-bottom: 0;
