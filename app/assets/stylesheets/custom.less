@@ -7,6 +7,7 @@
 @fixed-color: @orange;
 @text-color: @black;
 @data-tooltip-color: rgba(0,31,63,0.8);
+@controls-z-index: 1;
 
 .node circle {
   cursor: pointer;
@@ -84,17 +85,15 @@ html, body {
 svg {
   width: 100%;
   height: 100%;
-}
-
-#toolbar {
   position: absolute;
-  padding: 10px;
-  width: inherit;
+  top: 0;
+  left: 0;
 }
 
 #graph {
   width: 100%;
   height: 100%;
+  position: fixed;
 }
 
 #zoom-controls {
@@ -127,6 +126,7 @@ svg {
   border: 4px dashed lightgray;
   border-radius: 4px;
 }
+
 #trash-bin.selected {
   border-color:@selected-color;
   color:@selected-color;
@@ -152,6 +152,19 @@ svg {
   max-width: 300px;
 }
 
+.toolbar.right {
+  position: absolute;
+  right: 15px;
+}
+
+.controls {
+  z-index: @controls-z-index;
+}
+
+#add-node-form {
+  display: inline;
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
@@ -169,13 +182,4 @@ svg {
 .navbar-brand {
   padding: 5px;
   height: auto;
-}
-
-.navbar-form {
-  padding: 0;
-  margin: 0;
-}
-
-.navbar-form.navbar-right:last-child{
-  margin-right: 0;
 }
