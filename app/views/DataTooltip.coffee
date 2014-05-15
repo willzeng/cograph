@@ -40,8 +40,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
 
         @graphView.on 'connection:mouseout', (conn) =>
           window.clearTimeout(@isHoveringANode)
-          @dataToolTipShown = false
-          $(".data-tooltip-container").empty()
+          @emptyTooltip()
 
       trackCursor: (event) ->
         $(".data-tooltip-container")
