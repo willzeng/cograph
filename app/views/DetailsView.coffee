@@ -45,7 +45,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
         @closeDetail()
 
       deleteConnection: () ->
-        @model.removeConnection @getSelectedConnection
+        @model.removeConnection @getSelectedConnection()
         @closeDetail()
 
       editNodeConnection: (nodeConnection) ->
