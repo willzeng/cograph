@@ -49,6 +49,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Gr
         while(i<x)
           t = Math.round((n.length-1)*Math.random())
           s = Math.round((n.length-1)*Math.random())
+          if t == s
+            continue
           gm.connections.add
             name: 'related to'+t+s
             source: gm.nodes.models[t]
