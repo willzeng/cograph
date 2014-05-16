@@ -25,13 +25,10 @@
       </p>
       <% if (constructor.name === "NodeModel") {%>
         <button id="edit-node-button" class="btn btn-default">Edit</button>
+        <button id="remove-node-button" class="btn btn-warning">Remove</button>
       <% } else { %>
         <button id="edit-connection-button" class="btn btn-default">Edit</button>
-      <% } %>
-      <% if (constructor.name === "NodeModel") {%>
-        <button id="delete-node-button" class="btn btn-warning">Delete</button>
-      <% } else { %>
-        <button id="delete-connection-button" class="btn btn-warning">Delete</button>
+        <button id="remove-connection-button" class="btn btn-warning">Remove</button>
       <% } %>
     </div>
   </div>
