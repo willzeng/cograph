@@ -1,6 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3',
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons'],
-  ($, _, Backbone, d3, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
+  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -51,21 +51,7 @@ define ['jquery', 'underscore', 'backbone', 'd3',
                 .call(@zoom)
                 .on("dblclick.zoom", null)
 
-        #Per-type markers, as they dont inherit styles.
-        @svg.append("defs").append("marker")
-            .attr("id", "arrowhead")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 16)
-            .attr("refY", 0)
-            .attr("markerWidth", 3)
-            .attr("markerHeight", 3)
-            .attr("orient", "auto")
-            .attr("fill", "gray")
-            .attr("stroke","white")
-            .attr("stroke-width","4px")
-            .attr("stroke-location","outside")
-            .append("path")
-              .attr("d", "M0,-5L10,0L0,5")
+        $('svg').prepend _.template(defs, {})
 
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)

@@ -9,24 +9,8 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @svg = @attributes.svg
         @graphView = @attributes.graphView
 
-        @svg.append("defs").append("marker")
-            .attr("id", "draghead")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 5)
-            .attr("refY", 0)
-            .attr("markerWidth", 3)
-            .attr("markerHeight", 3)
-            .attr("orient", "auto")
-            .attr("fill", "black")
-            .append("path")
-              .attr("d", "M0,-5L10,0L0,5")
-
         @drag_line = @svg.append('svg:line')
                       .attr('class', 'dragline hidden')
-                      .attr('x1', '0')
-                      .attr('y1', '0')
-                      .attr('x2', '50')
-                      .attr('y2', '50')
                       .attr("marker-end", "url(#draghead)")
                       .data([{anchor:{x:0,y:0}}])
         @creatingConnection = false
