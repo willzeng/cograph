@@ -7,6 +7,7 @@ requirejs.config({
     'text': '/assets/libs/requirejs-text/text',
     'd3': '/assets/libs/d3/d3.min',
     'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
+    'backbone-forms-bootstrap': '/assets/js/backbone-forms/bootstrap3',
     'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min',
     'typeahead': '/assets/libs/typeahead.js/dist/typeahead.jquery.min',
     'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
