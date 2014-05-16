@@ -9,7 +9,11 @@
     <p>
       <ul class="list-group">
         <% _.each(tags, function(tag) { %>
-          <li class="list-group-item"><%= tag %></li>
+          <li class="list-group-item">
+            <input type='checkbox' class="filter-toggle" checked='true' data-id=<%= tag %>>
+              <%= tag %>
+            </input>
+          </li>
         <% }); %>
       </ul>
     </p>

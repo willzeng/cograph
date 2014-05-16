@@ -1,9 +1,11 @@
-define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/FilterModel'
+define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/GraphModel', 'cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView'],
-  ($, _, Backbone, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView) ->
+  ($, _, Backbone, NodeModel, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView) ->
     class Router extends Backbone.Router
       initialize: ->
-        @graphModel = new GraphModel()
+        default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
+        @graphModel = new GraphModel initial_tags:default_tags
+
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
         @detailsView = new DetailsView model: @graphModel
@@ -19,6 +21,16 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
 
       home: ->
         @graphView.render()
+
+        testNode = new NodeModel {name: "Fermat's Last Theorem", tags: ["theorem", "famous"]}
+        gm.putNode testNode
+
+
+        gm.putNode new NodeModel {name: "Poincare Conjecture", tags: ["conjecture", "famous"]}
+
+        #@randomPopulate()
+
+      randomPopulate: ->
         num = Math.round(3+Math.random()*15)
         iter = 0
         n = []
@@ -27,10 +39,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/GraphModel', 'cs!models/F
           iter++
 
         _.each(n, (d) ->
-          gm.nodes.add
+          gm.putNode new NodeModel
             name: Math.random().toString(36).substring(7)
             description: d + " is a wonderful number"
-            tags: [d,d+"-ness",d+"-tags"]
+            tags: ['conjecture']
         )
         x = Math.round(1+(n.length)*(n.length-1)/2*Math.random()/5)
         i = 0
