@@ -9,21 +9,17 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
       initialize: ->
         @graphView = @attributes.graphView
         @model.nodes.on 'remove', @emptyTooltip, this
+        @dataToolTipShown = false
 
         @isHoveringANode = @dataToolTipShown = false
 
-        @graphView.on 'node:right-click', () ->
-          $(".data-tooltip-container").empty()
+        @graphView.on 'node:right-click', () =>
+          @emptyTooltip()
 
-        @graphView.on 'node:mouseover', (node) =>
-          if !@dataToolTipShown
-            @isHoveringANode = setTimeout( () =>
-              @dataToolTipShown = true
-              $(".data-tooltip-container")
-                .append _.template(dataTooltipTemplate, node)
-            ,200)
+        @graphView.on 'node:mouseover connection:mouseover', (nc) =>
+          @showToolTip nc
 
-        @graphView.on 'node:mouseout', (node) =>
+        @graphView.on 'node:mouseout connection:mouseout', (nc) =>
           window.clearTimeout(@isHoveringANode)
           if !@translateLock
             @model.dehighlightConnections()
