@@ -16,16 +16,13 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
         @model.nodes.on 'change', @update, this
         @model.connections.on 'change', @update, this
 
-      update: ->
-        selectedNode = @getSelectedNode()
-        selectedConnection = @getSelectedConnection()
+      update: (nodeConnection) ->
+        if nodeConnection.changedAttributes()['selected']
+          selectedNC = @getSelectedNode() || @getSelectedConnection()
 
-        $("#details-container").empty()
-
-        if selectedNode
-          $("#details-container").append _.template(detailsTemplate, selectedNode)
-        if selectedConnection
-          $("#details-container").append _.template(detailsTemplate, selectedConnection)
+          $("#details-container").empty()
+          if selectedNC
+            $("#details-container").append _.template(detailsTemplate, selectedNC)
 
       closeDetail: () ->
         $('#details-container').empty()
