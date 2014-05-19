@@ -1,6 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3',
+define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons'],
-  ($, _, Backbone, d3, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
+  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -51,21 +51,7 @@ define ['jquery', 'underscore', 'backbone', 'd3',
                 .call(@zoom)
                 .on("dblclick.zoom", null)
 
-        #Per-type markers, as they dont inherit styles.
-        @svg.append("defs").append("marker")
-            .attr("id", "arrowhead")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 16)
-            .attr("refY", 0)
-            .attr("markerWidth", 3)
-            .attr("markerHeight", 3)
-            .attr("orient", "auto")
-            .attr("fill", "gray")
-            .attr("stroke","white")
-            .attr("stroke-width","4px")
-            .attr("stroke-location","outside")
-            .append("path")
-              .attr("d", "M0,-5L10,0L0,5")
+        @svg.append('defs').html(defs)
 
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
@@ -92,12 +78,38 @@ define ['jquery', 'underscore', 'backbone', 'd3',
         connections = @model.connections.models
         @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
 
+        # old elements
         connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
+
+        # new elements
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
           .attr("marker-end", "url(#arrowhead)")
+
+        connectionEnter
+          .on "click", (d) =>
+            @model.selectConnection d
+          .on "mouseover", (datum, index)  =>
+            if !@dataToolTipShown
+              @isHoveringANode = setTimeout( () =>
+                @dataToolTipShown = true
+                $(".data-tooltip-container")
+                  .append _.template(dataTooltipTemplate, datum)
+              ,200)
+          .on "mouseout", (datum, index) =>
+            window.clearTimeout(@isHoveringANode)
+            @dataToolTipShown = false
+            $(".data-tooltip-container").empty()
+
+        # old and new elements
+        connection.attr("class", "connection")
+          .classed('dim', (d) -> d.get('dim'))
+          .classed('selected', (d) -> d.get('selected'))
+
+        # remove deleted elements
+        connection.exit().remove()
 
         # old elements
         node = d3.select(".node-container")
@@ -120,30 +132,28 @@ define ['jquery', 'underscore', 'backbone', 'd3',
           @trigger "connection:mouseout", conn
 
         nodeEnter
-        .on "dblclick", (d) ->
-          d3.select(this).classed("fixed", d.fixed = false)
-        .on "click", (d) =>
-          if (d3.event.defaultPrevented)
-            return
-          @model.selectNode d
-        .on "contextmenu", (d) =>
-          d3.event.preventDefault()
-          @trigger 'node:right-click', d
+          .on "dblclick", (d) ->
+            d3.select(this).classed("fixed", d.fixed = false)
+          .on "click", (d) =>
+            if (d3.event.defaultPrevented) then return
+            @model.selectNode d
+          .on "contextmenu", (node) =>
+            d3.event.preventDefault()
+            @trigger 'node:right-click', node
+          .on "mouseover", (node) =>
+            if @creatingConnection then return
+            @trigger "node:mouseover", node
 
-        .on "mouseover", (node) =>
-          if @creatingConnection then return
-          @trigger "node:mouseover", node
+            connectionsToHL = @model.connections.filter (c) ->
+              (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
 
-          connectionsToHL = @model.connections.filter (c) ->
-            (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
+            nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
+            nodesToHL.push node
 
-          nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
-          nodesToHL.push node
-
-          @model.highlightNodes(nodesToHL)
-          @model.highlightConnections(connectionsToHL)
-        .on "mouseout", (node) =>
-          @trigger "node:mouseout", node
+            @model.highlightNodes(nodesToHL)
+            @model.highlightConnections(connectionsToHL)
+          .on "mouseout", (node) =>
+            @trigger "node:mouseout", node
 
         # update old and new elements
         node.attr('class', 'node')
@@ -154,13 +164,8 @@ define ['jquery', 'underscore', 'backbone', 'd3',
         node.select('text')
           .text((d) -> d.get('name'))
 
-        connection.attr("class", "connection")
-          .classed('dim', (d) -> d.get('dim'))
-          .classed('selected', (d) -> d.get('selected'))
-
         # delete unmatching elements
         node.exit().remove()
-        connection.exit().remove()
 
         tick = =>
           connection
