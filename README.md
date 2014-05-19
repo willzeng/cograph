@@ -1,4 +1,4 @@
-Rhizi
+GraphDocs
 =====
 
 How to Run

@@ -13,15 +13,10 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
         @isHoveringANode = @dataToolTipShown = false
 
         @graphView.on 'node:right-click', () ->
-          $(".data-tooltip-container").empty()
+          @emptyToolTip()
 
         @graphView.on 'node:mouseover', (node) =>
-          if !@dataToolTipShown
-            @isHoveringANode = setTimeout( () =>
-              @dataToolTipShown = true
-              $(".data-tooltip-container")
-                .append _.template(dataTooltipTemplate, node)
-            ,200)
+          @showToolTip node
 
         @graphView.on 'node:mouseout', (node) =>
           window.clearTimeout(@isHoveringANode)
@@ -30,11 +25,27 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
             @model.dehighlightNodes()
             @emptyTooltip()
 
+        @graphView.on 'connection:mouseover', (conn) =>
+          @showToolTip conn
+
+        @graphView.on 'connection:mouseout', (conn) =>
+          window.clearTimeout(@isHoveringANode)
+          @emptyTooltip()
+
       trackCursor: (event) ->
         $(".data-tooltip-container")
               .css('left',event.clientX)
               .css('top',event.clientY-20)
 
+      showToolTip: (nodeConnection) ->
+        if !@dataToolTipShown
+          @isHoveringANode = setTimeout( () =>
+            @dataToolTipShown = true
+            $(".data-tooltip-container")
+              .append(_.template(dataTooltipTemplate, nodeConnection))
+              .fadeIn()
+          ,400)
+
       emptyTooltip: ->
         @dataToolTipShown = false
-        $(".data-tooltip-container").empty()
+        $(".data-tooltip-container").fadeOut(200).empty()

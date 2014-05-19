@@ -123,6 +123,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         nodeEnter.append("circle")
           .attr("r", 25)
 
+        connectionEnter
+        .on "click", (d) =>
+          @model.selectConnection d
+        .on "mouseover", (conn)  =>
+          @trigger "connection:mouseover", conn        
+        .on "mouseout", (conn) =>
+          @trigger "connection:mouseout", conn
+
         nodeEnter
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
