@@ -1,6 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list',
+define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap'
  'text!templates/details_box.html', 'text!templates/edit_form.html'],
-  ($, _, Backbone, bbf, list, detailsTemplate, editFormTemplate) ->
+  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate) ->
     class DetailsView extends Backbone.View
       el: $ '#graph'
 
