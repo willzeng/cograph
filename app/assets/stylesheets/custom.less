@@ -173,10 +173,21 @@ svg {
   display: inline;
 }
 
+#menu-title {
+  max-width: 150px;
+  outline: none;
+  width:150px;
+  margin-left:10px;
+}
+
+#menu-title:focus {
+  background: @white;
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
-  outline:none !important;
+  outline: none !important;
 }
 
 .navbar {
@@ -187,7 +198,8 @@ svg {
   border-radius: 0;
 }
 
-.navbar-brand {
+.navbar-brand, .navbar-text  {
   padding: 5px;
   height: auto;
+  margin: 0px;
 }
