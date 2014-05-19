@@ -2,28 +2,29 @@ extends layout
 
 block content
   #graph
-    #toolbar
+    .toolbar.left.controls
       form#search-form.navbar-form.navbar-left
         .form-group
           input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
         button.btn.btn-primary(type="button")
           i.fa.fa-search
-      div.navbar-right.navbar-form
+    .toolbar.right.controls
+      .navbar-right.navbar-form
         form#add-node-form
           .form-group
             input.form-control(type="text", name='node-name', placeholder="Add something")
           button.btn.btn-primary(type="submit")
             i.fa.fa-plus
-        button#sidebar-toggle.btn.btn-default.navbar-right
+        button#sidebar-toggle.btn.btn-default
           i.fa.fa-arrows-h
-    #zoom-controls.btn-group-vertical
+    #zoom-controls.btn-group-vertical.controls
       button#zoom-in-button.btn.btn-primary
         i.glyphicon.glyphicon-plus
       button#zoom-out-button.btn.btn-primary
         i.glyphicon.glyphicon-minus
-    #trash-bin
+    #trash-bin.controls
       i.glyphicon.glyphicon-trash
-    #details-container
+    #details-container.controls
   #sidebar
     #filters-container
   .data-tooltip-container
