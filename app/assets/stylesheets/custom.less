@@ -174,14 +174,24 @@ svg {
 }
 
 #menu-title {
-  max-width: 150px;
   outline: none;
-  width:150px;
-  margin-left:10px;
+  width: 150px;
+  margin-left: 10px;
+  background: transparent;
+  border: 0;
+  float: left;
 }
 
 #menu-title:focus {
   background: @white;
+}
+
+#menu-bar .nav-pills {
+  a{
+    padding: 5px 10px;
+  }
+  
+  float: left;
 }
 
 // Overriding Bootstrap defaults
