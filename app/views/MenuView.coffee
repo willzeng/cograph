@@ -4,8 +4,8 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'bootstrap'],
       el: $ '#menu-bar'
 
       events:
-          'keypress #menu-title': 'removeNewlines'
+          'keypress #menu-title': 'saveTitle'
 
-      removeNewlines: (e) ->
+      saveTitle: (e) ->
         if e.which == 13
           $('#menu-title').blur()
