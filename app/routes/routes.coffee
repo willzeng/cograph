@@ -28,7 +28,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Gr
 
         gm.putNode new NodeModel {name: "Poincare Conjecture", tags: ["conjecture", "famous"]}
 
-        @randomPopulate()
+        #@randomPopulate()
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
