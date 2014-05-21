@@ -179,7 +179,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @force.on "tick", tick
 
       updateDetails: -> #Updates just Details of Nodes, doesn't move graph or deal with new/deleted nodes
-        that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
 
