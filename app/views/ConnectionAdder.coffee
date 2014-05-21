@@ -9,10 +9,12 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
         @svg = @attributes.svg
         @graphView = @attributes.graphView
 
-        @drag_line = @svg.append('svg:line')
+        @drag_line = @svg.append('svg:g')
                       .attr('class', 'dragline hidden')
-                      .attr("marker-end", "url(#draghead)")
                       .data([{anchor:{x:0,y:0}}])
+        @svg.append('svg:line')
+          .attr("marker-end", "url(#draghead)")
+                      
         @creatingConnection = false
 
         @svg.on "mousemove", () ->
