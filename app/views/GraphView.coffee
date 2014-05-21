@@ -74,7 +74,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           attributes: {zoom: @zoom, workspace: @workspace}
 
       update: -> #Updates Details and Positions of Nodes
-        console.log "updating GraphView"
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
