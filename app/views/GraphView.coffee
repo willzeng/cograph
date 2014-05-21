@@ -6,8 +6,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       initialize: ->
         that = this
-        @model.nodes.on 'add change remove', @update, this
-        @model.connections.on 'add change remove', @update, this
+        @model.nodes.on 'add change:attributes remove', @update, this
+        @model.connections.on 'add change:attributes remove', @update, this
+        @model.nodes.on 'change', @updateDetails, this
 
         @translateLock = false
 
@@ -72,7 +73,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
 
-      update: ->
+      update: -> #Updates Details and Positions of Nodes
+        console.log "updating GraphView"
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
@@ -176,6 +178,31 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()
         @force.on "tick", tick
+
+      updateDetails: -> #Updates just Details of Nodes, doesn't move graph or deal with new/deleted nodes
+        that = this
+        nodes = @model.nodes.models
+        connections = @model.connections.models
+
+        connection = d3.select(".connection-container")
+          .selectAll(".connection")
+          .data connections
+
+        connection.attr("class", "connection")
+          .classed('dim', (d) -> d.get('dim'))
+          .classed('selected', (d) -> d.get('selected'))
+
+        node = d3.select(".node-container")
+          .selectAll(".node")
+          .data(nodes, (node) -> node.cid)
+
+        node.attr('class', 'node')
+          .classed('dim', (d) -> d.get('dim'))
+          .classed('selected', (d) -> d.get('selected'))
+          .classed('fixed', (d) -> d.fixed)
+          .call(@force.drag)
+        node.select('text')
+          .text((d) -> d.get('name'))
 
       isContainedIn: (node, element) ->
         node.x < element.offset().left + element.width() &&
