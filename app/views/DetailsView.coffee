@@ -47,7 +47,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
 
-      saveNodeConnection: ->
+      saveNodeConnection: (e) ->
+        e.preventDefault()
         @nodeConnectionForm.commit()
         @update()
         false
