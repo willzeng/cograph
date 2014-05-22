@@ -7,9 +7,8 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
 
     #should add a node to the database
     nodeAdd: (node) ->
-      $.post("/create_node", node.attributes, (d) ->
-        console.log "callback", d
-      )
+      $.post "/create_node", node.attributes, (d) ->
+        console.log "Added node ", d, " to the database"
 
     # makes an ajax request to url with data and calls callback with response
     ajax: (url, data, callback) ->

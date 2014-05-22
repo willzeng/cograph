@@ -4,13 +4,6 @@ url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 
-node = graphDb.createNode {hello: 'world'}
-node.save (err, node) ->
-  if err
-    console.error 'Error saving new node to database:', err
-  else
-    console.log 'Node saved to database with id:', node.id
-
 express = require 'express'
 path = require 'path'
 favicon = require 'static-favicon'
@@ -35,7 +28,10 @@ app.get('/', (request, response)->
 )
 
 app.post('/create_node', (request, response) ->
-  console.log request.body
+  newNode = request.body
+  node = graphDb.createNode newNode
+  node.save (err, node) ->
+    console.log 'Node saved to database with id:', node.id
   response.send request.body
 )
 
