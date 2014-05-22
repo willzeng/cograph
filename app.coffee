@@ -14,6 +14,7 @@ node.save (err, node) ->
 express = require 'express'
 path = require 'path'
 favicon = require 'static-favicon'
+bodyParser = require 'body-parser'
 
 app = express()
 
@@ -27,12 +28,15 @@ app.use require('less-middleware')(path.join(__dirname, '/app/') )
 # http://stackoverflow.com/questions/19489681/node-js-less-middleware-not-auto-compiling
 app.use express.static(path.join(__dirname, '/app'))
 
+app.use bodyParser()
+
 app.get('/', (request, response)->
   response.render('index.jade')
 )
 
-app.post '/create_node', (request, response) ->
-  console.log "req made"
-  console.log request
+app.post('/create_node', (request, response) ->
+  console.log request.body
+  response.send request.body
+)
 
 module.exports = app

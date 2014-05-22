@@ -23,7 +23,6 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       if @filterModel.passes nodeModel
         @nodes.add nodeModel
 
-      console.log DataController
       DataController.nodeAdd nodeModel
 
     putConnection: (name, source, target) ->
