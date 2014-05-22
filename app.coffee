@@ -1,9 +1,8 @@
-url = 'http://wikinets-edge:wiKnj2gYeYOlzWPUcKYb@wikinetsedge.sb01.stations.graphenedb.com:24789'
-local = 'http://localhost:7474'
+url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 
 # load node_modules/neo4j folder and start graphDB instance
 neo4j = require __dirname + '/node_modules/neo4j'
-graphDb = new neo4j.GraphDatabase local
+graphDb = new neo4j.GraphDatabase url
 
 node = graphDb.createNode {hello: 'world'}
 node.save (err, node) ->
