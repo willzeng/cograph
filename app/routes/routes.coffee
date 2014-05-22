@@ -7,6 +7,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
         @graphModel = new GraphModel initial_tags:default_tags
 
+        @dataHub = new DataHub model: @graphModel
+
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
         @detailsView = new DetailsView model: @graphModel
