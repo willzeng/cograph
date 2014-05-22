@@ -14,4 +14,5 @@ define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel'],
           $('input', @el).val('')
         else
           $('input', @el).attr('placeholder', 'Node must have name!')
+
         false # return false to prevent form from routing to new url

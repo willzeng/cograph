@@ -1,4 +1,5 @@
-define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], (Backbone, NodeModel, ConnectionModel, FilterModel) ->
+define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel',
+ 'cs!controllers/DataController'], (Backbone, NodeModel, ConnectionModel, FilterModel, DataController) ->
   class ConnectionCollection extends Backbone.Collection
     model: ConnectionModel
 
@@ -21,6 +22,9 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     putNode: (nodeModel) ->
       if @filterModel.passes nodeModel
         @nodes.add nodeModel
+
+      console.log DataController
+      DataController.nodeAdd nodeModel
 
     putConnection: (name, source, target) ->
       @connections.add {'name': name, 'source': source, 'target': target}

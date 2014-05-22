@@ -32,4 +32,8 @@ app.get('/', (request, response)->
   response.render('index.jade')
 )
 
+app.post '/create_node', (request, response) ->
+  console.log "req made"
+  console.log request
+
 module.exports = app
