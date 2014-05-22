@@ -1,8 +1,16 @@
-url = 'http://wikinets-edge:wiKnj2gYeYOlzWPUcKYb@wikinetsedge.sb01.stations.graphenedb.com:24789';
+url = 'http://wikinets-edge:wiKnj2gYeYOlzWPUcKYb@wikinetsedge.sb01.stations.graphenedb.com:24789'
+local = 'http://localhost:7474'
 
-# load node_modules/neo4js folder
-neo4js = require(__dirname + '/node_modules/neo4js')
-graphDb = new neo4js.GraphDatabase4Node(url)
+# load node_modules/neo4j folder and start graphDB instance
+neo4j = require __dirname + '/node_modules/neo4j'
+graphDb = new neo4j.GraphDatabase local
+
+node = graphDb.createNode {hello: 'world'}
+node.save (err, node) ->
+  if err
+    console.error 'Error saving new node to database:', err
+  else
+    console.log 'Node saved to database with id:', node.id
 
 express = require 'express'
 path = require 'path'
