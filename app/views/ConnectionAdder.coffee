@@ -29,6 +29,10 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
               .data [{anchor:node}]
           @creatingConnection = !@creatingConnection
 
+        $(window).click () =>
+          @creatingConnection = false
+          @drag_line.attr('class', 'dragline hidden')
+
       tick: =>
         @drag_line
           .attr("x1", (d) => d.anchor.x+@graphView.zoom.translate()[0])
