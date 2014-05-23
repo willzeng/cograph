@@ -8,12 +8,12 @@ var specs = [
 
 // set up require.js to play nicely with the test environment
 requirejs.config({
-    baseUrl: './',
+    baseUrl: "/app",
     nodeRequire: require,
     paths: {
         // paths to coffeescript+cs wrapper plugin
-        cs            : 'node_modules/coffee-script'
-      , CoffeeScript  : '/app/assets/libs/coffee-script/index'
+        cs            : 'assets/libs/require-cs/cs', 
+        CoffeeScript  : 'assets/libs/coffee-script/index'
     }
 });
 
