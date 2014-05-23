@@ -1,4 +1,14 @@
-nav.navbar.navbar-default(role="navigation")
+nav.navbar.navbar-default#menu-bar(role="navigation")
   .container-fluid
     .navbar-header
       a.navbar-brand(href="") GraphDocs
+      ul.nav.nav-pills
+        li.dropdown
+          a.dropdown-toggle(data-toggle='dropdown', href='#')
+            | File
+            span.caret
+          ul.dropdown-menu
+            li(role="presentation")
+              a(href="#") 
+                i No Options
+      input.navbar-text#menu-title(type="text", placeholder="Untitled Doc")
