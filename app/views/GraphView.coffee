@@ -6,9 +6,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       initialize: ->
         that = this
-        @model.nodes.on 'add change:attributes remove', @update, this
-        @model.connections.on 'add change:attributes remove', @update, this
+        @model.nodes.on 'add remove', @updateForceGraph, this
+        @model.connections.on 'add remove', @updateForceGraph, this
         @model.nodes.on 'change', @updateDetails, this
+        @model.connections.on 'change', @updateDetails, this
 
         @translateLock = false
 
@@ -73,11 +74,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
 
-      update: -> #Updates Details and Positions of Nodes
-        that = this
+      updateForceGraph: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
         @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
+        @updateDetails()
+
+      updateDetails: ->
+        that = this
+        nodes = @model.nodes.models
+        connections = @model.connections.models
 
         # old elements
         connection = d3.select(".connection-container")
@@ -125,12 +131,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("r", 25)
 
         connectionEnter
-        .on "click", (d) =>
-          @model.selectConnection d
-        .on "mouseover", (conn)  =>
-          @trigger "connection:mouseover", conn        
-        .on "mouseout", (conn) =>
-          @trigger "connection:mouseout", conn
+          .on "click", (d) =>
+            @model.selectConnection d
+          .on "mouseover", (conn)  =>
+            @trigger "connection:mouseover", conn
+          .on "mouseout", (conn) =>
+            @trigger "connection:mouseout", conn
 
         nodeEnter
           .on "dblclick", (d) ->
@@ -177,30 +183,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()
         @force.on "tick", tick
-
-      updateDetails: -> #Updates just Details of Nodes, doesn't move graph or deal with new/deleted nodes
-        nodes = @model.nodes.models
-        connections = @model.connections.models
-
-        connection = d3.select(".connection-container")
-          .selectAll(".connection")
-          .data connections
-
-        connection.attr("class", "connection")
-          .classed('dim', (d) -> d.get('dim'))
-          .classed('selected', (d) -> d.get('selected'))
-
-        node = d3.select(".node-container")
-          .selectAll(".node")
-          .data(nodes, (node) -> node.cid)
-
-        node.attr('class', 'node')
-          .classed('dim', (d) -> d.get('dim'))
-          .classed('selected', (d) -> d.get('selected'))
-          .classed('fixed', (d) -> d.fixed)
-          .call(@force.drag)
-        node.select('text')
-          .text((d) -> d.get('name'))
 
       isContainedIn: (node, element) ->
         node.x < element.offset().left + element.width() &&
