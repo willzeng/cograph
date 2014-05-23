@@ -19,14 +19,12 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Gr
       routes:
         '': 'home'
 
-      home: ->
+      home: =>
         @graphView.render()
 
-        testNode = new NodeModel {name: "Fermat's Last Theorem", tags: ["theorem", "famous"]}
-        gm.putNode testNode
-
-
-        gm.putNode new NodeModel {name: "Poincare Conjecture", tags: ["conjecture", "famous"]}
+        #Prepopulate the GraphModel with all the nodes in the database
+        $.get '/server/get_all_nodes', (nodes) ->
+          gm.putNode new NodeModel node for node in nodes
 
         #@randomPopulate()
 
