@@ -13,16 +13,15 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #remove-connection-button': 'removeConnection'
 
       initialize: ->
-        @model.nodes.on 'change', @update, this
-        @model.connections.on 'change', @update, this
+        @model.nodes.on 'change:selected', @update, this
+        @model.connections.on 'change:selected', @update, this
 
       update: (nodeConnection) ->
-        if nodeConnection.changedAttributes()['selected']
-          selectedNC = @getSelectedNode() || @getSelectedConnection()
+        selectedNC = @getSelectedNode() || @getSelectedConnection()
 
-          $("#details-container").empty()
-          if selectedNC
-            $("#details-container").append _.template(detailsTemplate, selectedNC)
+        $("#details-container").empty()
+        if selectedNC
+          $("#details-container").append _.template(detailsTemplate, selectedNC)
 
       closeDetail: () ->
         $('#details-container').empty()
