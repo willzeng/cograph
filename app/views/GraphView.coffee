@@ -6,8 +6,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       initialize: ->
         that = this
-        @model.nodes.on 'add change remove', @update, this
-        @model.connections.on 'add change remove', @update, this
+        @model.nodes.on 'add remove', @updateForceGraph, this
+        @model.connections.on 'add remove', @updateForceGraph, this
+        @model.nodes.on 'change', @updateDetails, this
+        @model.connections.on 'change', @updateDetails, this
 
         @translateLock = false
 
@@ -72,11 +74,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
 
-      update: ->
-        that = this
+      updateForceGraph: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
         @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
+        @updateDetails()
+
+      updateDetails: ->
+        that = this
+        nodes = @model.nodes.models
+        connections = @model.connections.models
 
         # old elements
         connection = d3.select(".connection-container")
@@ -124,12 +131,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("r", 25)
 
         connectionEnter
-        .on "click", (d) =>
-          @model.selectConnection d
-        .on "mouseover", (conn)  =>
-          @trigger "connection:mouseover", conn        
-        .on "mouseout", (conn) =>
-          @trigger "connection:mouseout", conn
+          .on "click", (d) =>
+            @model.selectConnection d
+          .on "mouseover", (conn)  =>
+            @trigger "connection:mouseover", conn
+          .on "mouseout", (conn) =>
+            @trigger "connection:mouseout", conn
 
         nodeEnter
           .on "dblclick", (d) ->
