@@ -31,17 +31,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         # ignore panning and zooming when dragging node
         @translateLock = false
         # store the current zoom to undo changes from dragging a node
-        currentZoom = undefined
+        @currentZoom = undefined
         @force.drag()
         .on "dragstart", (d) ->
           that.translateLock = true
-          currentZoom = that.zoom.translate()
+          that.currentZoom = that.zoom.translate()
           d3.select(this).classed("fixed", d.fixed = true)
         .on "drag", (d) =>
           @trigger "node:drag", d
         .on "dragend", (node) =>
           @trigger "node:dragend", node
-          @zoom.translate currentZoom
+          @zoom.translate @currentZoom
           @translateLock = false
 
         @svg = d3.select(@el).append("svg:svg")
@@ -177,8 +177,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           @connectionAdder.tick()
         @force.on "tick", tick
 
-      isContainedIn: (node, element) ->
-        node.x < element.offset().left + element.width() &&
-          node.x > element.offset().left &&
-          node.y > element.offset().top &&
-          node.y < element.offset().top + element.height()
+      isContainedIn: (node, element) =>
+        node.x+@currentZoom[0] < element.offset().left + element.width() &&
+          node.x+@currentZoom[0] > element.offset().left &&
+          node.y+@currentZoom[1] > element.offset().top &&
+          node.y+@currentZoom[1] < element.offset().top + element.height()
