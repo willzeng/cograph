@@ -1,6 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/GraphModel', 'cs!models/FilterModel'
-  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView', 'cs!views/MenuView'],
-  ($, _, Backbone, NodeModel, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
+  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView',
+  'cs!views/SideBarView', 'cs!views/MenuView', 'text!initial_nodes.json'],
+  ($, _, Backbone, NodeModel, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, InitialNodes) ->
     class Router extends Backbone.Router
       initialize: ->
         default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
@@ -22,14 +23,20 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Gr
 
       home: ->
         @graphView.render()
-
-        testNode = new NodeModel {name: "Fermat's Last Theorem", tags: ["theorem", "famous"]}
-        gm.putNode testNode
-
-
+        gm.putNode new NodeModel {name: "Fermat's Last Theorem", tags: ["theorem", "famous"]}
         gm.putNode new NodeModel {name: "Poincare Conjecture", tags: ["conjecture", "famous"]}
 
-        @randomPopulate()
+        # @randomPopulate()
+        @loadNodes()
+
+      loadNodes: ->
+        nodeConnections = $.parseJSON InitialNodes
+        gm.putNode(new NodeModel(node)) for node in nodeConnections.nodes
+        for connection in nodeConnections.connections
+            gm.connections.add
+              name: connection.name
+              source: gm.nodes.findWhere(name: connection.source)
+              target: gm.nodes.findWhere(name: connection.target)
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
