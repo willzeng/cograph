@@ -1,1 +1,1 @@
-web: server.sh
+web: sh server.sh
