@@ -7,7 +7,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Gr
         @graphModel = new GraphModel initial_tags:default_tags
 
         @dataHub = new DataHub model: @graphModel
-        #console.log DataHub
 
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
