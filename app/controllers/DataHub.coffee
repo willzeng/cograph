@@ -6,5 +6,5 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController'],
       @model.nodes.on 'add', @nodeAdd, this
 
     nodeAdd:(node) ->
-      if !node.get('in_DB')
+      if !node.get('inDB')
         DataController.nodeAdd node

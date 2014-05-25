@@ -33,7 +33,7 @@ server.post('/create_connection', (request, response) ->
 
 parseCypherNode = (node) ->
   nodeData = node.n._data.data
-  nodeData.in_DB = true
+  nodeData.inDB = true
   nodeData
 
 

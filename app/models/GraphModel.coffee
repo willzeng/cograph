@@ -1,5 +1,4 @@
-define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel',
- 'cs!controllers/DataController'], (Backbone, NodeModel, ConnectionModel, FilterModel, DataController) ->
+define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], (Backbone, NodeModel, ConnectionModel, FilterModel) ->
   class ConnectionCollection extends Backbone.Collection
     model: ConnectionModel
 
