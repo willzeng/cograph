@@ -1,10 +1,13 @@
-define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/GraphModel', 'cs!models/FilterModel'
+define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/GraphModel', 'cs!controllers/DataHub','cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView'],
-  ($, _, Backbone, NodeModel, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView) ->
+  ($, _, Backbone, NodeModel, GraphModel, DataHub, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView) ->
     class Router extends Backbone.Router
       initialize: ->
         default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
         @graphModel = new GraphModel initial_tags:default_tags
+
+        @dataHub = new DataHub model: @graphModel
+        #console.log DataHub
 
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel

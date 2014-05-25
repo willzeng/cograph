@@ -23,7 +23,18 @@ server.post('/create_node', (request, response) ->
   response.send request.body
 )
 
+server.post('/create_connection', (request, response) ->
+  newConnection = request.body
+  source = request.body.source
+  target = request.body.target
+  console.log 'source is: ', source
+  response.send ""
+)
+
 parseCypherNode = (node) ->
-  node.n._data.data
+  nodeData = node.n._data.data
+  nodeData.in_DB = true
+  nodeData
+
 
 module.exports = server

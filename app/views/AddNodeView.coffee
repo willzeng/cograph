@@ -1,5 +1,5 @@
-define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel', 'cs!controllers/DataController'],
-  ($, Backbone, GraphModel, NodeModel, DataController) ->
+define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel'],
+  ($, Backbone, GraphModel, NodeModel) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
 
@@ -11,7 +11,6 @@ define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel', 'cs
         node = new NodeModel name: node_name
         if node.isValid()
           @model.selectNode @model.putNode node
-          DataController.nodeAdd node
           $('input', @el).val('')
         else
           $('input', @el).attr('placeholder', 'Node must have name!')
