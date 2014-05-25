@@ -22,7 +22,8 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
           if @creatingConnection
             @graphView.translateLock = false
             @drag_line.attr('class', 'dragline hidden')
-            @model.selectConnection @model.putConnection "links to", @drag_line.data()[0].anchor, node
+            if node.cid != @drag_line.data()[0].anchor.cid
+              @model.selectConnection @model.putConnection "links to", @drag_line.data()[0].anchor, node
           else
             @graphView.translateLock = true
             @drag_line.attr('class', 'dragline')
