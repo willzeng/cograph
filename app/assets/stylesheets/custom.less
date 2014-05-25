@@ -173,10 +173,30 @@ svg {
   display: inline;
 }
 
+#menu-title {
+  outline: none;
+  width: 450px;
+  background: transparent;
+  border: 0;
+  float: left;
+}
+
+#menu-title:focus {
+  background: @white;
+}
+
+#menu-bar .nav-pills {
+  a{
+    padding: 5px 10px;
+  }
+
+  float: left;
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
-  outline:none !important;
+  outline: none !important;
 }
 
 .navbar {
@@ -187,7 +207,8 @@ svg {
   border-radius: 0;
 }
 
-.navbar-brand {
+.navbar-brand, .navbar-text  {
   padding: 5px;
   height: auto;
+  margin: 0px;
 }

@@ -23,6 +23,9 @@ requirejs.config({
     },
     'bloodhound': {
       deps: ['jquery']
+    },
+    'bootstrap': {
+      deps: ['jquery']
     }
   },
   packages: [{

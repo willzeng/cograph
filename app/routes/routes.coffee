@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/GraphModel', 'cs!controllers/DataHub','cs!models/FilterModel'
-  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView'],
-  ($, _, Backbone, NodeModel, GraphModel, DataHub, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView) ->
+  'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView', 'cs!views/MenuView'],
+  ($, _, Backbone, NodeModel, GraphModel, DataHub, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
     class Router extends Backbone.Router
       initialize: ->
         default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
@@ -15,6 +15,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Gr
         @filterView = new FilterView {model: @graphModel.getFilter()}
         @searchView = new SearchView model: @graphModel
         @sidebarView = new SideBarView()
+        @menuView = new MenuView()
 
         window.gm = @graphModel
         Backbone.history.start()
