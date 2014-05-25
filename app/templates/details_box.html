@@ -16,7 +16,9 @@
     <div class="panel-body">
       <p class="lead"><%= attributes.description %></p>
       <p>
-        URL: <%= attributes.url %><br/>
+        <% if (attributes.url) { %>
+            URL: <a href="<%= attributes.url %>"><%= attributes.url %></a><br/>
+        <% }; %>
         <ul class="list-group">
           <% _.each(attributes.tags, function(tag) { %>
             <li class="list-group-item"><%= tag %></li>
