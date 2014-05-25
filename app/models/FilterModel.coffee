@@ -4,3 +4,4 @@ define ['backbone', 'cs!models/NodeModel'], (Backbone, NodeModel) ->
 
     passes: (node) =>
       (_.intersection node.get('tags'), @get('node_tags')).length > 0 or (node.get('tags').length is 0)
+      true

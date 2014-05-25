@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {
+      "name": "Victor",
+      "description": "A really nice guy",
+      "url": "www.google.com",
+      "tags": ["person"]
+    },
+    {
+      "name": "Erik",
+      "description": "A moderately nice guy",
+      "url": "www.facebook.com/erik",
+      "tags": ["person"]
+    }
+  ],
+  "connections": [
+    {
+      "source": "Victor",
+      "target": "Erik",
+      "description": "Met at Oxford"
+    }
+  ]
+}
