@@ -1,12 +1,7 @@
-url = 'http://wikinets-edge:wiKnj2gYeYOlzWPUcKYb@wikinetsedge.sb01.stations.graphenedb.com:24789';
-
-# load node_modules/neo4js folder
-neo4js = require(__dirname + '/node_modules/neo4js')
-graphDb = new neo4js.GraphDatabase4Node(url)
-
 express = require 'express'
 path = require 'path'
 favicon = require 'static-favicon'
+bodyParser = require 'body-parser'
 
 app = express()
 
@@ -20,8 +15,12 @@ app.use require('less-middleware')(path.join(__dirname, '/app/') )
 # http://stackoverflow.com/questions/19489681/node-js-less-middleware-not-auto-compiling
 app.use express.static(path.join(__dirname, '/app'))
 
-app.get('/', (request, response)->
-  response.render('index.jade')
-)
+app.use bodyParser()
+
+routes = require './routes/index'
+server = require './routes/server'
+
+app.use '/', routes
+app.use '/server', server
 
 module.exports = app

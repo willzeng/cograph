@@ -8,6 +8,7 @@ define ['backbone'], (Backbone) ->
       url: ''
       size: ''
       color: ''
+      inDB: false
 
     schema:
       name:
