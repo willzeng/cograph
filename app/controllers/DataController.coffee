@@ -11,7 +11,7 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
       newConn.source = conn.get('source').get('_id')
       newConn.target = conn.get('target').get('_id')
       $.post "/server/create_connection", newConn, (c) ->
-        console.log "Added connection ", d, " to the database"
+        console.log "Added connection ", c, " to the database"
         callback c
 
     nodeEdit: (node) ->
