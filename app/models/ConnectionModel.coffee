@@ -8,6 +8,7 @@ define ['backbone'], (Backbone) ->
       target: undefined
       color: 'grey'
       tags: []
+      _id: -1
 
     schema:
       name: 'Text'
