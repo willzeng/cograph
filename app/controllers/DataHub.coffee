@@ -8,8 +8,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
       @model.on 'delete', @nodeDelete, this
       @model.nodes.on 'change', @nodeEdit, this
 
-      @ignoredAttributes = ['dim', 'selected']
-
     nodeAdd: (node) ->
       if node.get('_id') < 0
         DataController.nodeAdd node, (newNode) ->
@@ -21,7 +19,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
           connection.set '_id', newConn._id
 
     nodeEdit: (node) ->
-      if _.difference(_.keys(node.changed), @ignoredAttributes).length
+      if not _.isEmpty _.omit(node.changed, node.ignoredAttributes)
         if node.get('_id') >= 0
           DataController.nodeEdit node
 
