@@ -25,6 +25,20 @@ server.post('/create_node', (request, response) ->
     response.send newNode
 )
 
+server.get '/get_node', (request, response) ->
+  id = request.query.id
+  graphDb.getNodeById id, (err, node) ->
+    response.send node
+
+server.post '/update_node', (request, response) ->
+  id = request.body._id
+  newData = request.body
+  graphDb.getNodeById id, (err, node) ->
+    node.data = newData
+    node.save (err, node) ->
+      console.log 'Node updated in database with id:', node._id
+    response.send node
+
 server.post('/create_connection', (request, response) ->
   newConnection = request.body
   source = request.body.source
