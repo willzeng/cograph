@@ -15,7 +15,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
 
     connectionAdd: (connection) ->
       if connection.get('_id') < 0
-        DataController.connectionAdd connection
+        DataController.connectionAdd connection, (newConn) ->
+          connection.set '_id', newConn._id
 
     nodeDelete:(node) ->
       DataController.nodeDelete node
