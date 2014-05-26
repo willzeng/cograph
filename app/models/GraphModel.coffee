@@ -22,8 +22,8 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       if @filterModel.passes nodeModel
         @nodes.add nodeModel
 
-    putConnection: (name, source, target) ->
-      @connections.add {'name': name, 'source': source, 'target': target}
+    putConnection: (connectionModel) ->
+      @connections.add connectionModel
 
     removeNode: (model) ->
       @nodes.remove model
