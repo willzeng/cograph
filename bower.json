@@ -1,7 +1,7 @@
 {
-  "name": "graphdocs-client",
+  "name": "GraphDocs",
   "version": "0.0.0",
-  "homepage": "https://github.com/Rhizi/rhizi-client",
+  "homepage": "https://github.com/willzeng/GraphDocs",
   "authors": [
     "Victor Pontis <vpontis@gmail.com>",
     "Will Zeng <zeng.will@gmail.com>",
