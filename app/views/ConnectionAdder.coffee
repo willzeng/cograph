@@ -1,5 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'd3'],
-  ($, _, Backbone, d3) ->
+define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
+  ($, _, Backbone, d3, ConnectionModel) ->
     class ConnectionAdder extends Backbone.View
       el: $ '#graph'
 
@@ -23,7 +23,11 @@ define ['jquery', 'underscore', 'backbone', 'd3'],
             @graphView.translateLock = false
             @drag_line.attr('class', 'dragline hidden')
             if node.cid != @drag_line.data()[0].anchor.cid
-              @model.selectConnection @model.putConnection "links to", @drag_line.data()[0].anchor, node
+              connection = new ConnectionModel
+                name: 'links to'
+                source: @drag_line.data()[0].anchor
+                target: node
+              @model.selectConnection @model.putConnection connection
           else
             @graphView.translateLock = true
             @drag_line.attr('class', 'dragline')
