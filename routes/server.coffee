@@ -19,7 +19,6 @@ server.get('/get_all_connections', (request, response) ->
   console.log "get_all_connections Query Requested"
   cypherQuery = "start n=rel(*) return n;"
   graphDb.query cypherQuery, {}, (err, results) ->
-    console.log results
     connections = (parseCypherNode(connection) for connection in results)
     response.send connections
 )
