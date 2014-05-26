@@ -38,9 +38,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         .on "dragstart", (d) ->
           that.translateLock = true
           that.currentZoom = that.zoom.translate()
-        .on "drag", (d) =>
-          @trigger "node:drag", d
+        .on "drag", (d) ->
           d3.select(this).classed("fixed", d.fixed = true)
+          that.trigger "node:drag", d
         .on "dragend", (node) =>
           @trigger "node:dragend", node
           @zoom.translate @currentZoom
