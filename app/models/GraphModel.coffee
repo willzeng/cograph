@@ -30,6 +30,9 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @connections.remove @connections.where {'source':model}
       @connections.remove @connections.where {'target':model}
 
+    removeConnection: (model) ->
+      @connections.remove model
+
     deleteNode: (model) ->
       @removeNode model
       @trigger 'delete:node', model
@@ -37,9 +40,6 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     deleteConnection: (model) ->
       @removeConnection model
       @trigger 'delete:connection', model
-
-    removeConnection: (model) ->
-      @connections.remove model
 
     selectNode: (node) ->
       @nodes.each (d) ->

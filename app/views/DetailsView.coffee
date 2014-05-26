@@ -63,16 +63,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       deleteObj: ->
         if @getSelectedNode()
-          @deleteNode()
+          @model.deleteNode @getSelectedNode()
         else if @getSelectedConnection()
-          @deleteConnection()
-
-      deleteNode: () ->
-        @model.deleteNode @getSelectedNode()
-        @closeDetail()
-
-      deleteConnection: () ->
-        @model.deleteConnection @getSelectedConnection()
+          @model.deleteConnection @getSelectedConnection()
         @closeDetail()
 
       getSelectedNode: ->
