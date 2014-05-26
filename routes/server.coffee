@@ -15,6 +15,14 @@ server.get('/get_all_nodes', (request, response) ->
     response.send nodes
 )
 
+server.get('/get_all_connections', (request, response) ->
+  console.log "get_all_connections Query Requested"
+  cypherQuery = "start n=rel(*) return n;"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    connections = (parseCypherNode(connection) for connection in results)
+    response.send connections
+)
+
 server.post('/create_node', (request, response) ->
   console.log "create_node Query Requested"
   newNode = request.body
@@ -22,6 +30,9 @@ server.post('/create_node', (request, response) ->
   node.save (err, node) ->
     console.log 'Node saved to database with id:', node.id
     newNode._id = node.id
+    node.data._id = node.id
+    node.save (err, node) ->
+      console.log 'Updated id of node'
     response.send newNode
 )
 
@@ -40,11 +51,16 @@ server.post '/update_node', (request, response) ->
     response.send node
 
 server.post('/create_connection', (request, response) ->
+  console.log "create_connection Query Requested"
   newConnection = request.body
-  source = request.body.source
-  target = request.body.target
-  console.log 'source is: ', source
-  response.send ""
+  graphDb.getNodeById newConnection.source, (err, source) ->
+    graphDb.getNodeById newConnection.target, (err, target) ->
+      source.createRelationshipTo target, 'connection', newConnection, (err, conn) ->
+        newConnection._id = conn.id
+        conn.data._id = conn.id
+        conn.save (err, conn) ->
+          console.log 'Updated id of connection'
+        response.send newConnection
 )
 
 server.post('/delete_node', (request, response) ->

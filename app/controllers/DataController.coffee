@@ -1,9 +1,18 @@
 define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
 
   DataController =
-    nodeAdd: (node) ->
+    nodeAdd: (node, callback) ->
       $.post "/server/create_node", node.attributes, (d) ->
         console.log "Added node ", d, " to the database"
+        callback d
+
+    connectionAdd: (conn, callback) ->
+      newConn = conn.clone().attributes
+      newConn.source = conn.get('source').get('_id')
+      newConn.target = conn.get('target').get('_id')
+      $.post "/server/create_connection", newConn, (c) ->
+        console.log "Added connection ", c, " to the database"
+        callback c
 
     nodeEdit: (node) ->
       $.post "/server/update_node", node.attributes, (d) ->
