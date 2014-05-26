@@ -20,6 +20,6 @@ define ['backbone'], (Backbone) ->
 
     serialize: ->
       json = _.omit @clone().toJSON(), @ignoredAttributes
-      json.source = @('source').get('_id')
-      json.target = @('target').get('_id')
+      json.source = @get('source').get('_id')
+      json.target = @get('target').get('_id')
       json
