@@ -16,11 +16,13 @@ server.get('/get_all_nodes', (request, response) ->
 )
 
 server.post('/create_node', (request, response) ->
+  console.log "create_node Query Requested"
   newNode = request.body
   node = graphDb.createNode newNode
   node.save (err, node) ->
     console.log 'Node saved to database with id:', node.id
-  response.send request.body
+    newNode._id = node.id
+    response.send newNode
 )
 
 server.post('/create_connection', (request, response) ->
@@ -31,10 +33,21 @@ server.post('/create_connection', (request, response) ->
   response.send ""
 )
 
+server.post('/delete_node', (request, response) ->
+  console.log "delete_node Query Requested"
+  deleteNode = request.body
+  cypherQuery = "start n=node(#{deleteNode._id}) delete n;"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    response.send true
+)
+
 parseCypherNode = (node) ->
   nodeData = node.n._data.data
-  nodeData.in_DB = true
+  nodeData._id = trim node.n._data.self
   nodeData
 
+#Trims a url i.e. 'http://localhost:7474/db/data/node/312' -> 312
+trim = (string)->
+  string.match(/[0-9]*$/)[0]
 
 module.exports = server
