@@ -18,9 +18,9 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
       $.post "/node/#{node.get('_id')}", node.attributes, (d) ->
         console.log "Updated node ", d
 
-    nodeDelete: (node) ->
+    objDelete: (type, obj) ->
       $.ajax
-        url: "/node/#{node.get('_id')}"
+        url: "/#{type}/#{obj.get('_id')}"
         type: "DELETE"
         success: (d) ->
-          if d then console.log "Deleted node from database"
+          if d then console.log "Deleted #{type} from database"

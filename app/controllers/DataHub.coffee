@@ -5,7 +5,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
     initialize: ->
       @model.nodes.on 'add', @nodeAdd, this
       @model.connections.on 'add', @connectionAdd, this
-      @model.on 'delete', @nodeDelete, this
+      @model.on 'delete:node', @nodeDelete, this
+      @model.on 'delete:connection', @connectionDelete, this
       @model.nodes.on 'change', @nodeEdit, this
 
       @ignoredAttributes = ['dim', 'selected']
@@ -26,4 +27,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
           DataController.nodeEdit node
 
     nodeDelete: (node) ->
-      DataController.nodeDelete node
+      DataController.objDelete 'node', node
+
+    connectionDelete: (conn) ->
+      DataController.objDelete 'connection', conn

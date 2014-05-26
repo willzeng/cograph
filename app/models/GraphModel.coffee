@@ -32,7 +32,11 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
 
     deleteNode: (model) ->
       @removeNode model
-      @trigger 'delete', model
+      @trigger 'delete:node', model
+
+    deleteConnection: (model) ->
+      @removeConnection model
+      @trigger 'delete:connection', model
 
     removeConnection: (model) ->
       @connections.remove model

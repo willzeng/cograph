@@ -35,11 +35,11 @@ connections.get '/', (req, resp) ->
 # UPDATE
 
 # DELETE
-connections.post '/:id', (req, resp) ->
-  console.log "delete_node Query Requested"
-  deleteNode = req.body
-  cypherQuery = "start n=node(#{deleteNode._id}) delete n;"
-  graphDb.query cypherQuery, {}, (err, results) ->
-    resp.send true
+connections.delete '/:id', (req, resp) ->
+  console.log "delete_connection Query Requested"
+  id = req.params.id
+  console.log "delete_connection Query Requested"
+  graphDb.getRelationshipById id, (err, conn) ->
+    conn.delete () -> true
 
 module.exports = connections
