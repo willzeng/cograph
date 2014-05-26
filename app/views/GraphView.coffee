@@ -129,6 +129,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("dy", "40px")
         nodeEnter.append("circle")
           .attr("r", 25)
+        nodeEnter.append("image")
+          .attr("x", -8)
+          .attr("y", -8)
+          .attr("width", 16)
+          .attr("height", 16)
 
         connectionEnter
           .on "click", (d) =>
@@ -170,6 +175,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
+        node.select('image')
+          .attr("xlink:href", (d) -> 
+            if(d.get('url') != '')
+              "http://www.google.com/s2/favicons?domain="+d.get('url')
+            else ''
+          )
 
         # delete unmatching elements
         node.exit().remove()
