@@ -29,12 +29,11 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         #Prepopulate the GraphModel with all the nodes in the database
         $.get '/server/get_all_nodes', (nodes) ->
           gm.putNode new NodeModel node for node in nodes
-
-        $.get '/server/get_all_connections', (connections) ->
-          for connection in connections
-            connection.source = gm.nodes.findWhere _id: connection.source
-            connection.target = gm.nodes.findWhere _id: connection.target
-            gm.putConnection new ConnectionModel connection
+          $.get '/server/get_all_connections', (connections) ->
+            for connection in connections
+              connection.source = gm.nodes.findWhere _id: connection.source
+              connection.target = gm.nodes.findWhere _id: connection.target
+              gm.putConnection new ConnectionModel connection
 
         #@randomPopulate()
 
