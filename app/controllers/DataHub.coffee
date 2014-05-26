@@ -5,10 +5,12 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
     initialize: ->
       @model.nodes.on 'add', @nodeAdd, this
       @model.connections.on 'add', @connectionAdd, this
-
       @model.on 'delete', @nodeDelete, this
+      @model.nodes.on 'change', @nodeEdit, this
 
-    nodeAdd:(node) ->
+      @ignoredAttributes = ['dim', 'selected']
+
+    nodeAdd: (node) ->
       if node.get('_id') < 0
         DataController.nodeAdd node, (newNode) ->
           node.set '_id', newNode._id
@@ -18,5 +20,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
         DataController.connectionAdd connection, (newConn) ->
           connection.set '_id', newConn._id
 
-    nodeDelete:(node) ->
+    nodeEdit: (node) ->
+      if _.difference(_.keys(node.changed), @ignoredAttributes).length
+        if node.get('_id') >= 0
+          DataController.nodeEdit node
+
+    nodeDelete: (node) ->
       DataController.nodeDelete node

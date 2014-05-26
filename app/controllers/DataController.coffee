@@ -1,8 +1,6 @@
 define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
 
   DataController =
-
-    #should add a node to the database
     nodeAdd: (node, callback) ->
       $.post "/server/create_node", node.attributes, (d) ->
         console.log "Added node ", d, " to the database"
@@ -16,6 +14,10 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
       $.post "/server/create_connection", newConn, (c) ->
         console.log "Added connection ", d, " to the database"
         callback c
+
+    nodeEdit: (node) ->
+      $.post "/server/update_node", node.attributes, (d) ->
+        console.log "Updated node ", d
 
     nodeDelete: (node) ->
       $.post "/server/delete_node", node.attributes, (d) ->
