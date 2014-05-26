@@ -7,8 +7,7 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
         callback d
 
     connectionAdd: (conn, callback) ->
-      conn = conn.clone()
-      newConn = conn.attributes
+      newConn = conn.clone().attributes
       newConn.source = conn.get('source').get('_id')
       newConn.target = conn.get('target').get('_id')
       $.post "/server/create_connection", newConn, (c) ->
