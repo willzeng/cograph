@@ -4,9 +4,11 @@ nodes = express.Router()
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
-utils = require 'utils'
+utils = require './utils'
 
-nodes.param 'id', /^\d+$/
+connections.param 'id', (req, res, next, id) ->
+  req.id = id
+  next()
 
 # CREATE
 nodes.post '/', (req, resp) ->

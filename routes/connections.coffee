@@ -4,9 +4,11 @@ connections = express.Router()
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
-utils = require 'utils'
+utils = require './utils'
 
-connections.param 'id', /^\d+$/
+connections.param 'id', (req, res, next, id) ->
+  req.id = id
+  next()
 
 # CREATE
 connections.post '/', (req, resp) ->
@@ -40,4 +42,4 @@ connections.post '/:id', (req, resp) ->
   graphDb.query cypherQuery, {}, (err, results) ->
     resp.send true
 
-modeule.exports = connections
+module.exports = connections
