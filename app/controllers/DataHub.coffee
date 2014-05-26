@@ -10,7 +10,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
 
     nodeAdd:(node) ->
       if node.get('_id') < 0
-        DataController.nodeAdd node
+        DataController.nodeAdd node, (newNode) ->
+          node.set '_id', newNode._id
 
     connectionAdd: (connection) ->
       if connection.get('_id') < 0
