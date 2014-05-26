@@ -17,10 +17,10 @@ server.get('/get_all_nodes', (request, response) ->
 
 server.get('/get_all_connections', (request, response) ->
   console.log "get_all_connections Query Requested"
-  cypherQuery = "start r=rel(*) return r;"
+  cypherQuery = "start n=rel(*) return n;"
   graphDb.query cypherQuery, {}, (err, results) ->
     console.log results
-    connections = (parseCypherRelationship(connection) for connection in results)
+    connections = (parseCypherNode(connection) for connection in results)
     response.send connections
 )
 
@@ -62,11 +62,6 @@ parseCypherNode = (node) ->
   nodeData = node.n._data.data
   nodeData._id = trim node.n._data.self
   nodeData
-
-parseCypherRelationship = (r) ->
-  relationshipData = r.r._data.data
-  relationshipData._id = trim r.r._data.self
-  relationshipData
 
 #Trims a url i.e. 'http://localhost:7474/db/data/node/312' -> 312
 trim = (string)->
