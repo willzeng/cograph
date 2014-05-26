@@ -2,7 +2,7 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
 
   DataController =
     nodeAdd: (node, callback) ->
-      $.post "/server/create_node", node.attributes, (d) ->
+      $.post "/node/", node.attributes, (d) ->
         console.log "Added node ", d, " to the database"
         callback d
 
@@ -10,14 +10,17 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
       newConn = conn.clone().attributes
       newConn.source = conn.get('source').get('_id')
       newConn.target = conn.get('target').get('_id')
-      $.post "/server/create_connection", newConn, (c) ->
+      $.post "/connection/", newConn, (c) ->
         console.log "Added connection ", c, " to the database"
         callback c
 
     nodeEdit: (node) ->
-      $.post "/server/update_node", node.attributes, (d) ->
+      $.post "/node/#{node.get('_id')}", node.attributes, (d) ->
         console.log "Updated node ", d
 
     nodeDelete: (node) ->
-      $.post "/server/delete_node", node.attributes, (d) ->
-        if d then console.log "Deleted node from database"
+      $.ajax
+        url: "/node/#{node.get('_id')}"
+        type: "DELETE"
+        success: (d) ->
+          if d then console.log "Deleted node from database"

@@ -6,7 +6,7 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-connections.param 'id', (req, res, next, id) ->
+nodes.param 'id', (req, res, next, id) ->
   req.id = id
   next()
 
@@ -14,7 +14,7 @@ connections.param 'id', (req, res, next, id) ->
 nodes.post '/', (req, resp) ->
   console.log "create_node Query Requested"
   newNode = req.body
-  node = graphDb.createNode
+  node = graphDb.createNode newNode
   node.save (err, node) ->
     console.log 'Node saved to database with id:', node.id
     newNode._id = node.id
@@ -50,9 +50,8 @@ nodes.post '/:id', (req, resp) ->
 nodes.delete '/:id', (req, resp) ->
   id = req.params.id
   console.log "delete_node Query Requested"
-  deleteNode = req.body
-  cypherQuery = "start n=node(#{deleteNode._id}) delete n;"
-  graphDb.query cypherQuery, {}, (err, results) ->
-    resp.send true
+  graphDb.getNodeById id, (err, node) ->
+    node.delete () -> true
+
 
 module.exports = nodes
