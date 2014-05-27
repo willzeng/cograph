@@ -33,6 +33,14 @@ connections.get '/', (req, resp) ->
     resp.send connections
 
 # UPDATE
+connections.post '/:id', (req, resp) ->
+  id = req.params.id
+  newData = req.body
+  graphDb.getRelationshipById id, (err, conn) ->
+    conn.data = newData
+    conn.save (err, conn) ->
+      console.log 'Conn updated in database with id:', conn._id
+      resp.send conn
 
 # DELETE
 connections.delete '/:id', (req, resp) ->

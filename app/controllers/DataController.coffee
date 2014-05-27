@@ -15,9 +15,13 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
       $.post "/node/#{node.get('_id')}", node.serialize(), (d) ->
         console.log "Updated node ", d
 
+    connectionEdit: (conn) ->
+      $.post "/connection/#{conn.get('_id')}", conn.serialize(), (d) ->
+        console.log "Updated conn ", d
+
     objDelete: (type, obj) ->
       $.ajax
         url: "/#{type}/#{obj.get('_id')}"
         type: "DELETE"
         success: (d) ->
-          if d then console.log "Deleted #{type} from database
+          if d then console.log "Deleted #{type} from database"
