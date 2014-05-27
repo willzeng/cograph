@@ -30,8 +30,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
         @zoom = d3.behavior.zoom().on('zoom', zoomed)
 
-        # ignore panning and zooming when dragging node
-        @translateLock = false
         # store the current zoom to undo changes from dragging a node
         @currentZoom = undefined
         @force.drag()
