@@ -146,7 +146,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             d3.event.preventDefault()
             @trigger 'node:right-click', node
           .on "mouseover", (node) =>
-            if @creatingConnection then return
             @trigger "node:mouseover", node
 
             connectionsToHL = @model.connections.filter (c) ->
