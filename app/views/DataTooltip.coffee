@@ -43,7 +43,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
           @isHoveringANode = setTimeout( () =>
             @dataToolTipShown = true
             $(".data-tooltip-container")
-              .append(_.template(dataTooltipTemplate, nodeConnection))
+              .html(_.template(dataTooltipTemplate, nodeConnection))
               .fadeIn()
           ,400)
 
