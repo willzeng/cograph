@@ -5,6 +5,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
 
       initialize: ->
         that = this
+        @svg = @attributes.svg
         @graphView = @attributes.graphView
 
         @drag_line = @svg.append('svg:line')
