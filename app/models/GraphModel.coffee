@@ -41,38 +41,27 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @removeConnection model
       @trigger 'delete:connection', model
 
-    selectNode: (node) ->
+    select: (nodeConnection) ->
       @nodes.each (d) ->
         d.set('selected', false)
       @connections.each (d) ->
         d.set('selected', false)
-      node.set 'selected', true
+      nodeConnection.set 'selected', true
 
-    selectConnection: (connection) ->
-      @connections.each (d) ->
-        d.set('selected', false)
+    highlight: (nodesToHL, connectionsToHL) ->
       @nodes.each (d) ->
-        d.set('selected', false)
-      connection.set 'selected', true
-
-    highlightNodes: (nodesToHL) ->
-      @nodes.each (d) ->
-        d.set('dim',true)
+        d.set 'dim', true
       _.each nodesToHL, (d) ->
         d.set 'dim', false
-
-    dehighlightNodes: () ->
-      @nodes.each (d) ->
-        d.set 'dim', false
-
-    highlightConnections: (connectionsToHL) ->
       @connections.each (d) ->
-        d.set('dim', true)
+        d.set 'dim', true
       _.each connectionsToHL, (d) ->
         d.set 'dim', false
 
-    dehighlightConnections: () ->
+    dehighlight: () ->
       @connections.each (d) ->
+        d.set 'dim', false
+      @nodes.each (d) ->
         d.set 'dim', false
 
     getFilter: () ->

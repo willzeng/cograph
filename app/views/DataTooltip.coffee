@@ -22,8 +22,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
         @graphView.on 'node:mouseout connection:mouseout', (nc) =>
           window.clearTimeout(@isHoveringANode)
           if !@translateLock
-            @model.dehighlightConnections()
-            @model.dehighlightNodes()
+            @model.dehighlight()
             @emptyTooltip()
 
         @graphView.on 'connection:mouseover', (conn) =>
@@ -45,7 +44,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
             $(".data-tooltip-container")
               .append(_.template(dataTooltipTemplate, nodeConnection))
               .fadeIn()
-          ,400)
+          , 600)
 
       emptyTooltip: ->
         @dataToolTipShown = false

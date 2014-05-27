@@ -97,7 +97,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         connectionEnter
           .on "click", (d) =>
-            @model.selectConnection d
+            @model.select d
           .on "mouseover", (datum, index)  =>
             if !@dataToolTipShown
               @isHoveringANode = setTimeout( () =>
@@ -132,7 +132,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         connectionEnter
           .on "click", (d) =>
-            @model.selectConnection d
+            @model.select d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
@@ -143,7 +143,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             d3.select(this).classed("fixed", d.fixed = false)
           .on "click", (d) =>
             if (d3.event.defaultPrevented) then return
-            @model.selectNode d
+            @model.select d
           .on "contextmenu", (node) =>
             d3.event.preventDefault()
             @trigger 'node:right-click', node
@@ -157,9 +157,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
             nodesToHL.push node
 
-            @model.highlightNodes(nodesToHL)
-            @model.highlightConnections(connectionsToHL)
+            @highlightTimer = setTimeout () =>
+                @model.highlight(nodesToHL, connectionsToHL)
+              , 600
           .on "mouseout", (node) =>
+            window.clearTimeout(@highlightTimer)
             @trigger "node:mouseout", node
 
         # update old and new elements
