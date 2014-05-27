@@ -25,6 +25,11 @@ connections.post '/', (req, resp) ->
 
 
 # READ
+connections.get '/:id', (req, resp) ->
+  id = req.params.id
+  graphDb.getRelationshipById id, (err, conn) ->
+    resp.send conn
+
 connections.get '/', (req, resp) ->
   console.log "get_all_connections Query Requested"
   cypherQuery = "start n=rel(*) return n;"
