@@ -20,9 +20,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                   .nodes([])
                   .links([])
                   .size([width, height])
-                  .charge(-4000 )
+                  .charge(-4000)
                   .gravity(0.2)
                   .friction(0.6)
+                  .distance(100)
 
         zoomed = =>
           return if @translateLock
@@ -91,8 +92,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .data connections
 
         # new elements
-        connectionEnter = connection.enter().append("line")
+        connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
+        connectionEnter.append("line")
           .attr("marker-end", "url(#arrowhead)")
 
         connectionEnter
@@ -175,7 +177,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.exit().remove()
 
         tick = =>
-          connection
+          connection.select('line')
             .attr("x1", (d) -> d.attributes.source.x)
             .attr("y1", (d) -> d.attributes.source.y)
             .attr("x2", (d) -> d.attributes.target.x)

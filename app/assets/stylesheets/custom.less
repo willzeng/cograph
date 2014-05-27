@@ -17,7 +17,11 @@
 }
 
 .node.dim {
-  opacity: 0.3;
+  filter: url(#blur-effect);
+}
+
+.node.dim * {
+  fill: lighten(@node-color,20%);
 }
 
 .node.selected circle {
@@ -38,22 +42,23 @@
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
-.connection {
+.connection line {
   stroke: @connection-color;
   stroke-width: 8px;
-  stroke-linecap:round;
+  stroke-linecap: round;
   opacity: 0.5;
   cursor: pointer;
 }
 
-.connection.selected {
+.connection.selected line {
   stroke: @selected-color;
   opacity: 1;
 }
 
 .connection.dim {
-  opacity: 0.1;
+  opacity: 0.2;
 }
+
 
 line {
   fill: none;
@@ -64,6 +69,7 @@ line {
 
 line.dragline {
   pointer-events: none;
+  stroke-linecap: round;
 }
 
 line.hidden {
