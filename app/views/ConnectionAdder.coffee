@@ -27,7 +27,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
                 target: node
               @model.selectConnection @model.putConnection connection
           else
-            @drag_line.classed('hidden', false).datum(node)
+            @drag_line.classed('hidden', false)
+              .datum(node)
+              .attr("x1", (d) => d.x + @graphView.zoom.translate()[0])
+              .attr("y1", (d) => d.y + @graphView.zoom.translate()[1])
           @creatingConnection = !@creatingConnection
 
       tick: =>
