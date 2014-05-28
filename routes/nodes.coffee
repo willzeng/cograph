@@ -33,7 +33,7 @@ nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
   cypherQuery = "start n=node(*) return n;"
   graphDb.query cypherQuery, {}, (err, results) ->
-    nodes = (utils.parseCypherNode(node) for node in results)
+    nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
 # UPDATE
