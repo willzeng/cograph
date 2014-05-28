@@ -32,9 +32,9 @@ connections.get '/:id', (req, resp) ->
 
 connections.get '/', (req, resp) ->
   console.log "get_all_connections Query Requested"
-  cypherQuery = "start n=rel(*) return n;"
+  cypherQuery = "start r=rel(*) return r;"
   graphDb.query cypherQuery, {}, (err, results) ->
-    connections = (utils.parseCypherNode(connection) for connection in results)
+    connections = (utils.parseCypherResult(connection, 'r') for connection in results)
     resp.send connections
 
 # UPDATE
