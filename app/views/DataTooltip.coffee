@@ -13,7 +13,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
         @graphView.on 'node:mouseover connection:mouseover', (nc) =>
           @showToolTip nc
 
-        @graphView.on 'node:mouseout node: right-click connection:mouseout', (nc) =>
+        @graphView.on 'node:mouseout node:right-click connection:mouseout', (nc) =>
           window.clearTimeout(@isHoveringANode)
           @model.dehighlightConnections()
           @model.dehighlightNodes()
