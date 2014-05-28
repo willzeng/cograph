@@ -27,7 +27,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
                 name: 'links to'
                 source: @drag_line.data()[0].anchor
                 target: node
-              @model.selectConnection @model.putConnection connection
+              @model.select @model.putConnection connection
           else
             @graphView.translateLock = true
             @drag_line.attr('class', 'dragline')

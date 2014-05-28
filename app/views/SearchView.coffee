@@ -30,7 +30,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
         searchTerm = $('#search-input').val()
         node = @findNode searchTerm
         if node
-          @model.selectNode node
+          @model.select node
           $('#search-input').val('')
 
       findNode: (name) ->
