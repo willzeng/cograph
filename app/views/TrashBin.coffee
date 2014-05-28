@@ -14,5 +14,6 @@ define ['jquery', 'underscore', 'backbone'],
 
         @graphView.on "node:dragend", (node) =>
           if @graphView.isContainedIn node, $('#trash-bin')
+            @model.deSelect node
             @model.removeNode node
             $("#trash-bin").removeClass('selected')

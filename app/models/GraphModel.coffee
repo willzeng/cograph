@@ -41,11 +41,12 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @removeConnection model
       @trigger 'delete:connection', model
 
+    deSelect: (nodeConnection) ->
+      nodeConnection.set 'selected', false
+
     select: (nodeConnection) ->
-      @nodes.each (d) ->
-        d.set('selected', false)
-      @connections.each (d) ->
-        d.set('selected', false)
+      @nodes.each (d) => @deSelect d
+      @connections.each (d) => @deSelect d
       nodeConnection.set 'selected', true
 
     highlight: (nodesToHL, connectionsToHL) ->
