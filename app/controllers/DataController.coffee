@@ -2,19 +2,26 @@ define ['jquery', 'underscore', 'backbone'], ($, _, Backbone) ->
 
   DataController =
     nodeAdd: (node, callback) ->
-      $.post "/server/create_node", node.serialize(), (d) ->
+      $.post "/node/", node.serialize(), (d) ->
         console.log "Added node ", d, " to the database"
         callback d
 
     connectionAdd: (conn, callback) ->
-      $.post "/server/create_connection", conn.serialize(), (c) ->
+      $.post "/connection/", conn.serialize(), (c) ->
         console.log "Added connection ", c, " to the database"
         callback c
 
     nodeEdit: (node) ->
-      $.post "/server/update_node", node.serialize(), (d) ->
+      $.post "/node/#{node.get('_id')}", node.serialize(), (d) ->
         console.log "Updated node ", d
 
-    nodeDelete: (node) ->
-      $.post "/server/delete_node", node.serialize(), (d) ->
-        if d then console.log "Deleted node from database"
+    connectionEdit: (conn) ->
+      $.post "/connection/#{conn.get('_id')}", conn.serialize(), (d) ->
+        console.log "Updated conn ", d
+
+    objDelete: (type, obj) ->
+      $.ajax
+        url: "/#{type}/#{obj.get('_id')}"
+        type: "DELETE"
+        success: (d) ->
+          if d then console.log "Deleted #{type} from database"

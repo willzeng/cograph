@@ -11,7 +11,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'submit form': 'saveNodeConnection'
         'click #remove-node-button': 'removeNode'
         'click #remove-connection-button': 'removeConnection'
-        'click #delete-node-button': 'deleteNode'
+        'click #delete-button': 'deleteObj'
 
       initialize: ->
         @model.nodes.on 'change:selected', @update, this
@@ -57,12 +57,15 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @model.removeNode @getSelectedNode()
         @closeDetail()
 
-      deleteNode: () ->
-        @model.deleteNode @getSelectedNode()
-        @closeDetail()
-
       removeConnection: () ->
         @model.removeConnection @getSelectedConnection()
+        @closeDetail()
+
+      deleteObj: ->
+        if @getSelectedNode()
+          @model.deleteNode @getSelectedNode()
+        else if @getSelectedConnection()
+          @model.deleteConnection @getSelectedConnection()
         @closeDetail()
 
       getSelectedNode: ->

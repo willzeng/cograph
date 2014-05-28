@@ -18,9 +18,11 @@ app.use express.static(path.join(__dirname, '/app'))
 app.use bodyParser()
 
 routes = require './routes/index'
-server = require './routes/server'
+nodes = require './routes/nodes'
+connections = require './routes/connections'
 
 app.use '/', routes
-app.use '/server', server
+app.use '/node', nodes
+app.use '/connection', connections
 
 module.exports = app
