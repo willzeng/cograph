@@ -25,7 +25,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
               .css('top',event.clientY-20)
 
       showToolTip: (nodeConnection) ->
-        @isHoveringANode = setTimeout( () =>
+        @isHoveringANode = setTimeout( () ->
           $(".data-tooltip-container")
             .html(_.template(dataTooltipTemplate, nodeConnection))
             .fadeIn()
