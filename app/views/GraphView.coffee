@@ -175,10 +175,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         tick = =>
           connection
-            .attr("x1", (d) -> d.attributes.source.x)
-            .attr("y1", (d) -> d.attributes.source.y)
-            .attr("x2", (d) -> d.attributes.target.x)
-            .attr("y2", (d) -> d.attributes.target.y)
+            .attr("x1", (d) -> d.get('source').x)
+            .attr("y1", (d) -> d.get('source').y)
+            .attr("x2", (d) -> d.get('target').x)
+            .attr("y2", (d) -> d.get('target').y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()
         @force.on "tick", tick

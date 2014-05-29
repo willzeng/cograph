@@ -43,9 +43,9 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
 
     select: (nodeConnection) ->
       @nodes.each (d) ->
-        d.set('selected', false)
+        d.set 'selected', false
       @connections.each (d) ->
-        d.set('selected', false)
+        d.set 'selected', false
       nodeConnection.set 'selected', true
 
     highlight: (nodesToHL, connectionsToHL) ->
