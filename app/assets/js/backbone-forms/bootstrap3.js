@@ -25,12 +25,12 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
 
   Form.Field.template = _.template('\
-    <div class="form-group field-<%= key %>">\
+    <div class="form-group field-<%= key %> edit-details-form">\
       <label class="control-label" for="<%= editorId %>"><%= title %></label>\
       <div>\
         <span data-editor></span>\
-        <p class="help-block" data-error></p>\
-        <p class="help-block"><%= help %></p>\
+        <span class="help-block" data-error></span>\
+        <span class="help-block"><%= help %></span>\
       </div>\
     </div>\
   ');
