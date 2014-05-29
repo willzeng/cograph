@@ -165,7 +165,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
-          .classed('fixed', (d) -> d.fixed)
+          .classed('fixed', (d) -> d.get('fixed'))
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))

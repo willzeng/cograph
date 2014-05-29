@@ -27,7 +27,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       if !@get('name')
         'Your node must have a name.'
 
-    ignoredAttributes: ['dim', 'selected']
+    ignoredAttributes: ['dim', 'selected', 'fixed']
 
     serialize: ->
       _.omit @clone().toJSON(), @ignoredAttributes
