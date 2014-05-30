@@ -47,6 +47,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         ).render()
 
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
+        $('input[name=name]', @el).focus()
 
       saveNodeConnection: (e) ->
         e.preventDefault()
