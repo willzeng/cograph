@@ -1,4 +1,6 @@
-var requirejs = require('requirejs');
+var requirejs = require('./app/assets/libs/requirejs/require.js');
+
+console.log(requirejs);
 
 // list all the tests to be run
 var specs = [
