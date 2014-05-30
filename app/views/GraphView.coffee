@@ -92,21 +92,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
           .attr("marker-end", "url(#arrowhead)")
-
-        connectionEnter
           .on "click", (d) =>
             @model.select d
-          .on "mouseover", (datum, index)  =>
-            if !@dataToolTipShown
-              @isHoveringANode = setTimeout( () =>
-                @dataToolTipShown = true
-                $(".data-tooltip-container")
-                  .append _.template(dataTooltipTemplate, datum)
-              ,200)
-          .on "mouseout", (datum, index) =>
-            window.clearTimeout(@isHoveringANode)
-            @dataToolTipShown = false
-            $(".data-tooltip-container").empty()
+          .on "mouseover", (conn)  =>
+            @trigger "connection:mouseover", conn
+          .on "mouseout", (conn) =>
+            @trigger "connection:mouseout", conn
 
         # old and new elements
         connection.attr("class", "connection")
@@ -128,14 +119,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         nodeEnter.append("circle")
           .attr("r", 25)
 
-        connectionEnter
-          .on "click", (d) =>
-            @model.select d
-          .on "mouseover", (conn)  =>
-            @trigger "connection:mouseover", conn
-          .on "mouseout", (conn) =>
-            @trigger "connection:mouseout", conn
-
         nodeEnter
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
@@ -147,18 +130,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             @trigger 'node:right-click', node
           .on "mouseover", (node) =>
             @trigger "node:mouseover", node
-
-            connectionsToHL = @model.connections.filter (c) ->
-              (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
-
-            nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
-            nodesToHL.push node
-
-            @highlightTimer = setTimeout () =>
-                @model.highlight(nodesToHL, connectionsToHL)
-              , 600
           .on "mouseout", (node) =>
-            window.clearTimeout(@highlightTimer)
             @trigger "node:mouseout", node
 
         # update old and new elements
