@@ -9,6 +9,10 @@
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
+.node {
+  transition: opacity .5s ease-in-out;
+}
+
 .node circle {
   cursor: pointer;
   stroke: @stroke-color;
@@ -173,10 +177,39 @@ svg {
   display: inline;
 }
 
+.edit-details-form input[type="text"], .edit-details-form button[type="button"] {
+  padding: 2px 5px;
+  height: auto;
+}
+
+.edit-details-form .help-block, .edit-details-form .form-group, .edit-details-form .label {
+  margin: 2px 0px;
+}
+
+#menu-title {
+  outline: none;
+  width: 450px;
+  background: transparent;
+  border: 0;
+  float: left;
+}
+
+#menu-title:focus {
+  background: @white;
+}
+
+#menu-bar .nav-pills {
+  a{
+    padding: 5px 10px;
+  }
+
+  float: left;
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
-  outline:none !important;
+  outline: none !important;
 }
 
 .navbar {
@@ -187,7 +220,12 @@ svg {
   border-radius: 0;
 }
 
-.navbar-brand {
+.navbar-brand, .navbar-text  {
   padding: 5px;
   height: auto;
+  margin: 0px;
+}
+
+.panel-body {
+  padding: 10px 15px;
 }

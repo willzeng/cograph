@@ -1,15 +1,15 @@
 {
-  "name": "rhizi-client",
+  "name": "GraphDocs",
   "version": "0.0.0",
-  "homepage": "https://github.com/Rhizi/rhizi-client",
+  "homepage": "https://github.com/willzeng/GraphDocs",
   "authors": [
     "Victor Pontis <vpontis@gmail.com>",
     "Will Zeng <zeng.will@gmail.com>",
     "David Furlong <dvfurlong@gmail.com>"
   ],
-  "description": "Rhizi allows you to explore graphs.",
+  "description": "Graph Docs allows you to explore graphs.",
   "keywords": [
-    "rhizi"
+    "graphdocs"
   ],
   "license": "GPL",
   "private": true,

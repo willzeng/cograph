@@ -7,31 +7,31 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
         'mousemove svg' : 'trackCursor'
 
       initialize: ->
-        @graphView = @attributes.graphView
         @model.nodes.on 'remove', @emptyTooltip, this
-        @dataToolTipShown = false
 
-        @isHoveringANode = @dataToolTipShown = false
-
-        @graphView.on 'node:right-click', () =>
-          @emptyTooltip()
-
+        @graphView = @attributes.graphView
         @graphView.on 'node:mouseover connection:mouseover', (nc) =>
           @showToolTip nc
 
-        @graphView.on 'node:mouseout connection:mouseout', (nc) =>
-          window.clearTimeout(@isHoveringANode)
-          if !@translateLock
-            @model.dehighlightConnections()
-            @model.dehighlightNodes()
-            @emptyTooltip()
+        @graphView.on 'node:mouseover', (node) =>
+          @highlight node
 
-        @graphView.on 'connection:mouseover', (conn) =>
-          @showToolTip conn
-
-        @graphView.on 'connection:mouseout', (conn) =>
+        @graphView.on 'node:mouseout node:right-click connection:mouseout', (nc) =>
           window.clearTimeout(@isHoveringANode)
+          window.clearTimeout(@highlightTimer)
+          @model.dehighlight()
           @emptyTooltip()
+
+      highlight: (node) ->
+        connectionsToHL = @model.connections.filter (c) ->
+          (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
+
+        nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
+        nodesToHL.push node
+
+        @highlightTimer = setTimeout () =>
+            @model.highlight(nodesToHL, connectionsToHL)
+          , 600
 
       trackCursor: (event) ->
         $(".data-tooltip-container")
@@ -39,14 +39,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
               .css('top',event.clientY-20)
 
       showToolTip: (nodeConnection) ->
-        if !@dataToolTipShown
-          @isHoveringANode = setTimeout( () =>
-            @dataToolTipShown = true
-            $(".data-tooltip-container")
-              .append(_.template(dataTooltipTemplate, nodeConnection))
-              .fadeIn()
-          ,400)
+        @isHoveringANode = setTimeout( () ->
+          $(".data-tooltip-container")
+            .html(_.template(dataTooltipTemplate, nodeConnection))
+            .fadeIn()
+        , 600)
 
       emptyTooltip: ->
-        @dataToolTipShown = false
         $(".data-tooltip-container").fadeOut(200).empty()

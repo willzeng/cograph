@@ -11,18 +11,19 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'submit form': 'saveNodeConnection'
         'click #remove-node-button': 'removeNode'
         'click #remove-connection-button': 'removeConnection'
+        'click #delete-button': 'deleteObj'
 
       initialize: ->
-        @model.nodes.on 'change', @update, this
-        @model.connections.on 'change', @update, this
+        @model.nodes.on 'change:selected', @update, this
+        @model.connections.on 'change:selected', @update, this
+        @model.on 'create:connection', @editConnection, this
 
       update: (nodeConnection) ->
-        if nodeConnection.changedAttributes()['selected']
-          selectedNC = @getSelectedNode() || @getSelectedConnection()
+        selectedNC = @getSelectedNode() || @getSelectedConnection()
 
-          $("#details-container").empty()
-          if selectedNC
-            $("#details-container").append _.template(detailsTemplate, selectedNC)
+        $("#details-container").empty()
+        if selectedNC
+          $("#details-container").append _.template(detailsTemplate, selectedNC)
 
       closeDetail: () ->
         $('#details-container').empty()
@@ -46,6 +47,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         ).render()
 
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
+        $('input[name=name]', @el).focus()
 
       saveNodeConnection: (e) ->
         e.preventDefault()
@@ -59,6 +61,13 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       removeConnection: () ->
         @model.removeConnection @getSelectedConnection()
+        @closeDetail()
+
+      deleteObj: ->
+        if @getSelectedNode()
+          @model.deleteNode @getSelectedNode()
+        else if @getSelectedConnection()
+          @model.deleteConnection @getSelectedConnection()
         @closeDetail()
 
       getSelectedNode: ->

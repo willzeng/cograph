@@ -23,6 +23,9 @@ requirejs.config({
     },
     'bloodhound': {
       deps: ['jquery']
+    },
+    'bootstrap': {
+      deps: ['jquery']
     }
   },
   packages: [{
@@ -36,6 +39,6 @@ requirejs.config({
   }]
 });
 
-require(['cs!Rhizi'], function(Rhizi){
-  Rhizi.initialize()
+require(['cs!GraphDocs'], function(GraphDocs){
+  GraphDocs.initialize()
 });

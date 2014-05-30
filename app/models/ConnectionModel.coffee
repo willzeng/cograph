@@ -8,9 +8,18 @@ define ['backbone'], (Backbone) ->
       target: undefined
       color: 'grey'
       tags: []
+      _id: -1
 
     schema:
       name: 'Text'
       url: 'Text'
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
+
+    ignoredAttributes: ['dim', 'selected']
+
+    serialize: ->
+      json = _.omit @clone().toJSON(), @ignoredAttributes
+      json.source = @get('source').get('_id')
+      json.target = @get('target').get('_id')
+      json

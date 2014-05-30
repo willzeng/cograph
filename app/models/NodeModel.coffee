@@ -1,4 +1,4 @@
-define ['backbone'], (Backbone) ->
+define ['underscore', 'backbone'], (_, Backbone) ->
 
   class NodeModel extends Backbone.Model
     defaults:
@@ -8,6 +8,7 @@ define ['backbone'], (Backbone) ->
       url: ''
       size: ''
       color: ''
+      _id: -1
 
     schema:
       name:
@@ -25,3 +26,8 @@ define ['backbone'], (Backbone) ->
     validate: ->
       if !@get('name')
         'Your node must have a name.'
+
+    ignoredAttributes: ['dim', 'selected']
+
+    serialize: ->
+      _.omit @clone().toJSON(), @ignoredAttributes

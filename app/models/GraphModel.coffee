@@ -22,8 +22,11 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       if @filterModel.passes nodeModel
         @nodes.add nodeModel
 
-    putConnection: (name, source, target) ->
-      @connections.add {'name': name, 'source': source, 'target': target}
+    putConnection: (connectionModel) ->
+      @connections.add connectionModel
+
+    newConnectionCreated: ->
+      @trigger 'create:connection'
 
     removeNode: (model) ->
       @nodes.remove model
@@ -33,38 +36,36 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     removeConnection: (model) ->
       @connections.remove model
 
-    selectNode: (node) ->
-      @nodes.each (d) ->
-        d.set('selected', false)
-      @connections.each (d) ->
-        d.set('selected', false)
-      node.set 'selected', true
+    deleteNode: (model) ->
+      @removeNode model
+      @trigger 'delete:node', model
 
-    selectConnection: (connection) ->
-      @connections.each (d) ->
-        d.set('selected', false)
-      @nodes.each (d) ->
-        d.set('selected', false)
-      connection.set 'selected', true
+    deleteConnection: (model) ->
+      @removeConnection model
+      @trigger 'delete:connection', model
 
-    highlightNodes: (nodesToHL) ->
+    deSelect: (model) ->
+      model.set 'selected', false
+
+    select: (model) ->
+      @nodes.each (d) => @deSelect d
+      @connections.each (d) => @deSelect d
+      model.set 'selected', true
+
+    highlight: (nodesToHL, connectionsToHL) ->
       @nodes.each (d) ->
-        d.set('dim',true)
+        d.set 'dim', true
       _.each nodesToHL, (d) ->
         d.set 'dim', false
-
-    dehighlightNodes: () ->
-      @nodes.each (d) ->
-        d.set 'dim', false
-
-    highlightConnections: (connectionsToHL) ->
       @connections.each (d) ->
-        d.set('dim', true)
+        d.set 'dim', true
       _.each connectionsToHL, (d) ->
         d.set 'dim', false
 
-    dehighlightConnections: () ->
+    dehighlight: () ->
       @connections.each (d) ->
+        d.set 'dim', false
+      @nodes.each (d) ->
         d.set 'dim', false
 
     getFilter: () ->

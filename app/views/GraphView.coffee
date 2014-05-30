@@ -6,8 +6,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       initialize: ->
         that = this
-        @model.nodes.on 'add change remove', @update, this
-        @model.connections.on 'add change remove', @update, this
+        @model.nodes.on 'add remove', @updateForceGraph, this
+        @model.connections.on 'add remove', @updateForceGraph, this
+        @model.nodes.on 'change', @updateDetails, this
+        @model.connections.on 'change', @updateDetails, this
 
         @translateLock = false
 
@@ -28,20 +30,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             "translate(#{d3.event.translate}) scale(#{d3.event.scale})"
         @zoom = d3.behavior.zoom().on('zoom', zoomed)
 
-        # ignore panning and zooming when dragging node
-        @translateLock = false
         # store the current zoom to undo changes from dragging a node
-        currentZoom = undefined
+        @currentZoom = undefined
         @force.drag()
         .on "dragstart", (d) ->
           that.translateLock = true
-          currentZoom = that.zoom.translate()
+          that.currentZoom = that.zoom.translate()
+        .on "drag", (d) ->
           d3.select(this).classed("fixed", d.fixed = true)
-        .on "drag", (d) =>
-          @trigger "node:drag", d
+          that.trigger "node:drag", d
         .on "dragend", (node) =>
           @trigger "node:dragend", node
-          @zoom.translate currentZoom
+          @zoom.translate @currentZoom
           @translateLock = false
 
         @svg = d3.select(@el).append("svg:svg")
@@ -72,11 +72,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
 
-      update: ->
-        that = this
+      updateForceGraph: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
         @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
+        @updateDetails()
+
+      updateDetails: ->
+        that = this
+        nodes = @model.nodes.models
+        connections = @model.connections.models
 
         # old elements
         connection = d3.select(".connection-container")
@@ -87,21 +92,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
           .attr("marker-end", "url(#arrowhead)")
-
-        connectionEnter
           .on "click", (d) =>
-            @model.selectConnection d
-          .on "mouseover", (datum, index)  =>
-            if !@dataToolTipShown
-              @isHoveringANode = setTimeout( () =>
-                @dataToolTipShown = true
-                $(".data-tooltip-container")
-                  .append _.template(dataTooltipTemplate, datum)
-              ,200)
-          .on "mouseout", (datum, index) =>
-            window.clearTimeout(@isHoveringANode)
-            @dataToolTipShown = false
-            $(".data-tooltip-container").empty()
+            @model.select d
+          .on "mouseover", (conn)  =>
+            @trigger "connection:mouseover", conn
+          .on "mouseout", (conn) =>
+            @trigger "connection:mouseout", conn
 
         # old and new elements
         connection.attr("class", "connection")
@@ -123,43 +119,26 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         nodeEnter.append("circle")
           .attr("r", 25)
 
-        connectionEnter
-        .on "click", (d) =>
-          @model.selectConnection d
-        .on "mouseover", (conn)  =>
-          @trigger "connection:mouseover", conn        
-        .on "mouseout", (conn) =>
-          @trigger "connection:mouseout", conn
-
         nodeEnter
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
           .on "click", (d) =>
             if (d3.event.defaultPrevented) then return
-            @model.selectNode d
+            @model.select d
           .on "contextmenu", (node) =>
             d3.event.preventDefault()
             @trigger 'node:right-click', node
           .on "mouseover", (node) =>
-            if @creatingConnection then return
             @trigger "node:mouseover", node
-
-            connectionsToHL = @model.connections.filter (c) ->
-              (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
-
-            nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
-            nodesToHL.push node
-
-            @model.highlightNodes(nodesToHL)
-            @model.highlightConnections(connectionsToHL)
           .on "mouseout", (node) =>
             @trigger "node:mouseout", node
+            node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
         # update old and new elements
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
-          .classed('fixed', (d) -> d.fixed)
+          .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
@@ -169,16 +148,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         tick = =>
           connection
-            .attr("x1", (d) -> d.attributes.source.x)
-            .attr("y1", (d) -> d.attributes.source.y)
-            .attr("x2", (d) -> d.attributes.target.x)
-            .attr("y2", (d) -> d.attributes.target.y)
+            .attr("x1", (d) -> d.get('source').x)
+            .attr("y1", (d) -> d.get('source').y)
+            .attr("x2", (d) -> d.get('target').x)
+            .attr("y2", (d) -> d.get('target').y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()
         @force.on "tick", tick
 
-      isContainedIn: (node, element) ->
-        node.x < element.offset().left + element.width() &&
-          node.x > element.offset().left &&
-          node.y > element.offset().top &&
-          node.y < element.offset().top + element.height()
+      isContainedIn: (node, element) =>
+        node.x+@currentZoom[0] < element.offset().left + element.width() &&
+          node.x+@currentZoom[0] > element.offset().left &&
+          node.y+@currentZoom[1] > element.offset().top &&
+          node.y+@currentZoom[1] < element.offset().top + element.height()
