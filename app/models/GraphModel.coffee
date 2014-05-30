@@ -25,6 +25,9 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     putConnection: (connectionModel) ->
       @connections.add connectionModel
 
+    newConnectionCreated: ->
+      @trigger 'create:connection'
+
     removeNode: (model) ->
       @nodes.remove model
       @connections.remove @connections.where {'source':model}
