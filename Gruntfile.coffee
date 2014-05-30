@@ -2,7 +2,7 @@ module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON 'package.json'
     coffeelint:
-      app: ['app/**/*.coffee', '*.cofee']
+      app: ['app/**/*.coffee', '*.coffee']
       options:
         configFile: 'coffeelint.json'
     lesslint:
