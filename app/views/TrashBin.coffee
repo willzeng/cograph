@@ -14,5 +14,9 @@ define ['jquery', 'underscore', 'backbone'],
 
         @graphView.on "node:dragend", (node) =>
           if @graphView.isContainedIn node, $('#trash-bin')
+            @model.deSelect node
+            spokes = @model.connections.filter (c) ->
+              (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
+            @model.deSelect spoke for spoke in spokes
             @model.removeNode node
             $("#trash-bin").removeClass('selected')
