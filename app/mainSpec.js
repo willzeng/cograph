@@ -1,5 +1,6 @@
 requirejs.config({
   baseUrl: "",
+  cb: 'cb=' + Math.random(),
   paths: {
     'jquery': 'assets/libs/jquery/dist/jquery.min',
     'underscore': 'assets/libs/underscore/underscore',
@@ -36,6 +37,19 @@ requirejs.config({
   }]
 });
 
-require(['cs!GraphDocs'], function(GraphDocs){
-  GraphDocs.initialize()
+require(['jquery', 'tests/index', 'cs!GraphDocs'], function($, index, GraphDocs) {
+  var jasmineEnv = jasmine.getEnv(),
+      htmlReporter = new jasmine.HtmlReporter();
+
+  jasmineEnv.addReporter(htmlReporter);
+
+  jasmineEnv.specFilter = function(spec) {
+    return htmlReporter.specFilter(spec);
+  };
+
+  $(function() {
+    require(index.specs, function() {
+      jasmineEnv.execute();
+    });
+  });
 });
