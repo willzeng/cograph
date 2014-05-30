@@ -18,8 +18,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!controllers/DataController', 'cs
 
     connectionAdd: (connection) ->
       if connection.get('_id') < 0
-        DataController.connectionAdd connection, (newConn) ->
+        DataController.connectionAdd connection, (newConn) =>
           connection.set '_id', newConn._id
+          @model.newConnectionCreated()
 
     nodeEdit: (node) ->
       if not _.isEmpty _.omit(node.changed, node.ignoredAttributes)

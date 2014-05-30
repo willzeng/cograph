@@ -22,7 +22,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             @drag_line.classed('hidden', true)
             if node != @drag_line.datum()
               connection = new ConnectionModel
-                name: 'links to'
                 source: @drag_line.datum()
                 target: node
               @model.select @model.putConnection connection

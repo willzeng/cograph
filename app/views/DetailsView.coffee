@@ -16,6 +16,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       initialize: ->
         @model.nodes.on 'change:selected', @update, this
         @model.connections.on 'change:selected', @update, this
+        @model.on 'create:connection', @editConnection, this
 
       update: (nodeConnection) ->
         selectedNC = @getSelectedNode() || @getSelectedConnection()
@@ -46,6 +47,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         ).render()
 
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
+        $('input[name=name]', @el).focus()
 
       saveNodeConnection: (e) ->
         e.preventDefault()
