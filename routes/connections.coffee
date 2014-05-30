@@ -14,14 +14,23 @@ connections.param 'id', (req, res, next, id) ->
 connections.post '/', (req, resp) ->
   console.log "create_connection Query Requested"
   newConnection = req.body
-  graphDb.getNodeById newConnection.source, (err, source) ->
-    graphDb.getNodeById newConnection.target, (err, target) ->
+  console.log newConnection
+  graphDb.getNodeById newConnection.source._id, (err, source) ->
+    graphDb.getNodeById newConnection.target._id, (err, target) ->
+      newConnection.source = newConnection.source._id
+      newConnection.target = newConnection.target._id
       source.createRelationshipTo target, 'connection', newConnection, (err, conn) ->
+        console.log err
+        console.log 'got source and targer and ', conn
         newConnection._id = conn.id
         conn.data._id = conn.id
         conn.save (err, conn) ->
           console.log 'Updated id of connection'
-        resp.send newConnection
+        resp.send {
+          conn: newConnection
+          source: source
+          target: target
+        }
 
 
 # READ
@@ -38,8 +47,8 @@ connections.get '/', (req, resp) ->
     resp.send connections
 
 # UPDATE
-connections.post '/:id', (req, resp) ->
-  id = req.params.id
+connections.put '/', (req, resp) ->
+  id = req.body._id
   newData = req.body
   graphDb.getRelationshipById id, (err, conn) ->
     conn.data = newData
@@ -48,9 +57,9 @@ connections.post '/:id', (req, resp) ->
       resp.send conn
 
 # DELETE
-connections.delete '/:id', (req, resp) ->
+connections.delete '/', (req, resp) ->
   console.log "delete_connection Query Requested"
-  id = req.params.id
+  id = req.body._id
   console.log "delete_connection Query Requested"
   graphDb.getRelationshipById id, (err, conn) ->
     conn.delete () -> true

@@ -1,5 +1,11 @@
-define ['backbone'], (Backbone) ->
+define ['backbone'], (Backbone, GraphModel) ->
   class ConnectionModel extends Backbone.Model
+    url: 'connection'
+    idAttribute: '_id'
+
+    isNew: ->
+      @get(@idAttribute) < 0
+
     defaults:
       name: ''
       description: ''
@@ -16,10 +22,16 @@ define ['backbone'], (Backbone) ->
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
 
-    ignoredAttributes: ['dim', 'selected']
-
     serialize: ->
       json = _.omit @clone().toJSON(), @ignoredAttributes
-      json.source = @get('source').get('_id')
-      json.target = @get('target').get('_id')
+      # json.source = @get('source').get('_id')
+      # json.target = @get('target').get('_id')
       json
+
+    ignoredAttributes: ['selected', 'dim', 'tags']
+
+    sync: (method, model, options) ->
+      options = options || {}
+      options.data = JSON.stringify(@serialize())
+      options.contentType = 'application/json'
+      Backbone.sync.apply(this, [method, model, options])

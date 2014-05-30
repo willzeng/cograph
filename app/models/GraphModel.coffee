@@ -1,9 +1,11 @@
 define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], (Backbone, NodeModel, ConnectionModel, FilterModel) ->
   class ConnectionCollection extends Backbone.Collection
     model: ConnectionModel
+    url: 'connection'
 
   class NodeCollection extends Backbone.Collection
     model: NodeModel
+    url: 'node'
 
   class GraphModel extends Backbone.Model
     initialize: ->

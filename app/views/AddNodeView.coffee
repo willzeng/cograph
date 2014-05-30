@@ -10,6 +10,7 @@ define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel'],
         node_name = $('input', @el).val()
         node = new NodeModel name: node_name
         if node.isValid()
+          node.save()
           @model.select @model.putNode node
           $('input', @el).val('')
         else

@@ -1,6 +1,11 @@
 define ['underscore', 'backbone'], (_, Backbone) ->
-
   class NodeModel extends Backbone.Model
+    url: 'node'
+    idAttribute: '_id'
+
+    isNew: ->
+      @get(@idAttribute) < 0
+
     defaults:
       name: ''
       tags: []
@@ -27,7 +32,11 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       if !@get('name')
         'Your node must have a name.'
 
-    ignoredAttributes: ['dim', 'selected']
-
     serialize: ->
       _.omit @clone().toJSON(), @ignoredAttributes
+
+    sync: (method, model, options) ->
+      options = options || {}
+      options.data = JSON.stringify(@serialize())
+      options.contentType = 'application/json'
+      Backbone.sync.apply(this, [method, model, options])

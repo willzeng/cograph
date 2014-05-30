@@ -25,6 +25,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
                 source: @drag_line.datum()
                 target: node
               @model.select @model.putConnection connection
+              connection.save()
           else
             @drag_line.classed('hidden', false)
               .datum(node)

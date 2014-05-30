@@ -52,6 +52,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       saveNodeConnection: (e) ->
         e.preventDefault()
         @nodeConnectionForm.commit()
+        @nodeConnectionForm.model.save()
         @update()
         false
 

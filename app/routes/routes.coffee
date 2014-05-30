@@ -7,7 +7,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
         @graphModel = new GraphModel initial_tags:default_tags
 
-        @dataHub = new DataHub model: @graphModel
+        # @dataHub = new DataHub model: @graphModel
 
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
@@ -18,6 +18,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @menuView = new MenuView()
 
         window.gm = @graphModel
+        window.nm = NodeModel
+        # Backbone.emulateHTTP = true
         Backbone.history.start()
 
       routes:
@@ -27,13 +29,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @graphView.render()
 
         #Prepopulate the GraphModel with all the nodes in the database
-        $.get '/node/', (nodes) ->
-          gm.putNode new NodeModel node for node in nodes
-          $.get '/connection/', (connections) ->
-            for connection in connections
-              connection.source = gm.nodes.findWhere _id: connection.source
-              connection.target = gm.nodes.findWhere _id: connection.target
-              gm.putConnection new ConnectionModel connection
+        $.when(gm.nodes.fetch()).then(gm.connections.fetch())
 
         #@randomPopulate()
 
