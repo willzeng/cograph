@@ -132,6 +132,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             @trigger "node:mouseover", node
           .on "mouseout", (node) =>
             @trigger "node:mouseout", node
+            node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
         # update old and new elements
         node.attr('class', 'node')
