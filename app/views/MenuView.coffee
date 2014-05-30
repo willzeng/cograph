@@ -4,7 +4,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'bootstrap'],
       el: $ '#menu-bar'
 
       events:
-          'keypress #menu-title': 'saveTitle'
+        'keypress #menu-title': 'saveTitle'
 
       saveTitle: (e) ->
         if e.which == 13
