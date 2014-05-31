@@ -1,10 +1,6 @@
-define ['backbone'], (Backbone) ->
-  class ConnectionModel extends Backbone.Model
+define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
+  class ConnectionModel extends ObjectModel
     url: 'connection'
-    idAttribute: '_id'
-
-    isNew: ->
-      @get(@idAttribute) < 0
 
     defaults:
       name: ''
@@ -29,11 +25,3 @@ define ['backbone'], (Backbone) ->
     validate: ->
       if !(typeof @get('source') is 'number' and typeof @get('target') is 'number')
         '_id must be a number.'
-
-    ignoredAttributes: ['selected', 'dim', 'tags']
-
-    sync: (method, model, options) ->
-      options = options || {}
-      options.data = JSON.stringify(@serialize())
-      options.contentType = 'application/json'
-      Backbone.sync.apply(this, [method, model, options])
