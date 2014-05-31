@@ -15,10 +15,8 @@ connections.post '/', (req, resp) ->
   console.log "create_connection Query Requested"
   newConnection = req.body
   console.log newConnection
-  graphDb.getNodeById newConnection.source._id, (err, source) ->
-    graphDb.getNodeById newConnection.target._id, (err, target) ->
-      newConnection.source = newConnection.source._id
-      newConnection.target = newConnection.target._id
+  graphDb.getNodeById newConnection.source, (err, source) ->
+    graphDb.getNodeById newConnection.target, (err, target) ->
       source.createRelationshipTo target, 'connection', newConnection, (err, conn) ->
         console.log err
         console.log 'got source and targer and ', conn
@@ -26,11 +24,7 @@ connections.post '/', (req, resp) ->
         conn.data._id = conn.id
         conn.save (err, conn) ->
           console.log 'Updated id of connection'
-        resp.send {
-          conn: newConnection
-          source: source
-          target: target
-        }
+        resp.send newConnection
 
 
 # READ

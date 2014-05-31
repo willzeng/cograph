@@ -28,6 +28,8 @@ define ['underscore', 'backbone'], (_, Backbone) ->
         type: 'List'
         itemType: 'Text'
 
+    ignoredAttributes: ['selected', 'dim', 'tags']
+
     validate: ->
       if !@get('name')
         'Your node must have a name.'

@@ -40,11 +40,11 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
 
     deleteNode: (model) ->
       @removeNode model
-      @trigger 'delete:node', model
+      model.destroy()
 
     deleteConnection: (model) ->
       @removeConnection model
-      @trigger 'delete:connection', model
+      model.destroy()
 
     deSelect: (model) ->
       model.set 'selected', false
@@ -53,6 +53,12 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @nodes.each (d) => @deSelect d
       @connections.each (d) => @deSelect d
       model.set 'selected', true
+
+    getSourceOf: (connection) ->
+      @nodes.findWhere _id: connection.get('source')
+
+    getTargetOf: (connection) ->
+      @nodes.findWhere _id: connection.get('target')
 
     highlight: (nodesToHL, connectionsToHL) ->
       @nodes.each (d) ->

@@ -75,7 +75,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
       updateForceGraph: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
-        @force.nodes(nodes).links(_.pluck(connections,'attributes')).start()
+        @force.nodes(nodes).links(_.pluck(connections, 'attributes')).start()
         @updateDetails()
 
       updateDetails: ->
@@ -148,10 +148,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         tick = =>
           connection
-            .attr("x1", (d) -> d.get('source').x)
-            .attr("y1", (d) -> d.get('source').y)
-            .attr("x2", (d) -> d.get('target').x)
-            .attr("y2", (d) -> d.get('target').y)
+            .attr("x1", (d) => @model.getSourceOf(d).x)
+            .attr("y1", (d) => @model.getSourceOf(d).y)
+            .attr("x2", (d) => @model.getTargetOf(d).x)
+            .attr("y2", (d) => @model.getTargetOf(d).y)
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()
         @force.on "tick", tick

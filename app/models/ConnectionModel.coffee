@@ -24,8 +24,6 @@ define ['backbone'], (Backbone, GraphModel) ->
 
     serialize: ->
       json = _.omit @clone().toJSON(), @ignoredAttributes
-      # json.source = @get('source').get('_id')
-      # json.target = @get('target').get('_id')
       json
 
     ignoredAttributes: ['selected', 'dim', 'tags']
