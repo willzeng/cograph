@@ -14,5 +14,4 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       Backbone.sync.apply(this, [method, model, options])
 
     serialize: ->
-      json = _.omit @clone().toJSON(), @ignoredAttributes
-      json
+      _.omit @clone().toJSON(), @ignoredAttributes
