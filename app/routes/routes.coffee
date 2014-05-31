@@ -16,8 +16,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @menuView = new MenuView()
 
         window.gm = @graphModel
-        window.nm = NodeModel
-        # Backbone.emulateHTTP = true
         Backbone.history.start()
 
       routes:
