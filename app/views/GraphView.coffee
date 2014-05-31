@@ -75,7 +75,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
       updateForceGraph: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
-        @force.nodes(nodes).links(_.pluck(connections, 'attributes')).start()
+        _.each connections, (c) =>
+          c.source = @model.getSourceOf c
+          c.target = @model.getTargetOf c
+        @force.nodes(nodes).links(connections).start()
         @updateDetails()
 
       updateDetails: ->

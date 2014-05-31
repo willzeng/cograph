@@ -33,9 +33,15 @@ define ['underscore', 'backbone'], (_, Backbone) ->
     validate: ->
       if !@get('name')
         'Your node must have a name.'
+    if !(typeof @get('_id') is 'number')
+        '_id must be a number.'
 
     serialize: ->
       _.omit @clone().toJSON(), @ignoredAttributes
+
+    parse: (resp, options) ->
+      if resp._id then resp._id = parseInt(resp._id, 10)
+      resp
 
     sync: (method, model, options) ->
       options = options || {}

@@ -26,6 +26,10 @@ define ['backbone'], (Backbone, GraphModel) ->
       json = _.omit @clone().toJSON(), @ignoredAttributes
       json
 
+    validate: ->
+      if !(typeof @get('source') is 'number' and typeof @get('target') is 'number')
+        '_id must be a number.'
+
     ignoredAttributes: ['selected', 'dim', 'tags']
 
     sync: (method, model, options) ->
