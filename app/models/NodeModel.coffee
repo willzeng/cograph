@@ -33,7 +33,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
     validate: ->
       if !@get('name')
         'Your node must have a name.'
-    if !(typeof @get('_id') is 'number')
+      if !(typeof @get('_id') is 'number')
         '_id must be a number.'
 
     serialize: ->
