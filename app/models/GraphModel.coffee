@@ -30,10 +30,10 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     newConnectionCreated: ->
       @trigger 'create:connection'
 
-    removeNode: (model) ->
-      @nodes.remove model
-      @connections.remove @connections.where {'source':model}
-      @connections.remove @connections.where {'target':model}
+    removeNode: (node) ->
+      @connections.remove @connections.where {'source': node.get('_id')}
+      @connections.remove @connections.where {'target': node.get('_id')}
+      @nodes.remove node
 
     removeConnection: (model) ->
       @connections.remove model
