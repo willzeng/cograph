@@ -1,4 +1,4 @@
-define ['backbone'], (Backbone, GraphModel) ->
+define ['backbone'], (Backbone) ->
   class ConnectionModel extends Backbone.Model
     url: 'connection'
     idAttribute: '_id'
