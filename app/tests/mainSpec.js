@@ -1,6 +1,6 @@
 (function(){
   requirejs.config({
-    baseUrl: "",
+    baseUrl: "../",
     cb: 'cb=' + Math.random(),
     paths: {
       'jquery': 'assets/libs/jquery/dist/jquery.min',
