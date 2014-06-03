@@ -14,12 +14,11 @@ nodes.param 'id', (req, res, next, id) ->
 nodes.post '/', (req, resp) ->
   newNode = req.body
   node = graphDb.createNode newNode
+  docId = req.body._docId
   node.save (err, node) ->
-    newNode._id = node.id
-    node.data._id = node.id
-    node.save (err, node) ->
-      console.log 'Updated id of node'
-    resp.send newNode
+    utils.setLabel graphDb, node.id, docId, (err, node) ->
+      newNode._id = node.id
+      resp.send newNode
 
 # READ
 nodes.get '/:id', (req, resp) ->
@@ -29,8 +28,12 @@ nodes.get '/:id', (req, resp) ->
 
 nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  cypherQuery = "start n=node(*) return n;"
-  graphDb.query cypherQuery, {}, (err, results) ->
+  docId = 'DefaultDoc'
+  # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
+  cypherQuery = "match (n:#{docId}) return n;"
+  params = {}
+  graphDb.query cypherQuery, params, (err, results) ->
+    if err then console.log err
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
@@ -42,7 +45,7 @@ nodes.put '/', (req, resp) ->
     node.data = newData
     node.save (err, node) ->
       console.log 'Node updated in database with id:', node._id
-    resp.send node
+      resp.send node
 
 # DELETE
 nodes.delete '/', (req, resp) ->

@@ -10,4 +10,10 @@ utils =
   trim: (string)->
     string.match(/[0-9]*$/)[0]
 
+  setLabel: (graphDb, id, label, cb) ->
+    cypherQuery = "start n=node(#{id}) set n:#{label} return n"
+    params = {}
+    graphDb.query cypherQuery, params, (err, results) ->
+      cb(err, results)
+
 module.exports = utils

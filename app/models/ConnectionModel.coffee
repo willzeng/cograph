@@ -11,6 +11,7 @@ define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
       color: 'grey'
       tags: []
       _id: -1
+      _doc_id: -1
 
     schema:
       name: 'Text'
