@@ -7,7 +7,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     model: NodeModel
     url: 'node'
 
-  class GraphModel extends Backbone.Model
+  class WorkspaceModel extends Backbone.Model
     initialize: ->
       @nodes = new NodeCollection()
       @connections = new ConnectionCollection()
