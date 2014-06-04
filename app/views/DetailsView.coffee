@@ -12,6 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #remove-node-button': 'removeNode'
         'click #remove-connection-button': 'removeConnection'
         'click #delete-button': 'deleteObj'
+        'click #expand-node-button': 'expandNode'
 
       initialize: ->
         @model.nodes.on 'change:selected', @update, this
@@ -70,6 +71,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         else if @getSelectedConnection()
           @model.deleteConnection @getSelectedConnection()
         @closeDetail()
+
+      expandNode: ->
+        @getSelectedNode().getNeighbors()
+        #@model.putNode node for node in @getSelectedNode().getNeighbors()
+        #@model.putConnection conn for conn in @getSelectedNode().getSpokes()
 
       getSelectedNode: ->
         selectedNode = @model.nodes.findWhere {'selected': true}

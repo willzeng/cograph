@@ -34,6 +34,13 @@ nodes.get '/', (req, resp) ->
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
+nodes.get '/expand', (req, resp) ->
+  console.log "expand Requested"
+  cypherQuery = "start n=node(*) return n;"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    nodes = (utils.parseCypherResult(node, 'n') for node in results)
+    resp.send nodes
+
 # UPDATE
 nodes.put '/', (req, resp) ->
   id = req.body._id
