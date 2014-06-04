@@ -33,3 +33,15 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
     parse: (resp, options) ->
       if resp._id then resp._id = parseInt(resp._id, 10)
       resp
+
+    getNeighbors: (callback) ->
+      this.sync 'read', this,
+        url: "node/neighbors/#{@get('_id')}"
+        success: (results) =>
+          callback (@parse result for result in results)
+
+    getSpokes: (callback) ->
+      this.sync 'read', this,
+        url: "node/spokes/#{@get('_id')}"
+        success: (results) ->
+          callback results
