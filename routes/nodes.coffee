@@ -6,9 +6,13 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-nodes.param 'id', (req, res, next, id) ->
-  req.id = id
-  next()
+nodes.param 'id', (req, res, next, val) ->
+  if captures = /^\d+$/.exec(String(val))
+    req.params[name] = captures;
+    next()
+  else
+    next 'route'
+
 
 # CREATE
 nodes.post '/', (req, resp) ->
