@@ -38,8 +38,8 @@ connections.get '/', (req, resp) ->
     resp.send connections
 
 # UPDATE
-connections.put '/', (req, resp) ->
-  id = req.body._id
+connections.put '/:id', (req, resp) ->
+  id = req.params.id
   newData = req.body
   graphDb.getRelationshipById id, (err, conn) ->
     conn.data = newData
@@ -48,9 +48,8 @@ connections.put '/', (req, resp) ->
       resp.send conn
 
 # DELETE
-connections.delete '/', (req, resp) ->
-  console.log "delete_connection Query Requested"
-  id = req.body._id
+connections.delete '/:id', (req, resp) ->
+  id = req.params.id
   console.log "delete_connection Query Requested"
   graphDb.getRelationshipById id, (err, conn) ->
     conn.delete () -> true

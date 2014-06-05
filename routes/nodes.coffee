@@ -35,18 +35,18 @@ nodes.get '/', (req, resp) ->
     resp.send nodes
 
 # UPDATE
-nodes.put '/', (req, resp) ->
-  id = req.body._id
+nodes.put '/:id', (req, resp) ->
+  id = req.params.id
   newData = req.body
   graphDb.getNodeById id, (err, node) ->
     node.data = newData
     node.save (err, node) ->
-      console.log 'Node updated in database with id:', node._id
+      console.log 'Node updated in database with id:', node.data._id
     resp.send node
 
 # DELETE
-nodes.delete '/', (req, resp) ->
-  id = req.body._id
+nodes.delete '/:id', (req, resp) ->
+  id = req.params.id
   console.log "delete_node Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
