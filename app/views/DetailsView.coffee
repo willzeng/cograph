@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap'
- 'text!templates/details_box.html', 'text!templates/edit_form.html'],
-  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate) ->
+ 'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel'],
+  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel) ->
     class DetailsView extends Backbone.View
       el: $ '#graph'
 
@@ -73,9 +73,16 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @closeDetail()
 
       expandNode: ->
-        @getSelectedNode().getNeighbors()
-        #@model.putNode node for node in @getSelectedNode().getNeighbors()
-        #@model.putConnection conn for conn in @getSelectedNode().getSpokes()
+        @getSelectedNode().getNeighbors (neighbors) =>
+          for node in neighbors
+            node._id = parseInt node._id, 10
+            @model.putNode new NodeModel node
+          @getSelectedNode().getSpokes (spokes) =>
+            for conn in spokes
+              conn._id = parseInt conn._id, 10
+              conn.source = parseInt conn.source, 10
+              conn.target = parseInt conn.target, 10
+              @model.putConnection new ConnectionModel conn
 
       getSelectedNode: ->
         selectedNode = @model.nodes.findWhere {'selected': true}

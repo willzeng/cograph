@@ -34,9 +34,14 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
       if resp._id then resp._id = parseInt(resp._id, 10)
       resp
 
-    getNeighbors: ->
-      console.log 'get getNeighbors', this
-      this.sync 'read', this,
-        url: 'node/expand'
+    getNeighbors: (callback) ->
+      this.sync 'create', this,
+        url: 'node/neighbors'
         success: (result) ->
-          console.log result
+          callback result
+
+    getSpokes: (callback) ->
+      this.sync 'create', this,
+        url: 'node/spokes'
+        success: (result) ->
+          callback result

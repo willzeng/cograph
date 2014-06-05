@@ -38,12 +38,19 @@ nodes.get '/', (req, resp) ->
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
-nodes.get '/expand', (req, resp) ->
-  console.log "expand Requested"
-  cypherQuery = "start n=node(*) return n;"
+nodes.post '/neighbors', (req, resp) ->
+  id = req.body._id
+  cypherQuery = "START n=node(#{id}) MATCH (n)<-->(m) RETURN m"
   graphDb.query cypherQuery, {}, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
+    nodes = (utils.parseCypherResult(node, 'm') for node in results)
     resp.send nodes
+
+nodes.post '/spokes', (req, resp) ->
+  id = req.body._id
+  cypherQuery = "START n=node(#{id}) MATCH (n)<-[r]->(m) RETURN r;"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    connections = (utils.parseCypherResult(conn, 'r') for conn in results)
+    resp.send connections
 
 # UPDATE
 nodes.put '/', (req, resp) ->
