@@ -24,9 +24,10 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
 
       highlight: (node) ->
         connectionsToHL = @model.connections.filter (c) ->
-          (c.get('source').cid is node.cid) or (c.get('target').cid is node.cid)
+          (c.get('source') is node.get('_id')) or (c.get('target') is node.get('_id'))
 
-        nodesToHL = _.flatten connectionsToHL.map (c) -> [c.get('source'), c.get('target')]
+        nodesToHL = _.flatten connectionsToHL.map (c) =>
+          [@model.getSourceOf(c), @model.getTargetOf(c)]
         nodesToHL.push node
 
         @highlightTimer = setTimeout () =>

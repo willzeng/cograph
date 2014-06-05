@@ -22,9 +22,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             @drag_line.classed('hidden', true)
             if node != @drag_line.datum()
               connection = new ConnectionModel
-                source: @drag_line.datum()
-                target: node
+                source: @drag_line.datum().get('_id')
+                target: node.get('_id')
+              connection.save()
               @model.select @model.putConnection connection
+              @model.newConnectionCreated()
           else
             @drag_line.classed('hidden', false)
               .datum(node)

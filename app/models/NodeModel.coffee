@@ -1,6 +1,7 @@
-define ['underscore', 'backbone'], (_, Backbone) ->
+define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, ObjectModel) ->
+  class NodeModel extends ObjectModel
+    url: 'node'
 
-  class NodeModel extends Backbone.Model
     defaults:
       name: ''
       tags: []
@@ -25,9 +26,10 @@ define ['underscore', 'backbone'], (_, Backbone) ->
 
     validate: ->
       if !@get('name')
-        'Your node must have a name.'
+        return 'Your node must have a name.'
+      if !(typeof @get('_id') is 'number')
+        return '_id must be a number.'
 
-    ignoredAttributes: ['dim', 'selected']
-
-    serialize: ->
-      _.omit @clone().toJSON(), @ignoredAttributes
+    parse: (resp, options) ->
+      if resp._id then resp._id = parseInt(resp._id, 10)
+      resp
