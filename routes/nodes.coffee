@@ -43,16 +43,16 @@ nodes.get '/', (req, resp) ->
     resp.send nodes
 
 nodes.get '/neighbors/:id', (req, resp) ->
-  id = req.params.id
-  cypherQuery = "START n=node(#{id}) MATCH (n)<-->(m) RETURN m"
-  graphDb.query cypherQuery, {}, (err, results) ->
+  params = {id: req.params.id}
+  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m"
+  graphDb.query cypherQuery, params, (err, results) ->
     nodes = (utils.parseCypherResult(node, 'm') for node in results)
     resp.send nodes
 
 nodes.get '/spokes/:id', (req, resp) ->
-  id = req.params.id
-  cypherQuery = "START n=node(#{id}) MATCH (n)<-[r]->(m) RETURN r;"
-  graphDb.query cypherQuery, {}, (err, results) ->
+  params = {id: req.params.id}
+  cypherQuery = "START n=node({id}) MATCH (n)<-[r]->(m) RETURN r;"
+  graphDb.query cypherQuery, params, (err, results) ->
     connections = (utils.parseCypherResult(conn, 'r') for conn in results)
     resp.send connections
 
