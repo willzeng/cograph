@@ -37,11 +37,11 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
     getNeighbors: (callback) ->
       this.sync 'read', this,
         url: 'node/neighbors/'+@get("_id")
-        success: (result) ->
-          callback result
+        success: (results) =>
+          callback (@parse result for result in results)
 
     getSpokes: (callback) ->
       this.sync 'read', this,
         url: 'node/spokes/'+@get("_id")
-        success: (result) ->
-          callback result
+        success: (results) ->
+          callback results

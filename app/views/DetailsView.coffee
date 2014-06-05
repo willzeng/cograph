@@ -74,15 +74,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       expandNode: ->
         @getSelectedNode().getNeighbors (neighbors) =>
-          for node in neighbors
-            node._id = parseInt node._id, 10
-            @model.putNode new NodeModel node
+          @model.putNode new NodeModel node for node in neighbors
           @getSelectedNode().getSpokes (spokes) =>
-            for conn in spokes
-              conn._id = parseInt conn._id, 10
-              conn.source = parseInt conn.source, 10
-              conn.target = parseInt conn.target, 10
-              @model.putConnection new ConnectionModel conn
+            @model.putConnection new ConnectionModel conn for conn in spokes
 
       getSelectedNode: ->
         selectedNode = @model.nodes.findWhere {'selected': true}
