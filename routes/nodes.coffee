@@ -6,13 +6,17 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-nodes.param 'id', (req, res, next, val) ->
-  if captures = /^\d+$/.exec(String(val))
-    req.params[name] = captures;
-    next()
-  else
-    next 'route'
+#defines a function to extract parameters using regex's
+nodes.param (name, fn) ->
+  if fn instanceof RegExp
+    return (req, res, next, val) ->
+      if captures = fn.exec String(val)
+        req.params[name] = captures
+        next()
+      else
+        next 'route'
 
+nodes.param 'id', /^\d+$/
 
 # CREATE
 nodes.post '/', (req, resp) ->
@@ -38,15 +42,15 @@ nodes.get '/', (req, resp) ->
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
-nodes.post '/neighbors', (req, resp) ->
-  id = req.body._id
+nodes.get '/neighbors/:id', (req, resp) ->
+  id = req.params.id
   cypherQuery = "START n=node(#{id}) MATCH (n)<-->(m) RETURN m"
   graphDb.query cypherQuery, {}, (err, results) ->
     nodes = (utils.parseCypherResult(node, 'm') for node in results)
     resp.send nodes
 
-nodes.post '/spokes', (req, resp) ->
-  id = req.body._id
+nodes.get '/spokes/:id', (req, resp) ->
+  id = req.params.id
   cypherQuery = "START n=node(#{id}) MATCH (n)<-[r]->(m) RETURN r;"
   graphDb.query cypherQuery, {}, (err, results) ->
     connections = (utils.parseCypherResult(conn, 'r') for conn in results)

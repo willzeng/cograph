@@ -35,13 +35,13 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
       resp
 
     getNeighbors: (callback) ->
-      this.sync 'create', this,
-        url: 'node/neighbors'
+      this.sync 'read', this,
+        url: 'node/neighbors/'+@get("_id")
         success: (result) ->
           callback result
 
     getSpokes: (callback) ->
-      this.sync 'create', this,
-        url: 'node/spokes'
+      this.sync 'read', this,
+        url: 'node/spokes/'+@get("_id")
         success: (result) ->
           callback result
