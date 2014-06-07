@@ -1,9 +1,11 @@
 define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], (Backbone, NodeModel, ConnectionModel, FilterModel) ->
   class ConnectionCollection extends Backbone.Collection
     model: ConnectionModel
+    url: 'connection'
 
   class NodeCollection extends Backbone.Collection
     model: NodeModel
+    url: 'node'
 
   class GraphModel extends Backbone.Model
     initialize: ->
@@ -28,21 +30,21 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     newConnectionCreated: ->
       @trigger 'create:connection'
 
-    removeNode: (model) ->
-      @nodes.remove model
-      @connections.remove @connections.where {'source':model}
-      @connections.remove @connections.where {'target':model}
+    removeNode: (node) ->
+      @connections.remove @connections.where {'source': node.get('_id')}
+      @connections.remove @connections.where {'target': node.get('_id')}
+      @nodes.remove node
 
     removeConnection: (model) ->
       @connections.remove model
 
     deleteNode: (model) ->
       @removeNode model
-      @trigger 'delete:node', model
+      model.destroy()
 
     deleteConnection: (model) ->
       @removeConnection model
-      @trigger 'delete:connection', model
+      model.destroy()
 
     deSelect: (model) ->
       model.set 'selected', false
@@ -51,6 +53,12 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @nodes.each (d) => @deSelect d
       @connections.each (d) => @deSelect d
       model.set 'selected', true
+
+    getSourceOf: (connection) ->
+      @nodes.findWhere _id: connection.get('source')
+
+    getTargetOf: (connection) ->
+      @nodes.findWhere _id: connection.get('target')
 
     highlight: (nodesToHL, connectionsToHL) ->
       @nodes.each (d) ->

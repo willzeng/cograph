@@ -12,11 +12,9 @@ nodes.param 'id', (req, res, next, id) ->
 
 # CREATE
 nodes.post '/', (req, resp) ->
-  console.log "create_node Query Requested"
   newNode = req.body
   node = graphDb.createNode newNode
   node.save (err, node) ->
-    console.log 'Node saved to database with id:', node.id
     newNode._id = node.id
     node.data._id = node.id
     node.save (err, node) ->
@@ -37,8 +35,8 @@ nodes.get '/', (req, resp) ->
     resp.send nodes
 
 # UPDATE
-nodes.post '/:id', (req, resp) ->
-  id = req.params.id
+nodes.put '/', (req, resp) ->
+  id = req.body._id
   newData = req.body
   graphDb.getNodeById id, (err, node) ->
     node.data = newData
@@ -47,8 +45,8 @@ nodes.post '/:id', (req, resp) ->
     resp.send node
 
 # DELETE
-nodes.delete '/:id', (req, resp) ->
-  id = req.params.id
+nodes.delete '/', (req, resp) ->
+  id = req.body._id
   console.log "delete_node Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true

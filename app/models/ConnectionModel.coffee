@@ -1,5 +1,7 @@
-define ['backbone'], (Backbone) ->
-  class ConnectionModel extends Backbone.Model
+define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
+  class ConnectionModel extends ObjectModel
+    url: 'connection'
+
     defaults:
       name: ''
       description: ''
@@ -16,10 +18,10 @@ define ['backbone'], (Backbone) ->
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
 
-    ignoredAttributes: ['dim', 'selected']
-
     serialize: ->
       json = _.omit @clone().toJSON(), @ignoredAttributes
-      json.source = @get('source').get('_id')
-      json.target = @get('target').get('_id')
       json
+
+    validate: ->
+      if !(typeof @get('source') is 'number' and typeof @get('target') is 'number')
+        '_id must be a number.'

@@ -1,13 +1,11 @@
-define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/GraphModel', 'cs!controllers/DataHub','cs!models/FilterModel'
+define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/GraphModel', 'cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView',
   'cs!views/MenuView'],
-  ($, _, Backbone, NodeModel, ConnectionModel, GraphModel, DataHub, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
+  ($, _, Backbone, NodeModel, ConnectionModel, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
     class Router extends Backbone.Router
       initialize: ->
         default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
         @graphModel = new GraphModel initial_tags:default_tags
-
-        @dataHub = new DataHub model: @graphModel
 
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
@@ -27,13 +25,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @graphView.render()
 
         #Prepopulate the GraphModel with all the nodes in the database
-        $.get '/node/', (nodes) ->
-          gm.putNode new NodeModel node for node in nodes
-          $.get '/connection/', (connections) ->
-            for connection in connections
-              connection.source = gm.nodes.findWhere _id: connection.source
-              connection.target = gm.nodes.findWhere _id: connection.target
-              gm.putConnection new ConnectionModel connection
+        $.when(gm.nodes.fetch()).then(gm.connections.fetch())
 
         #@randomPopulate()
 
