@@ -1,16 +1,7 @@
 define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, ObjectModel) ->
   class NodeModel extends ObjectModel
     url: 'node'
-
-    defaults:
-      name: ''
-      tags: []
-      description: ''
-      url: ''
-      size: ''
-      color: ''
-      _id: -1
-
+    
     schema:
       name:
         type: 'Text'

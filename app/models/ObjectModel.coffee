@@ -2,6 +2,15 @@ define ['underscore', 'backbone'], (_, Backbone) ->
   class ObjectModel extends Backbone.Model
     idAttribute: '_id'
 
+    defaults:
+      name: ''
+      description: ''
+      url: ''
+      color: 'grey'
+      tags: []
+      _id: -1
+      _docId: 'DefaultDoc'
+
     isNew: ->
       @get(@idAttribute) < 0
 

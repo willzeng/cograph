@@ -1,5 +1,5 @@
-define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel'],
-  ($, Backbone, GraphModel, NodeModel) ->
+define ['jquery', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel'],
+  ($, Backbone, WorkspaceModel, NodeModel) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
 
