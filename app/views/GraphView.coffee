@@ -126,6 +126,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
           .on "click", (d) =>
+            # prevents node from being selected on drag
             if (d3.event.defaultPrevented) then return
             @model.select d
           .on "contextmenu", (node) =>

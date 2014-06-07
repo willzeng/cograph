@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap'
- 'text!templates/details_box.html', 'text!templates/edit_form.html'],
-  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate) ->
+ 'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel'],
+  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel) ->
     class DetailsView extends Backbone.View
       el: $ '#graph'
 
@@ -12,6 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #remove-node-button': 'removeNode'
         'click #remove-connection-button': 'removeConnection'
         'click #delete-button': 'deleteObj'
+        'click #expand-node-button': 'expandNode'
 
       initialize: ->
         @model.nodes.on 'change:selected', @update, this
@@ -70,6 +71,12 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         else if @getSelectedConnection()
           @model.deleteConnection @getSelectedConnection()
         @closeDetail()
+
+      expandNode: ->
+        @getSelectedNode().getNeighbors (neighbors) =>
+          @model.putNode new NodeModel node for node in neighbors
+          @getSelectedNode().getSpokes (spokes) =>
+            @model.putConnection new ConnectionModel conn for conn in spokes
 
       getSelectedNode: ->
         selectedNode = @model.nodes.findWhere {'selected': true}
