@@ -31,5 +31,8 @@
     "d3": "~3.4.6",
     "backbone-forms": "~0.14.0",
     "typeahead.js": "~0.10.2"
+  },
+  "devDependencies": {
+    "jasmine": "~2.0.0"
   }
 }
