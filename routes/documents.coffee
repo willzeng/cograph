@@ -1,5 +1,5 @@
 express = require 'express'
-nodes = express.Router()
+documents = express.Router()
 
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
@@ -30,7 +30,7 @@ documents.get '/:id', (req, resp) ->
 documents.get '/', (req, resp) ->
   console.log "Get all Documents Query Requested"
   docLabel = '_Document'
-  cypherQuery = "match (n:#{docId}) return n;"
+  cypherQuery = "match (n:#{docLabel}) return n;"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
     if err then console.log err
@@ -48,7 +48,7 @@ documents.put '/', (req, resp) ->
       resp.send node
 
 # DELETE
-nodes.delete '/', (req, resp) ->
+documents.delete '/', (req, resp) ->
   id = req.body._id
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
