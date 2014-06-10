@@ -27,6 +27,16 @@ documents.get '/:id', (req, resp) ->
   graphDb.getNodeById id, (err, node) ->
     resp.send node
 
+documents.get '/', (req, resp) ->
+  console.log "Get all Documents Query Requested"
+  docLabel = '_Document'
+  cypherQuery = "match (n:#{docId}) return n;"
+  params = {}
+  graphDb.query cypherQuery, params, (err, results) ->
+    if err then console.log err
+    nodes = (utils.parseCypherResult(node, 'n') for node in results)
+    resp.send nodes
+
 # UPDATE
 documents.put '/', (req, resp) ->
   id = req.body._id
