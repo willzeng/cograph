@@ -7,14 +7,7 @@ graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
 #defines a function to extract parameters using regex's
-nodes.param (name, fn) ->
-  if fn instanceof RegExp
-    return (req, res, next, val) ->
-      if captures = fn.exec String(val)
-        req.params[name] = captures
-        next()
-      else
-        next 'route'
+nodes.param utils.paramExtract
 
 nodes.param 'id', /^\d+$/
 
