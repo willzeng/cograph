@@ -13,13 +13,14 @@ documents.param 'id', /^\d+$/
 
 # CREATE
 documents.post '/', (req, resp) ->
+  console.log 'create document query requested'
   newDocument = req.body
   node = graphDb.createNode newDocument
   label = "_Document"
   node.save (err, node) ->
     utils.setLabel graphDb, node.id, label, (err, node) ->
-      newNode._id = node.id
-      resp.send newNode
+      node._id = node.id
+      resp.send node
 
 # READ
 documents.get '/:id', (req, resp) ->

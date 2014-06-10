@@ -27,11 +27,14 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         true
 
       openDocumentModal: ->
-        documents = new DocumentCollection()
-        documents.fetch()
-        modal = new Backbone.BootstrapModal(
-          content: _.template(openDocTemplate, {documents: documents}),
-          title: "Open Document"
-          animate: true
-          showFooter: false
-        ).open()
+        documents = new DocumentCollection
+        $.when(documents.fetch()).then( ->
+          console.log 'hello'
+          console.log documents.models
+          modal = new Backbone.BootstrapModal(
+            content: _.template(openDocTemplate, {documents: documents})
+            title: "Open Document"
+            animate: true
+            showFooter: false
+          ).open()
+        )

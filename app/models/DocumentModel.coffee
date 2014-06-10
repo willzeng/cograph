@@ -8,4 +8,4 @@ define ['backbone'], (Backbone) ->
       _id: -1
 
     isNew: ->
-      @id < 0
+      @get(@idAttribute) < 0
