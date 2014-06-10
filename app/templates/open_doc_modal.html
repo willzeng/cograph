@@ -1,0 +1,8 @@
+<ul class="document-list">
+  <% _.each(documents, function(document) %>
+    <li>
+      <%= document.name %>
+      <button data-doc-id="<%= document.id %>">Open</button>
+    <li>
+  <% ); %>
+<ul>
