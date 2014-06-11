@@ -12,6 +12,12 @@ utils =
       str += "#{key}:'#{value}', "
     str.slice(0,-2)
 
+  dictionaryToUpdateCypherProperties: (dict) ->
+    str = ""
+    for key, value of dict
+      str += "n.#{key}='#{value}', "
+    str.slice(0,-2)
+
   listToLabels: (list) ->
     str = ":"
     for item in list
@@ -30,6 +36,18 @@ utils =
     graphDb.query cypherQuery, {}, (err, results) ->
       node = utils.parseCypherResult(results[0], 'n')
       callback node
+
+  updateNode: (graphDb, id, tags, props, callback) ->
+    tags = @listToLabels tags
+    props = @dictionaryToUpdateCypherProperties props
+    console.log "update called"
+
+    cypherQuery = "START n=node(#{id}) SET n #{tags}, #{props} RETURN n;"
+    console.log cypherQuery
+    graphDb.query cypherQuery, {}, (err, results) ->
+      #node = utils.parseCypherResult(results[0], 'n')
+      #callback node
+      console.log results
 
   nodeSet: (graphDb, node, property, value, callback) ->
     id = node._id

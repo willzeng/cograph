@@ -2,6 +2,8 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
   class NodeModel extends ObjectModel
     urlRoot: 'node'
 
+    ignoredAttributes: ['selected', 'dim']
+
     defaults:
       name: ''
       tags: []

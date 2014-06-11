@@ -43,22 +43,19 @@ nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
   cypherQuery = "start n=node(*) return n;"
 
-  iterator = (node, callback) ->
-    utils.getLabels graphDb, node._id, (labels) ->
-      node.tags = labels
-      callback null, node
-
   graphDb.query cypherQuery, {}, (err, results) ->
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    async.map nodes, iterator, (err, labeled) ->
+    async.map nodes, labeler, (err, labeled) ->
       resp.send labeled
 
 nodes.get '/neighbors/:id', (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m"
+
   graphDb.query cypherQuery, params, (err, results) ->
     nodes = (utils.parseCypherResult(node, 'm') for node in results)
-    resp.send nodes
+    async.map nodes, labeler, (err, labeled) ->
+      resp.send labeled
 
 nodes.get '/spokes/:id', (req, resp) ->
   params = {id: req.params.id}
@@ -71,11 +68,12 @@ nodes.get '/spokes/:id', (req, resp) ->
 nodes.put '/:id', (req, resp) ->
   id = req.params.id
   newData = req.body
-  graphDb.getNodeById id, (err, node) ->
-    node.data = newData
-    node.save (err, node) ->
-      console.log 'Node updated in database with id:', node.data._id
-    resp.send node
+  if req.body.tags then tags = req.body.tags else tags = ""
+  delete req.body.tags
+  props = req.body
+
+  utils.updateNode graphDb, id, tags, props, (newNode) ->
+    resp.send newNode
 
 # DELETE
 nodes.delete '/:id', (req, resp) ->
@@ -84,5 +82,9 @@ nodes.delete '/:id', (req, resp) ->
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
 
+labeler = (node, callback) ->
+  utils.getLabels graphDb, node._id, (labels) ->
+    node.tags = labels
+    callback null, node
 
 module.exports = nodes
