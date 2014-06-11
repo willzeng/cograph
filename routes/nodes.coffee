@@ -20,13 +20,11 @@ nodes.param 'id', /^\d+$/
 
 # CREATE
 nodes.post '/', (req, resp) ->
-  newNode = req.body
-  node = graphDb.createNode newNode
-  node.save (err, node) ->
-    newNode._id = node.id
-    node.data._id = node.id
-    node.save (err, node) ->
-      console.log 'Updated id of node'
+  if req.body.tags then tags = req.body.tags else tags = ""
+  delete req.body.tags
+  props = req.body
+
+  utils.createNode graphDb, tags, props, (newNode) ->
     resp.send newNode
 
 # READ
