@@ -31,4 +31,11 @@ utils =
       node = utils.parseCypherResult(results[0], 'n')
       callback node
 
+  nodeSet: (graphDb, node, property, value, callback) ->
+    id = node._id
+    cypherQuery = "START n=node(#{id}) SET n.#{property}=#{value} return n;"
+    graphDb.query cypherQuery, {}, (err, results) ->
+      node = utils.parseCypherResult(results[0], 'n')
+      callback node
+
 module.exports = utils

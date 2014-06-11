@@ -25,7 +25,8 @@ nodes.post '/', (req, resp) ->
   props = req.body
 
   utils.createNode graphDb, tags, props, (newNode) ->
-    resp.send newNode
+    utils.nodeSet graphDb, newNode, '_id', newNode._id, (savedNode) ->
+      resp.send savedNode
 
 # READ
 nodes.get '/:id', (req, resp) ->
