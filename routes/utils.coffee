@@ -38,4 +38,10 @@ utils =
       node = utils.parseCypherResult(results[0], 'n')
       callback node
 
+  getLabels: (graphDb, id, callback) ->
+    cypherQuery = "START n=node(#{id}) return labels(n);"
+    graphDb.query cypherQuery, {}, (err, results) ->
+      labels = results[0]['labels(n)']
+      callback labels
+
 module.exports = utils

@@ -6,6 +6,8 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
+async = require __dirname + '/../node_modules/async'
+
 #defines a function to extract parameters using regex's
 nodes.param (name, fn) ->
   if fn instanceof RegExp
@@ -32,14 +34,24 @@ nodes.post '/', (req, resp) ->
 nodes.get '/:id', (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    resp.send node
+    utils.getLabels graphDb, id, (labels) ->
+      parsed = node._data.data
+      parsed.tags = labels
+      resp.send parsed
 
 nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
   cypherQuery = "start n=node(*) return n;"
+
+  iterator = (node, callback) ->
+    utils.getLabels graphDb, node._id, (labels) ->
+      node.tags = labels
+      callback null, node
+
   graphDb.query cypherQuery, {}, (err, results) ->
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    resp.send nodes
+    async.map nodes, iterator, (err, labeled) ->
+      resp.send labeled
 
 nodes.get '/neighbors/:id', (req, resp) ->
   params = {id: req.params.id}
