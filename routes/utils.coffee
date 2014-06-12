@@ -74,4 +74,12 @@ utils =
       labels = results[0]['labels(n)']
       callback labels
 
+  # Input: A node dictionary
+  # Output: A node dictionary with node.tags = [ label0, label1,... ]
+  # for Neo4j labels
+  labeler = (graphDb, node, callback) ->
+    @getLabels graphDb, node._id, (labels) ->
+      node.tags = labels
+      callback null, node
+
 module.exports = utils

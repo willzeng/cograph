@@ -41,21 +41,27 @@ nodes.get '/:id', (req, resp) ->
 
 nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  cypherQuery = "start n=node(*) return n;"
+  cypherQuery = "start n=node(*) return n, labels(n);"
 
   graphDb.query cypherQuery, {}, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    async.map nodes, labeler, (err, labeled) ->
-      resp.send labeled
+    parsedNodes = []
+    for node in results
+      nodeData = node.n._data.data
+      nodeData.tags = node['labels(n)']
+      parsedNodes.push nodeData
+    resp.send parsedNodes
 
 nodes.get '/neighbors/:id', (req, resp) ->
   params = {id: req.params.id}
-  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m"
+  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
 
   graphDb.query cypherQuery, params, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'm') for node in results)
-    async.map nodes, labeler, (err, labeled) ->
-      resp.send labeled
+    parsedNodes = []
+    for node in results
+      nodeData = node.m._data.data
+      nodeData.tags = node['labels(m)']
+      parsedNodes.push nodeData
+    resp.send parsedNodes
 
 nodes.get '/spokes/:id', (req, resp) ->
   params = {id: req.params.id}
@@ -81,13 +87,5 @@ nodes.delete '/:id', (req, resp) ->
   console.log "delete_node Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
-
-# Input: A node dictionary
-# Output: A node dictionary with node.tags = [ label0, label1,... ]
-# for Neo4j labels
-labeler = (node, callback) ->
-  utils.getLabels graphDb, node._id, (labels) ->
-    node.tags = labels
-    callback null, node
 
 module.exports = nodes
