@@ -1,5 +1,5 @@
-define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel', 'cs!models/DocumentModel'],
-  (Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
+define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel', 'cs!models/DocumentModel'],
+  ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
     class ConnectionCollection extends Backbone.Collection
       model: ConnectionModel
       url: 'connection'
@@ -16,6 +16,11 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
 
         @filterModel.on "change", @filter
         @documentModel = new DocumentModel()
+
+      setDocument: (doc) ->
+        @documentModel = document
+        $.when(@nodes.fetch()).then =>
+          @connections.fetch()
 
       filter: =>
         for node in @nodes.models

@@ -29,7 +29,7 @@ nodes.get '/:id', (req, resp) ->
 
 nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  docId = 'DefaultDoc'
+  docId = req.body.docId | 'DefaultDoc'
   # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
   cypherQuery = "match (n:#{docId}) return n;"
   params = {}

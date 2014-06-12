@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
-  'cs!models/DocumentModel'],
+  'cs!models/DocumentModel', 'cs!models/WorkspaceModel'],
   ($, _, Backbone, Bloodhound, typeahead, bootsrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
@@ -21,20 +21,22 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           showFooter: false
         ).open()
 
-        $('button', @newDocModal.$el).click => @newDocument()
+        $('button', @newDocModal.$el).click () =>
+          @newDocument()
+          @newDocModal.close()
 
-      newDocument: ->
-        true
+      newDocument: () ->
+        docName = $('input', @newDocModal).val()
+        document = new DocumentModel(name: docName)
+        document.save()
+        @model.setDocument document
 
       openDocumentModal: ->
         documents = new DocumentCollection
-        $.when(documents.fetch()).then( ->
-          console.log 'hello'
-          console.log documents.models
+        $.when(documents.fetch()).then ->
           modal = new Backbone.BootstrapModal(
             content: _.template(openDocTemplate, {documents: documents})
             title: "Open Document"
             animate: true
             showFooter: false
           ).open()
-        )

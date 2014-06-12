@@ -13,8 +13,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @filterView = new FilterView {model: @workspaceModel.getFilter()}
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView()
-        @menuView = new MenuView()
+        @menuView = new MenuView model: @workspaceModel
 
+        window.dc = DocumentCollection
         window.gm = @workspaceModel
         Backbone.history.start()
 
