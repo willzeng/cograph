@@ -1,4 +1,5 @@
-define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], (Backbone, NodeModel, ConnectionModel, FilterModel) ->
+define ['jquery','backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel'], 
+($, Backbone, NodeModel, ConnectionModel, FilterModel) ->
   class ConnectionCollection extends Backbone.Collection
     model: ConnectionModel
     url: 'connection'
@@ -12,6 +13,8 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @nodes = new NodeCollection()
       @connections = new ConnectionCollection()
       @filterModel = new FilterModel @get 'initial_tags'
+
+      @getAllNames (names) => @allNames = names
 
       @filterModel.on "change", @filter
 
@@ -78,3 +81,7 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
 
     getFilter: () ->
       @filterModel
+
+    getAllNames: (callback) ->
+      $.get "node/names", {}, (names) ->
+        callback names
