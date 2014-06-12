@@ -30,6 +30,8 @@ utils =
   trim: (string)->
     string.match(/[0-9]*$/)[0]
 
+  # Creates a Node whose labels are given by the tags argument
+  # and with properties given by the props dictionary
   createNode: (graphDb, tags, props, callback) ->
     tags = @listToLabels tags
     props = @dictionaryToCypherProperties props
@@ -57,6 +59,7 @@ utils =
         node = utils.parseCypherResult(results[0], 'n')
         callback node
 
+  # Sets node.property = value in graphDb
   nodeSet: (graphDb, node, property, value, callback) ->
     id = node._id
     cypherQuery = "START n=node(#{id}) SET n.#{property}=#{value} return n;"
@@ -64,6 +67,7 @@ utils =
       node = utils.parseCypherResult(results[0], 'n')
       callback node
 
+  # Returns all the Neo4j Labels for a node with id
   getLabels: (graphDb, id, callback) ->
     cypherQuery = "START n=node(#{id}) return labels(n);"
     graphDb.query cypherQuery, {}, (err, results) ->

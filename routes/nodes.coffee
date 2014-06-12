@@ -82,6 +82,9 @@ nodes.delete '/:id', (req, resp) ->
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
 
+# Input: A node dictionary
+# Output: A node dictionary with node.tags = [ label0, label1,... ]
+# for Neo4j labels
 labeler = (node, callback) ->
   utils.getLabels graphDb, node._id, (labels) ->
     node.tags = labels
