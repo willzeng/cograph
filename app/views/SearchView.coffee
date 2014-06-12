@@ -34,6 +34,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
           $('#search-input').val('')
         else
           @findRemoteNode searchTerm
+          $('#search-input').val('')
 
       findLocalNode: (name) ->
         matchedNames = @findMatchingNames(name, @model.nodes.pluck('name'))
@@ -42,7 +43,8 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
       findRemoteNode: (name) ->
         matchedNames = @findMatchingNames(name, @model.allNames)
         matchedID = (_.findWhere @model.allNamesWithId, {name:matchedNames[0]})._id
-        @model.getAndAddNode matchedID
+        @model.getAndAddNode matchedID, (gotNode) =>
+          @model.select gotNode
 
       findMatchingNames: (query, allNames) ->
         regex = new RegExp(query,'i')

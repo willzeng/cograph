@@ -88,6 +88,8 @@ define ['jquery','backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','
       $.get "node/names", {}, (namesAndIds) ->
         callback namesAndIds
 
-    getAndAddNode: (id) ->
+    getAndAddNode: (id, callback) ->
       $.get "node/#{id}", {}, (node) =>
-        @putNode new NodeModel node
+        gotNode = new NodeModel node
+        @putNode gotNode
+        callback gotNode
