@@ -16,9 +16,9 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
       @filterModel.on "change", @filter
 
     filter: =>
-      for node in @nodes.models
+      for node in @nodes.clone().models
         if !(@filterModel.passes node)
-          @nodes.remove node
+          @removeNode node
 
     putNode: (nodeModel) ->
       if @filterModel.passes nodeModel

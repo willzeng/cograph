@@ -10,7 +10,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @graphView = new GraphView model: @graphModel
         @addNodeView = new AddNodeView model: @graphModel
         @detailsView = new DetailsView model: @graphModel
-        @filterView = new FilterView {model: @graphModel.getFilter()}
+        @filterView = new FilterView {model: @graphModel.getFilter(), attributes: {graphModel: @graphModel}}
         @searchView = new SearchView model: @graphModel
         @sidebarView = new SideBarView()
         @menuView = new MenuView()
