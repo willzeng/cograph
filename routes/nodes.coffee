@@ -73,5 +73,17 @@ nodes.delete '/:id', (req, resp) ->
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
 
+# OTHER
+
+# Request is of the form {node: id, nodes:{id0, id1, ...}}
+# returns all of the connections between node and any of the nodes
+nodes.post '/get_connections/:id', (request,response) ->
+  console.log "GET Conections REQUESTED"
+  id = request.body.node
+  nodes = request.body.nodes
+  if !(nodes?) then response.send "error"
+
+  utils.get_connections graphDb, id, nodes, (conns) ->
+    response.send conns
 
 module.exports = nodes

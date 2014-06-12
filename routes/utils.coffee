@@ -10,4 +10,12 @@ utils =
   trim: (string)->
     string.match(/[0-9]*$/)[0]
 
+  # returns all of the connections between id and any of the nodes
+  get_connections: (graphDb, id, nodes, callback) ->
+    cypherQuery = "START n=node(#{id}), m=node(#{nodes}) MATCH p=(n)-[]-(m) RETURN relationships(p);"
+    params = {}
+    graphDb.query cypherQuery, params, (err, results) ->
+      conns = ((val for key, val of result)[0][0]._data.data for result in results)
+      callback conns
+
 module.exports = utils
