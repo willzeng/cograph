@@ -15,7 +15,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @sidebarView = new SideBarView()
         @menuView = new MenuView model: @workspaceModel
 
-        window.dc = DocumentCollection
         window.gm = @workspaceModel
         Backbone.history.start()
 

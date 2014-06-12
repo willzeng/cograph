@@ -1,17 +1,10 @@
-express = require 'express'
-connections = express.Router()
-
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-connections.param 'id', (req, res, next, id) ->
-  req.id = id
-  next()
-
 # CREATE
-connections.post '/', (req, resp) ->
+exports.create = (req, resp) ->
   console.log "create_connection Query Requested"
   newConnection = req.body
   graphDb.getNodeById newConnection.source, (err, source) ->
@@ -25,12 +18,12 @@ connections.post '/', (req, resp) ->
 
 
 # READ
-connections.get '/:id', (req, resp) ->
+exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getRelationshipById id, (err, conn) ->
     resp.send conn
 
-connections.get '/', (req, resp) ->
+exports.getAll = (req, resp) ->
   console.log "get_all_connections Query Requested"
   cypherQuery = "start r=rel(*) return r;"
   graphDb.query cypherQuery, {}, (err, results) ->
@@ -38,7 +31,7 @@ connections.get '/', (req, resp) ->
     resp.send connections
 
 # UPDATE
-connections.put '/', (req, resp) ->
+exports.update = (req, resp) ->
   id = req.body._id
   newData = req.body
   graphDb.getRelationshipById id, (err, conn) ->
@@ -48,11 +41,9 @@ connections.put '/', (req, resp) ->
       resp.send conn
 
 # DELETE
-connections.delete '/', (req, resp) ->
+exports.destroy = (req, resp) ->
   console.log "delete_connection Query Requested"
   id = req.body._id
   console.log "delete_connection Query Requested"
   graphDb.getRelationshipById id, (err, conn) ->
     conn.delete () -> true
-
-module.exports = connections

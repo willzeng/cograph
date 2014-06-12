@@ -3,9 +3,6 @@ path = require 'path'
 favicon = require 'static-favicon'
 bodyParser = require 'body-parser'
 routes = require './routes/index'
-nodes = require './routes/nodes'
-connections = require './routes/connections'
-documents = require './routes/documents'
 
 app = express()
 
@@ -21,8 +18,5 @@ app.use bodyParser()
 app.use express.static(path.join(__dirname, '/app'))
 
 app.use '/', routes
-app.use '/node', nodes
-app.use '/connection', connections
-app.use '/document', documents
 
 module.exports = app

@@ -1,7 +1,7 @@
 define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, ObjectModel) ->
   class NodeModel extends ObjectModel
-    url: 'node'
-    
+    url: 'nodes'
+
     schema:
       name:
         type: 'Text'

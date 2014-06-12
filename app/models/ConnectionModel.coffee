@@ -1,6 +1,6 @@
 define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
   class ConnectionModel extends ObjectModel
-    url: 'connection'
+    url: 'connections'
 
     defaults:
       name: ''

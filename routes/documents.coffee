@@ -1,18 +1,10 @@
-express = require 'express'
-documents = express.Router()
-
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-#defines a function to extract parameters using regex's
-documents.param utils.paramExtract
-
-documents.param 'id', /^\d+$/
-
 # CREATE
-documents.post '/', (req, resp) ->
+exports.create = (req, resp) ->
   console.log 'create document query requested'
   newDocument = req.body
   node = graphDb.createNode newDocument
@@ -23,12 +15,12 @@ documents.post '/', (req, resp) ->
       resp.send node
 
 # READ
-documents.get '/:id', (req, resp) ->
+exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
     resp.send node
 
-documents.get '/', (req, resp) ->
+exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
   docLabel = '_Document'
   cypherQuery = "match (n:#{docLabel}) return n;"
@@ -39,7 +31,7 @@ documents.get '/', (req, resp) ->
     resp.send nodes
 
 # UPDATE
-documents.put '/', (req, resp) ->
+exports.update = (req, resp) ->
   id = req.body._id
   newData = req.body
   graphDb.getNodeById id, (err, node) ->
@@ -49,11 +41,8 @@ documents.put '/', (req, resp) ->
       resp.send node
 
 # DELETE
-documents.delete '/', (req, resp) ->
+exports.destroy = (req, resp) ->
   id = req.body._id
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
-
-
-module.exports = documents

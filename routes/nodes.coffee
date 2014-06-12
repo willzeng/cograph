@@ -1,18 +1,10 @@
-express = require 'express'
-nodes = express.Router()
-
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-#defines a function to extract parameters using regex's
-nodes.param utils.paramExtract
-
-nodes.param 'id', /^\d+$/
-
 # CREATE
-nodes.post '/', (req, resp) ->
+exports.create = (req, resp) ->
   newNode = req.body
   node = graphDb.createNode newNode
   docId = req.body._docId
@@ -22,14 +14,16 @@ nodes.post '/', (req, resp) ->
       resp.send newNode
 
 # READ
-nodes.get '/:id', (req, resp) ->
+exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
     resp.send node
 
-nodes.get '/', (req, resp) ->
+exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  docId = req.body.docId | 'DefaultDoc'
+  console.log req.body.docId
+  docId = req.body.docId || 'DefaultDoc'
+  console.log docId
   # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
   cypherQuery = "match (n:#{docId}) return n;"
   params = {}
@@ -38,14 +32,14 @@ nodes.get '/', (req, resp) ->
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
-nodes.get '/neighbors/:id', (req, resp) ->
+exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m"
   graphDb.query cypherQuery, params, (err, results) ->
     nodes = (utils.parseCypherResult(node, 'm') for node in results)
     resp.send nodes
 
-nodes.get '/spokes/:id', (req, resp) ->
+exports.getSpokes = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-[r]->(m) RETURN r;"
   graphDb.query cypherQuery, params, (err, results) ->
@@ -53,7 +47,7 @@ nodes.get '/spokes/:id', (req, resp) ->
     resp.send connections
 
 # UPDATE
-nodes.put '/', (req, resp) ->
+exports.update = (req, resp) ->
   id = req.body._id
   newData = req.body
   graphDb.getNodeById id, (err, node) ->
@@ -63,11 +57,8 @@ nodes.put '/', (req, resp) ->
       resp.send node
 
 # DELETE
-nodes.delete '/', (req, resp) ->
+exports.destroy = (req, resp) ->
   id = req.body._id
   console.log "delete_node Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
-
-
-module.exports = nodes
