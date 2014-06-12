@@ -33,7 +33,7 @@ nodes.post '/', (req, resp) ->
 nodes.get '/:id', (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    resp.send node
+    resp.send node._data.data
 
 nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
@@ -59,7 +59,7 @@ nodes.get '/spokes/:id', (req, resp) ->
 nodes.get '/names', (req, resp) ->
   cypherQuery = "start n=node(*) return n.name, n._id;"
   graphDb.query cypherQuery, {}, (err, results) ->
-    resp.send ({name:node['n.name'], id:node['n._id']} for node in results)
+    resp.send ({name:node['n.name'], _id:node['n._id']} for node in results)
 
 # UPDATE
 nodes.put '/:id', (req, resp) ->

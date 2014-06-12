@@ -14,7 +14,9 @@ define ['jquery','backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','
       @connections = new ConnectionCollection()
       @filterModel = new FilterModel @get 'initial_tags'
 
-      @getAllNames (names) => @allNames = names
+      @getAllNames (namesAndIds) =>
+        @allNamesWithId = namesAndIds
+        @allNames = (node.name for node in namesAndIds)
 
       @filterModel.on "change", @filter
 
@@ -83,5 +85,9 @@ define ['jquery','backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','
       @filterModel
 
     getAllNames: (callback) ->
-      $.get "node/names", {}, (names) ->
-        callback names
+      $.get "node/names", {}, (namesAndIds) ->
+        callback namesAndIds
+
+    getAndAddNode: (id) ->
+      $.get "node/#{id}", {}, (node) =>
+        @putNode new NodeModel node
