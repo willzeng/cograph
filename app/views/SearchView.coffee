@@ -9,7 +9,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel']
       initialize: ->
         substringMatcher = (gm) =>
           findMatches = (q, cb) =>
-            matches = @findMatchingNames q, gm.nodes.pluck('name')
+            matches = @findMatchingNames q, gm.allNames
             matches = _.map matches, (name) -> value: name
             cb matches
 

@@ -56,6 +56,11 @@ nodes.get '/spokes/:id', (req, resp) ->
     connections = (utils.parseCypherResult(conn, 'r') for conn in results)
     resp.send connections
 
+nodes.get '/names', (req, resp) ->
+  cypherQuery = "start n=node(*) return n.name;"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    resp.send (node['n.name'] for node in results)
+
 # UPDATE
 nodes.put '/:id', (req, resp) ->
   id = req.params.id
