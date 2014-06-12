@@ -23,6 +23,9 @@ define ['backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models
     putNode: (nodeModel) ->
       if @filterModel.passes nodeModel
         @nodes.add nodeModel
+        true
+      else
+        false
 
     putConnection: (connectionModel) ->
       @connections.add connectionModel
