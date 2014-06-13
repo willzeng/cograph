@@ -25,7 +25,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @graphView.render()
 
         #Prepopulate the WorkspaceModel with all the nodes in the database
-        $.when(gm.nodes.fetch()).then(gm.connections.fetch())
+        $.when(gm.nodes.fetch()).then ->
+          gm.connections.fetch()
 
         #@randomPopulate()
 

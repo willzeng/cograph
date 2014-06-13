@@ -1,6 +1,6 @@
 define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
   class ConnectionModel extends ObjectModel
-    url: 'connections'
+    url: -> "/documents/#{@get('_docId')}/connections"
 
     defaults:
       name: ''
@@ -11,7 +11,7 @@ define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
       color: 'grey'
       tags: []
       _id: -1
-      _doc_id: -1
+      _docId: 0
 
     schema:
       name: 'Text'

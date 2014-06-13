@@ -13,9 +13,13 @@ router.get '/', (request, response)->
 router.get '/hello', (request, response)->
   response.send('index.jade')
 
+
+
 #defines a function to extract parameters using regex's
 router.param utils.paramExtract
-router.param 'id', /^\d+$/
+integerRegex = /^\d+$/
+router.param 'id', integerRegex
+router.param 'docId', integerRegex
 
 # Documents
 router.post     '/documents',       documents.create
@@ -25,19 +29,19 @@ router.put      '/documents',       documents.update
 router.delete   '/documents',       documents.destroy
 
 # Nodes
-router.post     '/nodes',              nodes.create
-router.get      '/nodes/:id',           nodes.read
-router.get      '/nodes',              nodes.getAll
-router.get      '/nodes/neighbors/:id', nodes.getNeighbors
-router.get      '/nodes/spokes/:id',    nodes.getSpokes
-router.put      '/nodes',              nodes.update
-router.delete   '/nodes',              nodes.destroy
+router.post     '/documents/:docId/nodes',              nodes.create
+router.get      '/documents/:docId/nodes/:id',           nodes.read
+router.get      '/documents/:docId/nodes',              nodes.getAll
+router.get      '/documents/:docId/nodes/neighbors/:id', nodes.getNeighbors
+router.get      '/documents/:docId/nodes/spokes/:id',    nodes.getSpokes
+router.put      '/documents/:docId/nodes',              nodes.update
+router.delete   '/documents/:docId/nodes',              nodes.destroy
 
 # Connections
-router.post     '/connections',      connections.create
-router.get      '/connections/:id',   connections.read
-router.get      '/connections',      connections.getAll
-router.put      '/connections',      connections.update
-router.delete   '/connections',      connections.destroy
+router.post     '/documents/:docId/connections',      connections.create
+router.get      '/documents/:docId/connections/:id',   connections.read
+router.get      '/documents/:docId/connections',      connections.getAll
+router.put      '/documents/:docId/connections',      connections.update
+router.delete   '/documents/:docId/connections',      connections.destroy
 
 module.exports = router

@@ -7,9 +7,9 @@ utils = require './utils'
 exports.create = (req, resp) ->
   newNode = req.body
   node = graphDb.createNode newNode
-  docId = req.body._docId
+  docLabel = "_doc_id_#{req.params.docId || 0}"
   node.save (err, node) ->
-    utils.setLabel graphDb, node.id, docId, (err, savedNode) ->
+    utils.setLabel graphDb, node.id, docLabel, (err, savedNode) ->
       resp.send savedNode
 
 # READ
@@ -20,11 +20,9 @@ exports.read = (req, resp) ->
 
 exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  console.log req.body.docId
-  docId = req.body.docId || 'DefaultDoc'
-  console.log docId
+  docLabel = "_doc_id_#{req.params.docId || 0}"
   # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
-  cypherQuery = "match (n:#{docId}) return n;"
+  cypherQuery = "match (n:#{docLabel}) return n;"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
     if err then console.log err

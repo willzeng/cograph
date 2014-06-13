@@ -1,6 +1,6 @@
 define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, ObjectModel) ->
   class NodeModel extends ObjectModel
-    url: 'nodes'
+    url: -> "/documents/#{@get('_docId')}/nodes"
 
     schema:
       name:
@@ -25,9 +25,9 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
       if resp._id then resp._id = parseInt(resp._id, 10)
       resp
 
-    getNeighbors: (callback) ->
+    getNeighbors: (callback) =>
       this.sync 'read', this,
-        url: "node/neighbors/#{@get('_id')}"
+        url: @url() + "/#{@get('_id')}"
         success: (results) =>
           callback (@parse result for result in results)
 
