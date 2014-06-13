@@ -1,10 +1,10 @@
 define ['backbone'], (Backbone) ->
   class DocumentModel extends Backbone.Model
-    urlRoot: 'document'
+    urlRoot: 'documents'
     idAttribute: '_id'
 
     defaults:
-      name: ''
+      name: 'DefaultName'
       _id: -1
 
     isNew: ->

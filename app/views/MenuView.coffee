@@ -4,7 +4,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
   ($, _, Backbone, Bloodhound, typeahead, bootsrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
-      url: 'document'
+      url: 'documents'
 
     class MenuView extends Backbone.View
       el: $ '#menu-bar'
