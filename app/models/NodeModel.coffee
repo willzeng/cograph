@@ -27,12 +27,12 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
 
     getNeighbors: (callback) =>
       this.sync 'read', this,
-        url: @url() + "/#{@get('_id')}"
+        url: @url() + "/neighbors/#{@get('_id')}"
         success: (results) =>
           callback (@parse result for result in results)
 
     getSpokes: (callback) ->
       this.sync 'read', this,
-        url: "node/spokes/#{@get('_id')}"
+        url: @url() + "/spokes/#{@get('_id')}"
         success: (results) ->
           callback results
