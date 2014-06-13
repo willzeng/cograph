@@ -13,6 +13,13 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #new-doc-button': 'newDocumentModal'
         'click #open-doc-button': 'openDocumentModal'
 
+      initialize: ->
+        @model.getDocument().on "change", @render, this
+        @render()
+
+      render: ->
+        $('#menu-title').val @model.getDocument().get('name')
+
       newDocumentModal: ->
         @newDocModal = new Backbone.BootstrapModal(
           content: _.template(newDocTemplate, {})

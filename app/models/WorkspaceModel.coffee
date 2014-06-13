@@ -22,6 +22,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         $.when(@nodes.fetch()).then =>
           @connections.fetch()
 
+      getDocument: ->
+        @documentModel
+
       filter: =>
         for node in @nodes.models
           if !(@filterModel.passes node)
