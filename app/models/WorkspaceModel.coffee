@@ -14,13 +14,15 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       initialize: ->
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
-        @filterModel = new FilterModel @get 'initial_tags'
 
+        @filterModel = new FilterModel @get 'initial_tags'
         @filterModel.on "change", @filter
+
         @documentModel = new DocumentModel()
 
       setDocument: (doc) ->
-        @documentModel = document
+        @documentModel = doc
+        @trigger "document:change"
         $.when(@nodes.fetch()).then =>
           @connections.fetch()
 
@@ -34,6 +36,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       putNode: (nodeModel) ->
         if @filterModel.passes nodeModel
+          nodeModel.set '_docId', @documentModel.get('_id')
           @nodes.add nodeModel
 
       putConnection: (connectionModel) ->

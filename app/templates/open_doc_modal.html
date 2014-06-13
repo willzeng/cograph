@@ -2,7 +2,7 @@
   <% documents.each(function(document){ %>
     <li>
       <%= document.get('name') %>
-      <button data-doc-id="<%= document.id %>">Open</button>
+      <button data-doc-id="<%= document.id %>" class="btn btn-primary">Open</button>
     </li>
   <% }); %>
 <ul>

@@ -14,7 +14,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #open-doc-button': 'openDocumentModal'
 
       initialize: ->
-        @model.getDocument().on "change", @render, this
+        @model.on "document:change", @render, this
         @render()
 
       render: ->
@@ -40,10 +40,15 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
 
       openDocumentModal: ->
         documents = new DocumentCollection
-        $.when(documents.fetch()).then ->
+        $.when(documents.fetch()).then =>
           modal = new Backbone.BootstrapModal(
             content: _.template(openDocTemplate, {documents: documents})
             title: "Open Document"
             animate: true
             showFooter: false
           ).open()
+
+          $('button', modal.el).click (e) =>
+            targetDoc = $(e.currentTarget).attr("data-doc-id")
+            @model.setDocument documents.findWhere {_id:targetDoc}
+            modal.close()
