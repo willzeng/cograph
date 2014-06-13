@@ -33,7 +33,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           @newDocModal.close()
 
       newDocument: () ->
-        docName = $('#newDocName').val()
+        docName = $('#newDocName', @newDocModal.el).val()
         document = new DocumentModel(name: docName)
         document.save()
         @model.setDocument document
