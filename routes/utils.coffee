@@ -23,6 +23,7 @@ utils =
     cypherQuery = "start n=node(#{id}) set n:#{label} return n"
     params = {}
     graphDb.query cypherQuery, params, (err, results) ->
-      cb(err, results)
+      setNode = utils.parseCypherResult(results[0], 'n')
+      cb(err, setNode)
 
 module.exports = utils

@@ -9,9 +9,8 @@ exports.create = (req, resp) ->
   node = graphDb.createNode newNode
   docId = req.body._docId
   node.save (err, node) ->
-    utils.setLabel graphDb, node.id, docId, (err, node) ->
-      newNode._id = node.id
-      resp.send newNode
+    utils.setLabel graphDb, node.id, docId, (err, savedNode) ->
+      resp.send savedNode
 
 # READ
 exports.read = (req, resp) ->

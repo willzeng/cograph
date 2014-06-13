@@ -34,10 +34,10 @@ router.put      '/nodes',              nodes.update
 router.delete   '/nodes',              nodes.destroy
 
 # Connections
-router.post     '/conncetions',      connections.create
-router.get      '/conncetions/:id',   connections.read
-router.get      '/conncetions',      connections.getAll
-router.put      '/conncetions',      connections.update
-router.delete   '/conncetions',      connections.destroy
+router.post     '/connections',      connections.create
+router.get      '/connections/:id',   connections.read
+router.get      '/connections',      connections.getAll
+router.put      '/connections',      connections.update
+router.delete   '/connections',      connections.destroy
 
 module.exports = router
