@@ -26,7 +26,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           @newDocModal.close()
 
       newDocument: () ->
-        docName = $('input', @newDocModal).val()
+        docName = $('#newDocName').val()
         document = new DocumentModel(name: docName)
         document.save()
         @model.setDocument document
