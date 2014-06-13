@@ -9,7 +9,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       color: 'grey'
       tags: []
       _id: -1
-      _docId: 'DefaultDoc'
+      _docId: 0
 
     isNew: ->
       @get(@idAttribute) < 0

@@ -2,11 +2,13 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
   ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
     class ConnectionCollection extends Backbone.Collection
       model: ConnectionModel
-      url: 'connections'
+      url: -> "/documents/#{@_docId}/connections"
+      _docId: 0
 
     class NodeCollection extends Backbone.Collection
       model: NodeModel
-      url: 'nodes'
+      url: -> "/documents/#{@_docId}/nodes"
+      _docId:  0
 
     class WorkspaceModel extends Backbone.Model
       initialize: ->
