@@ -23,19 +23,20 @@ router.param 'docId', integerRegex
 
 # Documents
 router.post     '/documents',       documents.create
-router.get      '/documents/:id',    documents.read
+router.get      '/documents/:id',   documents.read
 router.get      '/documents',       documents.getAll
 router.put      '/documents',       documents.update
 router.delete   '/documents',       documents.destroy
 
 # Nodes
-router.post     '/documents/:docId/nodes',              nodes.create
+router.post     '/documents/:docId/nodes',               nodes.create
 router.get      '/documents/:docId/nodes/:id',           nodes.read
-router.get      '/documents/:docId/nodes',              nodes.getAll
+router.get      '/documents/:docId/nodes',               nodes.getAll
 router.get      '/documents/:docId/nodes/neighbors/:id', nodes.getNeighbors
 router.get      '/documents/:docId/nodes/spokes/:id',    nodes.getSpokes
-router.put      '/documents/:docId/nodes',              nodes.update
-router.delete   '/documents/:docId/nodes',              nodes.destroy
+router.get      '/documents/:docId/ndoes/get_connections/:id' nodes.getConnections
+router.put      '/documents/:docId/nodes',               nodes.update
+router.delete   '/documents/:docId/nodes',               nodes.destroy
 
 # Connections
 router.post     '/documents/:docId/connections',      connections.create

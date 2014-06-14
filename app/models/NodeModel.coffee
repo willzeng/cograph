@@ -1,4 +1,4 @@
-define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, ObjectModel) ->
+define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Backbone, ObjectModel) ->
   class NodeModel extends ObjectModel
     urlRoot: -> "/documents/#{@get('_docId')}/nodes"
 
@@ -36,3 +36,9 @@ define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, Object
         url: @url() + "/spokes/#{@get('_id')}"
         success: (results) ->
           callback results
+
+    getConnections: (nodes, callback) ->
+      nodeIds = (n.id for n in nodes)
+      data = {node:this.id, nodes:nodeIds}
+      $.post "node/get_connections/#{@get('_id')}", data, (results) ->
+        callback results
