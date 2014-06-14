@@ -16,7 +16,6 @@ exports.create = (req, resp) ->
           console.log 'Updated id of connection'
         resp.send newConnection
 
-
 # READ
 exports.read = (req, resp) ->
   id = req.params.id
@@ -25,7 +24,8 @@ exports.read = (req, resp) ->
 
 exports.getAll = (req, resp) ->
   console.log "get_all_connections Query Requested"
-  cypherQuery = "start r=rel(*) return r;"
+  docLabel = "_doc_id_#{req.params.docId || 0}"
+  cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
   graphDb.query cypherQuery, {}, (err, results) ->
     connections = (utils.parseCypherResult(connection, 'r') for connection in results)
     resp.send connections
