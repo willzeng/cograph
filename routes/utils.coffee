@@ -24,6 +24,7 @@ utils =
     params = {}
     graphDb.query cypherQuery, params, (err, results) ->
       setNode = utils.parseCypherResult(results[0], 'n')
+      setNode._id = id
       cb(err, setNode)
 
 module.exports = utils

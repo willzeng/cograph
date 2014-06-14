@@ -22,7 +22,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       setDocument: (doc) ->
         @documentModel = doc
+        @nodes._docId = doc.id
+        @connections._docId = doc.id
         @trigger "document:change"
+        @connections.reset()
         $.when(@nodes.fetch()).then =>
           @connections.fetch()
 
@@ -36,7 +39,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       putNode: (nodeModel) ->
         if @filterModel.passes nodeModel
-          nodeModel.set '_docId', @documentModel.get('_id')
           @nodes.add nodeModel
 
       putConnection: (connectionModel) ->

@@ -35,8 +35,8 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       newDocument: () ->
         docName = $('#newDocName', @newDocModal.el).val()
         document = new DocumentModel(name: docName)
-        document.save()
-        @model.setDocument document
+        $.when(document.save()).then =>
+          @model.setDocument document
 
       openDocumentModal: ->
         documents = new DocumentCollection
