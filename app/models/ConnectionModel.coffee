@@ -1,6 +1,6 @@
 define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
   class ConnectionModel extends ObjectModel
-    url: -> "/documents/#{@get('_docId')}/connections"
+    urlRoot: -> "/documents/#{@get('_docId')}/connections"
 
     defaults:
       name: ''

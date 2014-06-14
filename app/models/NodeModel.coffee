@@ -1,6 +1,6 @@
 define ['underscore', 'backbone', 'cs!models/ObjectModel'], (_, Backbone, ObjectModel) ->
   class NodeModel extends ObjectModel
-    url: -> "/documents/#{@get('_docId')}/nodes"
+    urlRoot: -> "/documents/#{@get('_docId')}/nodes"
 
     schema:
       name:

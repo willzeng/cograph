@@ -32,7 +32,7 @@ exports.getAll = (req, resp) ->
 
 # UPDATE
 exports.update = (req, resp) ->
-  id = req.body._id
+  id = req.params.id
   newData = req.body
   graphDb.getRelationshipById id, (err, conn) ->
     conn.data = newData
@@ -43,7 +43,6 @@ exports.update = (req, resp) ->
 # DELETE
 exports.destroy = (req, resp) ->
   console.log "delete_connection Query Requested"
-  id = req.body._id
-  console.log "delete_connection Query Requested"
+  id = req.params.id
   graphDb.getRelationshipById id, (err, conn) ->
     conn.delete () -> true

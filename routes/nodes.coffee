@@ -45,7 +45,7 @@ exports.getSpokes = (req, resp) ->
 
 # UPDATE
 exports.update = (req, resp) ->
-  id = req.body._id
+  id = req.params.id
   newData = req.body
   graphDb.getNodeById id, (err, node) ->
     node.data = newData
@@ -55,7 +55,7 @@ exports.update = (req, resp) ->
 
 # DELETE
 exports.destroy = (req, resp) ->
-  id = req.body._id
+  id = req.params.id
   console.log "delete_node Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
