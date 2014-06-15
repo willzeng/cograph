@@ -12,7 +12,7 @@ requirejs.config({
     'typeahead': '/assets/libs/typeahead.js/dist/typeahead.jquery.min',
     'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
     'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min',
-    'bb-modal': '/assets/js/backbone.bootstrap-modal'
+    'bb-modal': '/assets/libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal'
   },
   shim: {
     'backbone': {
