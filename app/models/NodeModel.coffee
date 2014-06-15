@@ -1,15 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Backbone, ObjectModel) ->
   class NodeModel extends ObjectModel
-    urlRoot: 'node'
-
-    defaults:
-      name: ''
-      tags: []
-      description: ''
-      url: ''
-      size: ''
-      color: ''
-      _id: -1
+    urlRoot: -> "/documents/#{@get('_docId')}/nodes"
 
     schema:
       name:
@@ -34,15 +25,15 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Bac
       if resp._id then resp._id = parseInt(resp._id, 10)
       resp
 
-    getNeighbors: (callback) ->
+    getNeighbors: (callback) =>
       this.sync 'read', this,
-        url: "node/neighbors/#{@get('_id')}"
+        url: @url() + "/neighbors/#{@get('_id')}"
         success: (results) =>
           callback (@parse result for result in results)
 
     getSpokes: (callback) ->
       this.sync 'read', this,
-        url: "node/spokes/#{@get('_id')}"
+        url: @url() + "/spokes/#{@get('_id')}"
         success: (results) ->
           callback results
 

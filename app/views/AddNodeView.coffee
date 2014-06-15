@@ -1,5 +1,5 @@
-define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel'],
-  ($, Backbone, GraphModel, NodeModel) ->
+define ['jquery', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel'],
+  ($, Backbone, WorkspaceModel, NodeModel) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
 
@@ -8,7 +8,8 @@ define ['jquery', 'backbone', 'cs!models/GraphModel', 'cs!models/NodeModel'],
 
       addNode: ->
         node_name = $('input', @el).val()
-        node = new NodeModel name: node_name
+        docId = @model.nodes._docId
+        node = new NodeModel {name: node_name, _docId: docId}
         if node.isValid()
           node.save()
           @model.select @model.putNode node

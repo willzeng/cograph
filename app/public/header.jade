@@ -9,6 +9,9 @@ nav.navbar.navbar-default#menu-bar(role="navigation")
             span.caret
           ul.dropdown-menu
             li(role="presentation")
-              a(href="#") 
-                i No Options
+              a#new-doc-button(href="#", data-toggle="modal", data-target="#new-doc-modal")
+                | New Document
+            li(role="presentation")
+              a#open-doc-button(href="#")
+                | Open Document
       input.navbar-text#menu-title(type="text", placeholder="Untitled Doc")
