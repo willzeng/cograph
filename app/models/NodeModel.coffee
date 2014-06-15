@@ -2,6 +2,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Bac
   class NodeModel extends ObjectModel
     urlRoot: 'node'
 
+    ignoredAttributes: ['selected', 'dim']
+
     defaults:
       name: ''
       tags: []
