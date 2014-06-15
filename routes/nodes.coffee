@@ -6,6 +6,8 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
+async = require __dirname + '/../node_modules/async'
+
 #defines a function to extract parameters using regex's
 nodes.param (name, fn) ->
   if fn instanceof RegExp
@@ -20,34 +22,46 @@ nodes.param 'id', /^\d+$/
 
 # CREATE
 nodes.post '/', (req, resp) ->
-  newNode = req.body
-  node = graphDb.createNode newNode
-  node.save (err, node) ->
-    newNode._id = node.id
-    node.data._id = node.id
-    node.save (err, node) ->
-      console.log 'Updated id of node'
-    resp.send newNode
+  if req.body.tags then tags = req.body.tags else tags = ""
+  delete req.body.tags
+  props = req.body
+
+  utils.createNode graphDb, tags, props, (newNode) ->
+    utils.nodeSet graphDb, newNode, '_id', newNode._id, (savedNode) ->
+      resp.send savedNode
 
 # READ
 nodes.get '/:id', (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    resp.send node
+    utils.getLabels graphDb, id, (labels) ->
+      parsed = node._data.data
+      parsed.tags = labels
+      resp.send parsed
 
 nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  cypherQuery = "start n=node(*) return n;"
+  cypherQuery = "start n=node(*) return n, labels(n);"
+
   graphDb.query cypherQuery, {}, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    resp.send nodes
+    parsedNodes = []
+    for node in results
+      nodeData = node.n._data.data
+      nodeData.tags = node['labels(n)']
+      parsedNodes.push nodeData
+    resp.send parsedNodes
 
 nodes.get '/neighbors/:id', (req, resp) ->
   params = {id: req.params.id}
-  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m"
+  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
+
   graphDb.query cypherQuery, params, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'm') for node in results)
-    resp.send nodes
+    parsedNodes = []
+    for node in results
+      nodeData = node.m._data.data
+      nodeData.tags = node['labels(m)']
+      parsedNodes.push nodeData
+    resp.send parsedNodes
 
 nodes.get '/spokes/:id', (req, resp) ->
   params = {id: req.params.id}
@@ -60,11 +74,12 @@ nodes.get '/spokes/:id', (req, resp) ->
 nodes.put '/:id', (req, resp) ->
   id = req.params.id
   newData = req.body
-  graphDb.getNodeById id, (err, node) ->
-    node.data = newData
-    node.save (err, node) ->
-      console.log 'Node updated in database with id:', node.data._id
-    resp.send node
+  if req.body.tags then tags = req.body.tags else tags = ""
+  delete req.body.tags
+  props = req.body
+
+  utils.updateNode graphDb, id, tags, props, (newNode) ->
+    resp.send newNode
 
 # DELETE
 nodes.delete '/:id', (req, resp) ->

@@ -6,9 +6,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
 
       events:
         'click .filter-toggle': 'updateFilter'
+        'click #filter-button': 'applyFilter'
 
       initialize: ->
         $(@el).append _.template(filtersTemplate, {tags:@model.get 'node_tags'})
+        @graphModel = @attributes.graphModel
 
       update: ->
         $(@el).empty()
@@ -21,3 +23,6 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
           @model.set 'node_tags', _.without @model.get('node_tags'), $(toggled).data('id')
         else
           @model.set 'node_tags', _.union @model.get('node_tags'), $(toggled).data('id')
+
+      applyFilter: ->
+        @graphModel.filter()
