@@ -64,7 +64,7 @@ exports.destroy = (req, resp) ->
 
 # Request is of the form {node: id, nodes:{id0, id1, ...}}
 # returns all of the connections between node and any of the nodes
-exports.getConenctions =  (request,response) ->
+exports.getConnections = (request,response) ->
   console.log "GET Conections REQUESTED"
   id = request.body.node
   nodes = request.body.nodes
