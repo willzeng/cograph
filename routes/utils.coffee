@@ -37,9 +37,10 @@ utils =
     props = @dictionaryToCypherProperties props
 
     cypherQuery = "CREATE (n#{tags} {#{props}}) RETURN n;"
-    graphDb.query cypherQuery, {}, (err, results) ->
+    graphDb.query cypherQuery, {}, (err, results) =>
       node = utils.parseCypherResult(results[0], 'n')
-      callback node
+      @nodeSet graphDb, node, '_id', node._id, (savedNode) ->
+        callback savedNode
 
   updateNode: (graphDb, id, tags, props, callback) ->
     props = @dictionaryToUpdateCypherProperties props

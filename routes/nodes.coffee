@@ -23,10 +23,8 @@ nodes.post '/', (req, resp) ->
   if req.body.tags then tags = req.body.tags else tags = ""
   delete req.body.tags
   props = req.body
-
   utils.createNode graphDb, tags, props, (newNode) ->
-    utils.nodeSet graphDb, newNode, '_id', newNode._id, (savedNode) ->
-      resp.send savedNode
+    resp.send newNode
 
 # READ
 nodes.get '/:id', (req, resp) ->
@@ -72,7 +70,7 @@ nodes.get '/spokes/:id', (req, resp) ->
 nodes.put '/:id', (req, resp) ->
   id = req.params.id
   newData = req.body
-  if req.body.tags then tags = req.body.tags else tags = ""
+  tags = req.body.tags || ""
   delete req.body.tags
   props = req.body
 
