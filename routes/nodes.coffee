@@ -6,8 +6,6 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-async = require __dirname + '/../node_modules/async'
-
 #defines a function to extract parameters using regex's
 nodes.param (name, fn) ->
   if fn instanceof RegExp
