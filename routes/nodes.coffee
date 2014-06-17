@@ -24,7 +24,7 @@ nodes.post '/', (req, resp) ->
   delete req.body.tags
   props = req.body
   utils.createNode graphDb, tags, props, (newNode) ->
-    resp.send newNode
+    resp.send utils.parseNodeToClient newNode
 
 # READ
 nodes.get '/:id', (req, resp) ->
@@ -33,7 +33,7 @@ nodes.get '/:id', (req, resp) ->
     utils.getLabels graphDb, id, (labels) ->
       parsed = node._data.data
       parsed.tags = labels
-      resp.send parsed
+      resp.send utils.parseNodeToClient parsed
 
 nodes.get '/', (req, resp) ->
   console.log "get_all_nodes Query Requested"
@@ -44,7 +44,7 @@ nodes.get '/', (req, resp) ->
     for node in results
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
-      parsedNodes.push nodeData
+      parsedNodes.push utils.parseNodeToClient nodeData
     resp.send parsedNodes
 
 nodes.get '/neighbors/:id', (req, resp) ->
@@ -56,7 +56,7 @@ nodes.get '/neighbors/:id', (req, resp) ->
     for node in results
       nodeData = node.m._data.data
       nodeData.tags = node['labels(m)']
-      parsedNodes.push nodeData
+      parsedNodes.push utils.parseNodeToClient nodeData
     resp.send parsedNodes
 
 nodes.get '/spokes/:id', (req, resp) ->
@@ -75,7 +75,7 @@ nodes.put '/:id', (req, resp) ->
   props = req.body
 
   utils.updateNode graphDb, id, tags, props, (newNode) ->
-    resp.send newNode
+    resp.send utils.parseNodeToClient newNode
 
 # DELETE
 nodes.delete '/:id', (req, resp) ->
