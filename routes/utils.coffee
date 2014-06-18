@@ -47,14 +47,15 @@ utils =
 
     @getTags graphDb, id, (labels) =>
       parsedTags = @listToLabels tags, "_tag_"
+      if parsedTags.length > 0 then parsedTags = "n #{parsedTags}, " else parsedTags = ""
 
       removedTags = _.difference labels, tags
       removedTags = @listToLabels removedTags, "_tag_"
 
       if removedTags.length > 0
-        cypherQuery = "START n=node(#{id}) SET n #{parsedTags}, #{props} REMOVE n#{removedTags} RETURN n;"
+        cypherQuery = "START n=node(#{id}) SET #{parsedTags}#{props} REMOVE n#{removedTags} RETURN n;"
       else
-        cypherQuery = "START n=node(#{id}) SET n #{parsedTags}, #{props} RETURN n;"
+        cypherQuery = "START n=node(#{id}) SET #{parsedTags}#{props} RETURN n;"
 
       graphDb.query cypherQuery, {}, (err, results) =>
         node = @parseCypherResult(results[0], 'n')
@@ -105,6 +106,23 @@ utils =
     @getLabels graphDb, node._id, (labels) ->
       node.tags = labels
       callback null, node
+
+  paramExtract: (name, fn) ->
+    if fn instanceof RegExp
+      return (req, res, next, val) ->
+        if captures = fn.exec String(val)
+          req.params[name] = captures
+          next()
+        else
+          next 'route'
+
+  setLabel: (graphDb, id, label, cb) ->
+    cypherQuery = "start n=node(#{id}) set n:#{label} return n"
+    params = {}
+    graphDb.query cypherQuery, params, (err, results) ->
+      setNode = utils.parseCypherResult(results[0], 'n')
+      setNode._id = id
+      cb(err, setNode)
 
   # returns all of the connections between id and any of the nodes
   get_connections: (graphDb, id, nodes, callback) ->
