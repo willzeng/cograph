@@ -13,8 +13,7 @@ exports.create = (req, resp) ->
   delete req.body.tags
   props = req.body
   utils.createNode graphDb, tags, props, (newNode) ->
-    console.log "the newNode is", newNode
-    utils.setLabel graphDb, newNode._id, docLabel, (err, savedNode) ->
+    utils.setLabel graphDb, newNode._id, docLabel, (savedNode) ->
       resp.send utils.parseNodeToClient savedNode
 
 # READ
@@ -22,8 +21,8 @@ exports.read = (req, resp) ->
   console.log "read requested"
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
+    parsed = node._data.data
     utils.getLabels graphDb, id, (labels) ->
-      parsed = node._data.data
       parsed.tags = labels
       resp.send utils.parseNodeToClient parsed
 

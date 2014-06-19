@@ -99,14 +99,6 @@ utils =
     @getLabels graphDb, id, (labelsDict) ->
       callback labelsDict.tags
 
-  # Input: A node dictionary
-  # Output: A node dictionary with node.tags = [ label0, label1,... ]
-  # for Neo4j labels
-  labeler: (graphDb, node, callback) ->
-    @getLabels graphDb, node._id, (labels) ->
-      node.tags = labels
-      callback null, node
-
   paramExtract: (name, fn) ->
     if fn instanceof RegExp
       return (req, res, next, val) ->
@@ -121,8 +113,7 @@ utils =
     params = {}
     graphDb.query cypherQuery, params, (err, results) ->
       setNode = utils.parseCypherResult(results[0], 'n')
-      setNode._id = id
-      cb(err, setNode)
+      cb setNode
 
   # returns all of the connections between id and any of the nodes
   get_connections: (graphDb, id, nodes, callback) ->
