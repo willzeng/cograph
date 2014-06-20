@@ -2,20 +2,32 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
   ($, _, Backbone, filtersTemplate) ->
     class FilterView extends Backbone.View
 
-      el: $ '#filters-container'
+      el: $ '#graph'
 
       events:
-        'click .filter-toggle': 'updateFilter'
-        'click #filter-button': 'applyFilter'
+        'click #filter-modal-toggle': 'openFilterModal'
 
       initialize: ->
-        $(@el).append _.template(filtersTemplate, {tags:@model.get 'node_tags'})
         @workspaceModel = @attributes.workspaceModel
 
-      update: ->
-        $(@el).empty()
+      openFilterModal: ->
+        initialTags = @workspaceModel.get('initial_tags').node_tags
+        checkedTags = @model.get 'node_tags'
+        tagTable = {}
+        for tag in initialTags
+          tagTable[tag] = _.contains checkedTags, tag
 
-        $(@el).append _.template(filtersTemplate, {tags:@model.get 'node_tags'})
+        @FilterModal = new Backbone.BootstrapModal(
+          content: _.template(filtersTemplate, {tagTable:tagTable})
+          title: "Filters"
+          animate: true
+          showFooter: false
+        ).open()
+
+        $('#filter-button', @FilterModal.$el).click (e) =>
+          @updateFilter(e)
+          @applyFilter()
+          @FilterModal.close()
 
       updateFilter: (e) =>
         toggled = e.currentTarget

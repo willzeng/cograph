@@ -16,7 +16,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @connections = new ConnectionCollection()
 
         @filterModel = new FilterModel @get 'initial_tags'
-        @filterModel.on "change", @filter
 
         @documentModel = new DocumentModel()
 
@@ -33,9 +32,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @documentModel
 
       filter: =>
-        for node in @nodes.models
+        cloneNodes = @nodes.clone()
+        for node in cloneNodes.models
           if !(@filterModel.passes node)
-            @nodes.remove node
+            @removeNode node
 
       putNode: (nodeModel) ->
         if @filterModel.passes nodeModel

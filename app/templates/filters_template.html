@@ -8,11 +8,17 @@
   <div class="panel-body">
     <p>
       <ul class="list-group">
-        <% _.each(tags, function(tag) { %>
+        <% _.each(_.keys(tagTable), function(tag) { %>
           <li class="list-group-item">
-            <input type='checkbox' class="filter-toggle" checked='true' data-id=<%= tag %>>
-              <%= tag %>
-            </input>
+            <% if(tagTable[tag]) { %>
+              <input type='checkbox' class="filter-toggle" checked='true' data-id=<%= tag %>>
+                <%= tag %>
+              </input>
+            <% } else { %>
+              <input type='checkbox' class="filter-toggle" data-id=<%= tag %>>
+                <%= tag %>
+              </input>
+            <% } %>
           </li>
         <% }); %>
       </ul>
