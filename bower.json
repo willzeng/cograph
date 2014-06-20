@@ -30,7 +30,8 @@
     "require-cs": "~0.4.4",
     "d3": "~3.4.6",
     "backbone-forms": "~0.14.0",
-    "typeahead.js": "~0.10.2"
+    "typeahead.js": "~0.10.2",
+    "backbone.bootstrap-modal": "git@github.com:vpontis/backbone.bootstrap-modal.git#~0.9.1"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

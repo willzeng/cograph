@@ -10,7 +10,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
 
       initialize: ->
         $(@el).append _.template(filtersTemplate, {tags:@model.get 'node_tags'})
-        @graphModel = @attributes.graphModel
+        @workspaceModel = @attributes.workspaceModel
 
       update: ->
         $(@el).empty()
@@ -25,4 +25,4 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
           @model.set 'node_tags', _.union @model.get('node_tags'), $(toggled).data('id')
 
       applyFilter: ->
-        @graphModel.filter()
+        @workspaceModel.filter()
