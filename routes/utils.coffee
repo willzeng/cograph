@@ -2,29 +2,21 @@ _ = require __dirname + '/../node_modules/underscore'
 
 utils =
 
-  #takes a cypher query result array and the name of the returned cypher variable
+  # takes a cypher query result array and the name of the returned cypher variable
+  # goes into `_data.data` and returns an object that corresponds to attributes of a node
   parseCypherResult: (obj, name) ->
     objData = obj[name]._data.data
     objData._id = @trim obj[name]._data.self
     objData
 
   dictionaryToCypherProperties: (dict) ->
-    str = ""
-    for key, value of dict
-      str += "#{key}:'#{value}', "
-    str.slice(0,-2)
+    _.map(_.keys(dict), (key) -> "#{key}:'#{dict[key]}'").join(', ')
 
   dictionaryToUpdateCypherProperties: (dict) ->
-    str = ""
-    for key, value of dict
-      str += "n.#{key}='#{value}', "
-    str.slice(0,-2)
+    _.map(_.keys(dict), (key) -> "n.#{key}='#{dict[key]}'").join(', ')
 
   listToLabels: (list, prefix) ->
-    str = ":"
-    for item in list
-      str += "#{prefix}#{item}:"
-    str.slice(0,-1)
+    _.map(list, (item) -> ":#{prefix}#{item}").join('')
 
   #Trims a url i.e. 'http://localhost:7474/db/data/node/312' -> 312
   trim: (string)->
@@ -39,7 +31,7 @@ utils =
     cypherQuery = "CREATE (n#{tags} {#{props}}) RETURN n;"
     graphDb.query cypherQuery, {}, (err, results) =>
       node = utils.parseCypherResult(results[0], 'n')
-      @nodeSet graphDb, node, '_id', node._id, (savedNode) =>
+      @nodeSet graphDb, node._id, '_id', node._id, (savedNode) =>
         callback savedNode
 
   updateNode: (graphDb, id, tags, props, callback) ->
@@ -61,32 +53,36 @@ utils =
         node = @parseCypherResult(results[0], 'n')
         callback node
 
-  parseNodeToClient: (serverNode) ->
-    clientNode = serverNode
-    if serverNode.tags
-      parsedLabels = @parseLabels serverNode.tags
-      clientNode.tags = parsedLabels.tags
-    clientNode
-
-  parseLabels: (labels) ->
-    labelDict = {tags:[]}
-    for label in labels
-      docRegex = new RegExp /\_doc\_\d+/
-      workspaceRegex = new RegExp /\_workspace\_\d+/
-      tagsRegex = new RegExp /\_tag\_.+/
-
-      if docRegex.test label then labelDict.doc = label.slice(5)
-      if workspaceRegex.test label then labelDict.workspace = label.slice(11)
-      if tagsRegex.test label then labelDict.tags.push label.slice(5)
-    labelDict
-
   # Sets node.property = value in graphDb
-  nodeSet: (graphDb, node, property, value, callback) ->
+  nodeSet: (graphDb, id, property, value, callback) ->
     id = node._id
     cypherQuery = "START n=node(#{id}) SET n.#{property}=#{value} return n;"
     graphDb.query cypherQuery, {}, (err, results) ->
       node = utils.parseCypherResult(results[0], 'n')
       callback node
+
+  parseNodeToClient: (serverNode) ->
+    serverNode.tags = @parseLabels(serverNode.tags).tags if serverNode.tags
+    serverNode
+
+  parseLabels: (labels) ->
+    labelDict = {tags:[]}
+    for label in labels
+      # js doesn't support lookbehinds in regexes
+      docRegex = new RegExp /^\_doc\_(\d+)/
+      workspaceRegex = new RegExp /^\_workspace\_(\d+)/
+      tagsRegex = new RegExp /^\_tag\_(.+)/
+
+      if tagsRegex.test label
+        labelDict.tags.push tagsRegex.exec(label)[1]
+        continue
+      if docRegex.test label
+        labelDict.doc = docRegex.exec(label)[1]
+        continue
+      if workspaceRegex.test label
+        labelDict.workspace = workspaceRegex.exec(label)[1]
+        continue
+    labelDict
 
   # Returns all the Neo4j Labels for a node with id
   getLabels: (graphDb, id, callback) ->
