@@ -22,45 +22,6 @@ utils =
   trim: (string)->
     string.match(/[0-9]*$/)[0]
 
-  # Creates a Node whose labels are given by the tags argument
-  # and with properties given by the props dictionary
-  createNode: (graphDb, tags, props, callback) ->
-    tags = @listToLabels tags, "_tag_"
-    props = @dictionaryToCypherProperties props
-
-    cypherQuery = "CREATE (n#{tags} {#{props}}) RETURN n;"
-    graphDb.query cypherQuery, {}, (err, results) =>
-      node = utils.parseCypherResult(results[0], 'n')
-      @nodeSet graphDb, node._id, '_id', node._id, (savedNode) =>
-        callback savedNode
-
-  updateNode: (graphDb, id, tags, props, callback) ->
-    props = @dictionaryToUpdateCypherProperties props
-
-    @getTags graphDb, id, (labels) =>
-      parsedTags = @listToLabels tags, "_tag_"
-      if parsedTags.length > 0 then parsedTags = "n #{parsedTags}, " else parsedTags = ""
-
-      removedTags = _.difference labels, tags
-      removedTags = @listToLabels removedTags, "_tag_"
-
-      if removedTags.length > 0
-        cypherQuery = "START n=node(#{id}) SET #{parsedTags}#{props} REMOVE n#{removedTags} RETURN n;"
-      else
-        cypherQuery = "START n=node(#{id}) SET #{parsedTags}#{props} RETURN n;"
-
-      graphDb.query cypherQuery, {}, (err, results) =>
-        node = @parseCypherResult(results[0], 'n')
-        callback node
-
-  # Sets node.property = value in graphDb
-  nodeSet: (graphDb, id, property, value, callback) ->
-    id = node._id
-    cypherQuery = "START n=node(#{id}) SET n.#{property}=#{value} return n;"
-    graphDb.query cypherQuery, {}, (err, results) ->
-      node = utils.parseCypherResult(results[0], 'n')
-      callback node
-
   parseNodeToClient: (serverNode) ->
     serverNode.tags = @parseLabels(serverNode.tags).tags if serverNode.tags
     serverNode
