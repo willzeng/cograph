@@ -40,5 +40,5 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Bac
     getConnections: (nodes, callback) ->
       nodeIds = (n.id for n in nodes)
       data = {node:this.id, nodes:nodeIds}
-      $.post "node/get_connections/#{@get('_id')}", data, (results) ->
+      $.post @url()+"/get_connections/:id", data, (results) ->
         callback results

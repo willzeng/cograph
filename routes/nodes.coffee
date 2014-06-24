@@ -7,34 +7,49 @@ utils = require './utils'
 exports.create = (req, resp) ->
   newNode = req.body
   node = graphDb.createNode newNode
-  docLabel = "_doc_id_#{req.params.docId || 0}"
-  node.save (err, node) ->
-    utils.setLabel graphDb, node.id, docLabel, (err, savedNode) ->
-      resp.send savedNode
+  docLabel = "_doc_#{req.params.docId || 0}"
+  tags = req.body.tags || ""
+  delete req.body.tags
+  props = req.body
+  utils.createNode graphDb, tags, props, (newNode) ->
+    utils.setLabel graphDb, newNode._id, docLabel, (savedNode) ->
+      resp.send utils.parseNodeToClient savedNode
 
 # READ
 exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    resp.send node
+    parsed = node._data.data
+    utils.getLabels graphDb, id, (labels) ->
+      parsed.tags = labels
+      resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  docLabel = "_doc_id_#{req.params.docId || 0}"
+  docLabel = "_doc_#{req.params.docId || 0}"
   # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
-  cypherQuery = "match (n:#{docLabel}) return n;"
+  cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
     if err then console.log err
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    resp.send nodes
+    parsedNodes = []
+    for node in results
+      nodeData = node.n._data.data
+      nodeData.tags = node['labels(n)']
+      parsedNodes.push utils.parseNodeToClient nodeData
+    resp.send parsedNodes
 
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
-  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m"
+  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
+
   graphDb.query cypherQuery, params, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'm') for node in results)
-    resp.send nodes
+    parsedNodes = []
+    for node in results
+      nodeData = node.m._data.data
+      nodeData.tags = node['labels(m)']
+      parsedNodes.push utils.parseNodeToClient nodeData
+    resp.send parsedNodes
 
 exports.getSpokes = (req, resp) ->
   params = {id: req.params.id}
@@ -47,16 +62,16 @@ exports.getSpokes = (req, resp) ->
 exports.update = (req, resp) ->
   id = req.params.id
   newData = req.body
-  graphDb.getNodeById id, (err, node) ->
-    node.data = newData
-    node.save (err, node) ->
-      console.log 'Node updated in database with id:', node._id
-      resp.send node
+  tags = req.body.tags || ""
+  delete req.body.tags
+  props = req.body
+
+  utils.updateNode graphDb, id, tags, props, (newNode) ->
+    resp.send utils.parseNodeToClient newNode
 
 # DELETE
 exports.destroy = (req, resp) ->
   id = req.params.id
-  console.log "delete_node Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
 
@@ -65,7 +80,6 @@ exports.destroy = (req, resp) ->
 # Request is of the form {node: id, nodes:{id0, id1, ...}}
 # returns all of the connections between node and any of the nodes
 exports.getConnections = (request,response) ->
-  console.log "GET Conections REQUESTED"
   id = request.body.node
   nodes = request.body.nodes
   if !(nodes?) then response.send "error"
