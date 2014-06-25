@@ -31,14 +31,18 @@ exports.getAll = (req, resp) ->
 
 # UPDATE
 exports.update = (req, resp) ->
+  console.log 'documents update requested'
+  console.log req.body
   id = req.params.id
-  props = req.body
-  utils.updateNode graphDb, id, [], props, (node) ->
-    resp.send node
+  newData = req.body
+  graphDb.getNodeById id, (err, node) ->
+    node.data = newData
+    node.save (err, node) ->
+      resp.send node
 
 # DELETE
 exports.destroy = (req, resp) ->
-  id = req.body._id
+  id = req.params.id
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
