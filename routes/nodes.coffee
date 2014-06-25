@@ -2,9 +2,9 @@ url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
-NodeModel = require __dirname + '/../models/NodeModel'
 
-serverNode = new NodeModel(graphDb)
+NodeHelper = require __dirname + '/helpers/NodeHelper'
+serverNode = new NodeHelper(graphDb)
 
 # CREATE
 exports.create = (req, resp) ->
@@ -72,7 +72,7 @@ exports.update = (req, resp) ->
 exports.destroy = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    node.delete () -> true
+    node.delete () -> resp.send true
 
 # OTHER
 

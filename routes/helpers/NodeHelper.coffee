@@ -1,12 +1,8 @@
-utils = require __dirname + '/../routes/utils'
-_ = require __dirname + '/../node_modules/underscore/underscore'
+_ = require __dirname + '/../../node_modules/underscore/underscore'
+utils = require __dirname + '/../utils'
 
-class NodeModel
+class NodeHelper
   constructor: (@graphDb) ->
-
-  # returns a populated instance of NodeModel from an id
-  get: (id) ->
-    true
 
   # Creates a Node whose labels are given by the tags argument
   # and with properties given by the props dictionary
@@ -19,7 +15,7 @@ class NodeModel
     @graphDb.query cypherQuery, {}, (err, results) =>
       if (err) then throw err
       node = utils.parseCypherResult(results[0], 'n')
-      @setProperty node.id, '_id', node.id, (savedNode) =>
+      utils.setProperty @graphDb, node.id, '_id', node.id, (savedNode) =>
         callback utils.parseNodeToClient savedNode
 
   # Update a node with new tags and properties
@@ -43,15 +39,6 @@ class NodeModel
         node = utils.parseCypherResult(results[0], 'n')
         callback utils.parseNodeToClient node
 
-  # Sets node.property = value in @graphDb
-  # Returns a dictionary that represents the server state of the node
-  setProperty: (id, property, value, callback) ->
-    cypherQuery = "START n=node(#{id}) SET n.#{property}=#{value} return n;"
-    @graphDb.query cypherQuery, {}, (err, results) =>
-      if err then throw err
-      node = utils.parseCypherResult(results[0], 'n')
-      callback node
-
   # Adds a label to a node identified by id
   setLabel: (id, label, callback) ->
     cypherQuery = "start n=node(#{id}) set n:#{label} return n"
@@ -61,4 +48,4 @@ class NodeModel
       setNode = utils.parseCypherResult(results[0], 'n')
       callback setNode
 
-module.exports = NodeModel
+module.exports = NodeHelper
