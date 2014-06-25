@@ -101,11 +101,45 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
             @trigger "connection:mouseout", conn
+          .each((d,i) ->
+            d3.select("defs").append("marker")
+                .attr("class", "connection-label")
+                .attr("id", "marker_"+i)
+                .attr("refX", "-10px")
+                .attr("refY", "0")
+                .attr("markerWidth", "20")
+                .attr("markerHeight", "10")
+                .attr("orient", "auto")
+                .attr("viewBox", "0 -5 10 10")
+                .append("text")
+                  .text(d.get("name"))
+            d3.select(this).attr("marker-start", "url(#marker_"+i+")")
+          )
 
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
+
+          .each((d,i) ->
+              if d.get('selected')
+                d3.select(this).attr("marker-end", "url(#arrowhead-selected)")
+              else
+                d3.select(this).attr("marker-end", "url(#arrowhead)")
+
+              d3.select("defs").append("marker")
+                  .attr("class", "connection-label")
+                  .attr("id", "marker_"+i)
+                  .attr("refX", "-10px")
+                  .attr("refY", "0")
+                  .attr("markerWidth", "20")
+                  .attr("markerHeight", "10")
+                  .attr("orient", "auto")
+                  .attr("viewBox", "0 -5 10 10")
+                  .append("text")
+                    .text(d.get("name"))
+              d3.select(this).attr("marker-start", "url(#marker_"+i+")")
+            )
 
         # remove deleted elements
         connection.exit().remove()
@@ -117,10 +151,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
+        nodeEnter.append("rect")
+          .attr("height", "30px")
+          .attr("width", "70px")
+          .attr("fill", "transparent")
+          .attr("x", "-35px")
+          .attr("y", "-15px")
         nodeEnter.append("text")
-          .attr("dy", "40px")
-        nodeEnter.append("circle")
-          .attr("r", 25)
+          .attr("dy", "5px")
 
         nodeEnter
           .on "dblclick", (d) ->
