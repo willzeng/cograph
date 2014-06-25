@@ -79,8 +79,8 @@ exports.destroy = (req, resp) ->
 # Request is of the form {node: id, nodes:{id0, id1, ...}}
 # returns all of the connections between node and any of the nodes
 exports.getConnections = (request,response) ->
-  id = request.body.node
-  nodes = request.body.nodes
-  if !(nodes?) then response.send "error"
-  utils.get_connections graphDb, id, nodes, (conns) ->
+  id = request.params.id
+  nodeIds = request.body.nodeIds
+  if !(nodeIds?) then response.send "error"
+  utils.get_connections graphDb, id, nodeIds, (conns) ->
     response.send conns

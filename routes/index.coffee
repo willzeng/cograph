@@ -29,14 +29,14 @@ router.put      '/documents',       documents.update
 router.delete   '/documents',       documents.destroy
 
 # Nodes
-router.post     '/documents/:docId/nodes',                     nodes.create
-router.get      '/documents/:docId/nodes/:id',                 nodes.read
-router.get      '/documents/:docId/nodes',                     nodes.getAll
-router.get      '/documents/:docId/nodes/neighbors/:id',       nodes.getNeighbors
-router.get      '/documents/:docId/nodes/spokes/:id',          nodes.getSpokes
-router.get      '/documents/:docId/nodes/get_connections/:id', nodes.getConnections
-router.put      '/documents/:docId/nodes/:id',                 nodes.update
-router.delete   '/documents/:docId/nodes/:id',                 nodes.destroy
+router.post     '/documents/:docId/nodes',                      nodes.create
+router.get      '/documents/:docId/nodes/:id',                  nodes.read
+router.get      '/documents/:docId/nodes',                      nodes.getAll
+router.get      '/documents/:docId/nodes/:id/neighbors/',       nodes.getNeighbors
+router.get      '/documents/:docId/nodes/:id/spokes/',          nodes.getSpokes
+router.post     '/documents/:docId/nodes/:id/get_connections/', nodes.getConnections
+router.put      '/documents/:docId/nodes/:id',                  nodes.update
+router.delete   '/documents/:docId/nodes/:id',                  nodes.destroy
 
 # Connections
 router.post     '/documents/:docId/connections',       connections.create
