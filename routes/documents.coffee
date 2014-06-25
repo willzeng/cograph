@@ -32,13 +32,10 @@ exports.getAll = (req, resp) ->
 # UPDATE
 exports.update = (req, resp) ->
   console.log 'documents update requested'
-  console.log req.body
   id = req.params.id
-  newData = req.body
-  graphDb.getNodeById id, (err, node) ->
-    node.data = newData
-    node.save (err, node) ->
-      resp.send node
+  props = req.body
+  serverDocument.update id, props, (savedDocument) ->
+    resp.send savedDocument
 
 # DELETE
 exports.destroy = (req, resp) ->

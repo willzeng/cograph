@@ -14,5 +14,15 @@ class DocumentHelper
       utils.setProperty @graphDb, doc.id, '_id', doc.id, (savedDoc) =>
         callback utils.parseNodeToClient savedDoc
 
+  # Update a Document with new tags and properties
+  update: (id, props, callback) ->
+    props = utils.dictionaryToUpdateCypherProperties props
+    cypherQuery = "START n=node(#{id}) SET #{props} RETURN n;"
+
+    @graphDb.query cypherQuery, {}, (err, results) =>
+      if err then throw err
+      node = utils.parseCypherResult(results[0], 'n')
+      callback utils.parseNodeToClient node
+
 
 module.exports = DocumentHelper
