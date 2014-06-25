@@ -31,7 +31,6 @@ exports.getAll = (req, resp) ->
 
 # UPDATE
 exports.update = (req, resp) ->
-  console.log 'documents update requested'
   id = req.params.id
   props = req.body
   serverDocument.update id, props, (savedDocument) ->
