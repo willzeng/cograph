@@ -5,9 +5,13 @@ define ['jquery', 'underscore', 'backbone'],
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'
+        'click .node': 'openSidebar'
 
       initialize: ->
         @sidebarShown = false
+
+      openSidebar: ->
+        if !@sidebarShown then @toggleSidebar()
 
       toggleSidebar: ->
         if @sidebarShown
