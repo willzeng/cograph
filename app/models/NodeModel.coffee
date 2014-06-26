@@ -26,19 +26,19 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Bac
       resp
 
     getNeighbors: (callback) =>
-      this.sync 'read', this,
-        url: @url() + "/neighbors/#{@get('_id')}"
+      @sync 'read', this,
+        url: @url() + "/neighbors/"
         success: (results) =>
           callback (@parse result for result in results)
 
     getSpokes: (callback) ->
       this.sync 'read', this,
-        url: @url() + "/spokes/#{@get('_id')}"
+        url: @url() + "/spokes/"
         success: (results) ->
           callback results
 
     getConnections: (nodes, callback) ->
       nodeIds = (n.id for n in nodes)
-      data = {node:this.id, nodes:nodeIds}
-      $.post "node/get_connections/#{@get('_id')}", data, (results) ->
+      data = {nodeIds: nodeIds}
+      $.post @url()+"/get_connections/", data, (results) ->
         callback results

@@ -14,7 +14,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
     isNew: ->
       @get(@idAttribute) < 0
 
-    ignoredAttributes: ['selected', 'dim', 'tags']
+    ignoredAttributes: ['selected', 'dim']
 
     sync: (method, model, options) ->
       options = options || {}

@@ -29,20 +29,20 @@ router.put      '/documents',       documents.update
 router.delete   '/documents',       documents.destroy
 
 # Nodes
-router.post     '/documents/:docId/nodes',                     nodes.create
-router.get      '/documents/:docId/nodes/:id',                 nodes.read
-router.get      '/documents/:docId/nodes',                     nodes.getAll
-router.get      '/documents/:docId/nodes/neighbors/:id',       nodes.getNeighbors
-router.get      '/documents/:docId/nodes/spokes/:id',          nodes.getSpokes
-router.get      '/documents/:docId/ndoes/get_connections/:id', nodes.getConnections
-router.put      '/documents/:docId/nodes',                     nodes.update
-router.delete   '/documents/:docId/nodes',                     nodes.destroy
+router.post     '/documents/:docId/nodes',                      nodes.create
+router.get      '/documents/:docId/nodes/:id',                  nodes.read
+router.get      '/documents/:docId/nodes',                      nodes.getAll
+router.get      '/documents/:docId/nodes/:id/neighbors/',       nodes.getNeighbors
+router.get      '/documents/:docId/nodes/:id/spokes/',          nodes.getSpokes
+router.post     '/documents/:docId/nodes/:id/get_connections/', nodes.getConnections
+router.put      '/documents/:docId/nodes/:id',                  nodes.update
+router.delete   '/documents/:docId/nodes/:id',                  nodes.destroy
 
 # Connections
 router.post     '/documents/:docId/connections',       connections.create
 router.get      '/documents/:docId/connections/:id',   connections.read
 router.get      '/documents/:docId/connections',       connections.getAll
-router.put      '/documents/:docId/connections',       connections.update
-router.delete   '/documents/:docId/connections',       connections.destroy
+router.put      '/documents/:docId/connections/:id',   connections.update
+router.delete   '/documents/:docId/connections/:id',   connections.destroy
 
 module.exports = router

@@ -3,15 +3,15 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
+DocumentHelper = require __dirname + '/helpers/DocumentHelper'
+serverDocument = new DocumentHelper graphDb
+
 # CREATE
 exports.create = (req, resp) ->
   console.log 'create document query requested'
   newDocument = req.body
-  node = graphDb.createNode newDocument
-  label = "_Document"
-  node.save (err, node) ->
-    utils.setLabel graphDb, node.id, label, (err, savedNode) ->
-      resp.send savedNode
+  serverDocument.create newDocument, (savedDocument) ->
+    resp.send savedDocument
 
 # READ
 exports.read = (req, resp) ->
@@ -21,7 +21,7 @@ exports.read = (req, resp) ->
 
 exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
-  docLabel = '_Document'
+  docLabel = '_document'
   cypherQuery = "match (n:#{docLabel}) return n;"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
