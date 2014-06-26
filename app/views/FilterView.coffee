@@ -24,8 +24,10 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
           showFooter: false
         ).open()
 
+        $('.filter-toggle', @FilterModal.$el).click (e) =>
+          @updateFilter e
+
         $('#filter-button', @FilterModal.$el).click (e) =>
-          @updateFilter(e)
           @applyFilter()
           @FilterModal.close()
 

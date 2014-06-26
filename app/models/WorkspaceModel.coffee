@@ -32,10 +32,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @documentModel
 
       filter: =>
-        cloneNodes = @nodes.clone()
-        for node in cloneNodes.models
-          if !(@filterModel.passes node)
-            @removeNode node
+        nodesToRemove = []
+        @nodes.each (node) =>
+          if !(@filterModel.passes node) then nodesToRemove.push node
+        @removeNode node for node in nodesToRemove
 
       putNode: (nodeModel) ->
         if @filterModel.passes nodeModel
