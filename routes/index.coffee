@@ -22,11 +22,11 @@ router.param 'id', integerRegex
 router.param 'docId', integerRegex
 
 # Documents
-router.post     '/documents',       documents.create
-router.get      '/documents/:id',   documents.read
-router.get      '/documents',       documents.getAll
-router.put      '/documents',       documents.update
-router.delete   '/documents',       documents.destroy
+router.post     '/documents',           documents.create
+router.get      '/documents/:id',       documents.read
+router.get      '/documents',           documents.getAll
+router.put      '/documents/:id',       documents.update
+router.delete   '/documents/:id',       documents.destroy
 
 # Nodes
 router.post     '/documents/:docId/nodes',                      nodes.create

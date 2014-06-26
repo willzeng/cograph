@@ -31,17 +31,14 @@ exports.getAll = (req, resp) ->
 
 # UPDATE
 exports.update = (req, resp) ->
-  id = req.body._id
-  newData = req.body
-  graphDb.getNodeById id, (err, node) ->
-    node.data = newData
-    node.save (err, node) ->
-      console.log 'Document updated in database with id:', node._id
-      resp.send node
+  id = req.params.id
+  props = req.body
+  serverDocument.update id, props, (savedDocument) ->
+    resp.send savedDocument
 
 # DELETE
 exports.destroy = (req, resp) ->
-  id = req.body._id
+  id = req.params.id
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
