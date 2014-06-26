@@ -9,8 +9,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #edit-node-button': 'editNode'
         'click #edit-connection-button': 'editConnection'
         'submit form': 'saveNodeConnection'
-        'click #remove-node-button': 'removeNode'
-        'click #remove-connection-button': 'removeConnection'
+        'click #archive-node-button': 'archiveNode'
+        'click #archive-connection-button': 'archiveConnection'
         'click #delete-button': 'deleteObj'
         'click #expand-node-button': 'expandNode'
 
@@ -57,11 +57,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @update()
         false
 
-      removeNode: () ->
+      archiveNode: () ->
         @model.removeNode @getSelectedNode()
         @closeDetail()
 
-      removeConnection: () ->
+      archiveConnection: () ->
         @model.removeConnection @getSelectedConnection()
         @closeDetail()
 

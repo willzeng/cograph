@@ -3,15 +3,15 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
+DocumentHelper = require __dirname + '/helpers/DocumentHelper'
+serverDocument = new DocumentHelper graphDb
+
 # CREATE
 exports.create = (req, resp) ->
   console.log 'create document query requested'
   newDocument = req.body
-  node = graphDb.createNode newDocument
-  label = "_Document"
-  node.save (err, node) ->
-    utils.setLabel graphDb, node.id, label, (err, savedNode) ->
-      resp.send savedNode
+  serverDocument.create newDocument, (savedDocument) ->
+    resp.send savedDocument
 
 # READ
 exports.read = (req, resp) ->
@@ -21,7 +21,7 @@ exports.read = (req, resp) ->
 
 exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
-  docLabel = '_Document'
+  docLabel = '_document'
   cypherQuery = "match (n:#{docLabel}) return n;"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
@@ -31,17 +31,14 @@ exports.getAll = (req, resp) ->
 
 # UPDATE
 exports.update = (req, resp) ->
-  id = req.body._id
-  newData = req.body
-  graphDb.getNodeById id, (err, node) ->
-    node.data = newData
-    node.save (err, node) ->
-      console.log 'Document updated in database with id:', node._id
-      resp.send node
+  id = req.params.id
+  props = req.body
+  serverDocument.update id, props, (savedDocument) ->
+    resp.send savedDocument
 
 # DELETE
 exports.destroy = (req, resp) ->
-  id = req.body._id
+  id = req.params.id
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true

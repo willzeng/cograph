@@ -3,17 +3,17 @@ neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
+NodeHelper = require __dirname + '/helpers/NodeHelper'
+serverNode = new NodeHelper(graphDb)
+
 # CREATE
 exports.create = (req, resp) ->
-  newNode = req.body
-  node = graphDb.createNode newNode
   docLabel = "_doc_#{req.params.docId || 0}"
-  tags = req.body.tags || ""
+  tags = req.body.tags || []
   delete req.body.tags
   props = req.body
-  utils.createNode graphDb, tags, props, (newNode) ->
-    utils.setLabel graphDb, newNode._id, docLabel, (savedNode) ->
-      resp.send utils.parseNodeToClient savedNode
+  serverNode.create tags, props, docLabel, (savedNode) ->
+    resp.send savedNode
 
 # READ
 exports.read = (req, resp) ->
@@ -65,23 +65,22 @@ exports.update = (req, resp) ->
   tags = req.body.tags || ""
   delete req.body.tags
   props = req.body
-
-  utils.updateNode graphDb, id, tags, props, (newNode) ->
-    resp.send utils.parseNodeToClient newNode
+  serverNode.update id, tags, props, (newNode) ->
+    resp.send newNode
 
 # DELETE
 exports.destroy = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    node.delete () -> true
+    node.delete () -> resp.send true
 
 # OTHER
 
 # Request is of the form {node: id, nodes:{id0, id1, ...}}
 # returns all of the connections between node and any of the nodes
 exports.getConnections = (request,response) ->
-  id = request.body.node
-  nodes = request.body.nodes
-  if !(nodes?) then response.send "error"
-  utils.get_connections graphDb, id, nodes, (conns) ->
+  id = request.params.id
+  nodeIds = request.body.nodeIds
+  if !(nodeIds?) then response.send "error"
+  utils.get_connections graphDb, id, nodeIds, (conns) ->
     response.send conns
