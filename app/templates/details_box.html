@@ -14,6 +14,16 @@
 
   <div id="collapse-one" class="panel-collapse collapse in">
     <div class="panel-body">
+      <div class="detail-controls">
+        <% if (constructor.name === "NodeModel") {%>
+          <button id="edit-node-button" class="btn btn-default">Edit</button>
+          <button id="expand-node-button" class="btn btn-primary">Expand</button>
+          <button id="archive-node-button" class="btn btn-warning">Archive</button>
+        <% } else { %>
+          <button id="edit-connection-button" class="btn btn-default">Edit</button>
+          <button id="archive-connection-button" class="btn btn-warning">Archive</button>
+        <% } %>
+      </div>
       <p class="lead"><%= attributes.description %></p>
       <p>
         <% if (attributes.url) { %>
@@ -21,18 +31,10 @@
         <% }; %>
         <ul class="list-group">
           <% _.each(attributes.tags, function(tag) { %>
-            <li class="list-group-item"><%= tag %></li>
+            <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
           <% }); %>
         </ul>
       </p>
-      <% if (constructor.name === "NodeModel") {%>
-        <button id="edit-node-button" class="btn btn-default">Edit</button>
-        <button id="expand-node-button" class="btn btn-primary">Expand</button>
-        <button id="archive-node-button" class="btn btn-warning">Archive</button>
-      <% } else { %>
-        <button id="edit-connection-button" class="btn btn-default">Edit</button>
-        <button id="archive-connection-button" class="btn btn-warning">Archive</button>
-      <% } %>
     </div>
   </div>
 
