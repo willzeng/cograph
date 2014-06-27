@@ -121,6 +121,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("dy", "40px")
         nodeEnter.append("circle")
           .attr("r", 25)
+          .style("fill", (d) -> d.get('color'))
 
         nodeEnter
           .on "dblclick", (d) ->

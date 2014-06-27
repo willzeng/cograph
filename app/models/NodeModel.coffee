@@ -14,6 +14,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Bac
       tags:
         type: 'List'
         itemType: 'Text'
+      color:
+        type: 'Select'
+        options: ['#AAA','#F56545', '#FFBB22', '#BBE535', '#77DDBB', '#66CCDD']
 
     validate: ->
       if !@get('name')
