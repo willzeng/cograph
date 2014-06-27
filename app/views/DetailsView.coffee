@@ -2,7 +2,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel'],
   ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel) ->
     class DetailsView extends Backbone.View
-      el: $ '#graph'
+      el: $ '#sidebar'
 
       events:
         'click .close' : 'closeDetail'
