@@ -32,9 +32,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @documentModel
 
       filter: =>
-        nodesToRemove = []
-        @nodes.each (node) =>
-          if !(@filterModel.passes node) then nodesToRemove.push node
+        nodesToRemove = @nodes.filter (node) =>
+          !(@filterModel.passes node)
         @removeNode node for node in nodesToRemove
 
       putNode: (nodeModel) ->
