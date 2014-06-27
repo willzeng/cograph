@@ -102,7 +102,6 @@ svg {
 
 #zoom-controls {
   position: absolute;
-  bottom: 40px;
   left: 10px;
 }
 
@@ -177,12 +176,17 @@ svg {
   right: 15px;
 }
 
+.bottom {
+  position: absolute;
+  bottom: 40px;
+}
+
 .controls {
   z-index: @controls-z-index;
 }
 
 #add-node-form {
-  display: inline;
+  width: 255px;
 }
 
 .edit-details-form input[type="text"], .edit-details-form button[type="button"] {

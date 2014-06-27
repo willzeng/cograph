@@ -11,13 +11,10 @@ block content
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form
-          .form-group
-            input.form-control(type="text", name='node-name', placeholder="Add something")
-          button.btn.btn-primary(type="submit")
-            i.fa.fa-plus
-        button#sidebar-toggle.btn.btn-default
-          i.fa.fa-arrows-h
-    #zoom-controls.btn-group-vertical.controls
+    .toolbar.right.bottom.controls
+      button#sidebar-toggle.btn.btn-default
+        i.fa.fa-arrows-h
+    #zoom-controls.bottom.btn-group-vertical.controls
       button#zoom-in-button.btn.btn-primary
         i.glyphicon.glyphicon-plus
       button#zoom-out-button.btn.btn-primary
