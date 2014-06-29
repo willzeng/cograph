@@ -1,5 +1,5 @@
-define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/GraphModel'],
-  ($, Backbone, Bloodhound, typeahead, GraphModel) ->
+define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceModel'],
+  ($, Backbone, Bloodhound, typeahead, WorkspaceModel) ->
     class SearchView extends Backbone.View
       el: $ '#search-form'
 

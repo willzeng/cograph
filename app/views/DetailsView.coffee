@@ -2,15 +2,15 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel'],
   ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel) ->
     class DetailsView extends Backbone.View
-      el: $ '#graph'
+      el: $ '#sidebar'
 
       events:
         'click .close' : 'closeDetail'
         'click #edit-node-button': 'editNode'
         'click #edit-connection-button': 'editConnection'
         'submit form': 'saveNodeConnection'
-        'click #remove-node-button': 'removeNode'
-        'click #remove-connection-button': 'removeConnection'
+        'click #archive-node-button': 'archiveNode'
+        'click #archive-connection-button': 'archiveConnection'
         'click #delete-button': 'deleteObj'
         'click #expand-node-button': 'expandNode'
 
@@ -57,11 +57,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @update()
         false
 
-      removeNode: () ->
+      archiveNode: () ->
         @model.removeNode @getSelectedNode()
         @closeDetail()
 
-      removeConnection: () ->
+      archiveConnection: () ->
         @model.removeConnection @getSelectedConnection()
         @closeDetail()
 
@@ -74,9 +74,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       expandNode: ->
         @getSelectedNode().getNeighbors (neighbors) =>
-          @model.putNode new NodeModel node for node in neighbors
-          @getSelectedNode().getSpokes (spokes) =>
-            @model.putConnection new ConnectionModel conn for conn in spokes
+          for node in neighbors
+            newNode = new NodeModel node
+            if @model.putNode newNode #this checks to see if the node has passed the filter
+              newNode.getConnections @model.nodes.models, (connections) =>
+                @model.putConnection new ConnectionModel conn for conn in connections
 
       getSelectedNode: ->
         selectedNode = @model.nodes.findWhere {'selected': true}

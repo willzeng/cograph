@@ -2,3 +2,4 @@ node_modules/
 app/assets/libs/*
 .ackrc
 **/Thumbs.db
+npm-debug.log

@@ -1,21 +1,21 @@
-define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/GraphModel', 'cs!models/FilterModel'
+define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/WorkspaceModel', 'cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView',
   'cs!views/MenuView'],
-  ($, _, Backbone, NodeModel, ConnectionModel, GraphModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
+  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
     class Router extends Backbone.Router
       initialize: ->
-        default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
-        @graphModel = new GraphModel initial_tags:default_tags
+        default_tags = {'node_tags': ['theorem','proof','conjecture','citation']}
+        @workspaceModel = new WorkspaceModel initial_tags:default_tags
 
-        @graphView = new GraphView model: @graphModel
-        @addNodeView = new AddNodeView model: @graphModel
-        @detailsView = new DetailsView model: @graphModel
-        @filterView = new FilterView {model: @graphModel.getFilter()}
-        @searchView = new SearchView model: @graphModel
+        @graphView = new GraphView model: @workspaceModel
+        @addNodeView = new AddNodeView model: @workspaceModel
+        @detailsView = new DetailsView model: @workspaceModel
+        @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
+        @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView()
-        @menuView = new MenuView()
+        @menuView = new MenuView model: @workspaceModel
 
-        window.gm = @graphModel
+        window.gm = @workspaceModel
         Backbone.history.start()
 
       routes:
@@ -24,8 +24,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
       home: =>
         @graphView.render()
 
-        #Prepopulate the GraphModel with all the nodes in the database
-        $.when(gm.nodes.fetch()).then(gm.connections.fetch())
+        #Prepopulate the WorkspaceModel with all the nodes in the database
+        $.when(gm.nodes.fetch()).then ->
+          gm.connections.fetch()
 
         #@randomPopulate()
 

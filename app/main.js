@@ -11,7 +11,8 @@ requirejs.config({
     'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min',
     'typeahead': '/assets/libs/typeahead.js/dist/typeahead.jquery.min',
     'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
-    'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min'
+    'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min',
+    'bb-modal': '/assets/libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal'
   },
   shim: {
     'backbone': {

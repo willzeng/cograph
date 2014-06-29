@@ -1,55 +1,57 @@
-express = require 'express'
-nodes = express.Router()
-
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
-#defines a function to extract parameters using regex's
-nodes.param (name, fn) ->
-  if fn instanceof RegExp
-    return (req, res, next, val) ->
-      if captures = fn.exec String(val)
-        req.params[name] = captures
-        next()
-      else
-        next 'route'
-
-nodes.param 'id', /^\d+$/
+NodeHelper = require __dirname + '/helpers/NodeHelper'
+serverNode = new NodeHelper(graphDb)
 
 # CREATE
-nodes.post '/', (req, resp) ->
-  newNode = req.body
-  node = graphDb.createNode newNode
-  node.save (err, node) ->
-    newNode._id = node.id
-    node.data._id = node.id
-    node.save (err, node) ->
-      console.log 'Updated id of node'
-    resp.send newNode
+exports.create = (req, resp) ->
+  docLabel = "_doc_#{req.params.docId || 0}"
+  tags = req.body.tags || []
+  delete req.body.tags
+  props = req.body
+  serverNode.create tags, props, docLabel, (savedNode) ->
+    resp.send savedNode
 
 # READ
-nodes.get '/:id', (req, resp) ->
+exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    resp.send node._data.data
+    parsed = node._data.data
+    utils.getLabels graphDb, id, (labels) ->
+      parsed.tags = labels
+      resp.send utils.parseNodeToClient parsed
 
-nodes.get '/', (req, resp) ->
+exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
-  cypherQuery = "start n=node(*) return n;"
-  graphDb.query cypherQuery, {}, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    resp.send nodes
-
-nodes.get '/neighbors/:id', (req, resp) ->
-  params = {id: req.params.id}
-  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m"
+  docLabel = "_doc_#{req.params.docId || 0}"
+  # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
+  cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
+  params = {}
   graphDb.query cypherQuery, params, (err, results) ->
-    nodes = (utils.parseCypherResult(node, 'm') for node in results)
-    resp.send nodes
+    if err then console.log err
+    parsedNodes = []
+    for node in results
+      nodeData = node.n._data.data
+      nodeData.tags = node['labels(n)']
+      parsedNodes.push utils.parseNodeToClient nodeData
+    resp.send parsedNodes
 
-nodes.get '/spokes/:id', (req, resp) ->
+exports.getNeighbors = (req, resp) ->
+  params = {id: req.params.id}
+  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
+
+  graphDb.query cypherQuery, params, (err, results) ->
+    parsedNodes = []
+    for node in results
+      nodeData = node.m._data.data
+      nodeData.tags = node['labels(m)']
+      parsedNodes.push utils.parseNodeToClient nodeData
+    resp.send parsedNodes
+
+exports.getSpokes = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-[r]->(m) RETURN r;"
   graphDb.query cypherQuery, params, (err, results) ->
@@ -62,21 +64,28 @@ nodes.get '/names', (req, resp) ->
     resp.send ({name:node['n.name'], _id:node['n._id']} for node in results)
 
 # UPDATE
-nodes.put '/:id', (req, resp) ->
+exports.update = (req, resp) ->
   id = req.params.id
   newData = req.body
-  graphDb.getNodeById id, (err, node) ->
-    node.data = newData
-    node.save (err, node) ->
-      console.log 'Node updated in database with id:', node.data._id
-    resp.send node
+  tags = req.body.tags || ""
+  delete req.body.tags
+  props = req.body
+  serverNode.update id, tags, props, (newNode) ->
+    resp.send newNode
 
 # DELETE
-nodes.delete '/:id', (req, resp) ->
+exports.destroy = (req, resp) ->
   id = req.params.id
-  console.log "delete_node Query Requested"
   graphDb.getNodeById id, (err, node) ->
-    node.delete () -> true
+    node.delete () -> resp.send true
 
+# OTHER
 
-module.exports = nodes
+# Request is of the form {node: id, nodes:{id0, id1, ...}}
+# returns all of the connections between node and any of the nodes
+exports.getConnections = (request,response) ->
+  id = request.params.id
+  nodeIds = request.body.nodeIds
+  if !(nodeIds?) then response.send "error"
+  utils.get_connections graphDb, id, nodeIds, (conns) ->
+    response.send conns
