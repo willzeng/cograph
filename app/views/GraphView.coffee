@@ -117,11 +117,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
+          .classed('selected', (d) -> d.get('selected'))
         nodeEnter.append("text")
           .attr("dy", "40px")
         nodeEnter.append("circle")
           .attr("r", 25)
-          .style("fill", (d) => @model.defaultColors[d.get('color')])
+          .style("fill", (d) => @getColor d)
 
         nodeEnter
           .on "dblclick", (d) ->
@@ -142,12 +143,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         # update old and new elements
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
+          .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
         node.select('circle')
-          .style("fill", (d) => @model.defaultColors[d.get('color')])
+          .style("fill", (d) => @getColor d)
 
         # delete unmatching elements
         node.exit().remove()
@@ -167,3 +169,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.x+@currentZoom[0] > element.offset().left &&
           node.y+@currentZoom[1] > element.offset().top &&
           node.y+@currentZoom[1] < element.offset().top + element.height()
+
+      getColor: (nc) ->
+        if nc.get 'selected'
+          @model.selectedColor
+        else
+          @model.defaultColors[nc.get('color')]
