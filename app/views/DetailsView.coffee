@@ -76,9 +76,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @getSelectedNode().getNeighbors (neighbors) =>
           for node in neighbors
             newNode = new NodeModel node
-            @model.putNode newNode
-            newNode.getConnections @model.nodes.models, (connections) =>
-              @model.putConnection new ConnectionModel conn for conn in connections
+            if @model.putNode newNode #this checks to see if the node has passed the filter
+              newNode.getConnections @model.nodes.models, (connections) =>
+                @model.putConnection new ConnectionModel conn for conn in connections
 
       getSelectedNode: ->
         selectedNode = @model.nodes.findWhere {'selected': true}
