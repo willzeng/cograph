@@ -1,6 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap'
- 'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel'],
-  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel) ->
+ 'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
+ 'bootstrap-color'],
+  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker) ->
     class DetailsView extends Backbone.View
       el: $ '#sidebar'
 
@@ -49,6 +50,14 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
         $('input[name=name]', @el).focus()
+
+        options = {
+          colors:[['#AAA', '#F56545', '#FFBB22', '#BBE535', '#77DDBB', '#66CCDD']]
+        }
+        $('#colorpalette4').colorPalette(options).on 'selectColor', (e) ->
+          console.log e.color
+          nodeConnection.set 'color', e.color
+
 
       saveNodeConnection: (e) ->
         e.preventDefault()
