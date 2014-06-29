@@ -51,14 +51,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
         $('input[name=name]', @el).focus()
 
-        options = {
-          colors:[['#AAA', '#F56545', '#FFBB22', '#BBE535', '#77DDBB', '#66CCDD']]
-        }
-        $('#colorpalette4').colorPalette(options).on 'selectColor', (e) ->
-          console.log e.color
-          nodeConnection.set 'color', e.color
+        colorOptions = colors:[(val for color, val of @model.defaultColors)]
+        $('.colorpalette').colorPalette(colorOptions).on 'selectColor', (e) =>
+          colorValue = e.color
+          nodeConnection.set 'color', _.invert(@model.defaultColors)[colorValue]
           nodeConnection.save()
-
 
       saveNodeConnection: (e) ->
         e.preventDefault()

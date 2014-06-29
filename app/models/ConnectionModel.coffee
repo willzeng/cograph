@@ -8,7 +8,7 @@ define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
       url: ''
       source: undefined
       target: undefined
-      color: '#AAA'
+      color: 'grey'
       tags: []
       _id: -1
       _docId: 0
