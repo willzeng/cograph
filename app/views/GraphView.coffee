@@ -171,7 +171,4 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.y+@currentZoom[1] < element.offset().top + element.height()
 
       getColor: (nc) ->
-        if nc.get 'selected'
-          @model.selectedColor
-        else
           @model.defaultColors[nc.get('color')]
