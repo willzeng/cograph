@@ -57,6 +57,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         $('#colorpalette4').colorPalette(options).on 'selectColor', (e) ->
           console.log e.color
           nodeConnection.set 'color', e.color
+          nodeConnection.save()
 
 
       saveNodeConnection: (e) ->

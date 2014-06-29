@@ -147,6 +147,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
+        node.select('circle')
+          .style("fill", (d) -> d.get('color'))
 
         # delete unmatching elements
         node.exit().remove()
