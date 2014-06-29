@@ -26,6 +26,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         $("#details-container").empty()
         if selectedNC
           $("#details-container").append _.template(detailsTemplate, selectedNC)
+          @updateColor @model.defaultColors[selectedNC.get('color')]
+          selectedNC.on "change:color", (nc) => @updateColor @model.defaultColors[selectedNC.get('color')]
+
+      updateColor: (color) ->
+        $('.panel-body', '#details-container').css 'background', color
 
       closeDetail: () ->
         $('#details-container').empty()
