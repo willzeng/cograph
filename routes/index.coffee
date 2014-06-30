@@ -45,6 +45,7 @@ router.delete   '/documents/:docId/connections/:id',   connections.destroy
 
 # Search
 router.get      '/documents/:docId/nodes/names',       search.getNodeNames
+router.get      '/documents/:docId/getNodeByName',     search.getNodeByName
 router.get      '/documents/:docId/tags',              search.getTagNames
 
 module.exports = router

@@ -34,18 +34,16 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           @model.select node
           $('#search-input').val('')
         else
-          @findRemoteNode searchTerm
+          @getNodeByName searchTerm
           $('#search-input').val('')
 
       findLocalNode: (name) ->
         matchedNames = @findMatchingNames(name, @model.nodes.pluck('name'))
         @model.nodes.findWhere name: matchedNames[0]
 
-      findRemoteNode: (name) ->
-        matchedNames = @findMatchingNames(name, @model.allNames)
-        matchedID = (_.findWhere @model.allNamesWithId, {name:matchedNames[0]})._id
-        @model.getAndAddNode matchedID, (gotNode) =>
-          @model.select gotNode
+      getNodeByName: (name) ->
+        @model.getNodeByName name, (node) =>
+          @model.select @model.putNodeFromData node
 
       findMatchingNames: (query, allNames) ->
         regex = new RegExp(query,'i')

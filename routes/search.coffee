@@ -20,3 +20,13 @@ exports.getTagNames = (req, resp) ->
     labels = _.uniq _.flatten _.map results, (result) -> result['labels(n)']
     labelDict = utils.parseLabels labels
     resp.send labelDict.tags
+
+exports.getNodeByName = (req, resp) ->
+  docId = req.params.docId
+  name = req.query.name
+  cypherQuery = "match (n:_doc_#{docId}) where n.name='#{name}' return n, labels(n) limit 1;"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    if err then throw err
+    nodeData = results[0].n._data.data
+    nodeData.tags = utils.parseLabels(results[0]['labels(n)']).tags
+    resp.send nodeData

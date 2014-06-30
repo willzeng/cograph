@@ -38,8 +38,13 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @removeNode node for node in nodesToRemove
 
       putNode: (nodeModel) ->
-        if @filterModel.passes nodeModel
-          @nodes.add nodeModel
+        @nodes.add nodeModel
+        nodeModel
+
+      putNodeFromData: (data) ->
+        node = new NodeModel data
+        console.log node
+        @putNode node
 
       putConnection: (connectionModel) ->
         @connections.add connectionModel
@@ -97,8 +102,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @filterModel
 
       getNodeNames: (cb) ->
-        console.log "getting ndoe names for doc #{@documentModel.id}"
         @documentModel.getNodeNames(cb)
 
       getTagNames: (cb) ->
-        cb @documentModel.getTagNames
+        @documentModel.getTagNames(cb)
+
+      getNodeByName: (name, cb) ->
+        @documentModel.getNodeByName(name, cb)
