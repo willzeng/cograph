@@ -58,11 +58,6 @@ exports.getSpokes = (req, resp) ->
     connections = (utils.parseCypherResult(conn, 'r') for conn in results)
     resp.send connections
 
-nodes.get '/names', (req, resp) ->
-  cypherQuery = "start n=node(*) return n.name, n._id;"
-  graphDb.query cypherQuery, {}, (err, results) ->
-    resp.send ({name:node['n.name'], _id:node['n._id']} for node in results)
-
 # UPDATE
 exports.update = (req, resp) ->
   id = req.params.id

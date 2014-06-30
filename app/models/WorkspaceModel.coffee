@@ -1,4 +1,5 @@
-define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel', 'cs!models/DocumentModel'],
+define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
+  'cs!models/FilterModel', 'cs!models/DocumentModel'],
   ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
     class ConnectionCollection extends Backbone.Collection
       model: ConnectionModel
@@ -94,3 +95,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       getFilter: () ->
         @filterModel
+
+      getNodeNames: (cb) ->
+        console.log "getting ndoe names for doc #{@documentModel.id}"
+        @documentModel.getNodeNames(cb)
+
+      getTagNames: (cb) ->
+        cb @documentModel.getTagNames

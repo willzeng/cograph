@@ -9,3 +9,11 @@ define ['backbone'], (Backbone) ->
 
     isNew: ->
       @get(@idAttribute) < 0
+
+    getNodeNames: (cb) ->
+      $.get @url() + '/nodes/names', {}, (names) =>
+        cb names
+
+    getTagNames: (cb) ->
+      $.get @url() + '/tags', {}, (tagNames) =>
+        cb tagNames

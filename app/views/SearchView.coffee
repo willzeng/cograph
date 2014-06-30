@@ -9,9 +9,10 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
       initialize: ->
         substringMatcher = (gm) =>
           findMatches = (q, cb) =>
-            matches = @findMatchingNames q, gm.allNames
-            matches = _.map matches, (name) -> value: name
-            cb matches
+            gm.getNodeNames (matches) =>
+              # matches come in id, name objects
+              matches = @findMatchingObjects q, matches
+              cb _.map matches, (match) -> {value: match.name}
 
         $('#search-input').typeahead(
           hint: true,
@@ -49,3 +50,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
       findMatchingNames: (query, allNames) ->
         regex = new RegExp(query,'i')
         _.filter(allNames, (name) -> regex.test(name))
+
+      findMatchingObjects: (query, allObjects) ->
+        regex = new RegExp(query,'i')
+        _.filter(allObjects, (object) -> regex.test(object.name))
