@@ -24,7 +24,7 @@
   opacity: 0.3;
 }
 
-.node.selected circle {
+.node.selected text {
   fill: @selected-color;
 }
 
@@ -52,7 +52,7 @@
 }
 
 
-.connection {
+.connection line {
   stroke: @connection-color;
   stroke-width: 8px;
   stroke-linecap:round;
@@ -60,12 +60,12 @@
   cursor: pointer;
 }
 
-.connection.selected {
+.connection.selected line {
   stroke: @selected-color;
   opacity: 1;
 }
 
-.connection.dim {
+.connection.dim line, .connection.dim text {
   opacity: 0.1;
 }
 

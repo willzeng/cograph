@@ -85,15 +85,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
-
         # old elements
         connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
 
         # new elements
-        connectionEnter = connection.enter().append("line")
+        connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
+        connectionEnter.append("line")
           .attr("marker-end", "url(#arrowhead)")
           .on "click", (d) =>
             @model.select d
@@ -101,45 +101,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
             @trigger "connection:mouseout", conn
-          .each((d,i) ->
-            d3.select("defs").append("marker")
-                .attr("class", "connection-label")
-                .attr("id", "marker_"+i)
-                .attr("refX", "-10px")
-                .attr("refY", "0")
-                .attr("markerWidth", "20")
-                .attr("markerHeight", "10")
-                .attr("orient", "auto")
-                .attr("viewBox", "0 -5 10 10")
-                .append("text")
-                  .text(d.get("name"))
-            d3.select(this).attr("marker-start", "url(#marker_"+i+")")
-          )
-
+        connectionEnter.append("text")
+          .attr("text-anchor", "middle")
+          
+          
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
-
           .each((d,i) ->
-              if d.get('selected')
-                d3.select(this).attr("marker-end", "url(#arrowhead-selected)")
-              else
-                d3.select(this).attr("marker-end", "url(#arrowhead)")
-
-              d3.select("defs").append("marker")
-                  .attr("class", "connection-label")
-                  .attr("id", "marker_"+i)
-                  .attr("refX", "-10px")
-                  .attr("refY", "0")
-                  .attr("markerWidth", "20")
-                  .attr("markerHeight", "10")
-                  .attr("orient", "auto")
-                  .attr("viewBox", "0 -5 10 10")
-                  .append("text")
-                    .text(d.get("name"))
-              d3.select(this).attr("marker-start", "url(#marker_"+i+")")
-            )
+            if d.get('selected')
+              d3.select(this).select("line").attr("marker-end", "url(#arrowhead-selected)")
+            else
+              d3.select(this).select("line").attr("marker-end", "url(#arrowhead)")
+          )
+        connection.select("text")
+          .text((d) -> d.get("name"))
 
         # remove deleted elements
         connection.exit().remove()
@@ -189,11 +166,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.exit().remove()
 
         tick = =>
-          connection
+          connection.select("line")
             .attr("x1", (d) => @model.getSourceOf(d).x)
             .attr("y1", (d) => @model.getSourceOf(d).y)
             .attr("x2", (d) => @model.getTargetOf(d).x)
             .attr("y2", (d) => @model.getTargetOf(d).y)
+          connection.select("text")
+            .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()
         @force.on "tick", tick
