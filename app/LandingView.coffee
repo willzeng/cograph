@@ -27,4 +27,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           ).open()
 
           $('button', modal.el).click (e) =>
-            window.open '/'
+            targetDoc = $(e.currentTarget).attr("data-doc-id")
+            console.log "tar is", targetDoc
+            window.open "/##{targetDoc}"
+            modal.close()
