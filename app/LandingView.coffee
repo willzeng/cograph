@@ -1,17 +1,30 @@
-define ['jquery', 'underscore', 'backbone'],
-  ($, _, Backbone) ->
+define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
+ 'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
+  'cs!models/DocumentModel', 'cs!models/WorkspaceModel'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
+    class DocumentCollection extends Backbone.Collection
+      model: DocumentModel
+      url: 'documents'
+
     class LandingView extends Backbone.View
       el: $ '#button-container'
 
       events:
         'click #create': 'newGraphDoc'
-        'click #open': 'openGraphDocModal'
-
-      initialize: ->
-        console.log "init LandingView"
+        'click #open': 'openDocumentModal'
 
       newGraphDoc: ->
-        console.log "newGraphDoc"
+        window.open '/'
 
-      openGraphDocModal: ->
-        console.log "openGraphDocModal"
+      openDocumentModal: ->
+        documents = new DocumentCollection
+        $.when(documents.fetch()).then =>
+          modal = new Backbone.BootstrapModal(
+            content: _.template(openDocTemplate, {documents: documents})
+            title: "Open Document"
+            animate: true
+            showFooter: false
+          ).open()
+
+          $('button', modal.el).click (e) =>
+            window.open '/'

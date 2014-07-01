@@ -27,6 +27,9 @@ requirejs.config({
     },
     'bootstrap': {
       deps: ['jquery']
+    },
+    'bb-modal': {
+      deps: ['underscore', 'jquery', 'backbone']
     }
   },
   packages: [{
