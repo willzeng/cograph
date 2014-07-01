@@ -20,6 +20,12 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
       routes:
         '': 'home'
+        ':id': 'withDoc'
+
+      withDoc: (docId) =>
+        @workspaceModel.documentModel.set '_id', docId
+        $.when(@workspaceModel.documentModel.fetch()).then =>
+          @workspaceModel.setDocument @workspaceModel.documentModel
 
       home: =>
         @graphView.render()
