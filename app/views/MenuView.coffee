@@ -33,6 +33,11 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           showFooter: false
         ).open()
 
+        @newDocModal.on "shown", () ->
+          $(newDocName).focus()
+          $("#new-doc-form").submit (e) ->
+            false
+
         $('button', @newDocModal.$el).click () =>
           @newDocument()
           @newDocModal.close()
