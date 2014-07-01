@@ -22,21 +22,22 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         '(:id)': 'home'
 
       home: (docId) =>
+        @graphView.render()
+
         if docId
           @workspaceModel.documentModel.set '_id', docId
           $.when(@workspaceModel.documentModel.fetch()).then =>
-            @workspaceModel.setDocument @workspaceModel.documentModel
+            @setAndFetchDoc()
         else
           $.when(@workspaceModel.documentModel.save()).then =>
             @navigate @workspaceModel.documentModel.get '_id'
+            @setAndFetchDoc()
 
-        @graphView.render()
-
+      setAndFetchDoc: ->
+        @workspaceModel.setDocument @workspaceModel.documentModel
         #Prepopulate the WorkspaceModel with all the nodes in the database
         $.when(gm.nodes.fetch()).then ->
           gm.connections.fetch()
-
-        #@randomPopulate()
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
