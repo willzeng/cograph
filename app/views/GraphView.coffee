@@ -50,7 +50,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                 .attr('height', height)
                 .call(@zoom)
                 .on("dblclick.zoom", null)
-
         @svg.append('defs').html(defs)
 
         @workspace = @svg.append("svg:g")
@@ -93,14 +92,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         # new elements
         connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
-        connectionEnter.append("line")
-          .attr("marker-end", "url(#arrowhead)")
           .on "click", (d) =>
             @model.select d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
             @trigger "connection:mouseout", conn
+        connectionEnter.append("line")
+          .attr("marker-end", "url(#arrowhead)")     
         connectionEnter.append("text")
           .attr("text-anchor", "middle")
           

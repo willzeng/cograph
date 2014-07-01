@@ -11,6 +11,7 @@
 
 .node {
   transition: opacity .5s ease-in-out;
+  cursor: pointer;
 }
 
 .node circle {
@@ -28,33 +29,30 @@
   fill: @selected-color;
 }
 
-.node.fixed circle {
-  stroke: @fixed-color;
-  stroke-dasharray:10;
-  stroke-location:outside;
+.node.fixed:hover text{
+  fill: @fixed-color;
 }
 
-
 .node text {
+  cursor: pointer;
   font: 20px sans-serif;
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
+  text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff;
+}
+
+.connection text {
+  font: 15px sans-serif;
+  pointer-events: none;
+  text-anchor: middle;
+  fill: lighten(@text-color,20%);
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
-
-.connection-label text {
-  font: 2px sans-serif;
-  pointer-events: none;
-  text-anchor: middle;
-  fill: black;
-}
-
-
 .connection line {
   stroke: @connection-color;
-  stroke-width: 8px;
+  stroke-width: 4px;
   stroke-linecap:round;
   opacity: 0.5;
   cursor: pointer;
@@ -65,8 +63,17 @@
   opacity: 1;
 }
 
-.connection.dim line, .connection.dim text {
+.connection.selected text {
+  fill: @selected-color;
+  text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff;
+}
+
+.connection.dim line {
   opacity: 0.1;
+}
+
+.connection.dim text {
+  opacity: 0.3;
 }
 
 line {
