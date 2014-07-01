@@ -5,7 +5,6 @@ requirejs.config({
     'underscore': '/assets/libs/underscore/underscore',
     'backbone': '/assets/libs/backbone/backbone',
     'text': '/assets/libs/requirejs-text/text',
-    'd3': '/assets/libs/d3/d3',
     'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
     'backbone-forms-bootstrap': '/assets/js/backbone-forms/bootstrap3',
     'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min',
@@ -45,5 +44,4 @@ requirejs.config({
 
 require(['cs!views/LandingView'], function(LandingView){
   landingView = new LandingView()
-  window.lv = landingView
 });

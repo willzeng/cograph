@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
-  'cs!models/DocumentModel', 'cs!models/WorkspaceModel'],
+  'cs!models/DocumentModel'],
   ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
