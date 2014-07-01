@@ -128,7 +128,6 @@ svg {
   right: 0;
   top: 0;
   height: 100%;
-  color: @silver;
   width: 0;
   background: @navy;
   overflow-y: scroll;
@@ -142,7 +141,7 @@ svg {
   position: absolute;
   bottom: 40px;
   left: 60px;
-  padding-top:10px;
+  padding-top:5px;
   text-align: center;
   border: 4px dashed lightgray;
   border-radius: 4px;
@@ -155,15 +154,18 @@ svg {
 
 #details-container {
   position: absolute;
-  top: 60px;
-  width: 250px;
-  left: 10px;
+  width: 100%;
+  padding: 8px 10px 0 10px;
   -ms-word-break: break-all;
   word-break: break-all;
   word-break: break-word;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
+}
+
+.detail-controls{
+  padding-bottom: 10px
 }
 
 .data-tooltip-container {

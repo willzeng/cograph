@@ -4,13 +4,13 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
   ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
     class Router extends Backbone.Router
       initialize: ->
-        default_tags = {'node_tags':['theorem','proof','conjecture','citation']}
+        default_tags = {'node_tags': ['theorem','proof','conjecture','citation']}
         @workspaceModel = new WorkspaceModel initial_tags:default_tags
 
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
         @detailsView = new DetailsView model: @workspaceModel
-        @filterView = new FilterView {model: @workspaceModel.getFilter()}
+        @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView()
         @menuView = new MenuView model: @workspaceModel

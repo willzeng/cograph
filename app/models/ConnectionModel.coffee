@@ -19,6 +19,8 @@ define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
 
+    ignoredAttributes: ['selected', 'dim', 'tags']
+
     serialize: ->
       json = _.omit @clone().toJSON(), @ignoredAttributes
       json

@@ -23,8 +23,8 @@ exports.read = (req, resp) ->
     resp.send conn
 
 exports.getAll = (req, resp) ->
-  console.log "get_all_connections Query Requested"
-  docLabel = "_doc_id_#{req.params.docId || 0}"
+  console.log "get_all_connections requested"
+  docLabel = "_doc_#{req.params.docId || 0}"
   cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
   graphDb.query cypherQuery, {}, (err, results) ->
     connections = (utils.parseCypherResult(connection, 'r') for connection in results)
