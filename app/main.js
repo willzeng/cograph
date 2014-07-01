@@ -13,6 +13,7 @@ requirejs.config({
     'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
     'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min',
     'bb-modal': '/assets/libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
+    'bootstrap-color':'/assets/libs/bootstrap-colorpalette/js/bootstrap-colorpalette',
     'share-button': '/assets/libs/share-button/build/share.min'
   },
   shim: {

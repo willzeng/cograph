@@ -11,6 +11,17 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       _docId:  0
 
     class WorkspaceModel extends Backbone.Model
+
+      selectedColor: '#3498db'
+
+      defaultColors:
+          grey:'#D1D1D1'
+          red:'#F56545'
+          yellow:'#FFBB22'
+          green: '#BBE535'
+          cyan: '#77DDBB'
+          blue: '#66CCDD'
+
       initialize: ->
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
