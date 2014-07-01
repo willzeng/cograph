@@ -1,8 +1,7 @@
-<ul class="document-list">
+<ul class="document-list list-group">
   <% documents.each(function(document){ %>
-    <li>
+    <a href="#<%= document.id %>" class="list-group-item">
       <%= document.get('name') %>
-      <button data-doc-id="<%= document.id %>" class="btn btn-primary">Open</button>
-    </li>
+    </a>
   <% }); %>
 <ul>
