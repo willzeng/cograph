@@ -4,7 +4,7 @@ define ['backbone'], (Backbone) ->
     idAttribute: '_id'
 
     defaults:
-      name: 'DefaultName'
+      name: 'Untitled'
       _id: -1
 
     isNew: ->

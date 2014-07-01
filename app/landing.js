@@ -43,7 +43,7 @@ requirejs.config({
   }]
 });
 
-require(['cs!LandingView'], function(LandingView){
+require(['cs!views/LandingView'], function(LandingView){
   landingView = new LandingView()
   window.lv = landingView
 });

@@ -19,15 +19,17 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         Backbone.history.start()
 
       routes:
-        '': 'home'
-        ':id': 'withDoc'
+        '(:id)': 'home'
 
-      withDoc: (docId) =>
-        @workspaceModel.documentModel.set '_id', docId
-        $.when(@workspaceModel.documentModel.fetch()).then =>
-          @workspaceModel.setDocument @workspaceModel.documentModel
+      home: (docId) =>
+        if docId
+          @workspaceModel.documentModel.set '_id', docId
+          $.when(@workspaceModel.documentModel.fetch()).then =>
+            @workspaceModel.setDocument @workspaceModel.documentModel
+        else
+          $.when(@workspaceModel.documentModel.save()).then =>
+            @navigate @workspaceModel.documentModel.get '_id'
 
-      home: =>
         @graphView.render()
 
         #Prepopulate the WorkspaceModel with all the nodes in the database
