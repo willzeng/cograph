@@ -57,8 +57,3 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
-
-          $('button', modal.el).click (e) =>
-            targetDoc = $(e.currentTarget).attr("data-doc-id")
-            @model.setDocument documents.findWhere {_id:targetDoc}
-            modal.close()
