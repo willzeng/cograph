@@ -49,7 +49,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         else if sugg.type == 'tag'
           @model.getNodesByTag sugg.value, (nodes) =>
             for node in nodes
-              localNode = @findLocalNode node
+              localNode = @findLocalNode node.name
               if localNode
                 @model.select localNode
               else
