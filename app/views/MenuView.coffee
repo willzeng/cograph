@@ -33,6 +33,11 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           showFooter: false
         ).open()
 
+        @newDocModal.on "shown", () ->
+          $(newDocName).focus()
+          $("#new-doc-form").submit (e) ->
+            false
+
         $('button', @newDocModal.$el).click () =>
           @newDocument()
           @newDocModal.close()
@@ -52,8 +57,3 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
-
-          $('button', modal.el).click (e) =>
-            targetDoc = $(e.currentTarget).attr("data-doc-id")
-            @model.setDocument documents.findWhere {_id:targetDoc}
-            modal.close()

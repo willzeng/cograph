@@ -20,16 +20,26 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         Backbone.history.start()
 
       routes:
-        '': 'home'
+        '(:id)': 'home'
 
-      home: =>
+      home: (docId) =>
         @graphView.render()
 
+        if docId
+          @workspaceModel.documentModel.set '_id', docId
+          @workspaceModel.documentModel.fetch
+            error: (err) -> location.href="/errors/missingDocument",
+            success: @setAndFetchDoc()
+        else
+          $.when(@workspaceModel.documentModel.save()).then =>
+            @navigate @workspaceModel.documentModel.get '_id'
+            @setAndFetchDoc()
+
+      setAndFetchDoc: ->
+        @workspaceModel.setDocument @workspaceModel.documentModel
         #Prepopulate the WorkspaceModel with all the nodes in the database
         $.when(gm.nodes.fetch()).then ->
           gm.connections.fetch()
-
-        #@randomPopulate()
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

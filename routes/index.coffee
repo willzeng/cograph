@@ -9,11 +9,11 @@ documents = require './documents'
 router.get '/', (request, response)->
   response.render('index.jade')
 
+router.get '/landing', (request, response)->
+  response.render('landing.jade')
 
-router.get '/hello', (request, response)->
-  response.send('index.jade')
-
-
+router.get '/errors/missingDocument', (request, response)->
+  response.render('errors/missingDocument.jade')
 
 #defines a function to extract parameters using regex's
 router.param utils.paramExtract
