@@ -17,7 +17,11 @@ exports.create = (req, resp) ->
 exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    resp.send node
+    if err
+      resp.send 500, 'Something broke!'
+    else
+      parsed = node._data.data
+      resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
