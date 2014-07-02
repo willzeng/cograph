@@ -27,7 +27,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
 
-        @filterModel = new FilterModel @get 'initial_tags'
+        @filterModel = new FilterModel()
 
         @documentModel = new DocumentModel()
 
@@ -48,13 +48,18 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           !(@filterModel.passes node)
         @removeNode node for node in nodesToRemove
 
-      putNode: (nodeModel) ->
-        @nodes.add nodeModel
-        nodeModel
+      # if called with nm, force:true the a node will be forced
+      # through the filter, adding its tags to the filterModel
+      putNode: (nodeModel, options) ->
+        if options
+          if options.force then @filterModel.addNodeTags nodeModel.get('tags')
+        if @filterModel.passes nodeModel
+          @nodes.add nodeModel
+          nodeModel
 
-      putNodeFromData: (data) ->
+      putNodeFromData: (data, options) ->
         node = new NodeModel data
-        @putNode node
+        @putNode node, options
 
       putConnection: (connectionModel) ->
         @connections.add connectionModel
