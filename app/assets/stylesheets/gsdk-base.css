@@ -168,7 +168,8 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     border-color: #999999
 }
 .btn-primary {
-    color: #3472F7;
+    color: white;
+    background: #3472F7;
     border-color: #3472F7;
 }
 .btn-info{
@@ -338,10 +339,10 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 /*             Inputs               */
 .form-control {
     background-color: #FFFFFF;
-    border: 1px solid #E3E3E3;
+    border: 1px solid #;
     border-radius: 4px;
     box-shadow: none;
-    color: #444444;
+    color: #000;
     height: 41px;
     padding: 6px 16px;
 }
