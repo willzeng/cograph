@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.1.1",
-    "fontawesome": "~4.0.3",
+    "fontawesome": "~4.1.0",
     "backbone": "~1.1.2",
     "requirejs": "~2.1.11",
     "requirejs-text": "~2.0.12",
@@ -31,7 +31,9 @@
     "d3": "~3.4.6",
     "backbone-forms": "~0.14.0",
     "typeahead.js": "~0.10.2",
-    "backbone.bootstrap-modal": "git@github.com:vpontis/backbone.bootstrap-modal.git#~0.9.1"
+    "backbone.bootstrap-modal": "git@github.com:vpontis/backbone.bootstrap-modal.git#~0.9.1",
+    "bootstrap-colorpalette": "git@github.com:willzeng/bootstrap-colorpalette.git",
+    "share-button": "git@github.com:willzeng/share-button.git"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

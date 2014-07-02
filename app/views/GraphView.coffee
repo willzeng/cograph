@@ -117,10 +117,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
+          .classed('selected', (d) -> d.get('selected'))
         nodeEnter.append("text")
           .attr("dy", "40px")
         nodeEnter.append("circle")
           .attr("r", 25)
+          .style("fill", (d) => @getColor d)
 
         nodeEnter
           .on "dblclick", (d) ->
@@ -146,6 +148,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
+        node.select('circle')
+          .style("fill", (d) => @getColor d)
 
         # delete unmatching elements
         node.exit().remove()
@@ -165,3 +169,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.x+@currentZoom[0] > element.offset().left &&
           node.y+@currentZoom[1] > element.offset().top &&
           node.y+@currentZoom[1] < element.offset().top + element.height()
+
+      getColor: (nc) ->
+          @model.defaultColors[nc.get('color')]

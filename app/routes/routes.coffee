@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/WorkspaceModel', 'cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView',
-  'cs!views/MenuView'],
-  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
+  'cs!views/MenuView', 'cs!views/ShareView'],
+  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView) ->
     class Router extends Backbone.Router
       initialize: ->
         default_tags = {'node_tags': ['theorem','proof','conjecture','citation']}
@@ -14,6 +14,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView()
         @menuView = new MenuView model: @workspaceModel
+        @shareView = new ShareView()
 
         window.gm = @workspaceModel
         Backbone.history.start()

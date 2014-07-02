@@ -24,7 +24,7 @@
   opacity: 0.3;
 }
 
-.node.selected circle {
+.node.selected text {
   fill: @selected-color;
 }
 
@@ -177,6 +177,11 @@ svg {
   right: 15px;
 }
 
+.toolbar.bottom {
+  position: absolute;
+  bottom: 40px;
+}
+
 .controls {
   z-index: @controls-z-index;
 }
@@ -214,6 +219,11 @@ svg {
   float: left;
 }
 
+.network-share-button {
+  margin-right:auto;
+  margin-left:auto;
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
@@ -236,4 +246,28 @@ svg {
 
 .panel-body {
   padding: 10px 15px;
+}
+
+// Bootstrap-colorpalette
+
+.bootstrap-colorpalette {
+    padding: 10px 0 10px 0;
+    white-space: normal;
+    line-height:1;
+}
+
+.bootstrap-colorpalette div {
+    line-height:0;
+}
+
+.bootstrap-colorpalette .btn-color {
+    width: 30px;
+    height: 30px;
+    border: 4px solid #fff;
+    margin: 3px;
+    padding: 0;
+}
+
+.bootstrap-colorpalette .btn-color:hover {
+    border: 4px solid #000;
 }
