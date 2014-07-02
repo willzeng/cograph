@@ -1,4 +1,5 @@
-define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel', 'cs!models/DocumentModel'],
+define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
+  'cs!models/FilterModel', 'cs!models/DocumentModel'],
   ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
     class ConnectionCollection extends Backbone.Collection
       model: ConnectionModel
@@ -48,8 +49,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @removeNode node for node in nodesToRemove
 
       putNode: (nodeModel) ->
-        if @filterModel.passes nodeModel
-          @nodes.add nodeModel
+        @nodes.add nodeModel
+        nodeModel
+
+      putNodeFromData: (data) ->
+        node = new NodeModel data
+        @putNode node
 
       putConnection: (connectionModel) ->
         @connections.add connectionModel
@@ -105,3 +110,15 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       getFilter: () ->
         @filterModel
+
+      getNodeNames: (cb) ->
+        @documentModel.getNodeNames(cb)
+
+      getTagNames: (cb) ->
+        @documentModel.getTagNames(cb)
+
+      getNodeByName: (name, cb) ->
+        @documentModel.getNodeByName(name, cb)
+
+      getNodesByTag: (tag, cb) ->
+        @documentModel.getNodesByTag(tag, cb)

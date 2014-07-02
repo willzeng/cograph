@@ -47,14 +47,14 @@ utils =
     serverNode.tags = @parseLabels(serverNode.tags).tags if serverNode.tags
     serverNode
 
-   # Sets node.property = value in @graphDb
-   # Returns a dictionary that represents the server state of the node
-   setProperty: (graphDb, id, property, value, callback) ->
-     cypherQuery = "START n=node(#{id}) SET n.#{property}=#{value} return n;"
-     graphDb.query cypherQuery, {}, (err, results) =>
-       if err then throw err
-       node = utils.parseCypherResult(results[0], 'n')
-       callback node
+  # Sets node.property = value in @graphDb
+  # Returns a dictionary that represents the server state of the node
+  setProperty: (graphDb, id, property, value, callback) ->
+    cypherQuery = "START n=node(#{id}) SET n.#{property}=#{value} return n;"
+    graphDb.query cypherQuery, {}, (err, results) =>
+      if err then throw err
+      node = utils.parseCypherResult(results[0], 'n')
+      callback node
 
   parseLabels: (labels) ->
     labelDict = {tags:[]}

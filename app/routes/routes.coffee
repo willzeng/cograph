@@ -29,7 +29,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           @workspaceModel.documentModel.set '_id', docId
           @workspaceModel.documentModel.fetch
             error: (err) -> location.href="/errors/missingDocument",
-            success: @setAndFetchDoc()
+            success: () => @setAndFetchDoc()
         else
           $.when(@workspaceModel.documentModel.save()).then =>
             @navigate @workspaceModel.documentModel.get '_id'
