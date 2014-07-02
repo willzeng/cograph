@@ -54,7 +54,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       putNodeFromData: (data) ->
         node = new NodeModel data
-        console.log node
         @putNode node
 
       putConnection: (connectionModel) ->

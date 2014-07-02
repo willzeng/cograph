@@ -48,7 +48,12 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
             @getNodeByName sugg.value
         else if sugg.type == 'tag'
           @model.getNodesByTag sugg.value, (nodes) =>
-            @model.putNode node for node in nodes
+            for node in nodes
+              localNode = @findLocalNode node
+              if localNode
+                @model.select localNode
+              else
+                @model.putNodeFromData node
         $('#search-input').val('')
 
       findLocalNode: (name) ->
