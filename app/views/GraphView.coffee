@@ -20,9 +20,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                   .nodes([])
                   .links([])
                   .size([width, height])
-                  .charge(-4000 )
+                  .charge(-4000)
                   .gravity(0.2)
                   .friction(0.6)
+                  .distance(200)
 
         zoomed = =>
           return if @translateLock
@@ -127,12 +128,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
-        rect = nodeEnter.append("rect")
-          .attr("height", "30px")
-          .attr("width", "70px")
-          .attr("fill", "white")
-          .attr("x", "-35px")
-          .attr("y", "-15px")
+        nodeEnter.append("rect")
         nodeEnter.append("text")
           .attr("dy", "5px")
 
@@ -160,22 +156,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
-        node.select('text').each((d,i) ->
-          console.log $(d.cid)
-          offset = 2 #todo
-        )
-        # node.select('rect')
-        #   .attr('width', )
-        #   .attr('height', )
-        #   .attr('x', )
-        #   .attr('y', )
-        # pathinfo = [
-        #     {x: rect.x-offset, y: rect.y }, 
-        #     {x: rect.x+offset + rect.width, y: rect.y}, 
-        #     {x: rect.x+offset + rect.width, y: rect.y + rect.height }, 
-        #     {x: rect.x-offset, y: rect.y + rect.height},
-        #     {x: rect.x-offset, y: rect.y },
-        # ];
+
+        offset = 5
+        for t in node.select('text')[0]
+          dim = t.getBBox()
+          rect = $(t).parent().find('rect')
+          rect
+            .attr('width', dim.width+offset)
+            .attr('height', dim.height+offset)
+            .attr('x', dim.x-(offset/2))
+            .attr('y', dim.y-(offset/2))
 
         # delete unmatching elements
         node.exit().remove()

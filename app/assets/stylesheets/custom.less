@@ -1,11 +1,11 @@
 @import "colors";
 
-@node-color: @gray;
+@node-color: white;
 @connection-color: @gray;
-@stroke-color: @white;
+@stroke-color: @gray;
 @selected-color: #3498db;
 @fixed-color: @orange;
-@text-color: @black;
+@text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
@@ -14,10 +14,10 @@
   cursor: pointer;
 }
 
-.node circle {
+.node rect {
   cursor: pointer;
   stroke: @stroke-color;
-  stroke-width: 4px;
+  stroke-width: 1px;
   fill: @node-color;
 }
 
