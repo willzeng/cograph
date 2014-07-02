@@ -28,8 +28,13 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @connections = new ConnectionCollection()
 
         @filterModel = new FilterModel()
+        @nodes.on "change:tags", @updateFilter, this
 
         @documentModel = new DocumentModel()
+
+      updateFilter: (node) ->
+        @filterModel.set 'initial_tags', _.union(@filterModel.get('node_tags'), node.get('tags'))
+        @filterModel.addNodeTags node.get('tags')
 
       setDocument: (doc) ->
         @documentModel = doc
