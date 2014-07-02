@@ -21,3 +21,7 @@ define ['backbone'], (Backbone) ->
     getNodeByName: (name, cb) ->
       $.get @url() + '/getNodeByName', {name: name}, (node) =>
         cb node
+
+    getNodesByTag: (tag, cb) ->
+      $.get @url() + '/getNodesByTag', {tag: tag}, (nodes) =>
+        cb nodes

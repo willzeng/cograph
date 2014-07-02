@@ -7,12 +7,17 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         'click button': 'search'
 
       initialize: ->
-        substringMatcher = (gm) =>
+        nodeNameMatcher = (gm) =>
           findMatches = (q, cb) =>
             gm.getNodeNames (matches) =>
               # matches come in id, name objects
               matches = @findMatchingObjects q, matches
-              cb _.map matches, (match) -> {value: match.name}
+              cb _.map matches, (match) -> {value: match.name, type: 'node'}
+
+        findTagMatches = (q, cb) =>
+          @model.getTagNames (tagNames) =>
+            matches = @findMatchingNames q, tagNames
+            cb _.map matches, (match) -> {value: match, type: 'tag'}
 
         $('#search-input').typeahead(
           hint: true,
@@ -21,21 +26,30 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           autoselect: true
         ,
           name: 'node-names',
-          source: substringMatcher(@model)
+          source: nodeNameMatcher(@model)
+          templates:
+            header: '<h4 class="text-center">Node Names</h4>'
+        ,
+          name: 'tags'
+          source: findTagMatches
+          templates:
+            header: '<h4 class="text-center">Labels</h4>'
         )
 
         $('#search-input').on 'typeahead:selected',
-          (e, sugg, dataset) => @search()
+          (e, sugg, dataset) => @search(sugg)
 
-      search: ->
-        searchTerm = $('#search-input').val()
-        node = @findLocalNode searchTerm
-        if node
-          @model.select node
-          $('#search-input').val('')
-        else
-          @getNodeByName searchTerm
-          $('#search-input').val('')
+      search: (sugg) ->
+        if sugg.type == 'node'
+          node = @findLocalNode sugg.value
+          if node
+            @model.select node
+          else
+            @getNodeByName sugg.value
+        else if sugg.type == 'tag'
+          @model.getNodesByTag sugg.value, (nodes) =>
+            @model.putNode node for node in nodes
+        $('#search-input').val('')
 
       findLocalNode: (name) ->
         matchedNames = @findMatchingNames(name, @model.nodes.pluck('name'))

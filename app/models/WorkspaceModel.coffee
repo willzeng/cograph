@@ -109,3 +109,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       getNodeByName: (name, cb) ->
         @documentModel.getNodeByName(name, cb)
+
+      getNodesByTag: (tag, cb) ->
+        @documentModel.getNodesByTag(tag, cb)

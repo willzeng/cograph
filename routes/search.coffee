@@ -30,3 +30,16 @@ exports.getNodeByName = (req, resp) ->
     nodeData = results[0].n._data.data
     nodeData.tags = utils.parseLabels(results[0]['labels(n)']).tags
     resp.send nodeData
+
+exports.getNodesByTag = (req, resp) ->
+  docId = req.params.docId
+  tag = req.query.tag
+  cypherQuery = "match (n:_tag_#{tag}:_doc_#{docId}) return n, labels(n);"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    if err then throw err
+    parsedNodes = []
+    for node in results
+      nodeData = node.n._data.data
+      nodeData.tags = node['labels(n)']
+      parsedNodes.push utils.parseNodeToClient nodeData
+    resp.send parsedNodes
