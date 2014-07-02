@@ -127,10 +127,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
-        nodeEnter.append("rect")
+        rect = nodeEnter.append("rect")
           .attr("height", "30px")
           .attr("width", "70px")
-          .attr("fill", "transparent")
+          .attr("fill", "white")
           .attr("x", "-35px")
           .attr("y", "-15px")
         nodeEnter.append("text")
@@ -160,6 +160,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
+        node.select('text').each((d,i) ->
+          console.log $(d.cid)
+          offset = 2 #todo
+        )
+        # node.select('rect')
+        #   .attr('width', )
+        #   .attr('height', )
+        #   .attr('x', )
+        #   .attr('y', )
+        # pathinfo = [
+        #     {x: rect.x-offset, y: rect.y }, 
+        #     {x: rect.x+offset + rect.width, y: rect.y}, 
+        #     {x: rect.x+offset + rect.width, y: rect.y + rect.height }, 
+        #     {x: rect.x-offset, y: rect.y + rect.height},
+        #     {x: rect.x-offset, y: rect.y },
+        # ];
 
         # delete unmatching elements
         node.exit().remove()
