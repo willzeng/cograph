@@ -26,8 +26,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
         if docId
           @workspaceModel.documentModel.set '_id', docId
-          $.when(@workspaceModel.documentModel.fetch()).then =>
-            @setAndFetchDoc()
+          @workspaceModel.documentModel.fetch
+            error: (err) -> location.href="/errors/missingDocument",
+            success: @setAndFetchDoc()
         else
           $.when(@workspaceModel.documentModel.save()).then =>
             @navigate @workspaceModel.documentModel.get '_id'
