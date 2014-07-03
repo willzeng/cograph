@@ -129,9 +129,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
+        nodeEnter.append("line")
         nodeEnter.append("rect").style("fill", (d) => @getColor d)
         nodeEnter.append("text")
           .attr("dy", "5px")
+
 
         nodeEnter
           .on "dblclick", (d) ->
@@ -161,15 +163,24 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .style("fill", (d) => @getColor d)
 
         # construct the node boxes
-        offset = 12
+        offsetV = 4
+        offsetH = 12
         for t in node.select('text')[0]
           dim = t.getBBox()
+          line = $(t).parent().find('line')
+          line
+            .attr('x1', dim.x-(offsetH)/2)
+            .attr('y1', dim.y+dim.height+2)
+            .attr('x2', dim.x + dim.width+(offsetH)/2)
+            .attr('y2', dim.y+dim.height+2)
+            .attr('stroke', '#ccc')
+            .attr('stroke-width', '4px')
           rect = $(t).parent().find('rect')
           rect
-            .attr('width', dim.width+offset)
-            .attr('height', dim.height+offset)
-            .attr('x', dim.x-(offset/2))
-            .attr('y', dim.y-(offset/2))
+            .attr('width', dim.width+ offsetH)
+            .attr('height', dim.height+ offsetV)
+            .attr('x', dim.x - (offsetH/2))
+            .attr('y', dim.y - (offsetV/2))
 
         # delete unmatching elements
         node.exit().remove()

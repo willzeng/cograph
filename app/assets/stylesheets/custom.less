@@ -1,11 +1,11 @@
 @import "colors";
 
 @node-color: white;
-@connection-color: @gray;
+@connection-color: black;
 @stroke-color: @gray;
 @selected-color: #3498db;
 @selected-nodetext-color: white;
-@fixed-color: @black;
+@fixed-color: #555;
 @text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
@@ -17,8 +17,6 @@
 
 .node rect {
   cursor: pointer;
-  stroke: @stroke-color;
-  stroke-width: 1px;
   fill: @node-color;
 }
 
@@ -30,9 +28,13 @@
   fill: @selected-nodetext-color;
 }
 
-.node.fixed rect{
+.node.fixed line{
+  stroke-dasharray:5;
   stroke: @fixed-color;
-  stroke-dasharray:10;
+}
+
+.node line {
+  stroke: #bbb;
 }
 
 .node text {
@@ -53,7 +55,7 @@
 
 .connection line {
   stroke: @connection-color;
-  stroke-width: 9px;
+  stroke-width: 4px;
   stroke-linecap:round;
   opacity: 0.5;
   cursor: pointer;
@@ -94,7 +96,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: @white;
+  background: #efefef;
   height: 100%;
 }
 
