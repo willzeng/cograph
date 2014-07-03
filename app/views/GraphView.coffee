@@ -95,6 +95,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connectionEnter = connection.enter().append("line")
           .attr("class", "connection")
           .attr("marker-end", "url(#arrowhead)")
+          .style("stroke", (d) => @getColor d)
           .on "click", (d) =>
             @model.select d
           .on "mouseover", (conn)  =>
@@ -106,6 +107,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
+          .style("stroke", (d) => @getColor d)
 
         # remove deleted elements
         connection.exit().remove()
