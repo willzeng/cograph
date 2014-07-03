@@ -4,7 +4,8 @@
 @connection-color: @gray;
 @stroke-color: @gray;
 @selected-color: #3498db;
-@fixed-color: @orange;
+@selected-nodetext-color: white;
+@fixed-color: @black;
 @text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
@@ -26,11 +27,12 @@
 }
 
 .node.selected text {
-  fill: @selected-color;
+  fill: @selected-nodetext-color;
 }
 
 .node.fixed rect{
   stroke: @fixed-color;
+  stroke-dasharray:10;
 }
 
 .node text {
@@ -39,7 +41,6 @@
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
-  text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff;
 }
 
 .connection text {
@@ -194,6 +195,11 @@ svg {
   right: 15px;
 }
 
+.toolbar.bottom {
+  position: absolute;
+  bottom: 40px;
+}
+
 .controls {
   z-index: @controls-z-index;
 }
@@ -231,6 +237,11 @@ svg {
   float: left;
 }
 
+.network-share-button {
+  margin-right:auto;
+  margin-left:auto;
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
@@ -253,4 +264,28 @@ svg {
 
 .panel-body {
   padding: 10px 15px;
+}
+
+// Bootstrap-colorpalette
+
+.bootstrap-colorpalette {
+    padding: 10px 0 10px 0;
+    white-space: normal;
+    line-height:1;
+}
+
+.bootstrap-colorpalette div {
+    line-height:0;
+}
+
+.bootstrap-colorpalette .btn-color {
+    width: 30px;
+    height: 30px;
+    border: 4px solid #fff;
+    margin: 3px;
+    padding: 0;
+}
+
+.bootstrap-colorpalette .btn-color:hover {
+    border: 4px solid #000;
 }

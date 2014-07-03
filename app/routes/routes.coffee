@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/WorkspaceModel', 'cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView',
-  'cs!views/MenuView'],
-  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView) ->
+  'cs!views/MenuView', 'cs!views/ShareView'],
+  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView) ->
     class Router extends Backbone.Router
       initialize: ->
         default_tags = {'node_tags': ['theorem','proof','conjecture','citation']}
@@ -12,23 +12,34 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @detailsView = new DetailsView model: @workspaceModel
         @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
-        @sidebarView = new SideBarView()
+        @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
+        @shareView = new ShareView()
 
         window.gm = @workspaceModel
         Backbone.history.start()
 
       routes:
-        '': 'home'
+        '(:id)': 'home'
 
-      home: =>
+      home: (docId) =>
         @graphView.render()
 
+        if docId
+          @workspaceModel.documentModel.set '_id', docId
+          @workspaceModel.documentModel.fetch
+            error: (err) -> location.href="/errors/missingDocument",
+            success: () => @setAndFetchDoc()
+        else
+          $.when(@workspaceModel.documentModel.save()).then =>
+            @navigate @workspaceModel.documentModel.get '_id'
+            @setAndFetchDoc()
+
+      setAndFetchDoc: ->
+        @workspaceModel.setDocument @workspaceModel.documentModel
         #Prepopulate the WorkspaceModel with all the nodes in the database
         $.when(gm.nodes.fetch()).then ->
           gm.connections.fetch()
-
-        #@randomPopulate()
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
   'cs!models/DocumentModel', 'cs!models/WorkspaceModel'],
-  ($, _, Backbone, Bloodhound, typeahead, bootsrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
@@ -33,6 +33,11 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           showFooter: false
         ).open()
 
+        @newDocModal.on "shown", () ->
+          $(newDocName).focus()
+          $("#new-doc-form").submit (e) ->
+            false
+
         $('button', @newDocModal.$el).click () =>
           @newDocument()
           @newDocModal.close()
@@ -52,8 +57,3 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
-
-          $('button', modal.el).click (e) =>
-            targetDoc = $(e.currentTarget).attr("data-doc-id")
-            @model.setDocument documents.findWhere {_id:targetDoc}
-            modal.close()

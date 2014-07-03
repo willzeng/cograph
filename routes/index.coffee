@@ -5,15 +5,16 @@ utils = require './utils'
 nodes = require './nodes'
 connections = require './connections'
 documents = require './documents'
+search = require './search'
 
 router.get '/', (request, response)->
   response.render('index.jade')
 
+router.get '/landing', (request, response)->
+  response.render('landing.jade')
 
-router.get '/hello', (request, response)->
-  response.send('index.jade')
-
-
+router.get '/errors/missingDocument', (request, response)->
+  response.render('errors/missingDocument.jade')
 
 #defines a function to extract parameters using regex's
 router.param utils.paramExtract
@@ -44,5 +45,11 @@ router.get      '/documents/:docId/connections/:id',   connections.read
 router.get      '/documents/:docId/connections',       connections.getAll
 router.put      '/documents/:docId/connections/:id',   connections.update
 router.delete   '/documents/:docId/connections/:id',   connections.destroy
+
+# Search
+router.get      '/documents/:docId/nodes/names',       search.getNodeNames
+router.get      '/documents/:docId/getNodeByName',     search.getNodeByName
+router.get      '/documents/:docId/getNodesByTag',     search.getNodesByTag
+router.get      '/documents/:docId/tags',              search.getTagNames
 
 module.exports = router

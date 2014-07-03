@@ -100,7 +100,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .on "mouseout", (conn) =>
             @trigger "connection:mouseout", conn
         connectionEnter.append("line")
-          .attr("marker-end", "url(#arrowhead)")     
+          .attr("marker-end", "url(#arrowhead)")
+          .style("stroke", (d) => @getColor d)
         connectionEnter.append("text")
           .attr("text-anchor", "middle")
           
@@ -109,12 +110,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
-          .each((d,i) ->
+          .each (d,i) ->
             if d.get('selected')
               d3.select(this).select("line").attr("marker-end", "url(#arrowhead-selected)")
             else
               d3.select(this).select("line").attr("marker-end", "url(#arrowhead)")
-          )
+          .style("stroke", (d) => @getColor d)
         connection.select("text")
           .text((d) -> d.get("name"))
 
@@ -128,7 +129,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
-        nodeEnter.append("rect")
+        nodeEnter.append("rect").style("fill", (d) => @getColor d)
         nodeEnter.append("text")
           .attr("dy", "5px")
 
@@ -156,6 +157,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
+        node.select('rect')
+          .style("fill", (d) => @getColor d)
 
         # construct the node boxes
         offset = 12
@@ -188,3 +191,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.x+@currentZoom[0] > element.offset().left &&
           node.y+@currentZoom[1] > element.offset().top &&
           node.y+@currentZoom[1] < element.offset().top + element.height()
+
+      getColor: (nc) ->
+          @model.defaultColors[nc.get('color')]

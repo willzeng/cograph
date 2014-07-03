@@ -31,7 +31,7 @@ exports.getAll = (req, resp) ->
   cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
-    if err then console.log err
+    if err then throw err
     parsedNodes = []
     for node in results
       nodeData = node.n._data.data
