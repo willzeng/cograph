@@ -17,7 +17,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       defaultColors:
           white:'#fff'
-          grey:'#555'
+          grey:'#ccc'
           red:'#F56545'
           yellow:'#FFBB22'
           green: '#BBE535'
