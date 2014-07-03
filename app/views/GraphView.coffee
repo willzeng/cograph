@@ -104,18 +104,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .style("stroke", (d) => @getColor d)
         connectionEnter.append("text")
           .attr("text-anchor", "middle")
-          
-          
+
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
           .each (d,i) ->
+            line = d3.select(this).select("line")
+            line.style("stroke", (d) -> that.getColor d)
             if d.get('selected')
-              d3.select(this).select("line").attr("marker-end", "url(#arrowhead-selected)")
+              line.attr("marker-end", "url(#arrowhead-selected)")
             else
-              d3.select(this).select("line").attr("marker-end", "url(#arrowhead)")
-          .style("stroke", (d) => @getColor d)
+              line.attr("marker-end", "url(#arrowhead)")
         connection.select("text")
           .text((d) -> d.get("name"))
 
