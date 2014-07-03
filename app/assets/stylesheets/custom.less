@@ -29,8 +29,8 @@
   fill: @selected-color;
 }
 
-.node.fixed:hover text{
-  fill: @fixed-color;
+.node.fixed rect{
+  stroke: @fixed-color;
 }
 
 .node text {
@@ -52,7 +52,7 @@
 
 .connection line {
   stroke: @connection-color;
-  stroke-width: 4px;
+  stroke-width: 9px;
   stroke-linecap:round;
   opacity: 0.5;
   cursor: pointer;
