@@ -33,7 +33,8 @@
     "typeahead.js": "~0.10.2",
     "backbone.bootstrap-modal": "git@github.com:vpontis/backbone.bootstrap-modal.git#~0.9.1",
     "bootstrap-colorpalette": "git@github.com:willzeng/bootstrap-colorpalette.git",
-    "share-button": "git@github.com:willzeng/share-button.git"
+    "share-button": "git@github.com:willzeng/share-button.git",
+    "backbone.iobind": "~0.4.7"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

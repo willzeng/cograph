@@ -1,7 +1,9 @@
-define ['backbone'], (Backbone) ->
+define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, iosync, io) ->
   class DocumentModel extends Backbone.Model
     urlRoot: 'documents'
     idAttribute: '_id'
+    noIoBind: false
+    socket: io.connect('')
 
     defaults:
       name: 'Untitled'

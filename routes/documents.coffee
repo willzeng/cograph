@@ -7,11 +7,14 @@ DocumentHelper = require __dirname + '/helpers/DocumentHelper'
 serverDocument = new DocumentHelper graphDb
 
 # CREATE
-exports.create = (req, resp) ->
+exports.create = (data, callback, socket) ->
   console.log 'create document query requested'
-  newDocument = req.body
+  newDocument = data
   serverDocument.create newDocument, (savedDocument) ->
-    resp.send savedDocument
+    console.log "emitting", savedDocument
+    socket.emit('documents:create', savedDocument)
+    # socket.broadcast.emit('documents:create', json)
+    callback(null, savedDocument)
 
 # READ
 exports.read = (req, resp) ->

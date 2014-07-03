@@ -1,4 +1,4 @@
-express = require 'express'
+express = require 'express.io'
 path = require 'path'
 favicon = require 'static-favicon'
 bodyParser = require 'body-parser'
