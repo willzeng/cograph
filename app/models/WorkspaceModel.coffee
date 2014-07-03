@@ -56,11 +56,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       # if called with nm, force:true the a node will be forced
       # through the filter, adding its tags to the filterModel
       putNode: (nodeModel, options) ->
-        if options
-          if options.force then @filterModel.addNodeTags nodeModel.get('tags')
-        if @filterModel.passes nodeModel
-          @nodes.add nodeModel
-          nodeModel
+        @nodes.add nodeModel
+        nodeModel
 
       putNodeFromData: (data, options) ->
         node = new NodeModel data
