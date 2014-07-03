@@ -157,6 +157,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.select('text')
           .text((d) -> d.get('name'))
 
+        # construct the node boxes
         offset = 12
         for t in node.select('text')[0]
           dim = t.getBBox()
