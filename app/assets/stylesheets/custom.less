@@ -24,8 +24,10 @@
   opacity: 0.3;
 }
 
-.node.selected text {
-  fill: @selected-nodetext-color;
+.node.selected rect {
+  stroke-dasharray:5;
+  stroke-width:3px;
+  stroke: @selected-color;
 }
 
 .node.fixed line{
@@ -39,7 +41,8 @@
 
 .node text {
   cursor: pointer;
-  font: 20px sans-serif;
+  font: 16px sans-serif;
+  font-weight:bold;
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
