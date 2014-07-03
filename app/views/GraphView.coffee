@@ -157,7 +157,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.select('text')
           .text((d) -> d.get('name'))
 
-        offset = 5
+        offset = 12
         for t in node.select('text')[0]
           dim = t.getBBox()
           rect = $(t).parent().find('rect')
