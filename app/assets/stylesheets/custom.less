@@ -1,22 +1,22 @@
 @import "colors";
 
-@node-color: @gray;
-@connection-color: @gray;
-@stroke-color: @white;
-@selected-color: #3498db;
+@node-color: white;
+@connection-color: black;
+@stroke-color: @gray;
+@selected-color: #74DDFC;
+@selected-nodetext-color: white;
 @fixed-color: @orange;
-@text-color: @black;
+@text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
 .node {
   transition: opacity .5s ease-in-out;
+  cursor: pointer;
 }
 
-.node circle {
+.node rect {
   cursor: pointer;
-  stroke: @stroke-color;
-  stroke-width: 4px;
   fill: @node-color;
 }
 
@@ -24,39 +24,69 @@
   opacity: 0.3;
 }
 
-.node.selected text {
-  fill: @selected-color;
+.node.selected rect {
+  stroke: @selected-color;
+  stroke-width: 3px;
 }
 
-.node.fixed circle {
+.node.fixed line{
+  stroke-dasharray:5;
   stroke: @fixed-color;
-  stroke-dasharray:10;
-  stroke-location:outside;
+}
+
+.node line {
+  stroke: #bbb;
 }
 
 .node text {
+  cursor: pointer;
   font: 16px sans-serif;
+  font-weight:bold;
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
+}
+
+.connection text {
+  font: 15px sans-serif;
+  pointer-events: none;
+  text-anchor: middle;
+  fill: #333;
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
-.connection {
+.connection line {
   stroke: @connection-color;
-  stroke-width: 8px;
+  stroke-width: 4px;
   stroke-linecap:round;
   opacity: 0.5;
   cursor: pointer;
 }
 
-.connection.selected {
+.connection line.select-zone {
+  stroke: transparent;
+  stroke-width: 15px;
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.connection.selected line {
   stroke: @selected-color;
   opacity: 1;
 }
 
-.connection.dim {
+.connection.selected text {
+  fill: @selected-color;
+  text-shadow: 0 2px 0 white, 2px 0 0 white, 0 -2px 0 white, -2px 0 0 white;
+}
+
+.connection.dim line {
   opacity: 0.1;
+}
+
+.connection.dim text {
+  opacity: 0.3;
 }
 
 line {
@@ -76,7 +106,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: @white;
+  background: #efefef;
   height: 100%;
 }
 
@@ -148,7 +178,7 @@ svg {
 }
 
 .detail-controls{
-  padding-bottom: 10px
+  padding-bottom: 10px;
 }
 
 .data-tooltip-container {
@@ -159,8 +189,9 @@ svg {
 
 .data-tooltip {
   background: @data-tooltip-color;
-  color: @white;
-  border: 1px solid @black;
+  color: white;
+  font-size: 12px;
+  border: 1px solid white;
   max-width: 300px;
 }
 
