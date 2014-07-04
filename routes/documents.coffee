@@ -17,8 +17,7 @@ exports.create = (req, resp) ->
 exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    if err
-      resp.send 500, 'Something broke!'
+    if err then resp.send 500, 'Something broke!'
     else
       parsed = node._data.data
       resp.send utils.parseNodeToClient parsed
