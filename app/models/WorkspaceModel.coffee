@@ -21,7 +21,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           red:'#F56545'
           yellow:'#FFBB22'
           green: '#BBE535'
-          cyan: '#77DDBB'
+          # cyan: '#77DDBB'
           blue: '#66CCDD'
 
       initialize: ->
