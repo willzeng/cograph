@@ -3,7 +3,7 @@
 @node-color: white;
 @connection-color: black;
 @stroke-color: @gray;
-@selected-color: #3498db;
+@selected-color: #74DDFC;
 @selected-nodetext-color: white;
 @fixed-color: #555;
 @text-color: #333;
@@ -24,8 +24,9 @@
   opacity: 0.3;
 }
 
-.node.selected text {
-  fill: @selected-color;
+.node.selected rect {
+  stroke: @selected-color;
+  stroke-width: 3px;
 }
 
 .node.fixed line{
@@ -50,8 +51,8 @@
   font: 15px sans-serif;
   pointer-events: none;
   text-anchor: middle;
-  fill: lighten(@text-color,20%);
-  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  fill: #eee;
+  text-shadow: 0 1px 0 #333, 1px 0 0 #333, 0 -1px 0 #333, -1px 0 0 #333;
 }
 
 .connection line {
@@ -69,7 +70,7 @@
 
 .connection.selected text {
   fill: @selected-color;
-  text-shadow: 0 2px 0 #fff, 2px 0 0 #fff, 0 -2px 0 #fff, -2px 0 0 #fff;
+  text-shadow: 0 2px 0 #333, 2px 0 0 #333, 0 -2px 0 #333, -2px 0 0 #333;
 }
 
 .connection.dim line {
@@ -97,7 +98,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: #efefef;
+  background: #204352;
   height: 100%;
 }
 
