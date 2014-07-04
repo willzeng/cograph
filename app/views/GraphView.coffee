@@ -100,6 +100,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .on "mouseout", (conn) =>
             @trigger "connection:mouseout", conn
         connectionEnter.append("line")
+          .attr('class', 'select-zone')
+        connectionEnter.append("line")
           .attr("marker-end", "url(#arrowhead)")
           .style("stroke", (d) => @getColor d)
         connectionEnter.append("text")
@@ -129,6 +131,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
+        nodeEnter.append("line")
+          .attr("class","select-zone")
         nodeEnter.append("line")
         nodeEnter.append("rect").style("fill", (d) => @getColor d)
         nodeEnter.append("text")
@@ -186,7 +190,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.exit().remove()
 
         tick = =>
-          connection.select("line")
+          connection.selectAll("line")
             .attr("x1", (d) => @model.getSourceOf(d).x)
             .attr("y1", (d) => @model.getSourceOf(d).y)
             .attr("x2", (d) => @model.getTargetOf(d).x)
