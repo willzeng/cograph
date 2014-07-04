@@ -37,8 +37,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
       setAndFetchDoc: ->
         $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then =>
           @workspaceModel.getTagNames (tags) =>
-            @workspaceModel.filterModel.set 'initial_tags', tags
-            @workspaceModel.filterModel.set 'node_tags', tags
+            @workspaceModel.filterModel.addInitialTags tags
+            @workspaceModel.filterModel.addNodeTags tags
 
           #Prepopulate the WorkspaceModel with all the nodes in the database
           $.when(gm.nodes.fetch()).then ->
