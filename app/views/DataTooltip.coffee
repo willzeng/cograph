@@ -40,11 +40,12 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
               .css('top',event.clientY-20)
 
       showToolTip: (nodeConnection) ->
-        @isHoveringANode = setTimeout( () ->
-          $(".data-tooltip-container")
-            .html(_.template(dataTooltipTemplate, nodeConnection))
-            .fadeIn()
-        , 600)
+        if(nodeConnection.get('tags').length != 0 || nodeConnection.get('description').length != 0)
+          @isHoveringANode = setTimeout( () ->
+            $(".data-tooltip-container")
+              .html(_.template(dataTooltipTemplate, nodeConnection))
+              .fadeIn()
+          , 600)
 
       emptyTooltip: ->
         $(".data-tooltip-container").fadeOut(200).empty()

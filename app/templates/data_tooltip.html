@@ -1,13 +1,11 @@
 <div class="panel panel-info data-tooltip">
   <div class="panel-body">
-    <b><%= attributes.name %></b>
     <span>
-      <% if(attributes.description != null){ %>
-        </br>
+      <% if(attributes.description != null && attributes.description != ""){ %>
         <i><%= attributes.description %></i>
+        </br>
       <% } %>
       <% if(_.some(attributes.tags)){ %>
-        </br>
         <i class="fa fa-tags"></i>
         <span><%= attributes.tags.join(", ") %></span>
       <% } %>
