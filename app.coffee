@@ -19,4 +19,7 @@ app.use express.static(path.join(__dirname, '/app'))
 
 app.use '/', routes
 
+sockets = require './routes/sockets'
+sockets.socketServer(app)
+
 module.exports = app

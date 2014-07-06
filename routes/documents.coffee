@@ -11,20 +11,20 @@ exports.create = (data, callback, socket) ->
   console.log 'create document query requested'
   newDocument = data
   serverDocument.create newDocument, (savedDocument) ->
-    console.log "emitting", savedDocument
     socket.emit('documents:create', savedDocument)
     # socket.broadcast.emit('documents:create', json)
     callback(null, savedDocument)
 
 # READ
-exports.read = (req, resp) ->
-  id = req.params.id
+exports.read = (data, callback, socket) ->
+  id = data._id
   graphDb.getNodeById id, (err, node) ->
     if err
-      resp.send 500, 'Something broke!'
+      console.log 'Something broke!'
     else
-      parsed = node._data.data
-      resp.send utils.parseNodeToClient parsed
+      parsed = utils.parseNodeToClient node._data.data
+      socket.emit 'documents:read', parsed
+      callback null, parsed
 
 exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
@@ -37,11 +37,12 @@ exports.getAll = (req, resp) ->
     resp.send nodes
 
 # UPDATE
-exports.update = (req, resp) ->
-  id = req.params.id
-  props = req.body
+exports.update = (data, callback, socket) ->
+  id = data.id
+  props = data
   serverDocument.update id, props, (savedDocument) ->
-    resp.send savedDocument
+    socket.emit 'documents:update', savedDocument
+    callback null, savedDocument
 
 # DELETE
 exports.destroy = (req, resp) ->

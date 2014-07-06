@@ -5,6 +5,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
+      socket: new DocumentModel().get('socket')
 
     class MenuView extends Backbone.View
       el: $ '#menu-bar'
