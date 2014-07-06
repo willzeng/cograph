@@ -1,10 +1,14 @@
     <span>
       <% if(attributes.description != null && attributes.description != ""){ %>
+        <span class="pad">
         <i><%= attributes.description %></i>
         </br>
+        </span>
       <% } %>
       <% if(_.some(attributes.tags)){ %>
+        <span class="pad">
         <i class="fa fa-tags"></i>
-        <span><%= attributes.tags.join(", ") %></span>
+        <%= attributes.tags.join(", ") %>
+        </span>
       <% } %>
     </span>
