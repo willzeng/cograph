@@ -1,17 +1,16 @@
-define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
-  ($, _, Backbone, dataTooltipTemplate) ->
+define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.html'],
+  ($, d3, _, Backbone, dataTooltipTemplate) ->
     class DataTooltip extends Backbone.View
       el: $ '#graph'
 
       events:
         'mousemove svg' : 'trackCursor'
+        'mouseover .node' : 'showToolTip'
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
 
         @graphView = @attributes.graphView
-        @graphView.on 'node:mouseover connection:mouseover', (nc) =>
-          @showToolTip nc
 
         @graphView.on 'node:mouseover', (node) =>
           @highlight node
@@ -36,16 +35,14 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/data_tooltip.html'],
 
       trackCursor: (event) ->
         $(".data-tooltip-container")
-              .css('left',event.clientX)
-              .css('top',event.clientY-20)
+          .css('left',event.clientX)
+          .css('top',event.clientY-20)
 
-      showToolTip: (nodeConnection) ->
-        if(nodeConnection.get('tags').length != 0 || nodeConnection.get('description').length != 0)
-          @isHoveringANode = setTimeout( () ->
-            $(".data-tooltip-container")
-              .html(_.template(dataTooltipTemplate, nodeConnection))
-              .fadeIn()
-          , 600)
+      showToolTip: (event) ->
+        console.log $(event.currentTarget).find('.node-info-body')
+        @isHoveringANode = setTimeout( () =>
+          $(event.currentTarget).find('.node-info-body').addClass('shown')
+        , 600)
 
-      emptyTooltip: ->
-        $(".data-tooltip-container").fadeOut(200).empty()
+      emptyTooltip: () ->
+        $('.node-info-body').removeClass('shown')

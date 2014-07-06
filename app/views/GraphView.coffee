@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html'],
+  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -137,7 +137,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         nodeEnter.append("rect").style("fill", (d) => @getColor d)
         nodeEnter.append("text")
           .attr("dy", "5px")
-
+        nodeEnter.append("foreignObject")
+          .attr('y', '12')
+          .attr('height', '200')
+          .attr('width', '120')
+          .attr('x', '-21')
+          .attr('class', 'node-info')
+          .append('xhtml:body')
+            .attr('class', 'node-info-body')
 
         nodeEnter
           .on "dblclick", (d) ->
@@ -165,6 +172,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .text((d) -> d.get('name'))
         node.select('rect')
           .style("fill", (d) => @getColor d)
+        node.select('.node-info-body')
+          .html((d) -> _.template(popover, d))
 
         # construct the node boxes
         offsetV = 4
