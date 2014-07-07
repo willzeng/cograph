@@ -6,6 +6,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
       events:
         'mousemove svg' : 'trackCursor'
         'mouseover .node' : 'showToolTip'
+        'mouseover .connection' : 'showToolTip'
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
@@ -41,7 +42,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
       showToolTip: (event) ->
         @isHoveringANode = setTimeout( () =>
           $(event.currentTarget).find('.node-info-body').addClass('shown')
+          $(event.currentTarget).find('.connection-info-body').addClass('shown')
         , 600)
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
+        $('.connection-info-body').removeClass('shown')
