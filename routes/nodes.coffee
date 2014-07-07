@@ -13,9 +13,9 @@ exports.create = (data, callback, socket) ->
   delete data["tags"]
   props = data
   serverNode.create tags, props, docLabel, (savedNode) ->
-    socket.emit('node:create', savedNode)
-    # socket.broadcast.emit('documents:create', savedNode)
-    callback(null, savedNode)
+    socket.emit 'node:create', savedNode
+    socket.broadcast.emit 'nodes:create', savedNode
+    callback null, savedNode
 
 # READ
 exports.read = (data, callback, socket) ->

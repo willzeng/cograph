@@ -17,6 +17,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       model: NodeModel
       url: -> "nodes"
 
+      initialize: ->
+        @socket.on "nodes:create", (nodeData) =>
+          @add new NodeModel nodeData
+
     class WorkspaceModel extends Backbone.Model
 
       selectedColor: '#3498db'
