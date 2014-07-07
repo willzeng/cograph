@@ -11,7 +11,7 @@ exports.create = (data, callback, socket) ->
   console.log 'create document query requested'
   newDocument = data
   serverDocument.create newDocument, (savedDocument) ->
-    socket.emit('documents:create', savedDocument)
+    socket.emit('document:create', savedDocument)
     # socket.broadcast.emit('documents:create', json)
     callback(null, savedDocument)
 
@@ -23,7 +23,7 @@ exports.read = (data, callback, socket) ->
       console.log 'Something broke!'
     else
       parsed = utils.parseNodeToClient node._data.data
-      socket.emit 'documents:read', parsed
+      socket.emit 'document:read', parsed
       callback null, parsed
 
 exports.readCollection = (data, callback, socket) ->
@@ -52,7 +52,7 @@ exports.update = (data, callback, socket) ->
   id = data._id
   props = data
   serverDocument.update id, props, (savedDocument) ->
-    socket.emit 'documents:update', savedDocument
+    socket.emit 'document:update', savedDocument
     callback null, savedDocument
 
 # DELETE
@@ -61,5 +61,5 @@ exports.destroy = (data, callback, socket) ->
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
-      socket.emit 'documents:delete', true
+      socket.emit 'document:delete', true
       callback null, node

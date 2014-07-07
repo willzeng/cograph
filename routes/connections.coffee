@@ -13,7 +13,7 @@ exports.create = (data, callback, socket) ->
         newConnection._id = conn.id
         conn.data._id = conn.id
         conn.save () -> console.log "saved connection with id", conn.id
-        socket.emit 'connections:create', newConnection
+        socket.emit 'connection:create', newConnection
         callback null, newConnection
 
 # READ
@@ -21,7 +21,7 @@ exports.read = (data, callback, socket) ->
   console.log "da best reading", data
   id = data._id
   graphDb.getRelationshipById id, (err, conn) ->
-    socket.emit 'connections:read', conn
+    socket.emit 'connection:read', conn
     callback null, conn
 
 exports.readCollection = (data, callback, socket) ->
@@ -41,7 +41,7 @@ exports.update = (data, callback, socket) ->
     conn.data = newData
     conn.save (err, savedConn) ->
       parsed = savedConn._data.data
-      socket.emit 'connections:update', parsed
+      socket.emit 'connection:update', parsed
       callback null, parsed
 
 # DELETE
