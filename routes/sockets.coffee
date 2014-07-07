@@ -1,5 +1,6 @@
 documents = require './documents'
 nodes = require './nodes'
+connections = require './connections'
 
 exports.socketServer = (app, server) ->
 
@@ -17,10 +18,26 @@ exports.socketServer = (app, server) ->
     socket.on 'documents:read',   (data, callback) -> documents.readCollection data, callback, socket
 
     # Node
-    socket.on 'node:create', (data, callback) -> nodes.create JSON.parse(data), callback, socket
+    socket.on 'node:create', (data, callback) -> nodes.create data, callback, socket
     socket.on 'node:read',   (data, callback) -> nodes.read data, callback, socket
-    socket.on 'node:update', (data, callback) -> nodes.update JSON.parse(data), callback, socket
-    socket.on 'node:delete', (data, callback) -> nodes.destroy JSON.parse(data), callback, socket
+    socket.on 'node:update', (data, callback) -> nodes.update data, callback, socket
+    socket.on 'node:delete', (data, callback) -> nodes.destroy data, callback, socket
 
     # Nodes
     socket.on 'nodes:read',   (data, callback) -> nodes.readCollection data, callback, socket
+
+    # # Connection
+    # socket.on 'connection:create', (data, callback) -> connections.create JSON.parse(data), callback, socket
+    # socket.on 'connection:read',   (data, callback) -> connections.read data, callback, socket
+    # socket.on 'connection:update', (data, callback) -> connections.update JSON.parse(data), callback, socket
+    # socket.on 'connection:delete', (data, callback) -> connections.destroy JSON.parse(data), callback, socket
+
+    # # Connections
+    # socket.on 'nodes:read',   (data, callback) -> nodes.readCollection data, callback, socket
+
+    # # Connections
+    # router.post     '/documents/:docId/connections',       connections.create
+    # router.get      '/documents/:docId/connections/:id',   connections.read
+    # router.get      '/documents/:docId/connections',       connections.getAll
+    # router.put      '/documents/:docId/connections/:id',   connections.update
+    # router.delete   '/documents/:docId/connections/:id',   connections.destroy

@@ -1,20 +1,21 @@
 define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
   'cs!models/FilterModel', 'cs!models/DocumentModel', 'socket-io'],
   ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel, io) ->
-    class ConnectionCollection extends Backbone.Collection
-      model: ConnectionModel
-      url: -> "/documents/#{@_docId}/connections"
+    class ObjectCollection extends Backbone.Collection
       _docId: 0
-
-    class NodeCollection extends Backbone.Collection
-      model: NodeModel
-      url: -> "nodes"
-      _docId:  0
       socket: io.connect("")
 
       sync: (method, model, options) ->
         if method is "read" then options = _.extend options, {_docId:@_docId}
         Backbone.sync method, model, options
+
+    class ConnectionCollection extends ObjectCollection
+      model: ConnectionModel
+      url: -> "connections"
+
+    class NodeCollection extends ObjectCollection
+      model: NodeModel
+      url: -> "nodes"
 
     class WorkspaceModel extends Backbone.Model
 
