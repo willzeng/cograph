@@ -39,7 +39,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then ->
           #Prepopulate the WorkspaceModel with all the nodes in the database
           $.when(gm.nodes.fetch()).then ->
-            gm.connections.fetch()
+            #gm.connections.fetch()
+            console.log "got nodes"
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

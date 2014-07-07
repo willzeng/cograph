@@ -29,24 +29,27 @@ exports.read = (data, callback, socket) ->
         parsed.tags = labels
         parsed = utils.parseNodeToClient parsed
         console.log "emit", parsed
-        socket.emit('nodes:read', parsed)
+        socket.emit('node:read', parsed)
         # socket.broadcast.emit('documents:create', parsed)
         callback(null, parsed)
 
 exports.readCollection = (data, callback, socket) ->
   console.log "read coll of nodes req", data
-  # docLabel = "_doc_#{req.params.docId || 0}"
-  # # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
-  # cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
-  # params = {}
-  # graphDb.query cypherQuery, params, (err, results) ->
-  #   if err then throw err
-  #   parsedNodes = []
-  #   for node in results
-  #     nodeData = node.n._data.data
-  #     nodeData.tags = node['labels(n)']
-  #     parsedNodes.push utils.parseNodeToClient nodeData
-  #   resp.send parsedNodes
+  docLabel = "_doc_#{data._docId || 0}"
+  # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
+  cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
+  params = {}
+  graphDb.query cypherQuery, params, (err, results) ->
+    if err then throw err
+    parsedNodes = []
+    for node in results
+      nodeData = node.n._data.data
+      nodeData.tags = node['labels(n)']
+      parsedNodes.push utils.parseNodeToClient nodeData
+    console.log "emit", parsedNodes
+    socket.emit('nodes:read', parsedNodes)
+    # socket.broadcast.emit('documents:create', parsedNodes)
+    callback(null, parsedNodes)
 
 exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
@@ -91,7 +94,7 @@ exports.update = (data, callback, socket) ->
   props = data
   serverNode.update id, tags, props, (newNode) ->
     console.log "emit:update", newNode
-    socket.emit('nodes:update', newNode)
+    socket.emit('node:update', newNode)
     # socket.broadcast.emit('documents:create', parsed)
     callback(null, newNode)
 
@@ -100,7 +103,7 @@ exports.destroy = (data, callback, socket) ->
   id = data._id
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
-      socket.emit('nodes:delete', true)
+      socket.emit('node:delete', true)
       # socket.broadcast.emit('documents:create', parsed)
       callback(null, node)
 

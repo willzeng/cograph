@@ -45,7 +45,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @trigger "document:change"
         @connections.reset()
         $.when(@nodes.fetch()).then =>
-          @connections.fetch()
+          #@connections.fetch()
+          console.log "would get conns"
 
       getDocument: ->
         @documentModel
