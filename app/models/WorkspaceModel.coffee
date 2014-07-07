@@ -21,6 +21,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket.on "nodes:create", (nodeData) =>
           @add new NodeModel nodeData
 
+        @socket.on "nodes:delete", (nodeData) =>
+          @remove new NodeModel nodeData
+
     class WorkspaceModel extends Backbone.Model
 
       selectedColor: '#3498db'

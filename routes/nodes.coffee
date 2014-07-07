@@ -72,18 +72,19 @@ exports.update = (data, callback, socket) ->
   delete data.tags
   props = data
   serverNode.update id, tags, props, (newNode) ->
-    socket.emit('node:update', newNode)
-    # socket.broadcast.emit('documents:create', parsed)
-    callback(null, newNode)
+    socket.emit 'node:update', newNode
+    socket.broadcast.emit 'node:update', newNode
+    callback null, newNode
 
 # DELETE
 exports.destroy = (data, callback, socket) ->
   id = data._id
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
-      socket.emit('node:delete', true)
-      # socket.broadcast.emit('documents:create', parsed)
-      callback(null, node)
+      parsed = node._data.data
+      socket.emit 'nodes:delete', true
+      socket.broadcast.emit 'nodes:delete', parsed
+      callback null, parsed
 
 # OTHER
 
