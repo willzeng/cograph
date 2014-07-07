@@ -46,10 +46,9 @@ exports.readCollection = (data, callback, socket) ->
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
       parsedNodes.push utils.parseNodeToClient nodeData
-    console.log "emit", parsedNodes
-    socket.emit('nodes:read', parsedNodes)
+    socket.emit 'nodes:read', parsedNodes
     # socket.broadcast.emit('documents:create', parsedNodes)
-    callback(null, parsedNodes)
+    callback null, parsedNodes
 
 exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"

@@ -13,10 +13,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       socket: io.connect("")
 
       sync: (method, model, options) ->
-        if method is "read"
-          Backbone.sync method, model, {attrs:{_docId:@_docId}}
-        else
-          Backbone.sync method, model, options
+        if method is "read" then options = _.extend options, {_docId:@_docId}
+        Backbone.sync method, model, options
 
     class WorkspaceModel extends Backbone.Model
 
