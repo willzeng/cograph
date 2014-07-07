@@ -26,6 +26,17 @@ exports.read = (data, callback, socket) ->
       socket.emit 'documents:read', parsed
       callback null, parsed
 
+exports.readCollection = (data, callback, socket) ->
+  console.log "get the collection"
+  docLabel = '_document'
+  cypherQuery = "match (n:#{docLabel}) return n;"
+  params = {}
+  graphDb.query cypherQuery, params, (err, results) ->
+    if err then throw err
+    nodes = (utils.parseCypherResult(node, 'n') for node in results)
+    socket.emit 'documents:read', nodes
+    callback null, nodes
+
 exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
   docLabel = '_document'
