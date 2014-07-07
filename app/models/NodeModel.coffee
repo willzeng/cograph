@@ -14,6 +14,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel'], ($, _, Bac
       tags:
         type: 'List'
         itemType: 'Text'
+        validators: [type: 'regexp', regexp: /^\w+$/]
 
     validate: ->
       if !@get('name')

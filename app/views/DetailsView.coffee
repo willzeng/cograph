@@ -49,7 +49,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @nodeConnectionForm = new Backbone.Form(
           model: nodeConnection
           template: _.template(editFormTemplate)
-        ).on('name:blur url:blur', (form, editor) ->
+        ).on('name:blur url:blur tags:blur', (form, editor) ->
           form.fields[editor.key].validate()
         ).render()
 

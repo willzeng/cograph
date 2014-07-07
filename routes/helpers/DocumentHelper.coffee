@@ -6,9 +6,9 @@ class DocumentHelper
 
   create: (newDocument, callback) ->
     docLabel = "_document"
-    props = utils.dictionaryToCypherProperties newDocument
-    cypherQuery = "CREATE (n:#{docLabel} {#{props}}) RETURN n;"
-    @graphDb.query cypherQuery, {}, (err, results) =>
+    params = {props: newDocument}
+    cypherQuery = "CREATE (n:#{docLabel} { props }) RETURN n;"
+    @graphDb.query cypherQuery, params, (err, results) =>
       if (err) then throw err
       doc = utils.parseCypherResult(results[0], 'n')
       utils.setProperty @graphDb, doc.id, '_id', doc.id, (savedDoc) =>
@@ -16,10 +16,10 @@ class DocumentHelper
 
   # Update a Document with new tags and properties
   update: (id, props, callback) ->
-    props = utils.dictionaryToUpdateCypherProperties props
-    cypherQuery = "START n=node(#{id}) SET #{props} RETURN n;"
+    params = {props: props, id: id}
+    cypherQuery = "START n=node({ id }) SET n = { props } RETURN n;"
 
-    @graphDb.query cypherQuery, {}, (err, results) =>
+    @graphDb.query cypherQuery, params, (err, results) =>
       if err then throw err
       node = utils.parseCypherResult(results[0], 'n')
       callback utils.parseNodeToClient node
