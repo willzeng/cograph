@@ -1,6 +1,9 @@
-define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
+define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'],
+(Backbone, ObjectModel, iobind, iosync, io) ->
   class ConnectionModel extends ObjectModel
-    urlRoot: -> "/documents/#{@get('_docId')}/connections"
+    urlRoot: -> "connection"
+    noIoBind: false
+    socket: io.connect('')
 
     defaults:
       name: ''

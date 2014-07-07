@@ -26,14 +26,14 @@ exports.socketServer = (app, server) ->
     # Nodes
     socket.on 'nodes:read',   (data, callback) -> nodes.readCollection data, callback, socket
 
-    # # Connection
-    # socket.on 'connection:create', (data, callback) -> connections.create JSON.parse(data), callback, socket
-    # socket.on 'connection:read',   (data, callback) -> connections.read data, callback, socket
-    # socket.on 'connection:update', (data, callback) -> connections.update JSON.parse(data), callback, socket
-    # socket.on 'connection:delete', (data, callback) -> connections.destroy JSON.parse(data), callback, socket
+    # Connection
+    socket.on 'connection:create', (data, callback) -> connections.create data, callback, socket
+    socket.on 'connection:read',   (data, callback) -> connections.read data, callback, socket
+    socket.on 'connection:update', (data, callback) -> connections.update data, callback, socket
+    socket.on 'connection:delete', (data, callback) -> connections.destroy data, callback, socket
 
-    # # Connections
-    # socket.on 'nodes:read',   (data, callback) -> nodes.readCollection data, callback, socket
+    # Connections
+    socket.on 'connections:read',   (data, callback) -> connection.readCollection data, callback, socket
 
     # # Connections
     # router.post     '/documents/:docId/connections',       connections.create
