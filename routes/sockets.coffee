@@ -33,11 +33,4 @@ exports.socketServer = (app, server) ->
     socket.on 'connection:delete', (data, callback) -> connections.destroy data, callback, socket
 
     # Connections
-    socket.on 'connections:read',   (data, callback) -> connection.readCollection data, callback, socket
-
-    # # Connections
-    # router.post     '/documents/:docId/connections',       connections.create
-    # router.get      '/documents/:docId/connections/:id',   connections.read
-    # router.get      '/documents/:docId/connections',       connections.getAll
-    # router.put      '/documents/:docId/connections/:id',   connections.update
-    # router.delete   '/documents/:docId/connections/:id',   connections.destroy
+    socket.on 'connections:read',   (data, callback) -> connections.readCollection data, callback, socket

@@ -19,17 +19,15 @@ exports.create = (data, callback, socket) ->
 
 # READ
 exports.read = (data, callback, socket) ->
-  if data.length > 0
-    data = JSON.parse(data)
-    id = data._id
-    graphDb.getNodeById id, (err, node) ->
-      parsed = node._data.data
-      utils.getLabels graphDb, id, (labels) ->
-        parsed.tags = labels
-        parsed = utils.parseNodeToClient parsed
-        socket.emit('node:read', parsed)
-        # socket.broadcast.emit('documents:create', parsed)
-        callback(null, parsed)
+  id = data._id
+  graphDb.getNodeById id, (err, node) ->
+    parsed = node._data.data
+    utils.getLabels graphDb, id, (labels) ->
+      parsed.tags = labels
+      parsed = utils.parseNodeToClient parsed
+      socket.emit('node:read', parsed)
+      # socket.broadcast.emit('documents:create', parsed)
+      callback(null, parsed)
 
 exports.readCollection = (data, callback, socket) ->
   console.log "readCollection of nodes"

@@ -17,10 +17,21 @@ exports.create = (data, callback, socket) ->
         callback null, newConnection
 
 # READ
-exports.read = (req, resp) ->
-  id = req.params.id
+exports.read = (data, callback, socket) ->
+  console.log "da best reading", data
+  id = data._id
   graphDb.getRelationshipById id, (err, conn) ->
-    resp.send conn
+    socket.emit 'connections:read', conn
+    callback null, conn
+
+exports.readCollection = (data, callback, socket) ->
+  console.log "readCollection of connections"
+  docLabel = "_doc_#{data._docId || 0}"
+  cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
+  graphDb.query cypherQuery, {}, (err, results) ->
+    connections = (utils.parseCypherResult(connection, 'r') for connection in results)
+    socket.emit 'connections:read', connections
+    callback null, connections
 
 exports.getAll = (req, resp) ->
   console.log "get_all_connections requested"
@@ -31,19 +42,22 @@ exports.getAll = (req, resp) ->
     resp.send connections
 
 # UPDATE
-exports.update = (req, resp) ->
-  id = req.params.id
-  newData = req.body
+exports.update = (data, callback, socket) ->
+  id = data._id
+  newData = data
   graphDb.getRelationshipById id, (err, conn) ->
     conn.data = newData
     conn.save (err, savedConn) ->
       parsed = savedConn._data.data
-      console.log 'Conn updated in database with id:', parsed._id
-      resp.send parsed
+      socket.emit 'connections:update', parsed
+      callback null, parsed
 
 # DELETE
-exports.destroy = (req, resp) ->
+exports.destroy = (data, callback, socket) ->
   console.log "delete_connection Query Requested"
-  id = req.params.id
+  id = data._id
   graphDb.getRelationshipById id, (err, conn) ->
-    conn.delete () -> true
+    conn.delete (deleted) ->
+      socket.emit 'connection:delete', true
+      # socket.broadcast.emit('documents:create', parsed)
+      callback null, deleted
