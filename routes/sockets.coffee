@@ -21,3 +21,6 @@ exports.socketServer = (app, server) ->
     socket.on 'node:read',   (data, callback) -> nodes.read data, callback, socket
     socket.on 'node:update', (data, callback) -> nodes.update JSON.parse(data), callback, socket
     socket.on 'node:delete', (data, callback) -> nodes.destroy JSON.parse(data), callback, socket
+
+    # Nodes
+    socket.on 'nodes:read',   (data, callback) -> nodes.readCollection data, callback, socket

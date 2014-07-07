@@ -33,6 +33,21 @@ exports.read = (data, callback, socket) ->
         # socket.broadcast.emit('documents:create', parsed)
         callback(null, parsed)
 
+exports.readCollection = (data, callback, socket) ->
+  console.log "read coll of nodes req", data
+  # docLabel = "_doc_#{req.params.docId || 0}"
+  # # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
+  # cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
+  # params = {}
+  # graphDb.query cypherQuery, params, (err, results) ->
+  #   if err then throw err
+  #   parsedNodes = []
+  #   for node in results
+  #     nodeData = node.n._data.data
+  #     nodeData.tags = node['labels(n)']
+  #     parsedNodes.push utils.parseNodeToClient nodeData
+  #   resp.send parsedNodes
+
 exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
   docLabel = "_doc_#{req.params.docId || 0}"

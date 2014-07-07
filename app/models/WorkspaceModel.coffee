@@ -12,6 +12,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       _docId:  0
       socket: io.connect("")
 
+      sync: (method, model, options) ->
+        if method is "read"
+          Backbone.sync method, model, {attrs:{_docId:@_docId}}
+        else
+          Backbone.sync method, model, options
+
     class WorkspaceModel extends Backbone.Model
 
       selectedColor: '#3498db'
@@ -25,7 +31,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           blue: '#66CCDD'
 
       initialize: ->
-        console.log "init"
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
 

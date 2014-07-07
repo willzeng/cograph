@@ -27,7 +27,7 @@ exports.read = (data, callback, socket) ->
       callback null, parsed
 
 exports.readCollection = (data, callback, socket) ->
-  console.log "get the collection"
+  console.log "get the document collection"
   docLabel = '_document'
   cypherQuery = "match (n:#{docLabel}) return n;"
   params = {}
