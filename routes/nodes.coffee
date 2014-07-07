@@ -7,22 +7,31 @@ NodeHelper = require __dirname + '/helpers/NodeHelper'
 serverNode = new NodeHelper(graphDb)
 
 # CREATE
-exports.create = (req, resp) ->
-  docLabel = "_doc_#{req.params.docId || 0}"
-  tags = req.body.tags || []
-  delete req.body.tags
-  props = req.body
+exports.create = (data, callback, socket) ->
+  docLabel = "_doc_#{data._docId || 0}"
+  tags = data["tags"] || []
+  delete data["tags"]
+  props = data
   serverNode.create tags, props, docLabel, (savedNode) ->
-    resp.send savedNode
+    socket.emit('nodes:create', savedNode)
+    # socket.broadcast.emit('documents:create', savedNode)
+    callback(null, savedNode)
 
 # READ
-exports.read = (req, resp) ->
-  id = req.params.id
-  graphDb.getNodeById id, (err, node) ->
-    parsed = node._data.data
-    utils.getLabels graphDb, id, (labels) ->
-      parsed.tags = labels
-      resp.send utils.parseNodeToClient parsed
+exports.read = (data, callback, socket) ->
+  console.log "da data be", data
+  if data.length > 0
+    data = JSON.parse(data)
+    id = data._id
+    graphDb.getNodeById id, (err, node) ->
+      parsed = node._data.data
+      utils.getLabels graphDb, id, (labels) ->
+        parsed.tags = labels
+        parsed = utils.parseNodeToClient parsed
+        console.log "emit", parsed
+        socket.emit('nodes:read', parsed)
+        # socket.broadcast.emit('documents:create', parsed)
+        callback(null, parsed)
 
 exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
@@ -59,20 +68,26 @@ exports.getSpokes = (req, resp) ->
     resp.send connections
 
 # UPDATE
-exports.update = (req, resp) ->
-  id = req.params.id
-  newData = req.body
-  tags = req.body.tags || ""
-  delete req.body.tags
-  props = req.body
+exports.update = (data, callback, socket) ->
+  console.log "data for de updatin be", data
+  id = data._id
+  tags = data.tags || ""
+  delete data.tags
+  props = data
   serverNode.update id, tags, props, (newNode) ->
-    resp.send newNode
+    console.log "emit:update", newNode
+    socket.emit('nodes:update', newNode)
+    # socket.broadcast.emit('documents:create', parsed)
+    callback(null, newNode)
 
 # DELETE
-exports.destroy = (req, resp) ->
-  id = req.params.id
+exports.destroy = (data, callback, socket) ->
+  id = data._id
   graphDb.getNodeById id, (err, node) ->
-    node.delete () -> resp.send true
+    node.delete () ->
+      socket.emit('nodes:delete', true)
+      # socket.broadcast.emit('documents:create', parsed)
+      callback(null, node)
 
 # OTHER
 

@@ -36,10 +36,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
             @setAndFetchDoc()
 
       setAndFetchDoc: ->
-        @workspaceModel.setDocument @workspaceModel.documentModel
-        #Prepopulate the WorkspaceModel with all the nodes in the database
-        $.when(gm.nodes.fetch()).then ->
-          gm.connections.fetch()
+        $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then ->
+          #Prepopulate the WorkspaceModel with all the nodes in the database
+          $.when(gm.nodes.fetch()).then ->
+            gm.connections.fetch()
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

@@ -1,6 +1,6 @@
 define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
-  'cs!models/FilterModel', 'cs!models/DocumentModel'],
-  ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
+  'cs!models/FilterModel', 'cs!models/DocumentModel', 'socket-io'],
+  ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel, io) ->
     class ConnectionCollection extends Backbone.Collection
       model: ConnectionModel
       url: -> "/documents/#{@_docId}/connections"
@@ -8,8 +8,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class NodeCollection extends Backbone.Collection
       model: NodeModel
-      url: -> "/documents/#{@_docId}/nodes"
+      url: -> "nodes"
       _docId:  0
+      socket: io.connect("")
 
     class WorkspaceModel extends Backbone.Model
 
@@ -24,6 +25,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           blue: '#66CCDD'
 
       initialize: ->
+        console.log "init"
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
 

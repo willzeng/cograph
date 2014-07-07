@@ -20,6 +20,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       options = options || {}
       options.data = JSON.stringify(@serialize())
       options.contentType = 'application/json'
+      console.log "sync", method, "with ", model.attributes, "and options", options
       Backbone.sync.apply(this, [method, model, options])
 
     serialize: ->
