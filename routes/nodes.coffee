@@ -89,7 +89,6 @@ exports.update = (data, callback, socket) ->
   delete data.tags
   props = data
   serverNode.update id, tags, props, (newNode) ->
-    console.log "emit:update", newNode
     socket.emit('node:update', newNode)
     # socket.broadcast.emit('documents:create', parsed)
     callback(null, newNode)
