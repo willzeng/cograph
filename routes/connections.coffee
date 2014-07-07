@@ -12,7 +12,7 @@ exports.create = (data, callback, socket) ->
       source.createRelationshipTo target, 'connection', newConnection, (err, conn) ->
         newConnection._id = conn.id
         conn.data._id = conn.id
-        conn.save()
+        conn.save () -> console.log "saved connection with id", conn.id
         socket.emit 'connections:create', newConnection
         callback null, newConnection
 
@@ -32,14 +32,6 @@ exports.readCollection = (data, callback, socket) ->
     connections = (utils.parseCypherResult(connection, 'r') for connection in results)
     socket.emit 'connections:read', connections
     callback null, connections
-
-exports.getAll = (req, resp) ->
-  console.log "get_all_connections requested"
-  docLabel = "_doc_#{req.params.docId || 0}"
-  cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
-  graphDb.query cypherQuery, {}, (err, results) ->
-    connections = (utils.parseCypherResult(connection, 'r') for connection in results)
-    resp.send connections
 
 # UPDATE
 exports.update = (data, callback, socket) ->
