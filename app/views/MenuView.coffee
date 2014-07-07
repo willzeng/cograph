@@ -1,11 +1,11 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
-  'cs!models/DocumentModel', 'cs!models/WorkspaceModel'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
+  'cs!models/DocumentModel', 'socket-io'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel, io) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
-      socket: new DocumentModel().get('socket')
+      socket: io.connect('')
 
     class MenuView extends Backbone.View
       el: $ '#menu-bar'
