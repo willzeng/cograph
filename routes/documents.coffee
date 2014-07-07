@@ -43,21 +43,23 @@ exports.getAll = (req, resp) ->
   cypherQuery = "match (n:#{docLabel}) return n;"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
-    if err then console.log err
+    if err then throw err
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
 # UPDATE
 exports.update = (data, callback, socket) ->
-  id = data.id
+  id = data._id
   props = data
   serverDocument.update id, props, (savedDocument) ->
     socket.emit 'documents:update', savedDocument
     callback null, savedDocument
 
 # DELETE
-exports.destroy = (req, resp) ->
-  id = req.params.id
+exports.destroy = (data, callback, socket) ->
+  id = data._id
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
-    node.delete () -> true
+    node.delete () ->
+      socket.emit 'documents:delete', true
+      callback null, node
