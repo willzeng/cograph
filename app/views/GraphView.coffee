@@ -102,6 +102,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
+          .attr('class', 'visible-line')
           .attr("marker-end", "url(#arrowhead)")
           .style("stroke", (d) => @getColor d)
         connectionEnter.append("text")
@@ -112,7 +113,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
           .each (d,i) ->
-            line = d3.select(this).select("line")
+            line = d3.select(this).select("line.visible-line")
             line.style("stroke", (d) -> that.getColor d)
             if d.get('selected')
               line.attr("marker-end", "url(#arrowhead-selected)")

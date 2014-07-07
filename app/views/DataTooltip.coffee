@@ -39,7 +39,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
           .css('top',event.clientY-20)
 
       showToolTip: (event) ->
-        console.log $(event.currentTarget).find('.node-info-body')
         @isHoveringANode = setTimeout( () =>
           $(event.currentTarget).find('.node-info-body').addClass('shown')
         , 600)
