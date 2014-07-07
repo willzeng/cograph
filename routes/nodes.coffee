@@ -19,7 +19,6 @@ exports.create = (data, callback, socket) ->
 
 # READ
 exports.read = (data, callback, socket) ->
-  console.log "da data be", data
   if data.length > 0
     data = JSON.parse(data)
     id = data._id
@@ -28,7 +27,6 @@ exports.read = (data, callback, socket) ->
       utils.getLabels graphDb, id, (labels) ->
         parsed.tags = labels
         parsed = utils.parseNodeToClient parsed
-        console.log "emit", parsed
         socket.emit('node:read', parsed)
         # socket.broadcast.emit('documents:create', parsed)
         callback(null, parsed)
@@ -86,7 +84,6 @@ exports.getSpokes = (req, resp) ->
 
 # UPDATE
 exports.update = (data, callback, socket) ->
-  console.log "data for de updatin be", data
   id = data._id
   tags = data.tags || ""
   delete data.tags
