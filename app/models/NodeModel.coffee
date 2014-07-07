@@ -19,11 +19,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
         type: 'List'
         itemType: 'Text'
 
-    initialize: ->
-      @socket.on "node:update", (nodeData) =>
-        if nodeData._id is this.get("_id").toString()
-          @set nodeData
-
     validate: ->
       if !@get('name')
         return 'Your node must have a name.'

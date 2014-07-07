@@ -5,6 +5,13 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       _docId: 0
       socket: io.connect("")
 
+      initialize: ->
+        @socket.on @url()+":create", (objData) =>
+          @add new @model objData
+
+        @socket.on @url()+":delete", (objData) =>
+          @remove new @model objData
+
       sync: (method, model, options) ->
         if method is "read" then options = _.extend options, {attrs:{_docId:@_docId}}
         Backbone.sync method, model, options
@@ -16,13 +23,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
     class NodeCollection extends ObjectCollection
       model: NodeModel
       url: -> "nodes"
-
-      initialize: ->
-        @socket.on "nodes:create", (nodeData) =>
-          @add new NodeModel nodeData
-
-        @socket.on "nodes:delete", (nodeData) =>
-          @remove new NodeModel nodeData
 
     class WorkspaceModel extends Backbone.Model
 

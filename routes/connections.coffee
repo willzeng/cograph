@@ -13,7 +13,8 @@ exports.create = (data, callback, socket) ->
         newConnection._id = conn.id
         conn.data._id = conn.id
         conn.save () -> console.log "saved connection with id", conn.id
-        socket.emit 'connection:create', newConnection
+        socket.emit 'connections:create', newConnection
+        socket.broadcast.emit 'connections:create', newConnection
         callback null, newConnection
 
 # READ
@@ -42,6 +43,7 @@ exports.update = (data, callback, socket) ->
     conn.save (err, savedConn) ->
       parsed = savedConn._data.data
       socket.emit 'connection:update', parsed
+      socket.broadcast.emit 'connection:update', parsed
       callback null, parsed
 
 # DELETE
@@ -49,7 +51,8 @@ exports.destroy = (data, callback, socket) ->
   console.log "delete_connection Query Requested"
   id = data._id
   graphDb.getRelationshipById id, (err, conn) ->
-    conn.delete (deleted) ->
-      socket.emit 'connection:delete', true
-      # socket.broadcast.emit('documents:create', parsed)
-      callback null, deleted
+    conn.delete () ->
+      parsed = conn._data.data
+      socket.emit 'connections:delete', true
+      socket.broadcast.emit 'connections:delete', parsed
+      callback null, parsed
