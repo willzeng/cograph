@@ -6,7 +6,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       name: ''
       description: ''
       url: ''
-      color: 'grey'
+      color: 'white'
       tags: []
       _id: -1
       _docId: 0

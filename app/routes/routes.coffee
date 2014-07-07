@@ -12,7 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @detailsView = new DetailsView model: @workspaceModel
         @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
-        @sidebarView = new SideBarView()
+        @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView()
 

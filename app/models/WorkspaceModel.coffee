@@ -21,11 +21,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       selectedColor: '#3498db'
 
       defaultColors:
-          grey:'#D1D1D1'
+          white:'#fff'
+          grey:'#ccc'
           red:'#F56545'
           yellow:'#FFBB22'
           green: '#BBE535'
-          cyan: '#77DDBB'
+          # cyan: '#77DDBB'
           blue: '#66CCDD'
 
       initialize: ->
