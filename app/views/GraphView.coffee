@@ -203,7 +203,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           dim = t.getBBox()
           info = $(t).parent().find('.node-info')
           info
-            .attr('x',dim.x-6)
+            .attr('x',dim.x-(offsetH/2))
           line = $(t).parent().find('line')
           line
             .attr('x1', dim.x-(offsetH)/2)
