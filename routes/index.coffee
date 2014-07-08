@@ -23,14 +23,14 @@ router.param 'id', integerRegex
 router.param 'docId', integerRegex
 
 # Nodes
-router.get      '/documents/:docId/nodes/:id/neighbors/',       nodes.getNeighbors
-router.get      '/documents/:docId/nodes/:id/spokes/',          nodes.getSpokes
-router.post     '/documents/:docId/nodes/:id/get_connections/', nodes.getConnections
+router.get      '/document/:docId/nodes/:id/neighbors/',       nodes.getNeighbors
+router.get      '/document/:docId/nodes/:id/spokes/',          nodes.getSpokes
+router.post     '/document/:docId/nodes/:id/get_connections/', nodes.getConnections
 
 # Search
-router.get      '/documents/:docId/nodes/names',       search.getNodeNames
-router.get      '/documents/:docId/getNodeByName',     search.getNodeByName
-router.get      '/documents/:docId/getNodesByTag',     search.getNodesByTag
-router.get      '/documents/:docId/tags',              search.getTagNames
+router.get      '/document/:docId/nodes/names',       search.getNodeNames
+router.get      '/document/:docId/getNodeByName',     search.getNodeByName
+router.get      '/document/:docId/getNodesByTag',     search.getNodesByTag
+router.get      '/document/:docId/tags',              search.getTagNames
 
 module.exports = router

@@ -2,7 +2,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
 ($, _, Backbone, ObjectModel, iobind, iosync, io) ->
   class NodeModel extends ObjectModel
     urlRoot: -> "node"
-    ajaxURL: -> "/documents/#{@get('_docId')}/nodes"
+    ajaxURL: -> "/document/#{@get('_docId')}/nodes"
     noIoBind: false
     socket: io.connect('')
 
