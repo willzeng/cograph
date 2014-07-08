@@ -30,12 +30,6 @@ utils =
     objData.id = objData._id = @trim obj[name]._data.self
     objData
 
-  dictionaryToCypherProperties: (dict) ->
-    _.map(_.keys(dict), (key) -> "#{key}:'#{dict[key]}'").join(', ')
-
-  dictionaryToUpdateCypherProperties: (dict) ->
-    _.map(_.keys(dict), (key) -> "n.#{key}='#{dict[key]}'").join(', ')
-
   listToLabels: (list, prefix) ->
     _.map(list, (item) -> ":#{prefix}#{item}").join('')
 

@@ -4,8 +4,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
   ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView) ->
     class Router extends Backbone.Router
       initialize: ->
-        default_tags = {'node_tags': ['theorem','proof','conjecture','citation']}
-        @workspaceModel = new WorkspaceModel initial_tags:default_tags
+        @workspaceModel = new WorkspaceModel()
 
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
@@ -36,7 +35,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
             @setAndFetchDoc()
 
       setAndFetchDoc: ->
-        @workspaceModel.setDocument @workspaceModel.documentModel
+        $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then =>
+          @workspaceModel.getTagNames (tags) =>
+            @workspaceModel.filterModel.addInitialTags tags
+            @workspaceModel.filterModel.addNodeTags tags
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
