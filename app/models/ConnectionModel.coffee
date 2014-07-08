@@ -30,4 +30,6 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
 
     validate: ->
       if !(typeof @get('source') is 'number' and typeof @get('target') is 'number')
-        '_id must be a number.'
+        '_id of source and target must be a number.'
+      if !(typeof @get('_id') is 'number')
+        '_id of connection must be a number.'

@@ -26,10 +26,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
       if !(typeof @get('_id') is 'number')
         return '_id must be a number.'
 
-    parse: (resp, options) ->
-      if resp._id then resp._id = parseInt(resp._id, 10)
-      resp
-
     getNeighbors: (callback) =>
       @sync 'read', this,
         url: @ajaxURL() + "/neighbors/"
