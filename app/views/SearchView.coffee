@@ -53,7 +53,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
               if localNode
                 @model.select localNode
               else
-                @model.putNodeFromData node
+                @model.putNodeFromData node, {force:true}
         $('#search-input').val('')
 
       findLocalNode: (name) ->
@@ -62,7 +62,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
 
       getNodeByName: (name) ->
         @model.getNodeByName name, (node) =>
-          @model.select @model.putNodeFromData node
+          @model.select @model.putNodeFromData node, {force:true}
 
       findMatchingNames: (query, allNames) ->
         regex = new RegExp(query,'i')
