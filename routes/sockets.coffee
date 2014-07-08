@@ -7,7 +7,13 @@ exports.socketServer = (app, server) ->
   app.http().io()
 
   app.io.sockets.on 'connection', (socket) ->
-  
+
+    # Rooms
+    socket.on 'open:document', (doc, callback) ->
+        docId = doc._id
+        socket.join docId
+        socket.broadcast.to(docId).emit 'announce', {message:"Someone has joined this document #{docId}"}
+
     # Document
     socket.on 'document:create', (data, callback) -> documents.create data, callback, socket
     socket.on 'document:read',   (data, callback) -> documents.read data, callback, socket

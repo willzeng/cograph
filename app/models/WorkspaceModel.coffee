@@ -38,6 +38,11 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           blue: '#66CCDD'
 
       initialize: ->
+        @socket = io.connect('')
+
+        @socket.on 'announce', (data) ->
+          console.log data.message
+
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
 
@@ -50,6 +55,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @nodes._docId = doc.id
         @connections._docId = doc.id
         @trigger "document:change"
+        @socket.emit 'open:document', doc.attributes
         @connections.reset()
         $.when(@nodes.fetch()).then =>
           @connections.fetch()

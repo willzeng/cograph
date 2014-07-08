@@ -14,7 +14,7 @@ exports.create = (data, callback, socket) ->
   props = data
   serverNode.create tags, props, docLabel, (savedNode) ->
     socket.emit 'node:create', savedNode
-    socket.broadcast.emit 'nodes:create', savedNode
+    socket.broadcast.to(savedNode._docId).emit 'nodes:create', savedNode
     callback null, savedNode
 
 # READ
@@ -26,7 +26,6 @@ exports.read = (data, callback, socket) ->
       parsed.tags = labels
       parsed = utils.parseNodeToClient parsed
       socket.emit('node:read', parsed)
-      # socket.broadcast.emit('documents:create', parsed)
       callback(null, parsed)
 
 exports.readCollection = (data, callback, socket) ->
@@ -43,7 +42,6 @@ exports.readCollection = (data, callback, socket) ->
       nodeData.tags = node['labels(n)']
       parsedNodes.push utils.parseNodeToClient nodeData
     socket.emit 'nodes:read', parsedNodes
-    # socket.broadcast.emit('documents:create', parsedNodes)
     callback null, parsedNodes
 
 exports.getNeighbors = (req, resp) ->
@@ -73,7 +71,7 @@ exports.update = (data, callback, socket) ->
   props = data
   serverNode.update id, tags, props, (newNode) ->
     socket.emit 'node:update', newNode
-    socket.broadcast.emit 'node:update', newNode
+    socket.broadcast.to(newNode._docId).emit 'node:update', newNode
     callback null, newNode
 
 # DELETE
@@ -83,7 +81,7 @@ exports.destroy = (data, callback, socket) ->
     node.delete () ->
       parsed = node._data.data
       socket.emit 'nodes:delete', true
-      socket.broadcast.emit 'nodes:delete', parsed
+      socket.broadcast.to(parsed._docId).emit 'nodes:delete', parsed
       callback null, parsed
 
 # OTHER
