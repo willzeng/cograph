@@ -14,7 +14,7 @@ exports.create = (data, callback, socket) ->
         conn.data._id = conn.id
         conn.save () -> console.log "saved connection with id", conn.id
         socket.emit 'connections:create', newConnection
-        socket.broadcast.emit 'connections:create', newConnection
+        socket.broadcast.to(newConnection._docId).emit 'connections:create', newConnection
         callback null, newConnection
 
 # READ
@@ -43,7 +43,7 @@ exports.update = (data, callback, socket) ->
     conn.save (err, savedConn) ->
       parsed = savedConn._data.data
       socket.emit 'connection:update', parsed
-      socket.broadcast.emit 'connection:update', parsed
+      socket.broadcast.to(parsed._docId).emit 'connections:update', parsed
       callback null, parsed
 
 # DELETE
@@ -54,5 +54,5 @@ exports.destroy = (data, callback, socket) ->
     conn.delete () ->
       parsed = conn._data.data
       socket.emit 'connections:delete', true
-      socket.broadcast.emit 'connections:delete', parsed
+      socket.broadcast.to(parsed._docId).emit 'connections:delete', parsed
       callback null, parsed

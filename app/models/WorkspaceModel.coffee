@@ -9,6 +9,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket.on @url()+":create", (objData) =>
           @add new @model objData
 
+        @socket.on @url()+":update", (objData) =>
+          id = parseInt(objData._id)
+          @findWhere({_id:id}).set objData
+
         @socket.on @url()+":delete", (objData) =>
           @remove new @model objData
 

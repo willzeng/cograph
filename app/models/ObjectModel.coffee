@@ -11,12 +11,6 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       _id: -1
       _docId: 0
 
-    initialize: ->
-      @socket.on @urlRoot()+":update", (objData) =>
-        console.log "updating", @urlRoot(), " with ", objData
-        if objData._id is this.get("_id").toString()
-          @set objData
-
     isNew: ->
       @get(@idAttribute) < 0
 

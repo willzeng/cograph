@@ -71,7 +71,7 @@ exports.update = (data, callback, socket) ->
   props = data
   serverNode.update id, tags, props, (newNode) ->
     socket.emit 'node:update', newNode
-    socket.broadcast.to(newNode._docId).emit 'node:update', newNode
+    socket.broadcast.to(newNode._docId).emit 'nodes:update', newNode
     callback null, newNode
 
 # DELETE
