@@ -9,6 +9,10 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       name: 'Untitled'
       _id: -1
 
+    initialize: ->
+      @socket.on @urlRoot+":update", (objData) =>
+        @set objData
+
     isNew: ->
       @get(@idAttribute) < 0
 

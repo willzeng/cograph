@@ -53,6 +53,7 @@ exports.update = (data, callback, socket) ->
   props = data
   serverDocument.update id, props, (savedDocument) ->
     socket.emit 'document:update', savedDocument
+    socket.broadcast.to(savedDocument._id).emit 'document:update', savedDocument
     callback null, savedDocument
 
 # DELETE
