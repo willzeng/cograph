@@ -29,7 +29,7 @@ exports.read = (data, callback, socket) ->
       callback(null, parsed)
 
 exports.readCollection = (data, callback, socket) ->
-  console.log "readCollection of nodes"
+  console.log "readCollection of nodes in document #{data._docId}"
   docLabel = "_doc_#{data._docId || 0}"
   # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
   cypherQuery = "match (n:#{docLabel}) return n, labels(n);"

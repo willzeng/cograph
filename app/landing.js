@@ -32,6 +32,12 @@ requirejs.config({
     },
     'bb-modal': {
       deps: ['underscore', 'jquery', 'backbone']
+    },
+    'b-iosync': {
+      deps: ['underscore','backbone']
+    },
+    'b-iobind': {
+      deps: ['underscore','backbone']
     }
   },
   packages: [{

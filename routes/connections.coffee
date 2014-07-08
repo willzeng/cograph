@@ -19,14 +19,13 @@ exports.create = (data, callback, socket) ->
 
 # READ
 exports.read = (data, callback, socket) ->
-  console.log "da best reading", data
   id = data._id
   graphDb.getRelationshipById id, (err, conn) ->
     socket.emit 'connection:read', conn
     callback null, conn
 
 exports.readCollection = (data, callback, socket) ->
-  console.log "readCollection of connections"
+  console.log "readCollection of connections in document #{data._docId}"
   docLabel = "_doc_#{data._docId || 0}"
   cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
   graphDb.query cypherQuery, {}, (err, results) ->

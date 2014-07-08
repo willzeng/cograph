@@ -16,6 +16,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket.on @url()+":delete", (objData) =>
           @remove new @model objData
 
+      # Extend sync to pass through the current document on read
       sync: (method, model, options) ->
         if method is "read" then options = _.extend options, {attrs:{_docId:@_docId}}
         Backbone.sync method, model, options
