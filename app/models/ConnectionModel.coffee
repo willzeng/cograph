@@ -22,7 +22,7 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
       description: 'TextArea'
       tags: { type: 'List', itemType: 'Text' }
 
-    ignoredAttributes: ['selected', 'dim', 'tags']
+    ignoredAttributes: ['selected', 'dim']
 
     serialize: ->
       json = _.omit @clone().toJSON(), @ignoredAttributes
