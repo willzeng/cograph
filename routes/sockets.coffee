@@ -12,7 +12,6 @@ exports.socketServer = (app, server) ->
     socket.on 'open:document', (doc, callback) ->
         docId = doc._id
         socket.join docId
-        socket.broadcast.to(docId).emit 'announce', {message:"Someone has joined this document #{docId}"}
 
     # Document
     socket.on 'document:create', (data, callback) -> documents.create data, callback, socket

@@ -46,9 +46,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       initialize: ->
         @socket = io.connect('')
 
-        @socket.on 'announce', (data) ->
-          console.log data.message
-
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
 
