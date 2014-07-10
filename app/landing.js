@@ -5,7 +5,6 @@ requirejs.config({
     'underscore': '/assets/libs/underscore/underscore',
     'backbone': '/assets/libs/backbone/backbone',
     'text': '/assets/libs/requirejs-text/text',
-    'd3': '/assets/libs/d3/d3',
     'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
     'backbone-forms-bootstrap': '/assets/js/backbone-forms/bootstrap3',
     'list': '/assets/libs/backbone-forms/distribution.amd/editors/list.min',
@@ -13,8 +12,6 @@ requirejs.config({
     'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
     'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min',
     'bb-modal': '/assets/libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
-    'bootstrap-color':'/assets/libs/bootstrap-colorpalette/js/bootstrap-colorpalette',
-    'share-button': '/assets/libs/share-button/build/share.min',
     'socket-io': '/socket.io/socket.io',
     'b-iosync': '/assets/libs/backbone.iobind/dist/backbone.iosync',
     'b-iobind': '/assets/libs/backbone.iobind/dist/backbone.iobind'
@@ -54,6 +51,6 @@ requirejs.config({
   }]
 });
 
-require(['cs!GraphDocs'], function(GraphDocs){
-  GraphDocs.initialize()
+require(['cs!views/LandingView'], function(LandingView){
+  landingView = new LandingView()
 });

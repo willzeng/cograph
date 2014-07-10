@@ -1,4 +1,4 @@
-express = require 'express'
+express = require 'express.io'
 path = require 'path'
 favicon = require 'static-favicon'
 bodyParser = require 'body-parser'
@@ -17,6 +17,11 @@ app.use bodyParser()
 # http://stackoverflow.com/questions/19489681/node-js-less-middleware-not-auto-compiling
 app.use express.static(path.join(__dirname, '/app'))
 
+# set up traditional routes
 app.use '/', routes
+
+# set up real time routes
+sockets = require './routes/sockets'
+sockets.socketServer(app)
 
 module.exports = app

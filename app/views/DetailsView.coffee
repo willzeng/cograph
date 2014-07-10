@@ -49,14 +49,15 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @nodeConnectionForm = new Backbone.Form(
           model: nodeConnection
           template: _.template(editFormTemplate)
-        ).on('name:blur url:blur', (form, editor) ->
+        ).on('name:blur url:blur tags:blur', (form, editor) ->
           form.fields[editor.key].validate()
         ).render()
 
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
         $('input[name=name]', @el).focus()
 
-        colorOptions = colors:[(val for color, val of @model.defaultColors)]
+        isNode = nodeConnection.constructor.name is 'NodeModel'
+        colorOptions = colors:[(val for color, val of @model.defaultColors when !((color is 'grey') and isNode))]
         $('.colorpalette').colorPalette(colorOptions).on 'selectColor', (e) =>
           colorValue = e.color
           nodeConnection.set 'color', _.invert(@model.defaultColors)[colorValue]

@@ -1,40 +1,72 @@
-define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel','cs!models/FilterModel', 'cs!models/DocumentModel'],
-  ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
-    class ConnectionCollection extends Backbone.Collection
-      model: ConnectionModel
-      url: -> "/documents/#{@_docId}/connections"
+define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
+  'cs!models/FilterModel', 'cs!models/DocumentModel', 'socket-io'],
+  ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel, io) ->
+    class ObjectCollection extends Backbone.Collection
       _docId: 0
+      socket: io.connect("")
 
-    class NodeCollection extends Backbone.Collection
+      initialize: ->
+        @socket.on @url()+":create", (objData) =>
+          @add new @model objData
+
+        @socket.on @url()+":update", (objData) =>
+          objData._id = parseInt(objData._id)
+          id = objData._id
+          @findWhere({_id:id}).set objData
+
+        @socket.on @url()+":delete", (objData) =>
+          @remove new @model objData
+
+      # Extend sync to pass through the current document on read
+      sync: (method, model, options) ->
+        if method is "read" then options = _.extend options, {attrs:{_docId:@_docId}}
+        Backbone.sync method, model, options
+
+    class ConnectionCollection extends ObjectCollection
+      model: ConnectionModel
+      url: -> "connections"
+
+    class NodeCollection extends ObjectCollection
       model: NodeModel
-      url: -> "/documents/#{@_docId}/nodes"
-      _docId:  0
+      url: -> "nodes"
 
     class WorkspaceModel extends Backbone.Model
 
       selectedColor: '#3498db'
 
       defaultColors:
-          grey:'#D1D1D1'
+          white:'#fff'
+          grey:'#ccc'
           red:'#F56545'
           yellow:'#FFBB22'
           green: '#BBE535'
-          cyan: '#77DDBB'
+          # cyan: '#77DDBB'
           blue: '#66CCDD'
 
       initialize: ->
+        @socket = io.connect('')
+
+        @socket.on 'announce', (data) ->
+          console.log data.message
+
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
 
-        @filterModel = new FilterModel @get 'initial_tags'
+        @filterModel = new FilterModel()
+        @nodes.on "change:tags", @updateFilter, this
 
         @documentModel = new DocumentModel()
+
+      updateFilter: (node) ->
+        @filterModel.set 'initial_tags', _.union(@filterModel.get('node_tags'), node.get('tags'))
+        @filterModel.addNodeTags node.get('tags')
 
       setDocument: (doc) ->
         @documentModel = doc
         @nodes._docId = doc.id
         @connections._docId = doc.id
         @trigger "document:change"
+        @socket.emit 'open:document', doc.attributes
         @connections.reset()
         $.when(@nodes.fetch()).then =>
           @connections.fetch()
@@ -47,9 +79,15 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           !(@filterModel.passes node)
         @removeNode node for node in nodesToRemove
 
-      putNode: (nodeModel) ->
-        if @filterModel.passes nodeModel
-          @nodes.add nodeModel
+      # if called with nm, force:true the a node will be forced
+      # through the filter, adding its tags to the filterModel
+      putNode: (nodeModel, options) ->
+        @nodes.add nodeModel
+        nodeModel
+
+      putNodeFromData: (data, options) ->
+        node = new NodeModel data
+        @putNode node, options
 
       putConnection: (connectionModel) ->
         @connections.add connectionModel
@@ -105,3 +143,15 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       getFilter: () ->
         @filterModel
+
+      getNodeNames: (cb) ->
+        @documentModel.getNodeNames(cb)
+
+      getTagNames: (cb) ->
+        @documentModel.getTagNames(cb)
+
+      getNodeByName: (name, cb) ->
+        @documentModel.getNodeByName(name, cb)
+
+      getNodesByTag: (tag, cb) ->
+        @documentModel.getNodesByTag(tag, cb)

@@ -2,7 +2,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
   ($, _, Backbone, filtersTemplate) ->
     class FilterView extends Backbone.View
 
-      el: $ '#graph'
+      el: $ '#menu-bar'
 
       events:
         'click #filter-modal-toggle': 'openFilterModal'
@@ -11,7 +11,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
         @workspaceModel = @attributes.workspaceModel
 
       openFilterModal: ->
-        initialTags = @workspaceModel.get('initial_tags').node_tags
+        initialTags = @model.get 'initial_tags'
         checkedTags = @model.get 'node_tags'
         tagTable = {}
         for tag in initialTags

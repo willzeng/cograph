@@ -1,22 +1,22 @@
 @import "colors";
 
-@node-color: @gray;
-@connection-color: @gray;
-@stroke-color: @white;
-@selected-color: #3498db;
+@node-color: white;
+@connection-color: black;
+@stroke-color: @gray;
+@selected-color: #74DDFC;
+@selected-nodetext-color: white;
 @fixed-color: @orange;
-@text-color: @black;
+@text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
 .node {
   transition: opacity .5s ease-in-out;
+  cursor: pointer;
 }
 
-.node circle {
+.node rect {
   cursor: pointer;
-  stroke: @stroke-color;
-  stroke-width: 4px;
   fill: @node-color;
 }
 
@@ -24,39 +24,69 @@
   opacity: 0.3;
 }
 
-.node.selected text {
-  fill: @selected-color;
+.node.selected rect {
+  stroke: @selected-color;
+  stroke-width: 3px;
 }
 
-.node.fixed circle {
+.node.fixed line{
+  stroke-dasharray:5;
   stroke: @fixed-color;
-  stroke-dasharray:10;
-  stroke-location:outside;
+}
+
+.node line {
+  stroke: #bbb;
 }
 
 .node text {
+  cursor: pointer;
   font: 16px sans-serif;
+  font-weight:bold;
   pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
-  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
 
-.connection {
+.connection text {
+  font: 15px sans-serif;
+  pointer-events: none;
+  text-anchor: middle;
+  fill: #fff;
+  text-shadow: 0 1px 0 #333, 1px 0 0 #333, 0 -1px 0 #333, -1px 0 0 #333;
+}
+
+.connection line {
   stroke: @connection-color;
-  stroke-width: 8px;
+  stroke-width: 4px;
   stroke-linecap:round;
   opacity: 0.5;
   cursor: pointer;
 }
 
-.connection.selected {
+.connection line.select-zone {
+  stroke: transparent;
+  stroke-width: 15px;
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.connection.selected line {
   stroke: @selected-color;
   opacity: 1;
 }
 
-.connection.dim {
+.connection.selected text {
+  fill: @selected-color;
+  /*text-shadow: 0 2px 0 white, 2px 0 0 white, 0 -2px 0 white, -2px 0 0 white;*/
+}
+
+.connection.dim line {
   opacity: 0.1;
+}
+
+.connection.dim text {
+  opacity: 0.3;
 }
 
 line {
@@ -76,7 +106,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: @white;
+  background: #204352;
   height: 100%;
 }
 
@@ -97,23 +127,28 @@ svg {
 #graph {
   width: 100%;
   height: 100%;
+  right:0;
   position: fixed;
 }
 
 #zoom-controls {
   position: absolute;
   bottom: 40px;
-  left: 10px;
+  left: 15px;
 }
 
 #sidebar {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
   height: 100%;
   width: 0;
   background: @navy;
   overflow-y: scroll;
+}
+
+#sidebar-toggle {
+  margin: 10px 0 0 0;
 }
 
 #trash-bin {
@@ -142,13 +177,16 @@ svg {
 #details-container {
   position: absolute;
   width: 100%;
-  padding: 8px 10px 0 10px;
+  padding: 8px 0px 0 0px;
   -ms-word-break: break-all;
   word-break: break-all;
   word-break: break-word;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
+  .panel {
+    border-radius: 0;
+  }
 }
 
 .detail-controls{
@@ -173,11 +211,11 @@ svg {
 }
 
 .toolbar.left {
-  z-index: @controls-z-index + 1;
+  left: 15px;
+  /*z-index: @controls-z-index + 1;*/
 }
 
 .toolbar.right {
-  position: absolute;
   right: 15px;
 }
 

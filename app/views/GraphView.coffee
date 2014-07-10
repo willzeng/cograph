@@ -20,9 +20,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                   .nodes([])
                   .links([])
                   .size([width, height])
-                  .charge(-4000 )
+                  .charge(-4000)
                   .gravity(0.2)
                   .friction(0.6)
+                  .distance(200)
 
         zoomed = =>
           return if @translateLock
@@ -50,7 +51,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                 .attr('height', height)
                 .call(@zoom)
                 .on("dblclick.zoom", null)
-
         @svg.append('defs').html(defs)
 
         @workspace = @svg.append("svg:g")
@@ -85,27 +85,41 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
-
         # old elements
         connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data connections
 
         # new elements
-        connectionEnter = connection.enter().append("line")
+        connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
-          .attr("marker-end", "url(#arrowhead)")
           .on "click", (d) =>
             @model.select d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
             @trigger "connection:mouseout", conn
+        connectionEnter.append("line")
+          .attr('class', 'select-zone')
+        connectionEnter.append("line")
+          .attr("marker-end", "url(#arrowhead)")
+          .style("stroke", (d) => @getColor d)
+        connectionEnter.append("text")
+          .attr("text-anchor", "middle")
 
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
+          .each (d,i) ->
+            line = d3.select(this).select("line")
+            line.style("stroke", (d) -> that.getColor d)
+            if d.get('selected')
+              line.attr("marker-end", "url(#arrowhead-selected)")
+            else
+              line.attr("marker-end", "url(#arrowhead)")
+        connection.select("text")
+          .text((d) -> d.get("name"))
 
         # remove deleted elements
         connection.exit().remove()
@@ -117,12 +131,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
-          .classed('selected', (d) -> d.get('selected'))
+        nodeEnter.append("line")
+          .attr("class","select-zone")
+        nodeEnter.append("line")
+        nodeEnter.append("rect").style("fill", (d) => @getColor d)
         nodeEnter.append("text")
-          .attr("dy", "40px")
-        nodeEnter.append("circle")
-          .attr("r", 25)
-          .style("fill", (d) => @getColor d)
+          .attr("dy", "5px")
+
 
         nodeEnter
           .on "dblclick", (d) ->
@@ -148,18 +163,40 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('text')
           .text((d) -> d.get('name'))
-        node.select('circle')
+        node.select('rect')
           .style("fill", (d) => @getColor d)
+
+        # construct the node boxes
+        offsetV = 4
+        offsetH = 12
+        for t in node.select('text')[0]
+          dim = t.getBBox()
+          line = $(t).parent().find('line')
+          line
+            .attr('x1', dim.x-(offsetH)/2)
+            .attr('y1', dim.y+dim.height+2)
+            .attr('x2', dim.x + dim.width+(offsetH)/2)
+            .attr('y2', dim.y+dim.height+2)
+            .attr('stroke', '#ccc')
+            .attr('stroke-width', '4px')
+          rect = $(t).parent().find('rect')
+          rect
+            .attr('width', dim.width+ offsetH)
+            .attr('height', dim.height+ offsetV)
+            .attr('x', dim.x - (offsetH/2))
+            .attr('y', dim.y - (offsetV/2))
 
         # delete unmatching elements
         node.exit().remove()
 
         tick = =>
-          connection
+          connection.selectAll("line")
             .attr("x1", (d) => @model.getSourceOf(d).x)
             .attr("y1", (d) => @model.getSourceOf(d).y)
             .attr("x2", (d) => @model.getTargetOf(d).x)
             .attr("y2", (d) => @model.getTargetOf(d).y)
+          connection.select("text")
+            .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()
         @force.on "tick", tick

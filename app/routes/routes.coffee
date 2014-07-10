@@ -4,15 +4,14 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
   ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView) ->
     class Router extends Backbone.Router
       initialize: ->
-        default_tags = {'node_tags': ['theorem','proof','conjecture','citation']}
-        @workspaceModel = new WorkspaceModel initial_tags:default_tags
+        @workspaceModel = new WorkspaceModel()
 
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
         @detailsView = new DetailsView model: @workspaceModel
         @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
-        @sidebarView = new SideBarView()
+        @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView()
 
@@ -20,16 +19,26 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         Backbone.history.start()
 
       routes:
-        '': 'home'
+        '(:id)': 'home'
 
-      home: =>
+      home: (docId) =>
         @graphView.render()
 
-        #Prepopulate the WorkspaceModel with all the nodes in the database
-        $.when(gm.nodes.fetch()).then ->
-          gm.connections.fetch()
+        if docId
+          @workspaceModel.documentModel.set '_id', docId
+          @workspaceModel.documentModel.fetch
+            error: (err) -> location.href="/errors/missingDocument",
+            success: () => @setAndFetchDoc()
+        else
+          $.when(@workspaceModel.documentModel.save()).then =>
+            @navigate @workspaceModel.documentModel.get '_id'
+            @setAndFetchDoc()
 
-        #@randomPopulate()
+      setAndFetchDoc: ->
+        $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then =>
+          @workspaceModel.getTagNames (tags) =>
+            @workspaceModel.filterModel.addInitialTags tags
+            @workspaceModel.filterModel.addNodeTags tags
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
