@@ -51,8 +51,8 @@
   font: 15px sans-serif;
   pointer-events: none;
   text-anchor: middle;
-  fill: #333;
-  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  fill: #fff;
+  text-shadow: 0 1px 0 #333, 1px 0 0 #333, 0 -1px 0 #333, -1px 0 0 #333;
 }
 
 .connection line {
@@ -78,7 +78,7 @@
 
 .connection.selected text {
   fill: @selected-color;
-  text-shadow: 0 2px 0 white, 2px 0 0 white, 0 -2px 0 white, -2px 0 0 white;
+  /*text-shadow: 0 2px 0 white, 2px 0 0 white, 0 -2px 0 white, -2px 0 0 white;*/
 }
 
 .connection.dim line {
@@ -106,7 +106,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: #efefef;
+  background: #204352;
   height: 100%;
 }
 
@@ -127,23 +127,28 @@ svg {
 #graph {
   width: 100%;
   height: 100%;
+  right:0;
   position: fixed;
 }
 
 #zoom-controls {
   position: absolute;
   bottom: 40px;
-  left: 10px;
+  left: 15px;
 }
 
 #sidebar {
   position: absolute;
-  right: 0;
+  left: 0;
   top: 0;
   height: 100%;
   width: 0;
   background: @navy;
   overflow-y: scroll;
+}
+
+#sidebar-toggle {
+  margin: 10px 0 0 0;
 }
 
 #trash-bin {
@@ -153,7 +158,7 @@ svg {
   color: lightgray;
   position: absolute;
   bottom: 40px;
-  left: 60px;
+  left: 65px;
   padding-top:5px;
   text-align: center;
   border: 4px dashed lightgray;
@@ -168,13 +173,16 @@ svg {
 #details-container {
   position: absolute;
   width: 100%;
-  padding: 8px 10px 0 10px;
+  padding: 8px 0px 0 0px;
   -ms-word-break: break-all;
   word-break: break-all;
   word-break: break-word;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
+  .panel {
+    border-radius: 0;
+  }
 }
 
 .detail-controls{
@@ -199,11 +207,11 @@ svg {
 }
 
 .toolbar.left {
-  z-index: @controls-z-index + 1;
+  left: 15px;
+  /*z-index: @controls-z-index + 1;*/
 }
 
 .toolbar.right {
-  position: absolute;
   right: 15px;
 }
 
