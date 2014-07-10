@@ -23,6 +23,8 @@ body {
     line-height: 1.4;
     overflow-x: hidden;
     background: lightgray;
+    margin: 0;
+    font-family: Helvetica, sans-serif;
 }
 
 a {
@@ -67,6 +69,13 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+input[type="text"] {
+  margin: 0;
+}
+
+input[type="submit"] {
+  cursor: pointer;
+}
 
 #brand {
   width: 100%;
@@ -76,6 +85,7 @@ textarea {
   padding: 10px 0px;
   text-align: center;
   letter-spacing: 1px;
+  font-family: 
 }
 
 #tabs {
