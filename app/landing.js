@@ -11,7 +11,10 @@ requirejs.config({
     'typeahead': '/assets/libs/typeahead.js/dist/typeahead.jquery.min',
     'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
     'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min',
-    'bb-modal': '/assets/libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal'
+    'bb-modal': '/assets/libs/backbone.bootstrap-modal/src/backbone.bootstrap-modal',
+    'socket-io': '/socket.io/socket.io',
+    'b-iosync': '/assets/libs/backbone.iobind/dist/backbone.iosync',
+    'b-iobind': '/assets/libs/backbone.iobind/dist/backbone.iobind'
   },
   shim: {
     'backbone': {
@@ -29,6 +32,12 @@ requirejs.config({
     },
     'bb-modal': {
       deps: ['underscore', 'jquery', 'backbone']
+    },
+    'b-iosync': {
+      deps: ['underscore','backbone']
+    },
+    'b-iobind': {
+      deps: ['underscore','backbone']
     }
   },
   packages: [{

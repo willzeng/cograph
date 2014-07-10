@@ -24,6 +24,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
               connection = new ConnectionModel
                 source: @drag_line.datum().get('_id')
                 target: node.get('_id')
+                _docId: @model.documentModel.get('_id')
               connection.save()
               @model.select @model.putConnection connection
               @model.newConnectionCreated()

@@ -1,6 +1,9 @@
-define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
+define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'],
+(Backbone, ObjectModel, iobind, iosync, io) ->
   class ConnectionModel extends ObjectModel
-    urlRoot: -> "/documents/#{@get('_docId')}/connections"
+    urlRoot: -> "connection"
+    noIoBind: false
+    socket: io.connect('')
 
     defaults:
       name: ''
@@ -27,4 +30,6 @@ define ['backbone', 'cs!models/ObjectModel'], (Backbone, ObjectModel) ->
 
     validate: ->
       if !(typeof @get('source') is 'number' and typeof @get('target') is 'number')
-        '_id must be a number.'
+        '_id of source and target must be a number.'
+      if !(typeof @get('_id') is 'number')
+        '_id of connection must be a number.'

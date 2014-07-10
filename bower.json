@@ -33,7 +33,8 @@
     "typeahead.js": "~0.10.2",
     "new-bb-modal": "~0.9.1",
     "bootstrap-colorpalette": "~0.0.1",
-    "share-button": "~0.4.1"
+    "share-button": "~0.4.1",
+    "backbone.iobind": "~0.4.7"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

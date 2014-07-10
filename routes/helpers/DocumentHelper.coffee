@@ -16,9 +16,8 @@ class DocumentHelper
 
   # Update a Document with new tags and properties
   update: (id, props, callback) ->
-    params = {props: props, id: id}
+    params = {props: props, id: parseInt(id)}
     cypherQuery = "START n=node({ id }) SET n = { props } RETURN n;"
-
     @graphDb.query cypherQuery, params, (err, results) =>
       if err then throw err
       node = utils.parseCypherResult(results[0], 'n')
