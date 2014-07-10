@@ -7,26 +7,30 @@ NodeHelper = require __dirname + '/helpers/NodeHelper'
 serverNode = new NodeHelper(graphDb)
 
 # CREATE
-exports.create = (req, resp) ->
-  docLabel = "_doc_#{req.params.docId || 0}"
-  tags = req.body.tags || []
-  delete req.body.tags
-  props = req.body
+exports.create = (data, callback, socket) ->
+  docLabel = "_doc_#{data._docId || 0}"
+  tags = data["tags"] || []
+  delete data["tags"]
+  props = data
   serverNode.create tags, props, docLabel, (savedNode) ->
-    resp.send savedNode
+    socket.emit 'node:create', savedNode
+    socket.broadcast.to(savedNode._docId).emit 'nodes:create', savedNode
+    callback null, savedNode
 
 # READ
-exports.read = (req, resp) ->
-  id = req.params.id
+exports.read = (data, callback, socket) ->
+  id = data._id
   graphDb.getNodeById id, (err, node) ->
     parsed = node._data.data
     utils.getLabels graphDb, id, (labels) ->
       parsed.tags = labels
-      resp.send utils.parseNodeToClient parsed
+      parsed = utils.parseNodeToClient parsed
+      socket.emit('node:read', parsed)
+      callback(null, parsed)
 
-exports.getAll = (req, resp) ->
-  console.log "get_all_nodes Query Requested"
-  docLabel = "_doc_#{req.params.docId || 0}"
+exports.readCollection = (data, callback, socket) ->
+  console.log "readCollection of nodes in document #{data._docId}"
+  docLabel = "_doc_#{data._docId || 0}"
   # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
   cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
   params = {}
@@ -37,7 +41,8 @@ exports.getAll = (req, resp) ->
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
       parsedNodes.push utils.parseNodeToClient nodeData
-    resp.send parsedNodes
+    socket.emit 'nodes:read', parsedNodes
+    callback null, parsedNodes
 
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
@@ -59,20 +64,25 @@ exports.getSpokes = (req, resp) ->
     resp.send connections
 
 # UPDATE
-exports.update = (req, resp) ->
-  id = req.params.id
-  newData = req.body
-  tags = req.body.tags || ""
-  delete req.body.tags
-  props = req.body
+exports.update = (data, callback, socket) ->
+  id = data._id
+  tags = data.tags || ""
+  delete data.tags
+  props = data
   serverNode.update id, tags, props, (newNode) ->
-    resp.send newNode
+    socket.emit 'node:update', newNode
+    socket.broadcast.to(newNode._docId).emit 'nodes:update', newNode
+    callback null, newNode
 
 # DELETE
-exports.destroy = (req, resp) ->
-  id = req.params.id
+exports.destroy = (data, callback, socket) ->
+  id = data._id
   graphDb.getNodeById id, (err, node) ->
-    node.delete () -> resp.send true
+    node.delete () ->
+      parsed = node._data.data
+      socket.emit 'nodes:delete', true
+      socket.broadcast.to(parsed._docId).emit 'nodes:delete', parsed
+      callback null, parsed
 
 # OTHER
 
