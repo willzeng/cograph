@@ -2,7 +2,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
 ($, _, Backbone, ObjectModel, iobind, iosync, io) ->
   class NodeModel extends ObjectModel
     urlRoot: -> "node"
-    ajaxURL: -> "/document/#{@get('_docId')}/nodes"
+    ajaxURL: -> "/document/#{@get('_docId')}/nodes/"+@get('_id')
     noIoBind: false
     socket: io.connect('')
 
@@ -27,16 +27,12 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
         return '_id must be a number.'
 
     getNeighbors: (callback) =>
-      @sync 'read', this,
-        url: @ajaxURL() + "/neighbors/"
-        success: (results) =>
-          callback (@parse result for result in results)
+      $.get @ajaxURL()+"/neighbors/", (results) =>
+        callback (@parse result for result in results)
 
     getSpokes: (callback) ->
-      this.sync 'read', this,
-        url: @ajaxURL() + "/spokes/"
-        success: (results) ->
-          callback results
+      $.get @ajaxURL()+"/spokes/", (results) ->
+        callback results
 
     getConnections: (nodes, callback) ->
       nodeIds = (n.id for n in nodes)
