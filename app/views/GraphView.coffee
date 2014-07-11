@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html'],
+  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -102,17 +102,28 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
+          .attr('class', 'visible-line')
           .attr("marker-end", "url(#arrowhead)")
           .style("stroke", (d) => @getColor d)
-        connectionEnter.append("text")
+        text-group = connectionEnter.append("g")
+          .attr('class', 'connection-text')
+        text-group.append("text")
           .attr("text-anchor", "middle")
+        text-group.append("foreignObject")
+          .attr('y', '0')
+          .attr('height', '200')
+          .attr('width', '120')
+          .attr('x', '-12')
+          .attr('class', 'connection-info')
+          .append('xhtml:body')
+            .attr('class', 'connection-info-body')
 
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
           .each (d,i) ->
-            line = d3.select(this).select("line")
+            line = d3.select(this).select("line.visible-line")
             line.style("stroke", (d) -> that.getColor d)
             if d.get('selected')
               line.attr("marker-end", "url(#arrowhead-selected)")
@@ -120,6 +131,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
               line.attr("marker-end", "url(#arrowhead)")
         connection.select("text")
           .text((d) -> d.get("name"))
+        connection.select('.connection-info-body')
+          .html((d) -> _.template(popover, d))
+
+        # move the popover info to align with the left of the text
+        for t in connection.select('text')[0]
+          dim = t.getBBox()
+          info = $(t).parent().find('.connection-info')
+          info
+            .attr('x',dim.x)
 
         # remove deleted elements
         connection.exit().remove()
@@ -137,7 +157,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         nodeEnter.append("rect").style("fill", (d) => @getColor d)
         nodeEnter.append("text")
           .attr("dy", "5px")
-
+        nodeEnter.append("foreignObject")
+          .attr('y', '12')
+          .attr('height', '200')
+          .attr('width', '120')
+          .attr('x', '-21')
+          .attr('class', 'node-info')
+          .append('xhtml:body')
+            .attr('class', 'node-info-body')
 
         nodeEnter
           .on "dblclick", (d) ->
@@ -165,12 +192,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .text((d) -> d.get('name'))
         node.select('rect')
           .style("fill", (d) => @getColor d)
+        node.select('.node-info-body')
+          .html((d) -> _.template(popover, d))
 
+        # move the popover info to align with the left of the text
         # construct the node boxes
         offsetV = 4
         offsetH = 12
         for t in node.select('text')[0]
           dim = t.getBBox()
+          info = $(t).parent().find('.node-info')
+          info
+            .attr('x',dim.x-(offsetH/2))
           line = $(t).parent().find('line')
           line
             .attr('x1', dim.x-(offsetH)/2)
@@ -195,7 +228,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             .attr("y1", (d) => @model.getSourceOf(d).y)
             .attr("x2", (d) => @model.getTargetOf(d).x)
             .attr("y2", (d) => @model.getTargetOf(d).y)
-          connection.select("text")
+          connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick()

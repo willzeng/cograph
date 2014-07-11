@@ -29,6 +29,20 @@
   stroke-width: 3px;
 }
 
+.node-info-body, .connection-info-body {
+  background: white;
+  display: none;
+  color: gray;
+}
+
+.node-info-body .pad, .connection-info-body .pad {
+  padding: 4px;
+}
+
+.node-info-body.shown, .connection-info-body.shown {
+  display: block;
+}
+
 .node.fixed line{
   stroke-dasharray:5;
   stroke: @fixed-color;
@@ -69,6 +83,13 @@
   opacity: 0;
   visibility: hidden;
   cursor: pointer;
+}
+
+.connection.selected line.select-zone {
+  stroke: @selected-color;
+  stroke-width: 5px;
+  opacity: 1;
+  visibility: visible;
 }
 
 .connection.selected line {
@@ -178,7 +199,7 @@ svg {
 }
 
 .detail-controls{
-  padding-bottom: 10px
+  padding-bottom: 10px;
 }
 
 .data-tooltip-container {
@@ -189,8 +210,9 @@ svg {
 
 .data-tooltip {
   background: @data-tooltip-color;
-  color: @white;
-  border: 1px solid @black;
+  color: white;
+  font-size: 12px;
+  border: 1px solid white;
   max-width: 300px;
 }
 
