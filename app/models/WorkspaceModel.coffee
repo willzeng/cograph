@@ -7,7 +7,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       initialize: ->
         @socket.on @url()+":create", (objData) =>
-          @add new @model objData
+          @add new @model objData, {parse:true}
 
         @socket.on @url()+":update", (objData) =>
           objData._id = parseInt(objData._id)

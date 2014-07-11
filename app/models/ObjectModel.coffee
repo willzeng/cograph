@@ -27,6 +27,4 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       Backbone.sync.apply(this, [method, model, options])
 
     serialize: ->
-      removedKeys = @ignoredAttributes
-      if @get('tags').length is 0 then removedKeys.push('tags')
-      _.omit @clone().toJSON(), removedKeys
+      _.omit @clone().toJSON(), @ignoredAttributes
