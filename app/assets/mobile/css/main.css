@@ -117,7 +117,11 @@ input[type="submit"] {
   padding: 15px 0px;  
 }
 
-.content-area * {
+.content-area {
+  font-size: 1em;
+}
+
+.content-area input {
   width: 100%;
   padding: 20px 10px;
   font-size: 1em;
@@ -126,7 +130,8 @@ input[type="submit"] {
   border-top: 1px solid lightgray;
   background-clip: border-box;
   /* TODO  above aint working */
-}
+  }
+
 
 .content-area.hidden {
   display: none;

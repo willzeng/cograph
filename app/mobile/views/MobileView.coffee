@@ -30,8 +30,6 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
         ,
           name: 'node-names',
           source: nodeNameMatcher()
-          templates:
-            header: '<h4 class="text-center">Node Names</h4>'
         )
 
         $('#source-node-name').on 'typeahead:selected',
@@ -46,8 +44,6 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
         ,
           name: 'node-names',
           source: nodeNameMatcher()
-          templates:
-            header: '<h4 class="text-center">Node Names</h4>'
         )
 
         $('#destination-node-name').on 'typeahead:selected',
@@ -62,8 +58,6 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
         ,
           name: 'connection-names',
           source: connectionNameMatcher()
-          templates:
-            header: '<h4 class="text-center">Node Names</h4>'
         )
 
         $('#connection-name').on 'typeahead:selected',
