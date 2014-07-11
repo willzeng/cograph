@@ -7,35 +7,20 @@ DocumentHelper = require __dirname + '/helpers/DocumentHelper'
 serverDocument = new DocumentHelper graphDb
 
 # CREATE
-exports.create = (data, callback, socket) ->
+exports.create = (req, resp) ->
   console.log 'create document query requested'
-  newDocument = data
+  newDocument = req.body
   serverDocument.create newDocument, (savedDocument) ->
-    socket.emit('document:create', savedDocument)
-    # socket.broadcast.emit('documents:create', json)
-    callback(null, savedDocument)
+    resp.send savedDocument
 
 # READ
-exports.read = (data, callback, socket) ->
-  id = data._id
+exports.read = (req, resp) ->
+  id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    if err
-      console.log 'Something broke!'
+    if err then resp.send 500, 'Something broke!'
     else
-      parsed = utils.parseNodeToClient node._data.data
-      socket.emit 'document:read', parsed
-      callback null, parsed
-
-exports.readCollection = (data, callback, socket) ->
-  console.log "get the document collection"
-  docLabel = '_document'
-  cypherQuery = "match (n:#{docLabel}) return n;"
-  params = {}
-  graphDb.query cypherQuery, params, (err, results) ->
-    if err then throw err
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    socket.emit 'documents:read', nodes
-    callback null, nodes
+      parsed = node._data.data
+      resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
@@ -43,24 +28,20 @@ exports.getAll = (req, resp) ->
   cypherQuery = "match (n:#{docLabel}) return n;"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
-    if err then throw err
+    if err then console.log err
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
 
 # UPDATE
-exports.update = (data, callback, socket) ->
-  id = data._id
-  props = data
+exports.update = (req, resp) ->
+  id = req.params.id
+  props = req.body
   serverDocument.update id, props, (savedDocument) ->
-    socket.emit 'document:update', savedDocument
-    socket.broadcast.to(savedDocument._id).emit 'document:update', savedDocument
-    callback null, savedDocument
+    resp.send savedDocument
 
 # DELETE
-exports.destroy = (data, callback, socket) ->
-  id = data._id
+exports.destroy = (req, resp) ->
+  id = req.params.id
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
-    node.delete () ->
-      socket.emit 'document:delete', true
-      callback null, node
+    node.delete () -> true

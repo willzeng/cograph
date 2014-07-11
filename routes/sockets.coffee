@@ -1,6 +1,6 @@
-documents = require './documents'
-nodes = require './nodes'
-connections = require './connections'
+documents = require './sockets/documents'
+nodes = require './sockets/nodes'
+connections = require './sockets/connections'
 
 exports.socketServer = (app, server) ->
 
