@@ -2,10 +2,12 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
   ($, _, Backbone, Bloodhound, typeahead, NodeModel, ConnectionModel, io) ->
     class MobileView extends Backbone.View
       el: $ 'body'
-      docId = 6848
 
       initialize: ->
-        console.log "init mobileview"
+        @docId = 6848
+
+        $.get "/document/#{@docId}/nodes", (nodes) =>
+          @nodes = nodes
 
       events:
           'click #add-connection-tab': 'switchTabsToConnection'
@@ -14,6 +16,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
           'click #add-node': 'addNode'
           'click #add-connection-node': 'addConnectionNode'
           'click #cancel-connection': 'cancelConnection'
+          'click #add-connection': 'addConnection'
 
       # TABS
       switchTabsToNode: ->
@@ -38,46 +41,62 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
       addNode: ->
         if $('#node-name').val() == ""
           $('#node-name').addClass('red')
+          [false]
         else
           $('#node-name').removeClass('red')
-          console.log $('.node > input[type="text"]').val()
-          nameText = $('.node > input[type="text"]').val()
 
-          newNode = new NodeModel {name:nameText, _docId: docId}
+          newNode = new NodeModel
+            name: $('#node-name').val()
+            description: $('#node-description').val()
+            tags: @parseTags $('#node-tags').val()
+            _docId: @docId
           newNode.save()
 
           $('.node > input[type="text"]').val("")
+          [true, $('#node-name').val()]
 
       addConnectionNode: ->
-        if $('#node-name').val() == ""
-          $('#node-name').addClass('red')
-        else
-          console.log($('.node > input[type="text"]').val());
-          $('#source-node-name').val($('#node-name').val())
-          $('.node > input[type="text"]').val("")
-          switchTabsToConnection()
+        success = @addNode()
+        if success[0]
+          @switchTabsToConnection()
+          $('#source-node-name').val success[1]
 
-        # Add Connection
-        cancelConnection: ->
+      # Add Connection
+      cancelConnection: ->
+        $('.connection > input[type="text"]').removeClass('red')
+        $('.connection > input[type="text"]').val("")
+
+      addConnection: ->
+        validated = true;
+        if $('#connection-name').val() == ""
+          validated = false
+          $('#connection-name').addClass('red')
+
+        if $('#source-node-name').val() == ""
+          validated = false
+          $('#source-node-name').addClass('red')
+
+        if $('#destination-node-name').val() == ""
+          validated = false
+          $('#destination-node-name').addClass('red')
+
+        if validated
+          sourceNode = _.findWhere @nodes, {name:$('#source-node-name').val()}
+          targetNode = _.findWhere @nodes, {name:$('#destination-node-name').val()}
+
+          #send data to server
+          connection = new ConnectionModel
+            name: $('#connection-name').val()
+            source: sourceNode._id
+            target: targetNode._id
+            description: $('#connection-description').val()
+            tags: @parseTags $('#node-tags').val()
+            _docId: @docId
+          connection.save()
+
           $('.connection > input[type="text"]').removeClass('red')
           $('.connection > input[type="text"]').val("")
 
-        addConnection: ->
-          validated = true;
-          if $('#connection-name').val() == ""
-            validated = false
-            $('#connection-name').addClass('red')
-
-          if $('#source-node-name').val() == ""
-            validated = false
-            $('#source-node-name').addClass('red')
-
-          if $('#destination-node-name').val() == ""
-            validated = false
-            $('#destination-node-name').addClass('red')
-
-          if validated
-            console.log($('.connection > input[type="text"]').val());
-            #send data to server
-            $('.connection > input[type="text"]').removeClass('red');
-            $('.connection > input[type="text"]').val("");
+      # Helper Methods
+      parseTags: (string) ->
+        (tag.trim() for tag in string.split(','))
