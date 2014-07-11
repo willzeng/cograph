@@ -25,7 +25,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
         $("#details-container").empty()
         if selectedNC
-          $("#details-container").append _.template(detailsTemplate, selectedNC)
+          workspaceSpokes = @model.getSpokes selectedNC
+          $("#details-container").append _.template(detailsTemplate, {node:selectedNC, spokes:workspaceSpokes})
           @updateColor @model.defaultColors[selectedNC.get('color')]
           selectedNC.on "change:color", (nc) => @updateColor @model.defaultColors[selectedNC.get('color')]
 
