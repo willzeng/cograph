@@ -42,7 +42,6 @@ exports.getAll = (req, resp) ->
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
-
   graphDb.query cypherQuery, params, (err, results) ->
     parsedNodes = []
     for node in results
@@ -54,6 +53,7 @@ exports.getNeighbors = (req, resp) ->
 exports.getSpokes = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-[r]->(m) RETURN r;"
+  console.log cypherQuery
   graphDb.query cypherQuery, params, (err, results) ->
     connections = (utils.parseCypherResult(conn, 'r') for conn in results)
     resp.send connections
