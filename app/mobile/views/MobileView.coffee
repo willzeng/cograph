@@ -13,6 +13,12 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
               matches = @findMatchingObjects q, nodes
               cb _.map matches, (match) -> {value: match.name, type: 'node'}
 
+        connectionNameMatcher = () =>
+          findMatches = (q, cb) =>
+            $.get "/document/#{@docId}/connections", (connections) =>
+              matches = @findMatchingObjects q, connections
+              cb _.map matches, (match) -> {value: match.name, type: 'connection'}
+
         # TYPAHEADS
 
         # Source Node
@@ -46,6 +52,22 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
 
         $('#destination-node-name').on 'typeahead:selected',
           (e, sugg, dataset) => @addConnection()
+
+        # Connection Types
+        $('#connection-name').typeahead(
+          hint: true,
+          highlight: true,
+          minLength: 1,
+          autoselect: true
+        ,
+          name: 'connection-names',
+          source: connectionNameMatcher()
+          templates:
+            header: '<h4 class="text-center">Node Names</h4>'
+        )
+
+        $('#connection-name').on 'typeahead:selected',
+          (e, sugg, dataset) -> $('#destination-node-name').focus()
 
       events:
           'click #add-connection-tab': 'switchTabsToConnection'
