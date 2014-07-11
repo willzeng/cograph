@@ -36,7 +36,7 @@ exports.analytics = (req, resp) ->
   id = req.params.id
   countNodes = "match (n:_doc_#{id}) return count(n);"
   countRels  = "MATCH (n:_doc_#{id})-[r]->(m:_doc_#{id}) return count(r);"
-  orderedByDegree = "MATCH (n:_doc_6848)-[r]->(m:_doc_6848) return n.name AS name, n._id As _id, count(r) AS degree  ORDER BY count(r) DESC"
+  orderedByDegree = "MATCH (n:_doc_#{id})-[r]->(m:_doc_#{id}) return n.name AS name, n._id As _id, count(r) AS degree  ORDER BY count(r) DESC"
   params = {}
   graphDb.query countNodes, params, (err, results) ->
     nodeCount = results[0]['count(n)']
