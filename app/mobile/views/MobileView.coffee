@@ -6,8 +6,46 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
       initialize: ->
         @docId = 6848
 
-        $.get "/document/#{@docId}/nodes", (nodes) =>
-          @nodes = nodes
+        nodeNameMatcher = () =>
+          findMatches = (q, cb) =>
+            $.get "/document/#{@docId}/nodes", (nodes) =>
+              @nodes = nodes
+              matches = @findMatchingObjects q, nodes
+              cb _.map matches, (match) -> {value: match.name, type: 'node'}
+
+        # TYPAHEADS
+
+        # Source Node
+        $('#source-node-name').typeahead(
+          hint: true,
+          highlight: true,
+          minLength: 1,
+          autoselect: true
+        ,
+          name: 'node-names',
+          source: nodeNameMatcher()
+          templates:
+            header: '<h4 class="text-center">Node Names</h4>'
+        )
+
+        $('#source-node-name').on 'typeahead:selected',
+          (e, sugg, dataset) -> $('#connection-name').focus()
+
+        # Target Node
+        $('#destination-node-name').typeahead(
+          hint: true,
+          highlight: true,
+          minLength: 1,
+          autoselect: true
+        ,
+          name: 'node-names',
+          source: nodeNameMatcher()
+          templates:
+            header: '<h4 class="text-center">Node Names</h4>'
+        )
+
+        $('#destination-node-name').on 'typeahead:selected',
+          (e, sugg, dataset) => @addConnection()
 
       events:
           'click #add-connection-tab': 'switchTabsToConnection'
@@ -90,13 +128,19 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!model
             source: sourceNode._id
             target: targetNode._id
             description: $('#connection-description').val()
-            tags: @parseTags $('#node-tags').val()
+            tags: @parseTags $('#connection-tags').val()
             _docId: @docId
           connection.save()
 
           $('.connection > input[type="text"]').removeClass('red')
-          $('.connection > input[type="text"]').val("")
+          $('#connection-name').val("")
+          $('#connection-description').val("")
+          $('#connection-tags').val("")
 
       # Helper Methods
       parseTags: (string) ->
         (tag.trim() for tag in string.split(','))
+
+      findMatchingObjects: (query, allObjects) ->
+        regex = new RegExp(query,'i')
+        _.filter(allObjects, (object) -> regex.test(object.name))
