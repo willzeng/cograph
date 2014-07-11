@@ -5,6 +5,7 @@ head
     title GraphDocs
     base(href='/')
     link(href='/assets/mobile/css/main.css', rel='stylesheet')
+    script(type='text/javascript', data-main="mobile", src="/assets/libs/requirejs/require.js") //loads mobile.js
   body
     #brand GraphDocs
     #tabs
@@ -28,6 +29,4 @@ head
         input#cancel-connection.red(type='submit', value='Cancel')
         input#add-connection.blue(type='submit', value='Connect')
     footer
-      a(href='') Desktop version
-    script(src='http://code.jquery.com/jquery-2.1.1.min.js')
-    script(src='/assets/mobile/js/main.js')
+      a(href='/landing') Desktop version
