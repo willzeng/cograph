@@ -7,8 +7,11 @@ connections = require './connections'
 documents = require './documents'
 search = require './search'
 
-router.get '/', (request, response)->
+router.get '/', (request, response) ->
   response.render('index.jade')
+
+router.get '/mobile', (request, response) ->
+  response.render('mobile.jade')
 
 router.get '/landing', (request, response)->
   response.render('landing.jade')
