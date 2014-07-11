@@ -24,10 +24,6 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
 
     ignoredAttributes: ['selected', 'dim']
 
-    serialize: ->
-      json = _.omit @clone().toJSON(), @ignoredAttributes
-      json
-
     validate: ->
       if !(typeof @get('source') is 'number' and typeof @get('target') is 'number')
         '_id of source and target must be a number.'
