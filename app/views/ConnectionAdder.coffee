@@ -25,9 +25,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
                 source: @drag_line.datum().get('_id')
                 target: node.get('_id')
                 _docId: @model.documentModel.get('_id')
-              connection.save()
-              @model.select @model.putConnection connection
-              @model.newConnectionCreated()
+              $.when(connection.save()).then =>
+                @model.select @model.putConnection connection
+                @model.newConnectionCreated()
           else
             @drag_line.classed('hidden', false)
               .datum(node)
