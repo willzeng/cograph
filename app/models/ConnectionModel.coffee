@@ -31,6 +31,8 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
         '_id of connection must be a number.'
 
     serialize: ->
-      removedKeys = @ignoredAttributes
-      if @get('tags').length is 0 then removedKeys.push('tags')
-      _.omit @clone().toJSON(), removedKeys
+      lessIgnored = _.omit @clone().toJSON(), @ignoredAttributes
+      if @get('tags').length is 0
+        _.omit lessIgnored, ['tags']
+      else
+        lessIgnored
