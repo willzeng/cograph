@@ -3,17 +3,12 @@ nav.navbar.navbar-default#menu-bar(role="navigation")
     .navbar-header
       a.navbar-brand(href="") GraphDocs
       ul.nav.nav-pills
-        li.dropdown
-          a.dropdown-toggle(data-toggle='dropdown', href='#')
-            | File
-            span.caret
-          ul.dropdown-menu
-            li(role="presentation")
-              a#new-doc-button(href="#", data-toggle="modal", data-target="#new-doc-modal")
-                | New Document
-            li(role="presentation")
-              a#open-doc-button(href="#")
-                | Open Document
+        li
+          a#new-doc-button(href="#", data-toggle="modal", data-target="#new-doc-modal")
+            | New
+        li
+          a#open-doc-button(href="#")
+            | Open
         li
           a#filter-modal-toggle(href="#", data-toggle="modal", data-target="#filters_template")
             | Filter
@@ -21,4 +16,4 @@ nav.navbar.navbar-default#menu-bar(role="navigation")
           a#analytics-button(href="", data-toggle="modal", data-target="#analytics-modal")
             | Analytics
       #navbar-menu-title      
-       input.navbar-text#menu-title(type="text", placeholder="Untitled Doc", data-toggle="tooltip", data-placement="bottom", title="Rename Doc")
+        input.navbar-text#menu-title(type="text", placeholder="Untitled Doc", data-toggle="tooltip", data-placement="bottom", title="Rename Doc")
