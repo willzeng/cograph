@@ -8,12 +8,12 @@ html(lang="en")
     base(href='/')
     link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
-    link(href='/assets/stylesheets/custom.css', rel='stylesheet')
+    link(href='/assets/stylesheets/mobile.css', rel='stylesheet')
     link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
     script(type='text/javascript', data-main="mobile", src="/assets/libs/requirejs/require.js") //loads mobile.js
 
   body
-    .container
+    .container#mobile-site
       .row
         .col-xs-12.col-sm-8.col-sm-offset-4.col-md-6.col-md-offset-3
           h2.text-center GraphDocs
@@ -28,19 +28,29 @@ html(lang="en")
                 .form-group
                   input.form-control(type="text", name="nodeName", placeholder="Node Name")
                 .form-group
-                  textarea.form-control(name="nodeDescription", placeholder="Enter a Description")
+                  textarea.form-control(name="nodeDescription", placeholder="Description")
                 .form-group
-                  input.form-control(type="text", name="nodeName", placeholder="Tags seperated by comma")
+                  input.form-control(type="text", name="nodeTags", placeholder="Tags separated by commas")
                 button.btn.btn-success(type="button" id="add-node") Create
                 button.btn.btn-default(type="button" id="cancel-node") Cancel
             .tab-pane(id="connection")
               form(role="form")
+                .form-group.input-group
+                  input.form-control(type="text", name="connectionSource", placeholder="Source Node")
+                  span.input-group-btn
+                      button.btn.btn-default(type='button') 
+                        i.fa.fa-caret-down
                 .form-group
-                  input.form-control(type="text", name="nodeName", placeholder="Connection Name")
+                  input.form-control(type="text", name="connectionName", placeholder="Name")
                 .form-group
-                  textarea.form-control(name="nodeDescription", placeholder="Enter a Description")
+                  textarea.form-control(name="connectionDescription", placeholder="Description")
                 .form-group
-                  input.form-control(type="text", name="nodeName", placeholder="Tags seperated by comma")
+                  input.form-control(type="text", name="connectionTags", placeholder="Tags separated by commas")
+                .form-group.input-group
+                    input.form-control(type="text", name="connectionTarget", placeholder="Target Node")
+                    span.input-group-btn
+                        button.btn.btn-default(type='button') 
+                          i.fa.fa-caret-down
                 button.btn.btn-success(type="button" id="add-connection") Create
                 button.btn.btn-default(type="button" id="cancel-connection") Cancel
 

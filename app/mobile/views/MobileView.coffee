@@ -1,5 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'socket-io'],
-  ($, _, Backbone, Bloodhound, typeahead, NodeModel, ConnectionModel, io) ->
+define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahead', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'socket-io'],
+  ($, _, Backbone, Bootstrap, Bloodhound, typeahead, NodeModel, ConnectionModel, io) ->
     class MobileView extends Backbone.View
       el: $ 'body'
 
