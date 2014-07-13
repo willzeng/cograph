@@ -5,22 +5,42 @@ html(lang="en")
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
+    base(href='/')
     link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
     link(href='/assets/stylesheets/custom.css', rel='stylesheet')
     link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
-    script(type='text/javascript', data-main="main", src="/assets/libs/requirejs/require.js") //loads main.js
+    script(type='text/javascript', data-main="mobile", src="/assets/libs/requirejs/require.js") //loads mobile.js
 
   body
     .container
       .row
         .col-xs-12.col-sm-8.col-sm-offset-4.col-md-6.col-md-offset-3
-          h2.text-center Enter a Node
-          form(role="form")
-            .form-group
-              label(for="nodeName") Node Name
-              input.form-control(type="text", name="nodeName", placeholder="Enter Node Name")
-            .form-group
-              label(for="nodeDescription") Node Description
-              textarea.form-control(name="nodeDescription", placeholder="Enter a Description")
-            button.btn.btn-success(type="submit") Create
+          h2.text-center GraphDocs
+          ul.nav.nav-tabs(id="main-tabs")
+            li.active
+              a(data-target="#node", role="tab", data-toggle="tab") Node
+            li
+              a(data-target="#connection", role="tab", data-toggle="tab") Connection
+          .tab-content
+            .tab-pane.active(id="node")
+              form(role="form")
+                .form-group
+                  input.form-control(type="text", name="nodeName", placeholder="Node Name")
+                .form-group
+                  textarea.form-control(name="nodeDescription", placeholder="Enter a Description")
+                .form-group
+                  input.form-control(type="text", name="nodeName", placeholder="Tags seperated by comma")
+                button.btn.btn-success(type="button" id="add-node") Create
+                button.btn.btn-default(type="button" id="cancel-node") Cancel
+            .tab-pane(id="connection")
+              form(role="form")
+                .form-group
+                  input.form-control(type="text", name="nodeName", placeholder="Connection Name")
+                .form-group
+                  textarea.form-control(name="nodeDescription", placeholder="Enter a Description")
+                .form-group
+                  input.form-control(type="text", name="nodeName", placeholder="Tags seperated by comma")
+                button.btn.btn-success(type="button" id="add-connection") Create
+                button.btn.btn-default(type="button" id="cancel-connection") Cancel
+
