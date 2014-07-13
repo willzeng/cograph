@@ -7,7 +7,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       initialize: ->
         @socket.on @url()+":create", (objData) =>
-          @add new @model objData
+          @add new @model objData, {parse:true}
 
         @socket.on @url()+":update", (objData) =>
           objData._id = parseInt(objData._id)
@@ -45,9 +45,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       initialize: ->
         @socket = io.connect('')
-
-        @socket.on 'announce', (data) ->
-          console.log data.message
 
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
@@ -140,6 +137,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           d.set 'dim', false
         @nodes.each (d) ->
           d.set 'dim', false
+
+      getSpokes: (node) ->
+        (@connections.where {'source': node.get('_id')}).concat @connections.where {'target': node.get('_id')}
 
       getFilter: () ->
         @filterModel

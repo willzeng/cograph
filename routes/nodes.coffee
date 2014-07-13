@@ -7,30 +7,26 @@ NodeHelper = require __dirname + '/helpers/NodeHelper'
 serverNode = new NodeHelper(graphDb)
 
 # CREATE
-exports.create = (data, callback, socket) ->
-  docLabel = "_doc_#{data._docId || 0}"
-  tags = data["tags"] || []
-  delete data["tags"]
-  props = data
+exports.create = (req, resp) ->
+  docLabel = "_doc_#{req.params.docId || 0}"
+  tags = req.body.tags || []
+  delete req.body.tags
+  props = req.body
   serverNode.create tags, props, docLabel, (savedNode) ->
-    socket.emit 'node:create', savedNode
-    socket.broadcast.to(savedNode._docId).emit 'nodes:create', savedNode
-    callback null, savedNode
+    resp.send savedNode
 
 # READ
-exports.read = (data, callback, socket) ->
-  id = data._id
+exports.read = (req, resp) ->
+  id = req.params.id
   graphDb.getNodeById id, (err, node) ->
     parsed = node._data.data
     utils.getLabels graphDb, id, (labels) ->
       parsed.tags = labels
-      parsed = utils.parseNodeToClient parsed
-      socket.emit('node:read', parsed)
-      callback(null, parsed)
+      resp.send utils.parseNodeToClient parsed
 
-exports.readCollection = (data, callback, socket) ->
-  console.log "readCollection of nodes in document #{data._docId}"
-  docLabel = "_doc_#{data._docId || 0}"
+exports.getAll = (req, resp) ->
+  console.log "get_all_nodes Query Requested"
+  docLabel = "_doc_#{req.params.docId || 0}"
   # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
   cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
   params = {}
@@ -41,13 +37,11 @@ exports.readCollection = (data, callback, socket) ->
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
       parsedNodes.push utils.parseNodeToClient nodeData
-    socket.emit 'nodes:read', parsedNodes
-    callback null, parsedNodes
+    resp.send parsedNodes
 
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
-
   graphDb.query cypherQuery, params, (err, results) ->
     parsedNodes = []
     for node in results
@@ -59,34 +53,30 @@ exports.getNeighbors = (req, resp) ->
 exports.getSpokes = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-[r]->(m) RETURN r;"
+  console.log cypherQuery
   graphDb.query cypherQuery, params, (err, results) ->
     connections = (utils.parseCypherResult(conn, 'r') for conn in results)
     resp.send connections
 
 # UPDATE
-exports.update = (data, callback, socket) ->
-  id = data._id
-  tags = data.tags || ""
-  delete data.tags
-  props = data
+exports.update = (req, resp) ->
+  id = req.params.id
+  newData = req.body
+  tags = req.body.tags || ""
+  delete req.body.tags
+  props = req.body
   serverNode.update id, tags, props, (newNode) ->
-    socket.emit 'node:update', newNode
-    socket.broadcast.to(newNode._docId).emit 'nodes:update', newNode
-    callback null, newNode
+    resp.send newNode
 
 # DELETE
-exports.destroy = (data, callback, socket) ->
-  id = data._id
+exports.destroy = (req, resp) ->
+  id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    node.delete () ->
-      parsed = node._data.data
-      socket.emit 'nodes:delete', true
-      socket.broadcast.to(parsed._docId).emit 'nodes:delete', parsed
-      callback null, parsed
+    node.delete () -> resp.send true
 
 # OTHER
 
-# Request is of the form {node: id, nodes:{id0, id1, ...}}
+# Request is of the form {nodeIds: {id0, id1, ...}}
 # returns all of the connections between node and any of the nodes
 exports.getConnections = (request,response) ->
   id = request.params.id

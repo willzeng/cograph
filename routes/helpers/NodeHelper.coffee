@@ -38,7 +38,9 @@ class NodeHelper
       @graphDb.query cypherQuery, params, (err, results) =>
         if err then throw err
         node = utils.parseCypherResult(results[0], 'n')
-        callback utils.parseNodeToClient node
+        node = utils.parseNodeToClient node
+        node.tags = tags
+        callback node
 
   # Adds a label to a node identified by id
   setLabel: (id, label, callback) ->
