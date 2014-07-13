@@ -1,9 +1,10 @@
-<div>Here is some information about this GraphDoc</div>
 <ul class="list-group">
   <li class="list-group-item">Total nodes: <%=nodeCount%></li>
   <li class="list-group-item">Total connections: <%=relCount%></li>
+  <% if(typeof highDegreeNode.name !== "undefined" && highDegreeNode.name !== null) { %>
   <li class="list-group-item">
-    The node with the highest degree is <%=highDegreeNode.name%> with <%=highDegreeNode.degree%> connections.
+    The node with the highest degree is <%= highDegreeNode.name%> with <%=highDegreeNode.degree%> connections.
   </li>
+  <% } %>
   <li class="list-group-item">Average connections per node: <%=avgDegree%></li>
 <ul>

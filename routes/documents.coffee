@@ -43,7 +43,7 @@ exports.analytics = (req, resp) ->
     graphDb.query countRels, params, (err, results) ->
       relCount = results[0]['count(r)']
       graphDb.query orderedByDegree, params, (err, results) ->
-        highDegreeNode = results[0]
+        highDegreeNode = results[0] || {}
         avgDegree = results.reduce(((memo, row) ->
           memo+parseInt(row.degree))
           , 0)/results.length
