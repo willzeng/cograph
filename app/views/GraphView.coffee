@@ -15,8 +15,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         that = this
         @model.nodes.on 'add remove', @updateForceGraph, this
         @model.connections.on 'add remove', @updateForceGraph, this
-        @model.nodes.on 'change', @updateDetails, this
-        @model.connections.on 'change', @updateDetails, this
+        @model.nodes.on 'change:name change:color', @updateDetails, this
+        @model.connections.on 'change:name change:color', @updateDetails, this
 
         @translateLock = false
 
