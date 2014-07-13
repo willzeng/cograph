@@ -29,6 +29,9 @@ router.get      '/document',           documents.getAll
 router.put      '/document/:id',       documents.update
 router.delete   '/document/:id',       documents.destroy
 
+# Analytics
+router.get      '/document/:id/analytics', documents.analytics
+
 # Nodes
 router.post     '/document/:docId/nodes',                      nodes.create
 router.get      '/document/:docId/nodes/:id',                  nodes.read

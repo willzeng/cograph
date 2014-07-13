@@ -31,3 +31,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
     getNodesByTag: (tag, cb) ->
       $.get @url() + '/getNodesByTag', {tag: tag}, (nodes) =>
         cb nodes
+
+    getAnalytics: (cb) ->
+      $.get @url() + '/analytics', {}, (results) ->
+        cb results

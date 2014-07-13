@@ -25,7 +25,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
         $("#details-container").empty()
         if selectedNC
-          $("#details-container").append _.template(detailsTemplate, selectedNC)
+          workspaceSpokes = @model.getSpokes selectedNC
+          $("#details-container").append _.template(detailsTemplate, {node:selectedNC, spokes:workspaceSpokes})
           @updateColor @model.defaultColors[selectedNC.get('color')]
           selectedNC.on "change:color", (nc) => @updateColor @model.defaultColors[selectedNC.get('color')]
 
@@ -90,7 +91,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           for node in neighbors
             newNode = new NodeModel node
             if @model.putNode newNode #this checks to see if the node has passed the filter
-              newNode.getConnections @model.nodes.models, (connections) =>
+              newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new ConnectionModel conn for conn in connections
 
       getSelectedNode: ->

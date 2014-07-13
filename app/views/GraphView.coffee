@@ -1,8 +1,15 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
+  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
+
+      # Parameters for display
+      maxConnTextLength: 20
+      maxNodeBoxHeight: 100
+      nodeBoxWidth: 120
+      maxInfoBoxHeight: 200
+      infoBoxWidth: 120
 
       initialize: ->
         that = this
@@ -102,24 +109,49 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
+          .attr('class', 'visible-line')
           .attr("marker-end", "url(#arrowhead)")
           .style("stroke", (d) => @getColor d)
-        connectionEnter.append("text")
+        text-group = connectionEnter.append("g")
+          .attr('class', 'connection-text')
+        text-group.append("text")
           .attr("text-anchor", "middle")
+        text-group.append("foreignObject")
+          .attr('y', '0')
+          .attr('height', @maxInfoBoxHeight)
+          .attr('width', @infoBoxWidth)
+          .attr('x', '-12')
+          .attr('class', 'connection-info')
+          .append('xhtml:body')
+            .attr('class', 'connection-info-body')
 
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
           .each (d,i) ->
-            line = d3.select(this).select("line")
+            line = d3.select(this).select("line.visible-line")
             line.style("stroke", (d) -> that.getColor d)
             if d.get('selected')
               line.attr("marker-end", "url(#arrowhead-selected)")
             else
               line.attr("marker-end", "url(#arrowhead)")
         connection.select("text")
-          .text((d) -> d.get("name"))
+          .text((d) =>
+            if(d.get("name").length < @maxConnTextLength)
+              return d.get("name")
+            else 
+              return d.get("name").substring(0,@maxConnTextLength-3)+"..."
+        )
+        connection.select('.connection-info-body')
+          .html((d) -> _.template(popover, d))
+
+        # move the popover info to align with the left of the text
+        for t in connection.select('text')[0]
+          dim = t.getBBox()
+          info = $(t).parent().find('.connection-info')
+          info
+            .attr('x',dim.x)
 
         # remove deleted elements
         connection.exit().remove()
@@ -131,24 +163,33 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
-        nodeEnter.append("line")
-          .attr("class","select-zone")
-        nodeEnter.append("line")
-        nodeEnter.append("rect").style("fill", (d) => @getColor d)
-        nodeEnter.append("text")
-          .attr("dy", "5px")
+        nodeText = nodeEnter.append("foreignObject")
+          .attr("y", "5")
+          .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
+          .attr("width", @nodeBoxWidth)
+          .attr("x", "-60")
+          .attr('class', 'node-title')
+        nodeInnerText = nodeText.append('xhtml:body')
+            .attr('class', 'node-title-body')
+        nodeEnter.append("foreignObject")
+          .attr('y', '12')
+          .attr('height', @maxInfoBoxHeight)
+          .attr('width', @infoBoxWidth)
+          .attr('x', '-21')
+          .attr('class', 'node-info')
+          .append('xhtml:body')
+            .attr('class', 'node-info-body')
 
-
-        nodeEnter
+        nodeInnerText
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
           .on "click", (d) =>
             # prevents node from being selected on drag
             if (d3.event.defaultPrevented) then return
             @model.select d
-          .on "contextmenu", (node) =>
+          .on "contextmenu", (node) ->
             d3.event.preventDefault()
-            @trigger 'node:right-click', node
+            that.trigger('node:right-click', node, d3.event)
           .on "mouseover", (node) =>
             @trigger "node:mouseover", node
           .on "mouseout", (node) =>
@@ -161,30 +202,28 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .call(@force.drag)
-        node.select('text')
-          .text((d) -> d.get('name'))
-        node.select('rect')
-          .style("fill", (d) => @getColor d)
+        node.select('.node-title-body')
+          .html((d) -> _.template(nodeTitle, d))
+          .style("background", (d) => @getColor d)
+        node.select('.node-info-body')
+          .html((d) -> _.template(popover, d))
 
+        # move the popover info to align with the left of the text
         # construct the node boxes
         offsetV = 4
         offsetH = 12
-        for t in node.select('text')[0]
+        for t in node.select('.node-title')[0]
+          el = $(t).find('.node-title-body')
+          left = el.width()/2+parseInt(el.css('border-left-width'),10)
+          top = el.height()/2+parseInt(el.css('border-bottom-width'),10)
+          $(t)
+            .attr('y', - top)
           dim = t.getBBox()
-          line = $(t).parent().find('line')
-          line
-            .attr('x1', dim.x-(offsetH)/2)
-            .attr('y1', dim.y+dim.height+2)
-            .attr('x2', dim.x + dim.width+(offsetH)/2)
-            .attr('y2', dim.y+dim.height+2)
-            .attr('stroke', '#ccc')
-            .attr('stroke-width', '4px')
-          rect = $(t).parent().find('rect')
-          rect
-            .attr('width', dim.width+ offsetH)
-            .attr('height', dim.height+ offsetV)
-            .attr('x', dim.x - (offsetH/2))
-            .attr('y', dim.y - (offsetV/2))
+          
+          info = $(t).parent().find('.node-info')
+          info
+            .attr('x',dim.x-left)
+            .attr('y',top)
 
         # delete unmatching elements
         node.exit().remove()
@@ -195,10 +234,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             .attr("y1", (d) => @model.getSourceOf(d).y)
             .attr("x2", (d) => @model.getTargetOf(d).x)
             .attr("y2", (d) => @model.getTargetOf(d).y)
-          connection.select("text")
+          connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
-          @connectionAdder.tick()
+          @connectionAdder.tick
         @force.on "tick", tick
 
       isContainedIn: (node, element) =>

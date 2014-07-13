@@ -1,13 +1,20 @@
 extends layout
 
 block content
+  #sidebar
+    #details-container.controls
   #graph
-    .toolbar.left.controls
-      form#search-form.navbar-form.navbar-left
-        .form-group
-          input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-        button.btn.btn-primary(type="button")
-          i.fa.fa-search
+    .loading-container
+      i.fa.fa-circle-o-notch.fa-spin.fa-5x
+    .toolbar.controls
+      .navbar-left.navbar-form
+        form#search-form
+          .form-group
+            input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
+          button.btn.btn-primary(type="button")
+            i.fa.fa-search
+        button#sidebar-toggle.btn.btn-default
+            i.fa.fa-arrows-h
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form
@@ -15,10 +22,6 @@ block content
             input.form-control(type="text", name='node-name', placeholder="Add something")
           button.btn.btn-primary(type="submit")
             i.fa.fa-plus
-        button#filter-modal-toggle.btn.btn-default
-          i.fa.fa-filter
-        button#sidebar-toggle.btn.btn-default
-          i.fa.fa-arrows-h
     .toolbar.bottom.right.controls
       button#sharing-button.btn.btn-primary
         div Share GraphDoc
@@ -29,6 +32,4 @@ block content
         i.glyphicon.glyphicon-minus
     #trash-bin.controls
       i.fa.fa-archive
-  #sidebar
-    #details-container.controls
   .data-tooltip-container

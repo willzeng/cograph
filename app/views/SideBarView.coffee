@@ -19,6 +19,6 @@ define ['jquery', 'underscore', 'backbone'],
           $('#sidebar').animate 'width': '0%'
           $('#graph').animate 'width': '100%'
         else
-          $('#sidebar').animate 'width': '30%'
-          $('#graph').animate 'width': '70%'
+          $('#sidebar').animate 'width': '25%'
+          $('#graph').animate 'width': '75%'
         @sidebarShown = !@sidebarShown

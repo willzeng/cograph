@@ -2,11 +2,11 @@
   <div class="panel-heading">
     <h4 class="panel-title">
       <a data-toggle="collapse" data-parent="#details-container" href="#collapse-one">
-        <%= attributes.name %>
+        <%= node.attributes.name %>
       </a>
       <div class="pull-right">
         <button type="button" class="close" aria-hidden="true">
-          <i class='fa fa-times'></i>
+          ×
         </button>
       </div>
     </h4>
@@ -15,7 +15,7 @@
   <div id="collapse-one" class="panel-collapse collapse in">
     <div class="panel-body">
       <div class="detail-controls">
-        <% if (constructor.name === "NodeModel") {%>
+        <% if (node.constructor.name === "NodeModel") {%>
           <button id="edit-node-button" class="btn btn-default">Edit</button>
           <button id="expand-node-button" class="btn btn-primary">Expand</button>
           <button id="archive-node-button" class="btn btn-warning">Archive</button>
@@ -24,14 +24,19 @@
           <button id="archive-connection-button" class="btn btn-warning">Archive</button>
         <% } %>
       </div>
-      <p class="lead"><%= attributes.description %></p>
+      <p class="lead"><%= node.attributes.description %></p>
       <p>
-        <% if (attributes.url) { %>
-            URL: <a href="<%= attributes.url %>"><%= attributes.url %></a><br/>
+        <% if (node.attributes.url) { %>
+            URL: <a href="<%= attributes.url %>"><%= node.attributes.url %></a><br/>
         <% }; %>
         <ul class="list-group">
-          <% _.each(attributes.tags, function(tag) { %>
+          <% _.each(node.attributes.tags, function(tag) { %>
             <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
+          <% }); %>
+        </ul>
+        <ul class="list-group">
+          <% _.each(spokes, function(conn) { %>
+            <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
           <% }); %>
         </ul>
       </p>

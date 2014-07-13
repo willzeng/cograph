@@ -14,4 +14,12 @@ nav.navbar.navbar-default#menu-bar(role="navigation")
             li(role="presentation")
               a#open-doc-button(href="#")
                 | Open Document
+        li
+          a#filter-modal-toggle(href="#", data-toggle="modal", data-target="#filters_template")
+            | Filter
+            span.caret
+        li
+          a#analytics-button(href="", data-toggle="modal", data-target="#analytics-modal")
+            | Analytics
+            span.caret
       input.navbar-text#menu-title(type="text", placeholder="Untitled Doc")
