@@ -1,0 +1,7 @@
+<div class="pad">
+  <% if(attributes.name.length < 30) { %>
+    <%= attributes.name %>
+  <% } else { %>
+  <%= attributes.name.substring(0,27) %>...
+  <% } %>
+</div>

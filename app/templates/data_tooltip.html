@@ -1,14 +1,14 @@
-    <span>
-      <% if(attributes.description != null && attributes.description != ""){ %>
-        <span class="pad">
-        <i><%= attributes.description %></i>
-        </br>
-        </span>
-      <% } %>
-      <% if(_.some(attributes.tags)){ %>
-        <span class="pad">
-        <i class="fa fa-tags"></i>
-        <%= attributes.tags.join(", ") %>
-        </span>
-      <% } %>
-    </span>
+<div class="pad">
+  <% if(attributes.description != null && attributes.description != ""){ %>
+    <div>
+    <i><%= attributes.description %></i>
+    </br>
+    </div>
+  <% } %>
+  <% if(_.some(attributes.tags)){ %>
+    <div>
+    <i class="fa fa-tags"></i>
+    <%= attributes.tags.join(", ") %>
+    </div>
+  <% } %>
+</div>

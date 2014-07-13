@@ -2,7 +2,7 @@
 
 @node-color: white;
 @connection-color: black;
-@stroke-color: @gray;
+@stroke-color: black;
 @selected-color: #74DDFC;
 @selected-nodetext-color: white;
 @fixed-color: @orange;
@@ -15,18 +15,28 @@
   cursor: pointer;
 }
 
-.node rect {
-  cursor: pointer;
-  fill: @node-color;
-}
-
 .node.dim {
   opacity: 0.3;
 }
 
-.node.selected rect {
-  stroke: @selected-color;
-  stroke-width: 3px;
+.node.fixed .node-title-body {
+  border: 2px dashed @orange;
+}
+
+.node.selected .node-title-body {
+  border: 1px solid @stroke-color;
+}
+
+.node-title-body {
+  background: white;
+  -ms-word-break: break-all;
+  word-break: break-all;
+
+  word-break: break-word;
+
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 
 .node-info-body, .connection-info-body {
@@ -35,36 +45,31 @@
   color: gray;
 }
 
-.node-info-body .pad, .connection-info-body .pad {
-  padding: 4px;
+.pad {
+  padding: 8px;
 }
 
 .node-info-body.shown, .connection-info-body.shown {
   display: block;
 }
 
-.node.fixed line{
-  stroke-dasharray:5;
-  stroke: @fixed-color;
-}
-
 .node line {
   stroke: #bbb;
 }
 
-.node text {
+.node-title-body {
   cursor: pointer;
   font: 16px sans-serif;
   font-weight:bold;
-  pointer-events: none;
+  //pointer-events: none;
   text-anchor: middle;
   fill: @text-color;
 }
 
 .connection text {
   font: 15px sans-serif;
-  pointer-events: none;
   text-anchor: middle;
+  cursor: pointer;
   fill: #333;
   text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
 }
@@ -127,7 +132,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: #efefef;
+  background: royalblue;
   height: 100%;
 }
 

@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
+  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -130,7 +130,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             else
               line.attr("marker-end", "url(#arrowhead)")
         connection.select("text")
-          .text((d) -> d.get("name"))
+          .text((d) -> 
+            if(d.get("name").length < 20)
+              return d.get("name")
+            else 
+              return d.get("name").substring(0,17)+"..."
+        )
         connection.select('.connection-info-body')
           .html((d) -> _.template(popover, d))
 
@@ -151,12 +156,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
-        nodeEnter.append("line")
-          .attr("class","select-zone")
-        nodeEnter.append("line")
-        nodeEnter.append("rect").style("fill", (d) => @getColor d)
-        nodeEnter.append("text")
-          .attr("dy", "5px")
+        nodeText = nodeEnter.append("foreignObject")
+          .attr("y", "5")
+          .attr("height", "100") #max height overflow is cut off
+          .attr("width", "120")
+          .attr("x", "-60")
+          .attr('class', 'node-title')
+        nodeInnerText = nodeText.append('xhtml:body')
+            .attr('class', 'node-title-body')
         nodeEnter.append("foreignObject")
           .attr('y', '12')
           .attr('height', '200')
@@ -166,7 +173,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .append('xhtml:body')
             .attr('class', 'node-info-body')
 
-        nodeEnter
+        nodeInnerText
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
           .on "click", (d) =>
@@ -188,10 +195,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .call(@force.drag)
-        node.select('text')
-          .text((d) -> d.get('name'))
-        node.select('rect')
-          .style("fill", (d) => @getColor d)
+        node.select('.node-title-body')
+          .html((d) -> _.template(nodeTitle, d))
+          .style("background", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
 
@@ -199,25 +205,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         # construct the node boxes
         offsetV = 4
         offsetH = 12
-        for t in node.select('text')[0]
+        for t in node.select('.node-title')[0]
+          el = $(t).find('.node-title-body')
+          left = el.width()/2+parseInt(el.css('border-left-width'),10)
+          top = el.height()/2+parseInt(el.css('border-bottom-width'),10)
+          $(t)
+            .attr('y', - top)
           dim = t.getBBox()
+          
           info = $(t).parent().find('.node-info')
           info
-            .attr('x',dim.x-(offsetH/2))
-          line = $(t).parent().find('line')
-          line
-            .attr('x1', dim.x-(offsetH)/2)
-            .attr('y1', dim.y+dim.height+2)
-            .attr('x2', dim.x + dim.width+(offsetH)/2)
-            .attr('y2', dim.y+dim.height+2)
-            .attr('stroke', '#ccc')
-            .attr('stroke-width', '4px')
-          rect = $(t).parent().find('rect')
-          rect
-            .attr('width', dim.width+ offsetH)
-            .attr('height', dim.height+ offsetV)
-            .attr('x', dim.x - (offsetH/2))
-            .attr('y', dim.y - (offsetV/2))
+            .attr('x',dim.x-left)
+            .attr('y',top)
 
         # delete unmatching elements
         node.exit().remove()
