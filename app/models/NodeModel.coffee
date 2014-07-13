@@ -34,8 +34,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
       $.get @ajaxURL()+"/spokes/", (results) ->
         callback results
 
-    getConnections: (nodes, callback) ->
-      nodeIds = (n.id for n in nodes)
+    getConnections: (nodeCollection, callback) ->
+      nodeIds = nodeCollection.pluck '_id'
       data = {nodeIds: nodeIds}
       $.post @ajaxURL()+"/get_connections/", data, (results) ->
         callback results
