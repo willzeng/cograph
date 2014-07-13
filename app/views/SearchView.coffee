@@ -1,5 +1,5 @@
-define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceModel'],
-  ($, Backbone, Bloodhound, typeahead, WorkspaceModel) ->
+define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceModel', 'cs!models/ConnectionModel'],
+  ($, Backbone, Bloodhound, typeahead, WorkspaceModel, ConnectionModel) ->
     class SearchView extends Backbone.View
       el: $ '#search-form'
 
@@ -53,8 +53,13 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
               if localNode
                 @model.select localNode
               else
-                @model.putNodeFromData node, {force:true}
+                @addNode node
         $('#search-input').val('')
+
+      addNode: (nodeData) ->
+        addedNode = @model.putNodeFromData nodeData, {force:true}
+        addedNode.getConnections @model.nodes, (connections) =>
+          @model.putConnection new ConnectionModel conn for conn in connections
 
       findLocalNode: (name) ->
         matchedNames = @findMatchingNames(name, @model.nodes.pluck('name'))
@@ -62,7 +67,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
 
       getNodeByName: (name) ->
         @model.getNodeByName name, (node) =>
-          @model.select @model.putNodeFromData node, {force:true}
+          @addNode node
 
       findMatchingNames: (query, allNames) ->
         regex = new RegExp(query,'i')
