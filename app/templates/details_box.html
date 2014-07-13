@@ -4,7 +4,7 @@
       <a data-toggle="collapse" data-parent="#details-container" href="#collapse-one">
         <%= node.attributes.name %>
       </a>
-      <div class="pull-right">
+      <div class="pull-right uptwo">
         <button type="button" class="close" aria-hidden="true">
           ×
         </button>
@@ -16,8 +16,8 @@
     <div class="panel-body">
       <div class="detail-controls">
         <% if (node.constructor.name === "NodeModel") {%>
-          <button id="edit-node-button" class="btn btn-default">Edit</button>
-          <button id="expand-node-button" class="btn btn-primary">Expand</button>
+          <button id="edit-node-button" class="btn btn-primary">Edit</button>
+          <button id="expand-node-button" class="btn btn-default">Expand</button>
           <button id="archive-node-button" class="btn btn-warning">Archive</button>
         <% } else { %>
           <button id="edit-connection-button" class="btn btn-default">Edit</button>

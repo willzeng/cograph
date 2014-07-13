@@ -31,7 +31,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           selectedNC.on "change:color", (nc) => @updateColor @model.defaultColors[selectedNC.get('color')]
 
       updateColor: (color) ->
-        $('.panel-body', '#details-container').css 'background', color
+        $('.panel-heading', '#details-container').css 'background', color
 
       closeDetail: () ->
         $('#details-container').empty()

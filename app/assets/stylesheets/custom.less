@@ -155,6 +155,25 @@ svg {
   position: fixed;
 }
 
+.uptwo {
+  margin-top: -2px;
+}
+
+input[type="text"]::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #999;
+}
+input[type="text"]:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #999;
+    opacity:  1;
+}
+input[type="text"]::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #999;
+    opacity:  1;
+}
+input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #999;
+}
+
 #zoom-controls {
   position: absolute;
   bottom: 40px;
@@ -167,8 +186,8 @@ svg {
   top: 0;
   height: 100%;
   width: 0;
-  background: @offwhite;
-  overflow-y: scroll;
+  background: darken(#284552,10%);
+  overflow-y: auto;
 }
 
 #sidebar-toggle {
@@ -176,7 +195,7 @@ svg {
 }
 
 #trash-bin {
-  height: 83px;
+  height: 81px;
   width: 200px;
   font-size: 26pt;
   color: lightgray;
@@ -266,16 +285,30 @@ svg {
   margin: 2px 0px;
 }
 
+.navbar-header {
+  width: 100%;
+}
+
+#navbar-menu-title {
+  width: calc(~"100% - 340px");
+  overflow: hidden;
+}
+
 #menu-title {
+  position: relative;
+  //left: calc(~"50% - 75px");
+  left: 0;
+  width: 150px;
   outline: none;
-  width: 450px;
   background: transparent;
+  color: black;
   border: 0;
-  float: left;
+  cursor: pointer;
 }
 
 #menu-title:focus {
   background: @white;
+  cursor: text;
 }
 
 #menu-bar .nav-pills {
@@ -312,6 +345,17 @@ svg {
 .btn {
   outline: none !important;
   border-radius: 0 !important;
+}
+
+.btn-primary {
+  background: darken(#284552,10%);
+  border: 1px solid darken(#284552,10%);
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+  border: 1px solid darken(#284552,12%);
+  background: darken(#284552,12%);;
+  color: white;
 }
 
 .navbar {
@@ -351,7 +395,7 @@ svg {
 .bootstrap-colorpalette .btn-color {
     width: 30px;
     height: 30px;
-    border: 4px solid #fff;
+    border: 1px solid #efefef;
     margin: 3px;
     padding: 0;
 }

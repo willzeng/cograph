@@ -19,6 +19,10 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @model.on "document:change", @render, this
         @model.getDocument().on 'change', @render, this
 
+        $('#menu-title').tooltip({animation:true})
+        $('#menu-title').click( ()->
+           $(this).select()
+        )
         $('#menu-title').bind 'input', () =>
           @model.getDocument().set 'name', $('#menu-title').val()
           @model.getDocument().save()

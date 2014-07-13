@@ -17,9 +17,8 @@ nav.navbar.navbar-default#menu-bar(role="navigation")
         li
           a#filter-modal-toggle(href="#", data-toggle="modal", data-target="#filters_template")
             | Filter
-            span.caret
         li
           a#analytics-button(href="", data-toggle="modal", data-target="#analytics-modal")
             | Analytics
-            span.caret
-      input.navbar-text#menu-title(type="text", placeholder="Untitled Doc")
+      #navbar-menu-title      
+       input.navbar-text#menu-title(type="text", placeholder="Untitled Doc", data-toggle="tooltip", data-placement="bottom", title="Rename Doc")
