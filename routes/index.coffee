@@ -13,6 +13,9 @@ router.get '/', (request, response)->
 router.get '/landing', (request, response)->
   response.render('landing.jade')
 
+router.get '/mobile', (request, response)->
+  response.render('mobile/mobile.jade')
+
 router.get '/errors/missingDocument', (request, response)->
   response.render('errors/missingDocument.jade')
 
