@@ -16,9 +16,13 @@ define ['underscore', 'backbone'], (_, Backbone) ->
 
     ignoredAttributes: ['selected', 'dim']
 
+    parse: (resp, options) ->
+      if resp._id then resp._id = parseInt(resp._id, 10)
+      resp
+
     sync: (method, model, options) ->
       options = options || {}
-      options.data = JSON.stringify(@serialize())
+      options.data = @serialize()
       options.contentType = 'application/json'
       Backbone.sync.apply(this, [method, model, options])
 

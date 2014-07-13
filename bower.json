@@ -31,9 +31,10 @@
     "d3": "~3.4.6",
     "backbone-forms": "~0.14.0",
     "typeahead.js": "~0.10.2",
-    "backbone.bootstrap-modal": "git@github.com:vpontis/backbone.bootstrap-modal.git#~0.9.1",
-    "bootstrap-colorpalette": "git@github.com:willzeng/bootstrap-colorpalette.git",
-    "share-button": "git@github.com:willzeng/share-button.git"
+    "new-bb-modal": "~0.9.1",
+    "bootstrap-colorpalette": "~0.0.1",
+    "share-button": "~0.4.1",
+    "backbone.iobind": "~0.4.7"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

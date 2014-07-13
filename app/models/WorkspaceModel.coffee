@@ -1,15 +1,34 @@
 define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
-  'cs!models/FilterModel', 'cs!models/DocumentModel'],
-  ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel) ->
-    class ConnectionCollection extends Backbone.Collection
-      model: ConnectionModel
-      url: -> "/documents/#{@_docId}/connections"
+  'cs!models/FilterModel', 'cs!models/DocumentModel', 'socket-io'],
+  ($, Backbone, NodeModel, ConnectionModel, FilterModel, DocumentModel, io) ->
+    class ObjectCollection extends Backbone.Collection
       _docId: 0
+      socket: io.connect("")
 
-    class NodeCollection extends Backbone.Collection
+      initialize: ->
+        @socket.on @url()+":create", (objData) =>
+          @add new @model objData, {parse:true}
+
+        @socket.on @url()+":update", (objData) =>
+          objData._id = parseInt(objData._id)
+          id = objData._id
+          @findWhere({_id:id}).set objData
+
+        @socket.on @url()+":delete", (objData) =>
+          @remove new @model objData
+
+      # Extend sync to pass through the current document on read
+      sync: (method, model, options) ->
+        if method is "read" then options = _.extend options, {attrs:{_docId:@_docId}}
+        Backbone.sync method, model, options
+
+    class ConnectionCollection extends ObjectCollection
+      model: ConnectionModel
+      url: -> "connections"
+
+    class NodeCollection extends ObjectCollection
       model: NodeModel
-      url: -> "/documents/#{@_docId}/nodes"
-      _docId:  0
+      url: -> "nodes"
 
     class WorkspaceModel extends Backbone.Model
 
@@ -25,6 +44,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           blue: '#66CCDD'
 
       initialize: ->
+        @socket = io.connect('')
+
         @nodes = new NodeCollection()
         @connections = new ConnectionCollection()
 
@@ -42,6 +63,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @nodes._docId = doc.id
         @connections._docId = doc.id
         @trigger "document:change"
+        @socket.emit 'open:document', doc.attributes
         @connections.reset()
         $.when(@nodes.fetch()).then =>
           @connections.fetch()
