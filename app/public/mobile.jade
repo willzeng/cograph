@@ -16,7 +16,8 @@ html(lang="en")
     .container#mobile-site
       .row
         .col-xs-12.col-sm-8.col-sm-offset-4.col-md-6.col-md-offset-3
-          h2.text-center GraphDocs
+          h2.text-center
+            a(href="/landing") GraphDocs
           ul.nav.nav-tabs(id="main-tabs")
             li
               a(data-target="#node", role="tab", data-toggle="tab") Node
@@ -42,11 +43,18 @@ html(lang="en")
                       button.btn.btn-default(type='button') 
                         i.fa.fa-caret-down
                 .form-group
-                  input.form-control(type="text", id="connection-name", placeholder="Name")
-                .form-group
-                  textarea.form-control(id="connection-description", placeholder="Description")
-                .form-group
-                  input.form-control(type="text", id="connection-tags", placeholder="Tags separated by commas")
+                  input.form-control(type="text", id="connection-name", placeholder="Connection Type")
+                #accordion.form-group
+                  #panel3.panel
+                      .panel-heading
+                        h4.panel-title
+                          a(data-toggle='collapse', data-parent='#accordion', href='#details')
+                            | Add details
+                      #details.panel-collapse.collapse
+                        .form-group
+                          textarea.form-control(id="connection-description", placeholder="Description")
+                        .form-group
+                          input.form-control(type="text", id="connection-tags", placeholder="Tags separated by commas")
                 .form-group.input-group
                     input.form-control(type="text", id="destination-node-name", placeholder="Target Node")
                     span.input-group-btn
