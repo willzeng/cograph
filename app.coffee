@@ -9,7 +9,7 @@ app = express()
 app.set 'views', __dirname + '/app/public'
 app.set 'view engine', 'jade'
 
-app.use favicon(path.join(__dirname, '/app/assets/images/rhizi.ico'))
+app.use favicon(path.join(__dirname, '/app/assets/images/favicon.ico'))
 app.use require('less-middleware')(path.join(__dirname, '/app/') )
 app.use bodyParser()
 
