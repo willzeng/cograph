@@ -4,8 +4,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
       el: $ 'body'
 
       initialize: ->
-        console.log 'init'
-        @docId = 6848
+        @docId = 6798
 
         nodeNameMatcher = () =>
           findMatches = (q, cb) =>
@@ -20,134 +19,142 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
               matches = @findMatchingObjects q, connections
               cb _.map matches, (match) -> {value: match.name, type: 'connection'}
 
-        # $('#main-tabs a').click (e) ->
-        #     e.preventDefault()
-        #     console.log "sdds"
-        #     # $(this).tab('show')
+        $('#source-node-name').focus ->
+          $('#source-node-name').removeClass('red')
+        $('#destination-node-name').focus ->
+          $('#destination-node-name').removeClass('red')
+        $('#connection-name').focus ->
+          $('#connection-name').removeClass('red')
+        $('#node-name').focus ->
+          $('#node-name').removeClass('red')
 
         # TYPEAHEADS
 
         # Source Node
-        # $('#source-node-name').typeahead(
-        #   hint: true,
-        #   highlight: true,
-        #   minLength: 1,
-        #   autoselect: true
-        # ,
-        #   name: 'node-names',
-        #   source: nodeNameMatcher()
-        # )
+        $('#source-node-name').typeahead(
+          hint: true,
+          highlight: true,
+          minLength: 1,
+          autoselect: true
+        ,
+          name: 'node-names',
+          source: nodeNameMatcher()
+        )
 
-        # $('#source-node-name').on 'typeahead:selected',
-        #   (e, sugg, dataset) -> $('#connection-name').focus()
+        $('#source-node-name').on 'typeahead:selected',
+          (e, sugg, dataset) -> $('#connection-name').focus()
 
-        # # Target Node
-        # $('#destination-node-name').typeahead(
-        #   hint: true,
-        #   highlight: true,
-        #   minLength: 1,
-        #   autoselect: true
-        # ,
-        #   name: 'node-names',
-        #   source: nodeNameMatcher()
-        # )
+        # Target Node
+        $('#destination-node-name').typeahead(
+          hint: true,
+          highlight: true,
+          minLength: 1,
+          autoselect: true
+        ,
+          name: 'node-names',
+          source: nodeNameMatcher()
+        )
 
-        # $('#destination-node-name').on 'typeahead:selected',
-        #   (e, sugg, dataset) => @addConnection()
+        $('#destination-node-name').on 'typeahead:selected',
+          (e, sugg, dataset) => @addConnection()
 
-        # # Connection Types
-        # $('#connection-name').typeahead(
-        #   hint: true,
-        #   highlight: true,
-        #   minLength: 1,
-        #   autoselect: true
-        # ,
-        #   name: 'connection-names',
-        #   source: connectionNameMatcher()
-        # )
+        # Connection Types
+        $('#connection-name').typeahead(
+          hint: true,
+          highlight: true,
+          minLength: 1,
+          autoselect: true
+        ,
+          name: 'connection-names',
+          source: connectionNameMatcher()
+        )
 
-        # $('#connection-name').on 'typeahead:selected',
-        #   (e, sugg, dataset) -> $('#destination-node-name').focus()
+        $('#connection-name').on 'typeahead:selected',
+          (e, sugg, dataset) -> $('#destination-node-name').focus()
 
-      # events:
-      #     'click #cancel-node': 'cancelNode'
-      #     'click #add-node': 'addNode'
-      #     # 'click #add-connection-node': 'addConnectionNode'
-      #     # 'click #cancel-connection': 'cancelConnection'
-      #     # 'click #add-connection': 'addConnection'
+      events:
+          'click #add-node': 'addNode'
+          'click #cancel-node': 'cancelNode'
+          'click #add-connection-node': 'addConnectionNode'
+          'click #cancel-connection': 'cancelConnection'
+          'click #add-connection': 'addConnection'
 
-      # # BUTTONS
+      # BUTTONS
 
-      # # Add Node
-      # cancelNode: ->
-      #   $('#node-name').removeClass('red')
-      #   $('.node > input[type="text"]').val("")
+      # Add Node
+      cancelNode: ->
+        $('#node-name').removeClass('red')
+        $('input[type="text"]').val("")
+        $('#node-description').val("")
 
-      # addNode: ->
-      #   if $('#node-name').val() == ""
-      #     $('#node-name').addClass('red')
-      #     [false]
-      #   else
-      #     $('#node-name').removeClass('red')
+      addNode: ->
+        if $('#node-name').val() == ""
+          $('#node-name').addClass('red')
+          [false]
+        else
+          $('#node-name').removeClass('red')
 
-      #     newNode = new NodeModel
-      #       name: $('#node-name').val()
-      #       description: $('#node-description').val()
-      #       tags: @parseTags $('#node-tags').val()
-      #       _docId: @docId
-      #     newNode.save()
+          newNode = new NodeModel
+            name: $('#node-name').val()
+            description: $('#node-description').val()
+            tags: @parseTags $('#node-tags').val()
+            _docId: @docId
+          newNode.save()
 
-      #     $('.node > input[type="text"]').val("")
-      #     [true, $('#node-name').val()]
+          $('input[type="text"]').val("")
+          $('#node-description').val("")
+          [true, newNode.get('name')]
 
-      # # addConnectionNode: ->
-      # #   success = @addNode()
-      # #   if success[0]
-      # #     @switchTabsToConnection()
-      # #     $('#source-node-name').val success[1]
+      addConnectionNode: ->
+        success = @addNode()
+        if success[0]
+          $('a[data-target="#connection"]').tab('show')
+          $('#source-node-name').val success[1]
 
-      # # Add Connection
-      # cancelConnection: ->
-      #   $('.connection > input[type="text"]').removeClass('red')
-      #   $('.connection > input[type="text"]').val("")
+      # Add Connection
+      cancelConnection: ->
+        # $('.connection > input[type="text"]').removeClass('red')
+        $('input').val("")
 
-      # addConnection: ->
-      #   validated = true;
-      #   if $('#connection-name').val() == ""
-      #     validated = false
-      #     $('#connection-name').addClass('red')
+      addConnection: ->
+        validated = true;
+        if $('#connection-name').val() == ""
+          validated = false
+          console.log "dsds"
+          $('#connection-name').addClass('red')
 
-      #   if $('#source-node-name').val() == ""
-      #     validated = false
-      #     $('#source-node-name').addClass('red')
+        if $('#source-node-name').val() == ""
+          validated = false
+          $('#source-node-name').addClass('red')
 
-      #   if $('#destination-node-name').val() == ""
-      #     validated = false
-      #     $('#destination-node-name').addClass('red')
+        if $('#destination-node-name').val() == ""
+          validated = false
+          $('#destination-node-name').addClass('red')
 
-      #   if validated
-      #     sourceNode = _.findWhere @nodes, {name:$('#source-node-name').val()}
-      #     targetNode = _.findWhere @nodes, {name:$('#destination-node-name').val()}
+        if validated
+          sourceNode = _.findWhere @nodes, {name:$('#source-node-name').val()}
+          targetNode = _.findWhere @nodes, {name:$('#destination-node-name').val()}
 
-      #     #send data to server
-      #     connection = new ConnectionModel
-      #       name: $('#connection-name').val()
-      #       source: sourceNode._id
-      #       target: targetNode._id
-      #       description: $('#connection-description').val()
-      #       tags: @parseTags $('#connection-tags').val()
-      #       _docId: @docId
-      #     connection.save()
+          #send data to server
+          connection = new ConnectionModel
+            name: $('#connection-name').val()
+            source: sourceNode._id
+            target: targetNode._id
+            description: $('#connection-description').val()
+            tags: @parseTags $('#connection-tags').val()
+            _docId: @docId
+          connection.save()
 
-      #     $('.connection > input[type="text"]').removeClass('red')
-      #     $('#connection-name').val("")
-      #     $('#connection-description').val("")
-      #     $('#connection-tags').val("")
+          # $('.connection > input[type="text"]').removeClass('red')
 
-      # # Helper Methods
-      # parseTags: (string) ->
-      #   (tag.trim() for tag in string.split(','))
+          $('input').val("")
+          $('#connection-description').val("")
+          $('source-node-name').focus()
 
-      # findMatchingObjects: (query, allObjects) ->
-      #   regex = new RegExp(query,'i')
-      #   _.filter(allObjects, (object) -> regex.test(object.name))
+      # Helper Methods
+      parseTags: (string) ->
+        (tag.trim() for tag in string.split(','))
+
+      findMatchingObjects: (query, allObjects) ->
+        regex = new RegExp(query,'i')
+        _.filter(allObjects, (object) -> regex.test(object.name))

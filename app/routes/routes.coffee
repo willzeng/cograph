@@ -19,7 +19,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         Backbone.history.start()
 
       routes:
-        '/(:id)': 'home'
+        '(:id)': 'home'
 
       home: (docId) =>
         @graphView.render()
