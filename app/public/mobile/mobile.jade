@@ -1,0 +1,33 @@
+doctype html
+html(lang="en").no-js
+head
+    meta(charset='utf-8')
+    title GraphDocs
+    base(href='/')
+    link(href='/assets/mobile/css/main.css', rel='stylesheet')
+    link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
+    script(type='text/javascript', data-main="mobile", src="/assets/libs/requirejs/require.js") //loads mobile.js
+  body
+    #brand GraphDocs
+    #tabs
+      #add-node-tab.selected + Node
+      #add-connection-tab + Connection
+    .content-area.node
+      input#node-name(type='text', placeholder='Node name')
+      input#node-description(type='text', placeholder='Node description')
+      input#node-tags(type='text', placeholder='Node tags seperated by commas')
+      .inline-group.three
+        input#cancel-node.red(type='submit', value='Cancel')
+        input#add-node.blue(type='submit', value='Add')
+        input#add-connection-node.dark-blue(type='submit', value='Add + Connect')
+    .content-area.connection.hidden
+      input#source-node-name.gray(type='text', placeholder='Source node name')
+      input#connection-name(type='text', placeholder='Connection type')
+      input#connection-description(type='text', placeholder='Connection description')
+      input#connection-tags(type='text', placeholder='Connection tags seperated by commas')
+      input#destination-node-name.gray(type='text', placeholder='Destination node name')
+      .inline-group.two
+        input#cancel-connection.red(type='submit', value='Cancel')
+        input#add-connection.blue(type='submit', value='Connect')
+    footer
+      a(href='/landing') Desktop version
