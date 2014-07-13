@@ -1,10 +1,11 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
-  'cs!models/DocumentModel', 'cs!models/WorkspaceModel'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, DocumentModel) ->
+ 'text!templates/analytics_modal.html', 'cs!models/DocumentModel', 'socket-io'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, DocumentModel, io) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
+      socket: io.connect('')
 
     class MenuView extends Backbone.View
       el: $ '#menu-bar'
@@ -12,9 +13,11 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       events:
         'click #new-doc-button': 'newDocumentModal'
         'click #open-doc-button': 'openDocumentModal'
+        'click #analytics-button': 'openAnalyticsModal'
 
       initialize: ->
         @model.on "document:change", @render, this
+        @model.getDocument().on 'change', @render, this
 
         $('#menu-title').bind 'input', () =>
           @model.getDocument().set 'name', $('#menu-title').val()
@@ -44,9 +47,9 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
 
       newDocument: () ->
         docName = $('#newDocName', @newDocModal.el).val()
-        document = new DocumentModel(name: docName)
-        $.when(document.save()).then =>
-          @model.setDocument document
+        newDocument = new DocumentModel(name: docName)
+        $.when(newDocument.save()).then =>
+          window.open '/#'+newDocument.get('_id')
 
       openDocumentModal: ->
         documents = new DocumentCollection
@@ -54,6 +57,15 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           modal = new Backbone.BootstrapModal(
             content: _.template(openDocTemplate, {documents: documents})
             title: "Open Document"
+            animate: true
+            showFooter: false
+          ).open()
+
+      openAnalyticsModal: ->
+        @model.getDocument().getAnalytics (analyticsData) ->
+          modal = new Backbone.BootstrapModal(
+            content: _.template(analyticsTemplate, analyticsData)
+            title: "Analytics"
             animate: true
             showFooter: false
           ).open()

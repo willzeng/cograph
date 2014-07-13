@@ -88,7 +88,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         # old elements
         connection = d3.select(".connection-container")
           .selectAll(".connection")
-          .data connections
+          .data(connections, (conn) -> conn.cid)
 
         # new elements
         connectionEnter = connection.enter().append("g")

@@ -40,10 +40,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
             @workspaceModel.filterModel.addInitialTags tags
             @workspaceModel.filterModel.addNodeTags tags
 
-          #Prepopulate the WorkspaceModel with all the nodes in the database
-          $.when(gm.nodes.fetch()).then ->
-            gm.connections.fetch()
-
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
         iter = 0

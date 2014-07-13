@@ -1,11 +1,17 @@
-define ['backbone'], (Backbone) ->
+define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, iosync, io) ->
   class DocumentModel extends Backbone.Model
-    urlRoot: 'documents'
+    urlRoot: 'document'
     idAttribute: '_id'
+    noIoBind: false
+    socket: io.connect('')
 
     defaults:
       name: 'Untitled'
       _id: -1
+
+    initialize: ->
+      @socket.on @urlRoot+":update", (objData) =>
+        @set objData
 
     isNew: ->
       @get(@idAttribute) < 0
@@ -25,3 +31,7 @@ define ['backbone'], (Backbone) ->
     getNodesByTag: (tag, cb) ->
       $.get @url() + '/getNodesByTag', {tag: tag}, (nodes) =>
         cb nodes
+
+    getAnalytics: (cb) ->
+      $.get @url() + '/analytics', {}, (results) ->
+        cb results
