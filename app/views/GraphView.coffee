@@ -4,6 +4,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
     class GraphView extends Backbone.View
       el: $ '#graph'
 
+      # Parameters for display
+      maxConnTextLength: 20
+      maxNodeBoxHeight: 100
+      nodeBoxWidth: 120
+      maxInfoBoxHeight: 200
+      infoBoxWidth: 120
+
       initialize: ->
         that = this
         @model.nodes.on 'add remove', @updateForceGraph, this
@@ -111,8 +118,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("text-anchor", "middle")
         text-group.append("foreignObject")
           .attr('y', '0')
-          .attr('height', '200')
-          .attr('width', '120')
+          .attr('height', @maxInfoBoxHeight)
+          .attr('width', @infoBoxWidth)
           .attr('x', '-12')
           .attr('class', 'connection-info')
           .append('xhtml:body')
@@ -130,11 +137,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             else
               line.attr("marker-end", "url(#arrowhead)")
         connection.select("text")
-          .text((d) -> 
-            if(d.get("name").length < 20)
+          .text((d) =>
+            if(d.get("name").length < @maxConnTextLength)
               return d.get("name")
             else 
-              return d.get("name").substring(0,17)+"..."
+              return d.get("name").substring(0,@maxConnTextLength-3)+"..."
         )
         connection.select('.connection-info-body')
           .html((d) -> _.template(popover, d))
@@ -158,16 +165,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         nodeEnter = node.enter().append("g")
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
-          .attr("height", "100") #max height overflow is cut off
-          .attr("width", "120")
+          .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
+          .attr("width", @nodeBoxWidth)
           .attr("x", "-60")
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
             .attr('class', 'node-title-body')
         nodeEnter.append("foreignObject")
           .attr('y', '12')
-          .attr('height', '200')
-          .attr('width', '120')
+          .attr('height', @maxInfoBoxHeight)
+          .attr('width', @infoBoxWidth)
           .attr('x', '-21')
           .attr('class', 'node-info')
           .append('xhtml:body')
