@@ -76,7 +76,7 @@ exports.destroy = (req, resp) ->
 
 # OTHER
 
-# Request is of the form {node: id, nodes:{id0, id1, ...}}
+# Request is of the form {nodeIds: {id0, id1, ...}}
 # returns all of the connections between node and any of the nodes
 exports.getConnections = (request,response) ->
   id = request.params.id

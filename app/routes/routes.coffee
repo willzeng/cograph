@@ -36,6 +36,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
       setAndFetchDoc: ->
         $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then =>
+          $('.loading-container').remove()
           @workspaceModel.getTagNames (tags) =>
             @workspaceModel.filterModel.addInitialTags tags
             @workspaceModel.filterModel.addNodeTags tags
