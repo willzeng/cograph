@@ -173,9 +173,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             # prevents node from being selected on drag
             if (d3.event.defaultPrevented) then return
             @model.select d
-          .on "contextmenu", (node) =>
+          .on "contextmenu", (node) ->
             d3.event.preventDefault()
-            @trigger 'node:right-click', node
+            that.trigger('node:right-click', node, d3.event)
           .on "mouseover", (node) =>
             @trigger "node:mouseover", node
           .on "mouseout", (node) =>
@@ -231,7 +231,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
-          @connectionAdder.tick()
+          @connectionAdder.tick
         @force.on "tick", tick
 
       isContainedIn: (node, element) =>
