@@ -1,45 +1,33 @@
-define ['jquery', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel',
-'text!templates/add_template.html', 'text!templates/add_placeholder.html'],
-  ($, Backbone, WorkspaceModel, NodeModel, adderTemplate, addPlaceholderTemplate) ->
+define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel',
+'text!templates/add_template.html'],
+  ($, _, Backbone, WorkspaceModel, NodeModel, adderTemplate) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
 
       events:
-        'submit': 'addNode'
-        'focus .node-input': 'showAdder'
+        'focusout textarea': 'lessInformation'
+        'focus .node-input': 'moreInformation'
 
       initialize: ->
-        @appendPlaceholder()
+        window.nm  = NodeModel
 
-      appendPlaceholder: ->
-        $('#add-node-form').append _.template(addPlaceholderTemplate)
+      moreInformation: ->
+        @$el.find('.node-description').removeClass 'hide'
 
-      addNode: ->
-        node_name = $('input', @el).val()
-        docId = @model.nodes._docId
-        node = new NodeModel {name: node_name, _docId: docId}
+      lessInformation: (e) ->
+        @$el.find('.node-description').addClass 'hide'
+
+      addNode: (e) ->
+        e.preventDefault()
+
+        attributes = {_dodId: @model.nodes._docId}
+        _.each $('#add-node-form').serializeArray(), (obj) ->
+          attributes[obj.name] = obj.value
+
+        node = new NodeModel attributes
         if node.isValid()
           node.save()
           @model.select @model.putNode node
-          $('input', @el).val('')
+          @$el[0].reset() # blanks out the form fields
         else
-          $('input', @el).attr('placeholder', 'Node must have name!')
-        false # return false to prevent form from routing to new url
-
-      hideAdder: ->
-        $('#add-node-form').empty()
-        @appendPlaceholder()
-
-      showAdder: ->
-        $('#add-node-form').empty()
-
-        @adderForm = new Backbone.Form(
-          model: new NodeModel
-          template: _.template(adderTemplate)
-        ).on('name:blur url:blur', (form, editor) ->
-          form.fields[editor.key].validate()
-        ).on('blur', (form, editor) =>
-          @hideAdder()
-        ).render()
-
-        $("#add-node-form").append(@adderForm.el)
+          $('input', @el).attr('placeholder', node.validate())
