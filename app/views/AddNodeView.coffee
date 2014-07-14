@@ -6,6 +6,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
       events:
         'focusout textarea': 'lessInformation'
         'focus .node-input': 'moreInformation'
+        'submit': 'addNode'
 
       initialize: ->
         window.nm  = NodeModel
