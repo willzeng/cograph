@@ -4,7 +4,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
       el: $ 'body'
 
       initialize: ->
-        @docId = 13467
+        @docId = 0
 
         nodeNameMatcher = () =>
           findMatches = (q, cb) =>
