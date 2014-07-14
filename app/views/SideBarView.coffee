@@ -5,13 +5,13 @@ define ['jquery', 'underscore', 'backbone'],
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'
-        'click .node': 'openSidebar'
-        'click .connection': 'openSidebar'
 
       initialize: ->
         @sidebarShown = false
+        @model.nodes.on "change:selected", @openSidebar, this
+        @model.connections.on "change:selected", @openSidebar, this
 
-      openSidebar: ->
+      openSidebar: =>
         if !@sidebarShown then @toggleSidebar()
 
       toggleSidebar: ->
@@ -19,6 +19,6 @@ define ['jquery', 'underscore', 'backbone'],
           $('#sidebar').animate 'width': '0%'
           $('#graph').animate 'width': '100%'
         else
-          $('#sidebar').animate 'width': '30%'
-          $('#graph').animate 'width': '70%'
+          $('#sidebar').animate 'width': '25%'
+          $('#graph').animate 'width': '75%'
         @sidebarShown = !@sidebarShown

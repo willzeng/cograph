@@ -17,7 +17,10 @@ exports.create = (req, resp) ->
 exports.read = (req, resp) ->
   id = req.params.id
   graphDb.getNodeById id, (err, node) ->
-    resp.send node
+    if err then resp.send 500, 'Something broke!'
+    else
+      parsed = node._data.data
+      resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
   console.log "Get all Documents Query Requested"
@@ -28,6 +31,23 @@ exports.getAll = (req, resp) ->
     if err then console.log err
     nodes = (utils.parseCypherResult(node, 'n') for node in results)
     resp.send nodes
+
+exports.analytics = (req, resp) ->
+  id = req.params.id
+  countNodes = "match (n:_doc_#{id}) return count(n);"
+  countRels  = "MATCH (n:_doc_#{id})-[r]->(m:_doc_#{id}) return count(r);"
+  orderedByDegree = "MATCH (n:_doc_#{id})-[r]->(m:_doc_#{id}) return n.name AS name, n._id As _id, count(r) AS degree  ORDER BY count(r) DESC"
+  params = {}
+  graphDb.query countNodes, params, (err, results) ->
+    nodeCount = results[0]['count(n)']
+    graphDb.query countRels, params, (err, results) ->
+      relCount = results[0]['count(r)']
+      graphDb.query orderedByDegree, params, (err, results) ->
+        highDegreeNode = results[0] || {}
+        avgDegree = results.reduce(((memo, row) ->
+          memo+parseInt(row.degree))
+          , 0)/results.length
+        resp.send {nodeCount:nodeCount, relCount:relCount, highDegreeNode:highDegreeNode, avgDegree:avgDegree}
 
 # UPDATE
 exports.update = (req, resp) ->

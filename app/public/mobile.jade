@@ -1,0 +1,67 @@
+doctype html
+html(lang="en")
+  head
+    title GraphDocs
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    base(href='/')
+    link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+    link(href='/assets/stylesheets/mobile.css', rel='stylesheet')
+    link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
+    script(type='text/javascript', data-main="mobile", src="/assets/libs/requirejs/require.js") //loads mobile.js
+
+  body
+    .container#mobile-site
+      .row
+        .col-xs-12.col-sm-8.col-sm-offset-4.col-md-6.col-md-offset-3
+          h2.text-center
+            a#splash(href="/landing")
+              b Graph
+              span(class="light") Docs
+          ul.nav.nav-tabs(id="main-tabs")
+            li
+              a(data-target="#node", role="tab", data-toggle="tab") Node
+            li.active
+              a(data-target="#connection", role="tab", data-toggle="tab") Connection
+          .tab-content
+            .tab-pane(id="node")
+              form(role="form")
+                .form-group
+                  input.form-control(type="text", id="node-name", placeholder="Node Name")
+                .form-group
+                  textarea.form-control(id="node-description", placeholder="Description")
+                .form-group
+                  input.form-control(type="text", id="node-tags", placeholder="Tags separated by commas")
+                button.btn.btn-success(type="button" id="add-node") Create
+                button.btn.btn-primary(type="button" id="add-connection-node") Create & Connect
+                button.btn.btn-default(type="button" id="cancel-node") Cancel     
+            .tab-pane.active(id="connection")
+              form(role="form")
+                .form-group.input-group
+                  input.form-control(type="text", id="source-node-name", placeholder="Source Node")
+                  span.input-group-btn
+                      button.btn.btn-default(type='button') 
+                        i.fa.fa-caret-down
+                .form-group
+                  input.form-control(type="text", id="connection-name", placeholder="Connection Type")
+                #accordion.form-group
+                  #panel3.panel
+                      .panel-heading
+                        span.panel-title
+                          a(data-toggle='collapse', data-parent='#accordion', href='#details')
+                            | + Add details
+                      #details.panel-collapse.collapse
+                        .form-group
+                          textarea.form-control(id="connection-description", placeholder="Description")
+                        .form-group
+                          input.form-control(type="text", id="connection-tags", placeholder="Tags separated by commas")
+                .form-group.input-group
+                    input.form-control(type="text", id="destination-node-name", placeholder="Target Node")
+                    span.input-group-btn
+                        button.btn.btn-default(type='button') 
+                          i.fa.fa-caret-down
+                button.btn.btn-success(type="button" id="add-connection") Create
+                button.btn.btn-default(type="button" id="cancel-connection") Cancel
+

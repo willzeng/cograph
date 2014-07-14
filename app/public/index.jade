@@ -1,26 +1,35 @@
 extends layout
 
 block content
+  #sidebar
+    #details-container.controls
   #graph
-    .toolbar.left.controls
-      form#search-form.navbar-form.navbar-left
-        .form-group
-          input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-        button.btn.btn-primary(type="button")
-          i.fa.fa-search
+    .loading-container
+      i.fa.fa-circle-o-notch.fa-spin.fa-5x
+    .toolbar.controls
+      .navbar-left.navbar-form
+        form#search-form
+          .form-group
+            input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
+          button.btn.btn-primary(type="button")
+            i.fa.fa-search
+        button#sidebar-toggle.btn.btn-default
+            i.fa.fa-arrows-h
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form
-    .toolbar.right.bottom.controls
-      button#sidebar-toggle.btn.btn-default
-        i.fa.fa-arrows-h
-    #zoom-controls.bottom.btn-group-vertical.controls
+          .form-group
+            input.form-control(type="text", name='node-name', placeholder="Add something")
+          button.btn.btn-primary(type="submit")
+            i.fa.fa-plus
+    .toolbar.bottom.right.controls
+      button#sharing-button.btn.btn-primary
+        div Share GraphDoc
+    #zoom-controls.btn-group-vertical.controls
       button#zoom-in-button.btn.btn-primary
         i.glyphicon.glyphicon-plus
       button#zoom-out-button.btn.btn-primary
         i.glyphicon.glyphicon-minus
     #trash-bin.controls
       i.fa.fa-archive
-  #sidebar
-    #details-container.controls
   .data-tooltip-container

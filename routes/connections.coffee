@@ -36,9 +36,10 @@ exports.update = (req, resp) ->
   newData = req.body
   graphDb.getRelationshipById id, (err, conn) ->
     conn.data = newData
-    conn.save (err, conn) ->
-      console.log 'Conn updated in database with id:', conn._id
-      resp.send conn
+    conn.save (err, savedConn) ->
+      parsed = savedConn._data.data
+      console.log 'Conn updated in database with id:', parsed._id
+      resp.send parsed
 
 # DELETE
 exports.destroy = (req, resp) ->

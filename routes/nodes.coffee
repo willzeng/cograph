@@ -31,7 +31,7 @@ exports.getAll = (req, resp) ->
   cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
-    if err then console.log err
+    if err then throw err
     parsedNodes = []
     for node in results
       nodeData = node.n._data.data
@@ -42,7 +42,6 @@ exports.getAll = (req, resp) ->
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
-
   graphDb.query cypherQuery, params, (err, results) ->
     parsedNodes = []
     for node in results
@@ -54,6 +53,7 @@ exports.getNeighbors = (req, resp) ->
 exports.getSpokes = (req, resp) ->
   params = {id: req.params.id}
   cypherQuery = "START n=node({id}) MATCH (n)<-[r]->(m) RETURN r;"
+  console.log cypherQuery
   graphDb.query cypherQuery, params, (err, results) ->
     connections = (utils.parseCypherResult(conn, 'r') for conn in results)
     resp.send connections
@@ -76,7 +76,7 @@ exports.destroy = (req, resp) ->
 
 # OTHER
 
-# Request is of the form {node: id, nodes:{id0, id1, ...}}
+# Request is of the form {nodeIds: {id0, id1, ...}}
 # returns all of the connections between node and any of the nodes
 exports.getConnections = (request,response) ->
   id = request.params.id

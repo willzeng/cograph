@@ -10,9 +10,9 @@ class NodeHelper
   create: (tags, props, docLabel, callback) ->
     tags = utils.listToLabels tags, "_tag_"
     tags += ":#{docLabel}"
-    props = utils.dictionaryToCypherProperties props
-    cypherQuery = "CREATE (n#{tags} {#{props}}) RETURN n;"
-    @graphDb.query cypherQuery, {}, (err, results) =>
+    params = {props: props}
+    cypherQuery = "CREATE (n#{tags} { props }) RETURN n;"
+    @graphDb.query cypherQuery, params, (err, results) =>
       if (err) then throw err
       node = utils.parseCypherResult(results[0], 'n')
       utils.setProperty @graphDb, node.id, '_id', node.id, (savedNode) =>
@@ -20,29 +20,32 @@ class NodeHelper
 
   # Update a node with new tags and properties
   update: (id, tags, props, callback) ->
-    props = utils.dictionaryToUpdateCypherProperties props
 
     utils.getTags @graphDb, id, (labels) =>
       parsedTags = utils.listToLabels tags, "_tag_"
-      if parsedTags.length > 0 then parsedTags = "n #{parsedTags}, " else parsedTags = ""
+      if parsedTags.length > 0 then parsedTags = "SET n #{parsedTags} " else parsedTags = ""
 
       removedTags = _.difference labels, tags
       removedTags = utils.listToLabels removedTags, "_tag_"
 
-      if removedTags.length > 0
-        cypherQuery = "START n=node(#{id}) SET #{parsedTags}#{props} REMOVE n#{removedTags} RETURN n;"
-      else
-        cypherQuery = "START n=node(#{id}) SET #{parsedTags}#{props} RETURN n;"
+      params = { props: props, id: id }
 
-      @graphDb.query cypherQuery, {}, (err, results) =>
+      if removedTags.length > 0
+        cypherQuery = "START n=node({ id }) #{parsedTags} SET n = { props } REMOVE n#{removedTags} RETURN n;"
+      else
+        cypherQuery = "START n=node({ id }) #{parsedTags} SET n = { props } RETURN n;"
+
+      @graphDb.query cypherQuery, params, (err, results) =>
         if err then throw err
         node = utils.parseCypherResult(results[0], 'n')
-        callback utils.parseNodeToClient node
+        node = utils.parseNodeToClient node
+        node.tags = tags
+        callback node
 
   # Adds a label to a node identified by id
   setLabel: (id, label, callback) ->
-    cypherQuery = "start n=node(#{id}) set n:#{label} return n"
-    params = {}
+    cypherQuery = "start n=node({ id }) set n:#{label} return n"
+    params = { id: id }
     @graphDb.query cypherQuery, params, (err, results) ->
       if err then throw err
       setNode = utils.parseCypherResult(results[0], 'n')
