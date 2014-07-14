@@ -4,13 +4,13 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
       el: $ 'body'
 
       initialize: ->
-        @docId = 6798
+        @docId = 13467
 
         nodeNameMatcher = () =>
           findMatches = (q, cb) =>
             $.get "/document/#{@docId}/nodes", (nodes) =>
               @nodes = nodes
-              matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
+              matches = _.uniq @findMatchingObjects(q, nodes), (match) -> match.name
               cb _.map matches, (match) -> {value: match.name, type: 'node'}
 
         connectionNameMatcher = () =>
@@ -32,42 +32,60 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
 
         # Source Node
         $('#source-node-name').typeahead(
-          hint: true,
+          hint: false,
           highlight: true,
-          minLength: 1,
+          minLength: 0,
           autoselect: true
         ,
           name: 'node-names',
           source: nodeNameMatcher()
         )
+
+        $('#source-caret').on 'click', () =>
+          ev = $.Event("keydown")
+          ev.keyCode = ev.which = 40
+          $('#source-node-name').trigger ev
+
 
         $('#source-node-name').on 'typeahead:selected',
           (e, sugg, dataset) -> $('#connection-name').focus()
 
         # Target Node
         $('#destination-node-name').typeahead(
-          hint: true,
+          hint: false,
           highlight: true,
-          minLength: 1,
+          minLength: 0,
           autoselect: true
         ,
           name: 'node-names',
           source: nodeNameMatcher()
         )
 
+        $('#target-caret').on 'click', () =>
+          ev = $.Event("keydown")
+          ev.keyCode = ev.which = 40
+          $('#destination-node-name').trigger ev
+
+
         $('#destination-node-name').on 'typeahead:selected',
           (e, sugg, dataset) => @addConnection()
 
         # Connection Types
         $('#connection-name').typeahead(
-          hint: true,
+          hint: false,
           highlight: true,
-          minLength: 1,
+          minLength: 0,
           autoselect: true
         ,
           name: 'connection-names',
           source: connectionNameMatcher()
         )
+
+        $('#connection-caret').on 'click', () =>
+          ev = $.Event("keydown")
+          ev.keyCode = ev.which = 40
+          $('#connection-name').trigger ev
+
 
         $('#connection-name').on 'typeahead:selected',
           (e, sugg, dataset) -> $('#destination-node-name').focus()

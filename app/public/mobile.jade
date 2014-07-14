@@ -42,10 +42,13 @@ html(lang="en")
                 .form-group.input-group
                   input.form-control(type="text", id="source-node-name", placeholder="Source Node")
                   span.input-group-btn
-                      button.btn.btn-default(type='button') 
+                      button.btn.btn-default#source-caret(type='button') 
                         i.fa.fa-caret-down
-                .form-group
+                .form-group.input-group
                   input.form-control(type="text", id="connection-name", placeholder="Connection Type")
+                  span.input-group-btn
+                      button.btn.btn-default#connection-caret(type='button') 
+                        i.fa.fa-caret-down
                 #accordion.form-group
                   #panel3.panel
                       .panel-heading
@@ -60,7 +63,7 @@ html(lang="en")
                 .form-group.input-group
                     input.form-control(type="text", id="destination-node-name", placeholder="Target Node")
                     span.input-group-btn
-                        button.btn.btn-default(type='button') 
+                        button.btn.btn-default#target-caret(type='button') 
                           i.fa.fa-caret-down
                 button.btn.btn-success(type="button" id="add-connection") Create
                 button.btn.btn-default(type="button" id="cancel-connection") Cancel
