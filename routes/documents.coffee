@@ -51,7 +51,7 @@ exports.analytics = (req, resp) ->
 
 exports.fullgraph = (req, resp) ->
   id = req.params.id
-  cypherQuery = "MATCH (n:_doc_6786)-[r]->m return n.name AS source, m.name AS target;"
+  cypherQuery = "MATCH (n:_doc_#{id})-[r]->m return n.name AS source, m.name AS target;"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
     resp.send ([res.source, res.target] for res in results)
