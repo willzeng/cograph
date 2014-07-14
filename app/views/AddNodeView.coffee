@@ -1,6 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel',
-'text!templates/add_template.html'],
-  ($, _, Backbone, WorkspaceModel, NodeModel, adderTemplate) ->
+define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel'],
+  ($, _, Backbone, WorkspaceModel, NodeModel) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
 
