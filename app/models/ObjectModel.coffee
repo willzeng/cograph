@@ -11,12 +11,21 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       _id: -1
       _docId: 0
 
+    tagToColor:
+      Project: "yellow"
+      ProjectMember: "white"
+      Expert: "green"
+      Jisc: "red"
+
     isNew: ->
       @get(@idAttribute) < 0
 
     ignoredAttributes: ['selected', 'dim']
 
     parse: (resp, options) ->
+      if resp.tags
+        for tag in resp.tags
+          resp.color = @tagToColor[tag]
       if resp._id then resp._id = parseInt(resp._id, 10)
       resp
 
