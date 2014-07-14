@@ -150,7 +150,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           $('input[type="text"]').val("")
           $('#node-description').val("")
 
-          $('body').prepend((d) -> _.template(mobile_alert, d))
+          @setupAlert()
 
           [true, newNode.get('name')]
 
@@ -159,6 +159,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
         if success[0]
           $('a[data-target="#connection"]').tab('show')
           $('#source-node-name').val success[1]
+          @setupAlert()
 
       # Add Connection
       cancelConnection: ->
@@ -193,12 +194,18 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
             _docId: @docId
           connection.save()
 
-          $('body').prepend((d) -> _.template(mobile_alert, d))
+          @setupAlert()
           # $('.connection > input[type="text"]').removeClass('red')
 
           $('input').val("")
           $('#connection-description').val("")
           $('source-node-name').focus()
+
+      setupAlert: () ->
+        $('body').prepend((d) -> _.template(mobile_alert, d))
+        setTimeout () ->
+          $('.alert').remove()
+        , 1500
 
       # Helper Methods
       parseTags: (string) ->
