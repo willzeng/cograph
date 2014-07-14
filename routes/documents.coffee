@@ -49,6 +49,13 @@ exports.analytics = (req, resp) ->
           , 0)/results.length
         resp.send {nodeCount:nodeCount, relCount:relCount, highDegreeNode:highDegreeNode, avgDegree:avgDegree}
 
+exports.fullgraph = (req, resp) ->
+  id = req.params.id
+  cypherQuery = "MATCH (n:_doc_6786)-[r]->m return n.name AS source, m.name AS target;"
+  params = {}
+  graphDb.query cypherQuery, params, (err, results) ->
+    resp.send ([res.source, res.target] for res in results)
+
 # UPDATE
 exports.update = (req, resp) ->
   id = req.params.id

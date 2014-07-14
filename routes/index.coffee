@@ -34,6 +34,7 @@ router.delete   '/document/:id',       documents.destroy
 
 # Analytics
 router.get      '/document/:id/analytics', documents.analytics
+router.get      '/document/:id/fullgraph', documents.fullgraph
 
 # Nodes
 router.post     '/document/:docId/nodes',                      nodes.create
