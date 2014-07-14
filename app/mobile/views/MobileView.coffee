@@ -1,5 +1,5 @@
-define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahead', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'socket-io'],
-  ($, _, Backbone, Bootstrap, Bloodhound, typeahead, NodeModel, ConnectionModel, io) ->
+define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahead', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'socket-io', 'text!templates/mobile_alert.html'],
+  ($, _, Backbone, Bootstrap, Bloodhound, typeahead, NodeModel, ConnectionModel, io, mobile_alert) ->
     class MobileView extends Backbone.View
       el: $ 'body'
 
@@ -41,11 +41,38 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           source: nodeNameMatcher()
         )
 
+        $('#source-node-name').blur(() ->
+          $('#source-node-name').typeahead('close')
+        )
+
+        $('#destination-node-name').blur(() ->
+          $('#destination-node-name').typeahead('close')
+        )
+
+        $('#connection-name').blur(() ->
+          $('#connection-name').typeahead('close')
+        )
+
+        $('#source-node-name').on('typeahead:opened', () ->
+          $('#destination-node-name').typeahead('close')
+          $('#connection-name').typeahead('close')
+        )
+
+        $('#destination-node-name').on('typeahead:opened', () ->
+          $('#source-node-name').typeahead('close')
+          $('#connection-name').typeahead('close')
+        )
+
+        $('#connection-name').on('typeahead:opened', () ->
+          $('#destination-node-name').typeahead('close')
+          $('#source-node-name').typeahead('close')
+        )
+
         $('#source-caret').on 'click', () =>
           ev = $.Event("keydown")
           ev.keyCode = ev.which = 40
           $('#source-node-name').trigger ev
-
+          $('#source-node-name').focus()
 
         $('#source-node-name').on 'typeahead:selected',
           (e, sugg, dataset) -> $('#connection-name').focus()
@@ -65,6 +92,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           ev = $.Event("keydown")
           ev.keyCode = ev.which = 40
           $('#destination-node-name').trigger ev
+          $('#destination-node-name').focus()
 
 
         $('#destination-node-name').on 'typeahead:selected',
@@ -85,7 +113,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           ev = $.Event("keydown")
           ev.keyCode = ev.which = 40
           $('#connection-name').trigger ev
-
+          $('#connection-name').focus()
 
         $('#connection-name').on 'typeahead:selected',
           (e, sugg, dataset) -> $('#destination-node-name').focus()
@@ -121,6 +149,9 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
 
           $('input[type="text"]').val("")
           $('#node-description').val("")
+
+          $('body').prepend((d) -> _.template(mobile_alert, d))
+
           [true, newNode.get('name')]
 
       addConnectionNode: ->
@@ -138,7 +169,6 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
         validated = true;
         if $('#connection-name').val() == ""
           validated = false
-          console.log "dsds"
           $('#connection-name').addClass('red')
 
         if $('#source-node-name').val() == ""
@@ -163,6 +193,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
             _docId: @docId
           connection.save()
 
+          $('body').prepend((d) -> _.template(mobile_alert, d))
           # $('.connection > input[type="text"]').removeClass('red')
 
           $('input').val("")
