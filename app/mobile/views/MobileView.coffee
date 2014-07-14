@@ -4,19 +4,19 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
       el: $ 'body'
 
       initialize: ->
-        @docId = 0
+        @docId = 6798
 
         nodeNameMatcher = () =>
           findMatches = (q, cb) =>
             $.get "/document/#{@docId}/nodes", (nodes) =>
               @nodes = nodes
-              matches = @findMatchingObjects q, nodes
+              matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
               cb _.map matches, (match) -> {value: match.name, type: 'node'}
 
         connectionNameMatcher = () =>
           findMatches = (q, cb) =>
             $.get "/document/#{@docId}/connections", (connections) =>
-              matches = @findMatchingObjects q, connections
+              matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
               cb _.map matches, (match) -> {value: match.name, type: 'connection'}
 
         $('#source-node-name').focus ->
