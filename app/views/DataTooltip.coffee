@@ -29,7 +29,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
           [@model.getSourceOf(c), @model.getTargetOf(c)]
         nodesToHL.push node
 
-        @model.highlight(nodesToHL, connectionsToHL)
         @highlightTimer = setTimeout () =>
             @model.highlight(nodesToHL, connectionsToHL)
           , 600
