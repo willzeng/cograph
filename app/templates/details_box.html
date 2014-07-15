@@ -34,11 +34,13 @@
             <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
           <% }); %>
         </ul>
-        <ul class="list-group">
-          <% _.each(spokes, function(conn) { %>
-            <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
-          <% }); %>
-        </ul>
+        <% if (node.constructor.name === "NodeModel") {%>
+          <ul class="list-group">
+            <% _.each(spokes, function(conn) { %>
+              <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
+            <% }); %>
+          </ul>
+        <% } %>
       </p>
     </div>
   </div>

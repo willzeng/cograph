@@ -1,3 +1,5 @@
+@alert-z-index: 1;
+
 body, html {
   background: #eee;
   font-family: 'Helvetica Neue', Helvetica, sans-serif;
@@ -18,7 +20,7 @@ body, html {
   background: white;
 }
 
-#panel3 .panel-heading {
+#conn-details .panel-heading {
   padding: 0;
 }
 
@@ -26,12 +28,12 @@ input[type="button"] {
   font-weight: 300;
 }
 
-#panel3 .panel-title {
+#conn-details .panel-title {
   font-weight: 200;
   font-size: 13px;
 }
 
-#panel3 {
+#conn-details {
   margin-left: 20px;
   margin-bottom: 0;
   border: 0;
@@ -45,8 +47,6 @@ input[type="button"] {
   padding: 5px;
   box-sizing: border-box;
 }
-
-
 
 .btn {
   padding: 7px 12px 6px 12px;
@@ -81,4 +81,13 @@ input[type="button"] {
 .light {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
   font-weight: 300;
+}
+
+/* Alerts */
+
+.alert {
+  position:absolute;
+  width:100%;
+  z-index:@alert-z-index;
+  text-align: center;
 }
