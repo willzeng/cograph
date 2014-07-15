@@ -27,16 +27,28 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
         $('.filter-toggle', @FilterModal.$el).click (e) =>
           @updateFilter e
 
+        $('.filter-toggle-all', @FilterModal.$el).click (e) =>
+          if !e.currentTarget.checked 
+            $.each($('.filter-toggle'), (i, el) =>
+              @model.set 'node_tags', _.without @model.get('node_tags'), $(el).data('id') 
+              $(el).prop('checked', false)
+            )
+          else
+            $.each($('.filter-toggle'), (i, el) =>
+              @model.set 'node_tags', _.union @model.get('node_tags'), $(el).data('id')
+              $(el).prop('checked', true)
+            )
+
         $('#filter-button', @FilterModal.$el).click (e) =>
           @applyFilter()
           @FilterModal.close()
 
       updateFilter: (e) =>
-        toggled = e.currentTarget
-        if !toggled.checked
-          @model.set 'node_tags', _.without @model.get('node_tags'), $(toggled).data('id')
+        el = e.currentTarget
+        if !el.checked
+          @model.set 'node_tags', _.without @model.get('node_tags'), $(el).data('id')
         else
-          @model.set 'node_tags', _.union @model.get('node_tags'), $(toggled).data('id')
-
+          @model.set 'node_tags', _.union @model.get('node_tags'), $(el).data('id')
+        
       applyFilter: ->
         @workspaceModel.filter()
