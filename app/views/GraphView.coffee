@@ -90,6 +90,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       updateDetails: (incoming) ->
         if incoming?
+          # don't updateDetails if we have only dimmed the one node
           if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
         that = this
         nodes = @model.nodes.models
