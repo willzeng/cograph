@@ -1,11 +1,8 @@
-<% if(attributes.description != null && attributes.description != ""){ %>
+<% if(attributes.description != null || attributes.description != "" || _.some(attributes.tags)){ %>
   <div class="pad">
       <div>
-      <i><%= attributes.description %></i>
-      </br>
+      <%= attributes.description %>
       </div>
-    <% } %>
-    <% if(_.some(attributes.tags)){ %>
       <div>
       <i class="fa fa-tags"></i>
       <%= attributes.tags.join(", ") %>
