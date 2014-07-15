@@ -23,7 +23,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         $('#menu-title').click( ()->
            $(this).select()
         )
-        $('#menu-title').bind 'input', () =>
+        $('#menu-title').bind 'blur', () =>
           @model.getDocument().set 'name', $('#menu-title').val()
           @model.getDocument().save()
 
