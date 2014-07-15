@@ -10,12 +10,8 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       tags: []
       _id: -1
       _docId: 0
-
-    tagToColor:
-      Project: "yellow"
-      ProjectMember: "white"
-      Expert: "green"
-      Jisc: "red"
+      tagToColor: {}  # This dictionary automatically maps certain tags to colors
+                      # on the client side
 
     isNew: ->
       @get(@idAttribute) < 0
@@ -23,7 +19,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
     ignoredAttributes: ['selected', 'dim']
 
     parse: (resp, options) ->
-      if resp.tags
+      if resp.tags and !($.isEmptyObject(@tagToColor))
         for tag in resp.tags
           resp.color = @tagToColor[tag]
       if resp._id then resp._id = parseInt(resp._id, 10)

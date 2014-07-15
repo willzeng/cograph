@@ -19,14 +19,9 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
               matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
               cb _.map matches, (match) -> {value: match.name, type: 'connection'}
 
-        $('#source-node-name').focus ->
-          $('#source-node-name').removeClass('red')
-        $('#destination-node-name').focus ->
-          $('#destination-node-name').removeClass('red')
-        $('#connection-name').focus ->
-          $('#connection-name').removeClass('red')
-        $('#node-name').focus ->
-          $('#node-name').removeClass('red')
+
+        $('.name-input').focus (e) ->
+          $(e.currentTarget).removeClass('red')
 
         # TYPEAHEADS
 
@@ -41,17 +36,8 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           source: nodeNameMatcher()
         )
 
-        $('#source-node-name').blur(() ->
-          $('#source-node-name').typeahead('close')
-        )
-
-        $('#destination-node-name').blur(() ->
-          $('#destination-node-name').typeahead('close')
-        )
-
-        $('#connection-name').blur(() ->
-          $('#connection-name').typeahead('close')
-        )
+        $('.name-input').blur (e) ->
+          $(e.currentTarget).typeahead('close')
 
         $('#source-node-name').on('typeahead:opened', () ->
           $('#destination-node-name').typeahead('close')
@@ -163,7 +149,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
 
       # Add Connection
       cancelConnection: ->
-        # $('.connection > input[type="text"]').removeClass('red')
+        $('.name-input').removeClass 'red'
         $('input').val("")
 
       addConnection: ->
@@ -195,7 +181,6 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           connection.save()
 
           @setupAlert()
-          # $('.connection > input[type="text"]').removeClass('red')
 
           $('input').val("")
           $('#connection-description').val("")
@@ -205,7 +190,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
         $('body').prepend((d) -> _.template(mobile_alert, d))
         setTimeout () ->
           $('.alert').remove()
-        , 1500
+        , 2000
 
       # Helper Methods
       parseTags: (string) ->
