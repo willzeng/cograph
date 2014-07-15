@@ -42,12 +42,12 @@ html(lang="en")
                 .form-group.input-group
                   input.form-control.name-input(type="text", id="source-node-name", placeholder="Select Source Node")
                   span.input-group-btn
-                      button.btn.btn-default#source-caret(type='button') 
+                      button.btn.btn-default.typeahead-caret(type='button' data-target="#source-node-name")
                         i.fa.fa-caret-down
                 .form-group.input-group
                   input.form-control.name-input(type="text", id="connection-name", placeholder="Connection Type")
                   span.input-group-btn
-                      button.btn.btn-default#connection-caret(type='button') 
+                      button.btn.btn-default.typeahead-caret(type='button' data-target="#connection-name")
                         i.fa.fa-caret-down
                 #accordion.form-group
                   #conn-details.panel
@@ -63,7 +63,7 @@ html(lang="en")
                 .form-group.input-group
                     input.form-control.name-input(type="text", id="destination-node-name", placeholder="Select Target Node")
                     span.input-group-btn
-                        button.btn.btn-default#target-caret(type='button') 
+                        button.btn.btn-default.typeahead-caret(type='button' data-target="#destination-node-name")
                           i.fa.fa-caret-down
                 button.btn.btn-success(type="button" id="add-connection") Create
                 button.btn.btn-default(type="button" id="cancel-connection") Cancel

@@ -3,9 +3,22 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
     class MobileView extends Backbone.View
       el: $ 'body'
 
+      events:
+          'click #add-node': 'addNode'
+          'click #cancel-node': 'cancelNode'
+          'click #add-connection-node': 'addConnectionNode'
+          'click #cancel-connection': 'cancelConnection'
+          'click #add-connection': 'addConnection'
+
       initialize: ->
         @docId = 0
 
+        $('.name-input').focus (e) ->
+          $(e.currentTarget).removeClass('red')
+
+        # TYPEAHEADS
+
+        # fetch methods for typeaheads
         nodeNameMatcher = () =>
           findMatches = (q, cb) =>
             $.get "/document/#{@docId}/nodes", (nodes) =>
@@ -19,105 +32,53 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
               matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
               cb _.map matches, (match) -> {value: match.name, type: 'connection'}
 
-
-        $('.name-input').focus (e) ->
-          $(e.currentTarget).removeClass('red')
-
-        # TYPEAHEADS
-
-        # Source Node
-        $('#source-node-name').typeahead(
+        typeaheadConfig =
           hint: false,
           highlight: true,
           minLength: 0,
           autoselect: true
-        ,
-          name: 'node-names',
-          source: nodeNameMatcher()
-        )
 
         $('.name-input').blur (e) ->
           $(e.currentTarget).typeahead('close')
 
-        $('#source-node-name').on('typeahead:opened', () ->
-          $('#destination-node-name').typeahead('close')
-          $('#connection-name').typeahead('close')
-        )
-
-        $('#destination-node-name').on('typeahead:opened', () ->
-          $('#source-node-name').typeahead('close')
-          $('#connection-name').typeahead('close')
-        )
-
-        $('#connection-name').on('typeahead:opened', () ->
-          $('#destination-node-name').typeahead('close')
-          $('#source-node-name').typeahead('close')
-        )
-
-        $('#source-caret').on 'click', () =>
+        # trigger typeahead dropdowns with caret buttons
+        $('.typeahead-caret').on 'click', (e) =>
+          targetInput = $(e.currentTarget).attr('data-target')
           ev = $.Event("keydown")
           ev.keyCode = ev.which = 40
-          $('#source-node-name').trigger ev
-          $('#source-node-name').focus()
+          $(targetInput).trigger ev
+          $(targetInput).focus()
+
+        # Source Node
+        $('#source-node-name').typeahead typeaheadConfig,
+          name: 'node-names',
+          source: nodeNameMatcher()
 
         $('#source-node-name').on 'typeahead:selected',
           (e, sugg, dataset) -> $('#connection-name').focus()
 
         # Target Node
-        $('#destination-node-name').typeahead(
-          hint: false,
-          highlight: true,
-          minLength: 0,
-          autoselect: true
-        ,
+        $('#destination-node-name').typeahead typeaheadConfig,
           name: 'node-names',
           source: nodeNameMatcher()
-        )
-
-        $('#target-caret').on 'click', () =>
-          ev = $.Event("keydown")
-          ev.keyCode = ev.which = 40
-          $('#destination-node-name').trigger ev
-          $('#destination-node-name').focus()
-
 
         $('#destination-node-name').on 'typeahead:selected',
           (e, sugg, dataset) => @addConnection()
 
         # Connection Types
-        $('#connection-name').typeahead(
-          hint: false,
-          highlight: true,
-          minLength: 0,
-          autoselect: true
-        ,
+        $('#connection-name').typeahead typeaheadConfig,
           name: 'connection-names',
           source: connectionNameMatcher()
-        )
-
-        $('#connection-caret').on 'click', () =>
-          ev = $.Event("keydown")
-          ev.keyCode = ev.which = 40
-          $('#connection-name').trigger ev
-          $('#connection-name').focus()
 
         $('#connection-name').on 'typeahead:selected',
           (e, sugg, dataset) -> $('#destination-node-name').focus()
-
-      events:
-          'click #add-node': 'addNode'
-          'click #cancel-node': 'cancelNode'
-          'click #add-connection-node': 'addConnectionNode'
-          'click #cancel-connection': 'cancelConnection'
-          'click #add-connection': 'addConnection'
 
       # BUTTONS
 
       # Add Node
       cancelNode: ->
         $('#node-name').removeClass('red')
-        $('input[type="text"]').val("")
-        $('#node-description').val("")
+        $('#node .form-control').val("")
 
       addNode: ->
         if $('#node-name').val() == ""
@@ -133,9 +94,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
             _docId: @docId
           newNode.save()
 
-          $('input[type="text"]').val("")
-          $('#node-description').val("")
-
+          $('#node .form-control').val("")
           @setupAlert()
 
           [true, newNode.get('name')]
@@ -150,7 +109,7 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
       # Add Connection
       cancelConnection: ->
         $('.name-input').removeClass 'red'
-        $('input').val("")
+        $('#connection .form-control').val("")
 
       addConnection: ->
         validated = true;
@@ -181,18 +140,16 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           connection.save()
 
           @setupAlert()
-
-          $('input').val("")
-          $('#connection-description').val("")
-          $('source-node-name').focus()
-
-      setupAlert: () ->
-        $('body').prepend((d) -> _.template(mobile_alert, d))
-        setTimeout () ->
-          $('.alert').remove()
-        , 2000
+          $('#connection .form-control').blur().val("")
+          $('#source-node-name').focus()
 
       # Helper Methods
+      setupAlert: () ->
+        $('body').append((d) -> _.template(mobile_alert, d))
+        setTimeout () ->
+          $('.alert').remove()
+        , 2500
+
       parseTags: (string) ->
         (tag.trim() for tag in string.split(','))
 
