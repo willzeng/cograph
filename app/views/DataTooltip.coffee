@@ -15,8 +15,10 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
         @graphView.on 'node:mouseenter', (node) =>
           @highlight node
 
-        @graphView.on 'node:mouseout node:right-click connection:mouseout', (nc) =>
-          window.clearTimeout(@isHoveringANode)
+        @graphView.on 'connection:mouseout', (conn) =>
+          @emptyTooltip()
+
+        @graphView.on 'node:mouseout node:right-click', (nc) =>
           window.clearTimeout(@highlightTimer)
           @model.dehighlight()
           @emptyTooltip()
