@@ -230,7 +230,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         tick = =>
           connection.selectAll("line")
-            .attr("x1", (d) => @model.getSourceOf(d).x)
+            .attr("x1", (d) => 
+              @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d))
+              @model.getSourceOf(d).x
+            )
             .attr("y1", (d) => @model.getSourceOf(d).y)
             .attr("x2", (d) => @model.getTargetOf(d).x)
             .attr("y2", (d) => @model.getTargetOf(d).y)
@@ -248,3 +251,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       getColor: (nc) ->
           @model.defaultColors[nc.get('color')]
+
+      findConnectionCoords: (source, target) ->
+        console.log d3.select(source)
+        sx = source.x
+        sy = source.y
+        tx = target.x
+        ty = target.y
+        dy = ty - sy
+        dx = tx - sx
+        ang = Math.atan(dy / dx)
+        # unknown of source
+        su = ((dy / dx) * source.width) / 2
+        scx = sx + (source.width / 2)
+        scy = sy + su
+        console.log scx+" "+scy
