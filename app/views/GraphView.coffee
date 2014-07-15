@@ -216,13 +216,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           el = $(t).find('.node-title-body')
           left = el.width()/2+parseInt(el.css('border-left-width'),10)
           top = el.height()/2+parseInt(el.css('border-bottom-width'),10)
+
           $(t)
             .attr('y', - top)
-          dim = t.getBBox()
-          
+
           info = $(t).parent().find('.node-info')
           info
-            .attr('x',dim.x-left)
+            .attr('x',-left)
             .attr('y',top)
 
         # delete unmatching elements

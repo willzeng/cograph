@@ -4,7 +4,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
       el: $ '#graph'
 
       events:
-        'mouseover .node' : 'showToolTip'
+        'mouseover .node-title-body' : 'showToolTip'
         'mouseover .connection' : 'showToolTip'
 
       initialize: ->
@@ -37,7 +37,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
 
       showToolTip: (event) ->
         @isHoveringANode = setTimeout( () =>
-          $(event.currentTarget).find('.node-info-body').addClass('shown')
+          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
           $(event.currentTarget).find('.connection-info-body').addClass('shown')
         , 600)
 
