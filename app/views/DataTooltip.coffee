@@ -34,10 +34,8 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
           , 600
 
       showToolTip: (event) ->
-        @isHoveringANode = setTimeout( () =>
-          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
-          $(event.currentTarget).find('.connection-info-body').addClass('shown')
-        , 600)
+        $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
+        $(event.currentTarget).find('.connection-info-body').addClass('shown')
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
