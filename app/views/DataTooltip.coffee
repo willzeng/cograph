@@ -22,7 +22,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
           @emptyTooltip()
 
       highlight: (node) ->
-        console.log "highlight"
         connectionsToHL = @model.connections.filter (c) ->
           (c.get('source') is node.get('_id')) or (c.get('target') is node.get('_id'))
 
