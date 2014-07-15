@@ -194,7 +194,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
           .on "mouseenter", (node) =>
-            console.log "mouseenter", node
             @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             @trigger "node:mouseout", node
