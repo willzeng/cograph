@@ -16,32 +16,30 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
           @highlight node
 
         @graphView.on 'node:mouseout node:right-click connection:mouseout', (nc) =>
-        # window.clearTimeout(@isHoveringANode)
-        # window.clearTimeout(@highlightTimer)
-        # @model.dehighlight()
+          window.clearTimeout(@isHoveringANode)
+          window.clearTimeout(@highlightTimer)
+          @model.dehighlight()
           @emptyTooltip()
 
       highlight: (node) ->
-        # console.log "highlight"
-        # connectionsToHL = @model.connections.filter (c) ->
-        #   (c.get('source') is node.get('_id')) or (c.get('target') is node.get('_id'))
+        console.log "highlight"
+        connectionsToHL = @model.connections.filter (c) ->
+          (c.get('source') is node.get('_id')) or (c.get('target') is node.get('_id'))
 
-        # nodesToHL = _.flatten connectionsToHL.map (c) =>
-        #   [@model.getSourceOf(c), @model.getTargetOf(c)]
-        # nodesToHL.push node
+        nodesToHL = _.flatten connectionsToHL.map (c) =>
+          [@model.getSourceOf(c), @model.getTargetOf(c)]
+        nodesToHL.push node
 
-        # @model.highlight(nodesToHL, connectionsToHL)
-        # # @highlightTimer = setTimeout () =>
-        # #     @model.highlight(nodesToHL, connectionsToHL)
-        # #   , 600
+        @model.highlight(nodesToHL, connectionsToHL)
+        @highlightTimer = setTimeout () =>
+            @model.highlight(nodesToHL, connectionsToHL)
+          , 600
 
       showToolTip: (event) ->
-        $(event.currentTarget).find('.node-info-body').addClass('shown')
-        $(event.currentTarget).find('.connection-info-body').addClass('shown')
-        # @isHoveringANode = setTimeout( () =>
-        #   $(event.currentTarget).find('.node-info-body').addClass('shown')
-        #   $(event.currentTarget).find('.connection-info-body').addClass('shown')
-        # , 600)
+        @isHoveringANode = setTimeout( () =>
+          $(event.currentTarget).find('.node-info-body').addClass('shown')
+          $(event.currentTarget).find('.connection-info-body').addClass('shown')
+        , 600)
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
