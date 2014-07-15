@@ -131,6 +131,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           d.set 'dim', true
         _.each connectionsToHL, (d) ->
           d.set 'dim', false
+        @nodes.trigger "change"
 
       dehighlight: () ->
         @connections.each (d) ->

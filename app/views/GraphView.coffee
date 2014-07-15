@@ -88,7 +88,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @force.nodes(nodes).links(connections).start()
         @updateDetails()
 
-      updateDetails: ->
+      updateDetails: (incoming) ->
+        if incoming?
+          if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
