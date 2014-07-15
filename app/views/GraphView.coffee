@@ -241,10 +241,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @force.on "tick", tick
 
       isContainedIn: (node, element) =>
-        node.x+@currentZoom[0] < element.offset().left + element.width() &&
-          node.x+@currentZoom[0] > element.offset().left &&
-          node.y+@currentZoom[1] > element.offset().top &&
-          node.y+@currentZoom[1] < element.offset().top + element.height()
+        node.x < element.offset().left + element.outerWidth() &&
+        node.x > element.offset().left &&
+        node.y > element.offset().top &&
+        node.y < element.offset().top + element.outerHeight()
 
       getColor: (nc) ->
           @model.defaultColors[nc.get('color')]
