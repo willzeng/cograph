@@ -3,9 +3,11 @@
       <div>
       <%= attributes.description %>
       </div>
-      <div>
-      <i class="fa fa-tags"></i>
-      <%= attributes.tags.join(", ") %>
-      </div>
+      <% if(_.some(attributes.tags)){ %>
+        <div>
+        <i class="fa fa-tags"></i>
+        <%= attributes.tags.join(", ") %>
+        </div>
+      <% } %>
   </div>
 <% } %>
