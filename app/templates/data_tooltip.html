@@ -1,4 +1,4 @@
-<% if(attributes.description != null || attributes.description != "" || _.some(attributes.tags)){ %>
+<% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags)){ %>
   <div class="pad">
       <div>
       <%= attributes.description %>
