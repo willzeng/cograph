@@ -138,6 +138,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           d.set 'dim', false
         @nodes.each (d) ->
           d.set 'dim', false
+        @nodes.trigger "change"
 
       getSpokes: (node) ->
         (@connections.where {'source': node.get('_id')}).concat @connections.where {'target': node.get('_id')}

@@ -193,8 +193,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
-          .on "mouseover", (node) =>
-            @trigger "node:mouseover", node
+          .on "mouseenter", (node) =>
+            console.log "mouseenter", node
+            @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
