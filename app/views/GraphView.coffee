@@ -88,7 +88,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @force.nodes(nodes).links(connections).start()
         @updateDetails()
 
-      updateDetails: ->
+      updateDetails: (incoming) ->
+        if incoming?
+          # don't updateDetails if we have only dimmed the one node
+          if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
@@ -190,8 +193,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
-          .on "mouseover", (node) =>
-            @trigger "node:mouseover", node
+          .on "mouseenter", (node) =>
+            @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
