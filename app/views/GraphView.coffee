@@ -46,9 +46,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           that.currentZoom = that.zoom.translate()
         .on "drag", (d) ->
           d3.select(this).classed("fixed", d.fixed = true)
-          that.trigger "node:drag", d
+          that.trigger "node:drag", d, d3.event
         .on "dragend", (node) =>
-          @trigger "node:dragend", node
+          @trigger "node:dragend", node, d3.event
           @zoom.translate @currentZoom
           @translateLock = false
 
@@ -244,10 +244,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @force.on "tick", tick
 
       isContainedIn: (node, element) =>
-        node.x+@currentZoom[0] < element.offset().left + element.width() &&
-          node.x+@currentZoom[0] > element.offset().left &&
-          node.y+@currentZoom[1] > element.offset().top &&
-          node.y+@currentZoom[1] < element.offset().top + element.height()
+        node.x < element.offset().left + element.outerWidth() &&
+        node.x > element.offset().left &&
+        node.y > element.offset().top &&
+        node.y < element.offset().top + element.outerHeight()
 
       getColor: (nc) ->
           @model.defaultColors[nc.get('color')]

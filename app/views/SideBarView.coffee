@@ -8,11 +8,12 @@ define ['jquery', 'underscore', 'backbone'],
 
       initialize: ->
         @sidebarShown = false
-        @model.nodes.on "change:selected", @openSidebar, this
+        @model.nodes.on "change:selected", @openSidebar, @model
         @model.connections.on "change:selected", @openSidebar, this
 
-      openSidebar: =>
-        if !@sidebarShown then @toggleSidebar()
+      openSidebar: (nc) =>
+        if nc.get('selected')
+          if !@sidebarShown then @toggleSidebar()
 
       toggleSidebar: ->
         if @sidebarShown

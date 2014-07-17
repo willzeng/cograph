@@ -27,7 +27,7 @@
       <p class="lead"><%= node.attributes.description %></p>
       <p>
         <% if (node.attributes.url) { %>
-            URL: <a href="<%= attributes.url %>"><%= node.attributes.url %></a><br/>
+            URL: <a href="<%= node.attributes.url %>"><%= node.attributes.url %></a><br/>
         <% }; %>
         <ul class="list-group">
           <% _.each(node.attributes.tags, function(tag) { %>
