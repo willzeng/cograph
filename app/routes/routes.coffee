@@ -19,27 +19,19 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         Backbone.history.start()
 
       routes:
-        '(:id)': 'home'
+        '': 'home'
 
-      home: (docId) =>
-        @graphView.render()
+      home: () =>
+        @workspaceModel.getDocument().set window.prefetch.theDocument
+        if window.prefetch.nodes then @workspaceModel.nodes.set window.prefetch.nodes, {silent:true}
+        if window.prefetch.connections != null then @workspaceModel.connections.set window.prefetch.connections, {silent:true}
+        @workspaceModel.nodes.trigger "add"
 
-        if docId
-          @workspaceModel.documentModel.set '_id', docId
-          @workspaceModel.documentModel.fetch
-            error: (err) -> location.href="/errors/missingDocument",
-            success: () => @setAndFetchDoc()
-        else
-          $.when(@workspaceModel.documentModel.save()).then =>
-            @navigate @workspaceModel.documentModel.get '_id'
-            @setAndFetchDoc()
+        $('.loading-container').remove()
 
-      setAndFetchDoc: ->
-        $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then =>
-          $('.loading-container').remove()
-          @workspaceModel.getTagNames (tags) =>
-            @workspaceModel.filterModel.addInitialTags tags
-            @workspaceModel.filterModel.addNodeTags tags
+        @workspaceModel.getTagNames (tags) =>
+          @workspaceModel.filterModel.addInitialTags tags
+          @workspaceModel.filterModel.addNodeTags tags
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

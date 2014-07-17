@@ -20,7 +20,7 @@ exports.read = (data, callback, socket) ->
   id = data._id
   graphDb.getNodeById id, (err, node) ->
     if err
-      console.log 'Something broke!'
+      console.log 'Something broke!', err
     else
       parsed = utils.parseNodeToClient node._data.data
       socket.emit 'document:read', parsed

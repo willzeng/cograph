@@ -53,7 +53,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         docName = $('#newDocName', @newDocModal.el).val()
         newDocument = new DocumentModel(name: docName)
         $.when(newDocument.save()).then =>
-          window.open '/#'+newDocument.get('_id')
+          window.open '/'+newDocument.get('_id')
 
       openDocumentModal: ->
         documents = new DocumentCollection
@@ -64,6 +64,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
+        false # prevent navigation from appending '#'
 
       openAnalyticsModal: ->
         @model.getDocument().getAnalytics (analyticsData) ->
