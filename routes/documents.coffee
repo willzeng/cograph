@@ -87,7 +87,6 @@ exports.prefetch = (req, resp, callback) ->
       cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
       graphDb.query cypherQuery, {}, (err, results) ->
         connections = (utils.parseCypherResult(connection, 'r') for connection in results)
-        console.log "the doc", theDocument
         callback {nodes:parsedNodes, connections:connections, theDocument: theDocument}
 
 
