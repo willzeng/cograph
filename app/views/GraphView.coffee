@@ -163,6 +163,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         # new elements
         nodeEnter = node.enter().append("g")
+        nodeEnter.append("rect")
+          .attr('height', '8')
+          .attr('width', '10')
+          .attr('x', '-21')
+          .attr('y', '-4')
+          .attr('class', 'node-connector-rect')
+          .attr('fill', 'gray')
+        nodeConnector = nodeEnter.append("circle")
+          .attr('r', '8')
+          .attr('cx', '-21')
+          .attr('cy', '0')
+          .attr('class', 'node-connector')
+          .attr('fill', 'gray') 
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
           .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
@@ -179,7 +192,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr('class', 'node-info')
           .append('xhtml:body')
             .attr('class', 'node-info-body')
-
+        
         nodeInnerText
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
@@ -220,10 +233,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           $(t)
             .attr('y', - top)
 
+
           info = $(t).parent().find('.node-info')
           info
             .attr('x',-left)
             .attr('y',top)
+
+          $(t).parent().find('.node-connector').attr('cx', -left-8)
+          $(t).parent().find('.node-connector-rect').attr('x', -left-8)
+
 
         # delete unmatching elements
         node.exit().remove()

@@ -3,6 +3,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
     class ConnectionAdder extends Backbone.View
       el: $ '#graph'
 
+      events:
+        'click .node-connector' : 'toggleLine'
+
       initialize: ->
         that = this
         @svg = @attributes.svg
@@ -17,7 +20,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
         @attributes.svg.on "mousemove", () ->
           that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
-        @graphView.on 'node:right-click', (node, e) ->
+      
+        @graphView.on 'node:click', (node) ->
+          console.log node
           if that.creatingConnection
             that.drag_line.classed('hidden', true)
             if node != that.drag_line.datum()
@@ -36,6 +41,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
               .attr("x1", (d) => e.pageX-offset.left)
               .attr("y1", (d) => e.pageY-offset.top)
           that.creatingConnection = !that.creatingConnection
+
+      toggleLine: (e) ->
+        console.log d3.select($(e.currentTarget).closest('.node'))
 
       tick: =>
         @drag_line
