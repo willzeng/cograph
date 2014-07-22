@@ -231,12 +231,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         tick = =>
           connection.selectAll("line")
             .attr("x1", (d) => 
-              @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d))
-              @model.getSourceOf(d).x
-            )
-            .attr("y1", (d) => @model.getSourceOf(d).y)
-            .attr("x2", (d) => @model.getTargetOf(d).x)
-            .attr("y2", (d) => @model.getTargetOf(d).y)
+              @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),1))
+            .attr("y1", (d) => @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),2))
+            .attr("x2", (d) => @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),3))
+            .attr("y2", (d) => @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),4))
           connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
@@ -252,17 +250,52 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
       getColor: (nc) ->
           @model.defaultColors[nc.get('color')]
 
-      findConnectionCoords: (source, target) ->
-        console.log d3.select(source)
+      findConnectionCoords: (source, target, which) ->
+        console.log source
         sx = source.x
         sy = source.y
         tx = target.x
         ty = target.y
         dy = ty - sy
         dx = tx - sx
-        ang = Math.atan(dy / dx)
-        # unknown of source
-        su = ((dy / dx) * source.width) / 2
-        scx = sx + (source.width / 2)
-        scy = sy + su
-        console.log scx+" "+scy
+
+        # currently only considers 1 line high nodes
+
+        
+        su = ((dy / dx) * 120) / 2 #120 is source.width
+
+        if(Math.abs(su) > 34/2)
+          # case: intersects nodes on top/bottom
+          su = (dx / dy) * (34/2)
+
+          if(ty < sy)
+            scy = sy - 34/2
+            tcy = ty + 34/2
+            scx = sx - su
+            tcx = tx + su
+          else
+            scy = sy + 34/2
+            tcy = ty - 34/2     
+            scx = sx + su
+            tcx = tx - su
+        else 
+          # case: intersects nodes on left/right
+          if(tx < sx)
+            scx = sx - (120 / 2)
+            tcx = tx + (120 / 2)
+            scy = sy - su
+            tcy = ty + su
+          else 
+            scx = sx + (120 / 2)
+            tcx = tx - (120 / 2)
+            scy = sy + su
+            tcy = ty - su 
+
+        if(which == 1)
+          return scx
+        if(which == 2)
+          return scy
+        if(which == 3)
+          return tcx
+        if(which == 4)
+          return tcy
