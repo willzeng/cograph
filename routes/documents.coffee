@@ -65,10 +65,12 @@ exports.prefetch = (req, resp, callback) ->
   id = req.params.id[0]
   docLabel = "_doc_#{id || 0}"
   # Get the document
-  graphDb.getNodeById id, (err, node) ->
-    if err then resp.send 500, 'Something broke!'
+  params = {id:parseInt(id)}
+  cypherQuery = "START n=node({id}) MATCH (n:_document) RETURN n AS node;"
+  graphDb.query cypherQuery, params, (err, results) ->
+    if err or results.length is 0 then resp.redirect "/errors/missingDocument"
     else
-      parsed = node._data.data
+      parsed = results[0].node._data.data
       theDocument = utils.parseNodeToClient parsed
 
     # Get all nodes
