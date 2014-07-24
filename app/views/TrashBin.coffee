@@ -2,8 +2,9 @@ define ['jquery', 'underscore', 'backbone'],
   ($, _, Backbone) ->
     class TrashBin extends Backbone.View
       el: $ '#graph'
-      that = this
+
       initialize: ->
+
         @graphView = @attributes.graphView
 
         @graphView.on "node:drag", (node, e) =>
