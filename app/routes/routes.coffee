@@ -23,8 +23,11 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
       home: () =>
         @workspaceModel.getDocument().set window.prefetch.theDocument
+        @workspaceModel.nodes._docId = window.prefetch.theDocument._id
+        @workspaceModel.connections._docId = window.prefetch.theDocument._id
+
         if window.prefetch.nodes then @workspaceModel.nodes.set window.prefetch.nodes, {silent:true}
-        if window.prefetch.connections != null then @workspaceModel.connections.set window.prefetch.connections, {silent:true}
+        if window.prefetch.connections then @workspaceModel.connections.set window.prefetch.connections, {silent:true}
         @workspaceModel.nodes.trigger "add"
 
         $('.loading-container').remove()
