@@ -4,6 +4,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
     class GraphView extends Backbone.View
       el: $ '#graph'
 
+      events:
+        "contextmenu": "rightClicked"
+
       # Parameters for display
       maxConnTextLength: 20
       maxNodeBoxHeight: 100
@@ -242,6 +245,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
         @force.on "tick", tick
+
+      rightClicked: (e) ->
+        e.preventDefault()
 
       isContainedIn: (node, element) =>
         node.x < element.offset().left + element.outerWidth() &&
