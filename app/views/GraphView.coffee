@@ -231,11 +231,80 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         tick = =>
           connection.selectAll("line")
-            .attr("x1", (d) => 
-              @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),1))
-            .attr("y1", (d) => @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),2))
-            .attr("x2", (d) => @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),3))
-            .attr("y2", (d) => @findConnectionCoords(@model.getSourceOf(d),@model.getTargetOf(d),4))
+            .each((d, i) ->
+              source = that.model.getSourceOf(d)
+              target = that.model.getTargetOf(d)
+              sx = source.x
+              sy = source.y
+              tx = target.x
+              ty = target.y
+              dy = ty - sy
+              dx = tx - sx
+
+              sh = $('#'+source.get('_id')).find('.node-title-body').height()/2
+              th = $('#'+target.get('_id')).find('.node-title-body').height()/2
+
+              # currently only considers 1 line high nodes
+              
+              su = ((dy / dx) * 120) / 2 #120 is source.width
+
+              if(Math.abs(su) > sh)
+                # case: intersects source nodes on top/bottom
+                su = (dx / dy) * (sh)
+                tu = (dx / dy) * (th)
+
+                if(ty < sy)
+                  scy = sy - sh
+                  tcy = ty + th
+                  scx = sx - su
+                  tcx = tx + tu
+                else
+                  scy = sy + sh
+                  tcy = ty - th    
+                  scx = sx + su
+                  tcx = tx - tu
+              else 
+                # case: intersects nodes on left/right
+                if(tx < sx)
+                  scx = sx - (120 / 2)
+                  tcx = tx + (120 / 2)
+                  scy = sy - su
+                  tcy = ty + su
+                else 
+                  scx = sx + (120 / 2)
+                  tcx = tx - (120 / 2)
+                  scy = sy + su
+                  tcy = ty - su 
+
+              # if(Math.abs(tu) > th)
+              #   tu = (dx / dy) * (th)
+
+              #   if(ty < sy)
+              #     scy = sy - sh
+              #     tcy = ty + th
+              #     scx = sx - su
+              #     tcx = tx + su
+              #   else
+              #     scy = sy + sh
+              #     tcy = ty - th    
+              #     scx = sx + su
+              #     tcx = tx - su
+              # else 
+              #   # case: intersect target nodes on left/right
+              #   if(tx < sx)
+              #     tcx = tx + (120 / 2)
+              #     tcy = ty + su
+              #   else 
+              #     tcx = tx - (120 / 2)
+              #     tcy = ty - su 
+
+
+              d3.select(this).attr('x1', scx)
+              d3.select(this).attr('y1', scy)
+              d3.select(this).attr('x2', tcx)
+              d3.select(this).attr('y2', tcy)
+            )
+           
           connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
@@ -251,52 +320,4 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
       getColor: (nc) ->
           @model.defaultColors[nc.get('color')]
 
-      findConnectionCoords: (source, target, which) ->
-        sx = source.x
-        sy = source.y
-        tx = target.x
-        ty = target.y
-        dy = ty - sy
-        dx = tx - sx
-
-        sh = $('#'+source.get('_id')).find('.node-title-body').height()/2
-        th = $('#'+target.get('_id')).find('.node-title-body').height()/2
-
-        # currently only considers 1 line high nodes
-        
-        su = ((dy / dx) * 120) / 2 #120 is source.width
-
-        if(Math.abs(su) > sh)
-          # case: intersects nodes on top/bottom
-          su = (dx / dy) * (sh)
-
-          if(ty < sy)
-            scy = sy - sh
-            tcy = ty + th
-            scx = sx - su
-            tcx = tx + su
-          else
-            scy = sy + sh
-            tcy = ty - th    
-            scx = sx + su
-            tcx = tx - su
-        else 
-          # case: intersects nodes on left/right
-          if(tx < sx)
-            scx = sx - (120 / 2)
-            tcx = tx + (120 / 2)
-            scy = sy - su
-            tcy = ty + su
-          else 
-            scx = sx + (120 / 2)
-            tcx = tx - (120 / 2)
-            scy = sy + su
-            tcy = ty - su 
-        if(which == 1)
-          return scx
-        if(which == 2)
-          return scy
-        if(which == 3)
-          return tcx
-        if(which == 4)
-          return tcy
+      
