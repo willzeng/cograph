@@ -197,6 +197,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
         # update old and new elements
+        node.attr('id', (d) -> d.get('_id'))
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
@@ -251,7 +252,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           @model.defaultColors[nc.get('color')]
 
       findConnectionCoords: (source, target, which) ->
-        console.log source
         sx = source.x
         sy = source.y
         tx = target.x
@@ -259,23 +259,25 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         dy = ty - sy
         dx = tx - sx
 
-        # currently only considers 1 line high nodes
+        sh = $('#'+source.get('_id')).find('.node-title-body').height()/2
+        th = $('#'+target.get('_id')).find('.node-title-body').height()/2
 
+        # currently only considers 1 line high nodes
         
         su = ((dy / dx) * 120) / 2 #120 is source.width
 
-        if(Math.abs(su) > 34/2)
+        if(Math.abs(su) > sh)
           # case: intersects nodes on top/bottom
-          su = (dx / dy) * (34/2)
+          su = (dx / dy) * (sh)
 
           if(ty < sy)
-            scy = sy - 34/2
-            tcy = ty + 34/2
+            scy = sy - sh
+            tcy = ty + th
             scx = sx - su
             tcx = tx + su
           else
-            scy = sy + 34/2
-            tcy = ty - 34/2     
+            scy = sy + sh
+            tcy = ty - th    
             scx = sx + su
             tcx = tx - su
         else 
@@ -290,7 +292,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             tcx = tx - (120 / 2)
             scy = sy + su
             tcy = ty - su 
-
         if(which == 1)
           return scx
         if(which == 2)
