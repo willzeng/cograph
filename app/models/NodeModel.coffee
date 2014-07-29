@@ -25,7 +25,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
         return 'Your node must have a name.'
       if !(typeof @get('_id') is 'number')
         return '_id must be a number.'
-      @set('tags', _.uniq @get 'tags')
 
     getNeighbors: (callback) =>
       $.get @ajaxURL()+"/neighbors/", (results) =>

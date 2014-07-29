@@ -29,7 +29,6 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
         '_id of source and target must be a number.'
       if !(typeof @get('_id') is 'number')
         '_id of connection must be a number.'
-      @set('tags', _.uniq @get 'tags')
 
     serialize: ->
       lessIgnored = _.omit @clone().toJSON(), @ignoredAttributes
