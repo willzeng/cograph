@@ -13,7 +13,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
-        @shareView = new ShareView()
+        @shareView = new ShareView model: @workspaceModel
+        @shareView.on "save:workspace", (workspaceId) => @navigate workspaceId
 
         window.gm = @workspaceModel
         Backbone.history.start()
