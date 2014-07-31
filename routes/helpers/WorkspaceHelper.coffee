@@ -12,7 +12,6 @@ class WorkspaceHelper
       if (err) then throw err
       doc = utils.parseCypherResult(results[0], 'n')
       utils.setProperty @graphDb, doc.id, '_id', doc.id, (savedWorkspace) =>
-        console.log utils.parseNodeToClient savedWorkspace
         callback utils.parseNodeToClient savedWorkspace
 
 module.exports = WorkspaceHelper

@@ -8,19 +8,19 @@ serverWorkspace = new WorkspaceHelper(graphDb)
 
 # CREATE
 exports.create = (data, callback, socket) ->
-  console.log 'create workspace query requested', data
+  console.log 'create workspace query requested'
   newWorkspace = data
   serverWorkspace.create newWorkspace, (savedWorkspace) ->
     socket.emit('workspace:create', savedWorkspace)
     callback(null, savedWorkspace)
 
 # READ
-# exports.read = (data, callback, socket) ->
-#   id = data._id
-#   graphDb.getNodeById id, (err, node) ->
-#     if err
-#       console.error 'Something broke!', err
-#     else
-#       parsed = utils.parseNodeToClient node._data.data
-#       socket.emit 'document:read', parsed
-#       callback null, parsed
+exports.read = (data, callback, socket) ->
+  id = data._id
+  graphDb.getNodeById id, (err, node) ->
+    if err
+      console.error 'Something broke!', err
+    else
+      parsed = utils.parseNodeToClient node._data.data
+      socket.emit 'workspace:read', parsed
+      callback null, parsed

@@ -33,6 +33,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
       urlRoot: -> "workspace"
+      _id: 0
 
       selectedColor: '#3498db'
 
@@ -170,4 +171,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       serialize: ->
         nodes = @nodes.pluck "_id"
         connIds = (parseInt c for c in @connections.pluck "_id")
-        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags')}
+        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id}
+
+      getWorkspace: (callback) ->
+        @sync "read", this,
+          success: callback

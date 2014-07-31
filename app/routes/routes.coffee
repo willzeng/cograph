@@ -14,24 +14,49 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView model: @workspaceModel
-        @shareView.on "save:workspace", (workspaceId) => @navigate workspaceId
+        @shareView.on "save:workspace", (workspaceId) => @navigate ""+workspaceId
 
         window.gm = @workspaceModel
         Backbone.history.start()
 
       routes:
         '': 'home'
+        '(:id)': 'workspace'
 
       home: () =>
-        @workspaceModel.getDocument().set window.prefetch.theDocument
-        @workspaceModel.nodes._docId = window.prefetch.theDocument._id
-        @workspaceModel.connections._docId = window.prefetch.theDocument._id
+        @setDoc()
 
         if window.prefetch.nodes then @workspaceModel.nodes.set window.prefetch.nodes, {silent:true}
         if window.prefetch.connections then @workspaceModel.connections.set window.prefetch.connections, {silent:true}
         @workspaceModel.nodes.trigger "add"
 
         $('.loading-container').remove()
+
+      # This navigates to a workspace specified by the id
+      workspace: (id) ->
+        id = parseInt id
+        @setDoc()
+
+        @workspaceModel._id = id
+        @workspaceModel.getWorkspace (w) =>
+          if window.prefetch.nodes
+            workspaceNodes = _.filter window.prefetch.nodes, (node) ->
+              _.contains w.nodes, node._id
+            @workspaceModel.nodes.set workspaceNodes, {silent:true}
+          if window.prefetch.connections
+            workspaceConns = _.filter window.prefetch.connections, (conn) ->
+              _.contains w.connections, conn._id
+            @workspaceModel.connections.set workspaceConns, {silent:true}
+
+          @workspaceModel.nodes.trigger "add"
+          @workspaceModel.filterModel.set 'node_tags', w.nodeTags
+
+          $('.loading-container').remove()
+
+      setDoc: ->
+        @workspaceModel.getDocument().set window.prefetch.theDocument
+        @workspaceModel.nodes._docId = window.prefetch.theDocument._id
+        @workspaceModel.connections._docId = window.prefetch.theDocument._id
 
         @workspaceModel.getTagNames (tags) =>
           @workspaceModel.filterModel.addInitialTags tags
