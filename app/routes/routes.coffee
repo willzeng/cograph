@@ -25,12 +25,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
       home: () =>
         @setDoc()
-
-        if window.prefetch.nodes then @workspaceModel.nodes.set window.prefetch.nodes, {silent:true}
-        if window.prefetch.connections then @workspaceModel.connections.set window.prefetch.connections, {silent:true}
-        @workspaceModel.nodes.trigger "add"
-
-        $('.loading-container').remove()
+        @loadGraph()
 
       # This navigates to a workspace specified by the id
       workspace: (id) ->
@@ -39,19 +34,26 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
         @workspaceModel._id = id
         @workspaceModel.getWorkspace (w) =>
-          if window.prefetch.nodes
-            workspaceNodes = _.filter window.prefetch.nodes, (node) ->
-              _.contains w.nodes, node._id
-            @workspaceModel.nodes.set workspaceNodes, {silent:true}
-          if window.prefetch.connections
-            workspaceConns = _.filter window.prefetch.connections, (conn) ->
-              _.contains w.connections, conn._id
-            @workspaceModel.connections.set workspaceConns, {silent:true}
-
-          @workspaceModel.nodes.trigger "add"
+          nodeFilter = (node) -> _.contains w.nodes, node._id
+          connFilter = (conn) -> _.contains w.connections, conn._id
+          @loadGraph nodeFilter, connFilter
           @workspaceModel.filterModel.set 'node_tags', w.nodeTags
 
-          $('.loading-container').remove()
+      # Load a graph based on preset filters
+      # Defaults to loading the whole prefetch
+      loadGraph: (nodeFilter, connFilter) ->
+        if !(nodeFilter?) then nodeFilter = (x) -> true
+        if !(connFilter?) then connFilter = (x) -> true
+
+        if window.prefetch.nodes
+          workspaceNodes = _.filter window.prefetch.nodes, nodeFilter
+          @workspaceModel.nodes.set workspaceNodes, {silent:true}
+        if window.prefetch.connections
+          workspaceConns = _.filter window.prefetch.connections, connFilter
+          @workspaceModel.connections.set workspaceConns, {silent:true}
+
+        @workspaceModel.nodes.trigger "add"
+        $('.loading-container').remove()
 
       setDoc: ->
         @workspaceModel.getDocument().set window.prefetch.theDocument
