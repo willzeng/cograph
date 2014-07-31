@@ -170,7 +170,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       serialize: ->
         nodes = @nodes.pluck "_id"
-        connIds = (parseInt c for c in @connections.pluck "_id")
+        connIds = @connections.pluck "_id"
         {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id}
 
       getWorkspace: (callback) ->
