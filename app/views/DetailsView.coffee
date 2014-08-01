@@ -7,35 +7,33 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       events:
         'click .close' : 'closeDetail'
-        'click #edit-node-button': 'editNode'
-        'click #edit-connection-button': 'editConnection'
+        'click #edit-node-button': 'editNodeConnection'
+        'click #edit-connection-button': 'editNodeConnection'
         'submit form': 'saveNodeConnection'
-        'click #archive-node-button': 'archiveNode'
-        'click #archive-connection-button': 'archiveConnection'
+        'click #archive-node-button': 'archiveObj'
+        'click #archive-connection-button': 'archiveObj'
         'click #delete-button': 'deleteObj'
         'click #expand-node-button': 'expandNode'
 
       initialize: ->
         @graphView = @attributes.graphView
 
-        @model.on 'conn:clicked', @update, this
-        @model.on 'node:clicked', @update, this
+        @model.on 'conn:clicked', @openDetails, this
+        @model.on 'node:clicked', @openDetails, this
         @model.on 'create:connection', @editConnection, this
 
-      update: (nodeConnection) ->
-        selectedNC = @getSelectedNode() || @getSelectedConnection()
+      openDetails: (nodeConnection) ->
+        workspaceSpokes = @model.getSpokes nodeConnection
+        @updateColor @model.defaultColors[nodeConnection.get('color')]
+        nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
 
-        $("#details-container").empty()
-        if selectedNC
-          workspaceSpokes = @model.getSpokes selectedNC
-          @updateColor @model.defaultColors[selectedNC.get('color')]
-          selectedNC.on "change:color", (nc) => @updateColor @model.defaultColors[selectedNC.get('color')]
+        @detailsModal = new Backbone.BootstrapModal(
+          content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
+          animate: true
+          showFooter: false
+        ).open()
 
-          @detailsModal = new Backbone.BootstrapModal(
-            content: _.template(detailsTemplate, {node:selectedNC, spokes:workspaceSpokes})
-            animate: true
-            showFooter: false
-          ).open()
+        @currentNC = nodeConnection
 
       updateColor: (color) ->
         $('#details-container .panel-heading').css 'background', color
@@ -43,18 +41,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       closeDetail: () ->
         @detailsModal.close()
         @graphView.trigger "node:mouseout"
-        if @getSelectedNode()
-          @getSelectedNode().set 'selected', false
-        if @getSelectedConnection()
-          @getSelectedConnection().set 'selected', false
 
-      editNode: () ->
-        @editNodeConnection @getSelectedNode()
-
-      editConnection: () ->
-        @editNodeConnection @getSelectedConnection()
-
-      editNodeConnection: (nodeConnection) ->
+      editNodeConnection: ->
+        nodeConnection = @currentNC
         @nodeConnectionForm = new Backbone.Form(
           model: nodeConnection
           template: _.template(editFormTemplate)
@@ -79,31 +68,24 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @closeDetail()
         false
 
-      archiveNode: () ->
-        @model.removeNode @getSelectedNode()
-        @closeDetail()
-
-      archiveConnection: () ->
-        @model.removeConnection @getSelectedConnection()
+      archiveObj: ->
+        if @currentNC.constructor.name is "NodeModel"
+          @model.removeNode @currentNC
+        else if @currentNC.constructor.name is "ConnectionModel"
+          @model.removeConnection @currentNC
         @closeDetail()
 
       deleteObj: ->
-        if @getSelectedNode()
-          @model.deleteNode @getSelectedNode()
-        else if @getSelectedConnection()
-          @model.deleteConnection @getSelectedConnection()
+        if @currentNC.constructor.name is "NodeModel"
+          @model.deleteNode @currentNC
+        else if @currentNC.constructor.name is "ConnectionModel"
+          @model.deleteConnection @currentNC
         @closeDetail()
 
       expandNode: ->
-        @getSelectedNode().getNeighbors (neighbors) =>
+        @currentNC.getNeighbors (neighbors) =>
           for node in neighbors
             newNode = new NodeModel node
             if @model.putNode newNode #this checks to see if the node has passed the filter
               newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new ConnectionModel conn for conn in connections
-
-      getSelectedNode: ->
-        selectedNode = @model.nodes.findWhere {'selected': true}
-
-      getSelectedConnection: ->
-        selectedConnection = @model.connections.findWhere {'selected': true}
