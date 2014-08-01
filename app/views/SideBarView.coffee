@@ -8,8 +8,6 @@ define ['jquery', 'underscore', 'backbone'],
 
       initialize: ->
         @sidebarShown = false
-        @model.nodes.on "change:selected", @openSidebar, @model
-        @model.connections.on "change:selected", @openSidebar, this
 
       openSidebar: (nc) =>
         if nc.get('selected')

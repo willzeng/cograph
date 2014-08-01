@@ -1,9 +1,9 @@
-define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap'
+define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap', 'bb-modal',
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
  'bootstrap-color'],
-  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker) ->
+  ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker) ->
     class DetailsView extends Backbone.View
-      el: $ '#sidebar'
+      el: $ 'body'
 
       events:
         'click .close' : 'closeDetail'
@@ -16,8 +16,10 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #expand-node-button': 'expandNode'
 
       initialize: ->
-        @model.nodes.on 'change:selected', @update, this
-        @model.connections.on 'change:selected', @update, this
+        @graphView = @attributes.graphView
+
+        @model.on 'conn:clicked', @update, this
+        @model.on 'node:clicked', @update, this
         @model.on 'create:connection', @editConnection, this
 
       update: (nodeConnection) ->
@@ -26,15 +28,21 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         $("#details-container").empty()
         if selectedNC
           workspaceSpokes = @model.getSpokes selectedNC
-          $("#details-container").append _.template(detailsTemplate, {node:selectedNC, spokes:workspaceSpokes})
           @updateColor @model.defaultColors[selectedNC.get('color')]
           selectedNC.on "change:color", (nc) => @updateColor @model.defaultColors[selectedNC.get('color')]
 
+          @detailsModal = new Backbone.BootstrapModal(
+            content: _.template(detailsTemplate, {node:selectedNC, spokes:workspaceSpokes})
+            animate: true
+            showFooter: false
+          ).open()
+
       updateColor: (color) ->
-        $('.panel-heading', '#details-container').css 'background', color
+        $('#details-container .panel-heading').css 'background', color
 
       closeDetail: () ->
-        $('#details-container').empty()
+        @detailsModal.close()
+        @graphView.trigger "node:mouseout"
         if @getSelectedNode()
           @getSelectedNode().set 'selected', false
         if @getSelectedConnection()
@@ -68,7 +76,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         e.preventDefault()
         @nodeConnectionForm.commit()
         @nodeConnectionForm.model.save()
-        @update()
+        @closeDetail()
         false
 
       archiveNode: () ->
