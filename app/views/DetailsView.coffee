@@ -1,7 +1,7 @@
-define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap'
+define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap',
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
- 'bootstrap-color'],
-  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker) ->
+ 'bootstrap-color', 'atwho'],
+  ($, _, Backbone, bbf, list, bbfb, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho) ->
     class DetailsView extends Backbone.View
       el: $ '#sidebar'
 
@@ -19,6 +19,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @model.nodes.on 'change:selected', @update, this
         @model.connections.on 'change:selected', @update, this
         @model.on 'create:connection', @editConnection, this
+
+        @setupAtWho()
 
         $('#inputor').atwho
           at: "@"
@@ -103,3 +105,18 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       getSelectedConnection: ->
         selectedConnection = @model.connections.findWhere {'selected': true}
+
+      setupAtWho: ->
+        Backbone.Form.editors.AtWhoEditor = Backbone.Form.editors.TextArea.extend({
+            render: () ->
+              # Call the parent's render method
+              Backbone.Form.editors.Text.prototype.render.call this
+              # Then make the editor's element have atwho.
+              # this.$el.atwho
+              #   at: "@"
+              #   data:['Peter', 'Tom', 'Anne']
+              return this
+            # The set value must correct
+            setValue: (value) ->
+              this.$el.val()
+        })

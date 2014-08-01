@@ -19,6 +19,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
         type: 'List'
         itemType: 'Text'
         validators: [type: 'regexp', regexp: /^\w+$/]
+      details:
+        type: 'AtWhoEditor'
 
     validate: ->
       if !@get('name')
