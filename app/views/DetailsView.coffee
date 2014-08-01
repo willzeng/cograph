@@ -112,9 +112,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
               # Call the parent's render method
               Backbone.Form.editors.Text.prototype.render.call this
               # Then make the editor's element have atwho.
-              # this.$el.atwho
-              #   at: "@"
-              #   data:['Peter', 'Tom', 'Anne']
+              this.$el.atwho
+                at: "@"
+                data:['Peter', 'Tom', 'Anne']
               return this
             # The set value must correct
             setValue: (value) ->
