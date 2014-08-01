@@ -17,7 +17,9 @@ requirejs.config({
     'share-button': '/assets/libs/share-button/build/share.min',
     'socket-io': '/socket.io/socket.io',
     'b-iosync': '/assets/libs/backbone.iobind/dist/backbone.iosync',
-    'b-iobind': '/assets/libs/backbone.iobind/dist/backbone.iobind'
+    'b-iobind': '/assets/libs/backbone.iobind/dist/backbone.iobind',
+    'caret': '/assets/libs/caret.js/dist/jquery.caret.min',
+    'atwho': '/assets/libs/jquery.atwho/dist/js/jquery.atwho.min'
   },
   shim: {
     'backbone': {
@@ -41,6 +43,12 @@ requirejs.config({
     },
     'b-iobind': {
       deps: ['underscore','backbone']
+    },
+    'caret': {
+      deps: ['jquery']
+    },
+    'atwho': {
+      deps: ['jquery', 'caret']
     }
   },
   packages: [{

@@ -34,7 +34,9 @@
     "new-bb-modal": "~0.9.1",
     "bootstrap-colorpalette": "~0.0.1",
     "share-button": "~0.4.1",
-    "backbone.iobind": "~0.4.7"
+    "backbone.iobind": "~0.4.7",
+    "jquery.atwho": "~0.5.0",
+    "caret.js": "~0.1.0"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

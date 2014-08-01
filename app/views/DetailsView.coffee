@@ -20,6 +20,10 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @model.connections.on 'change:selected', @update, this
         @model.on 'create:connection', @editConnection, this
 
+        $('#inputor').atwho
+          at: "@"
+          data:['Peter', 'Tom', 'Anne']
+
       update: (nodeConnection) ->
         selectedNC = @getSelectedNode() || @getSelectedConnection()
 
