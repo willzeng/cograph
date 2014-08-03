@@ -419,10 +419,10 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     margin-top: 1px;
 }
 .navbar-nav > li > a {
-    margin-top: 13px;
-    margin-bottom: 13px;
-    padding-bottom: 12px;
-    padding-top: 12px;
+/*    margin-top: 13px;
+    margin-bottom: 13px;*/
+/*    padding-bottom: 12px;
+    padding-top: 12px;*/
 }
 .navbar-nav > li > a [class^="fa"]{
     font-size: 18px;
