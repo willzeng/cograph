@@ -20,20 +20,19 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
         @model.on 'conn:clicked', @openDetails, this
         @model.on 'node:clicked', @openDetails, this
-        @model.on 'create:connection', @editConnection, this
+        @model.on 'create:connection', @openAndEditConnection, this
 
       openDetails: (nodeConnection) ->
+        @currentNC = nodeConnection
         workspaceSpokes = @model.getSpokes nodeConnection
         @updateColor @model.defaultColors[nodeConnection.get('color')]
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
 
         @detailsModal = new Backbone.BootstrapModal(
           content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
-          animate: true
+          animate: false
           showFooter: false
         ).open()
-
-        @currentNC = nodeConnection
 
       updateColor: (color) ->
         $('#details-container .panel-heading').css 'background', color
@@ -41,6 +40,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       closeDetail: () ->
         @detailsModal.close()
         @graphView.trigger "node:mouseout"
+
+      openAndEditConnection: (conn) ->
+        @currentNC = conn
+        @openDetails conn
+        @editNodeConnection()
 
       editNodeConnection: ->
         nodeConnection = @currentNC

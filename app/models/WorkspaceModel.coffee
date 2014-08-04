@@ -89,8 +89,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       putConnection: (connectionModel) ->
         @connections.add connectionModel
 
-      newConnectionCreated: ->
-        @trigger 'create:connection'
+      newConnectionCreated: (conn) ->
+        @trigger 'create:connection', conn
 
       removeNode: (node) ->
         @connections.remove @connections.where {'source': node.get('_id')}
