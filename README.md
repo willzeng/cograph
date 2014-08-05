@@ -23,3 +23,9 @@ To run the tests you need to do two steps:
 
 
 Copyright GraphDocs, William Zeng, David Furlong, Victor Pontis 2014
+
+
+Related Projects:
+-------
+https://www.moh.io/mohiomap/welcome.php
+http://www.graphcommons.com
