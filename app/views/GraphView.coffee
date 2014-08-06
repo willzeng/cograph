@@ -108,6 +108,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("class", "connection")
           .on "click", (d) =>
             @model.select d
+            @model.trigger "conn:clicked", d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
@@ -193,6 +194,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             # prevents node from being selected on drag
             if (d3.event.defaultPrevented) then return
             @model.select d
+            @model.trigger "node:clicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)

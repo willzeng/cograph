@@ -8,7 +8,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
-        @detailsView = new DetailsView model: @workspaceModel
+        @detailsView = new DetailsView {model: @workspaceModel, attributes: {graphView: @graphView}}
         @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
