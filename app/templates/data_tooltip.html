@@ -1,11 +1,12 @@
-  <div class="pad">
+  
       <div class="node-toolbar">
-        <i class="fa fa-thumb-tack node-fix"></i>
-        <i class="fa fa-plus-circle node-add-related"></i>
-<!--         <i class="fa fa-archive"></i>
- -->    <i class="fa fa-link node-connect"></i>
-        <i class="fa fa-trash node-archive"></i>
+        <button type="button"><i class="fa fa-thumb-tack node-fix"></i></button>
+        <button type="button"><i class="fa fa-plus-circle node-add-related"></i></button>
+        <button type="button"><i class="fa fa-link node-connect"></i></button>
+        <button type="button"><i class="fa fa-trash-o node-archive"></i></button>
       </div>
+  <% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags)){ %>
+    <div class="pad">
       <div>
       <%= attributes.description %>
       </div>
@@ -15,4 +16,5 @@
         <%= attributes.tags.join(", ") %>
         </div>
       <% } %>
-  </div>
+    </div>
+  <% } %>
