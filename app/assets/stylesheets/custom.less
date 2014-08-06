@@ -48,6 +48,8 @@
   color: gray;
   cursor: pointer;
   height: auto;
+  font-size: 14px;
+  line-height: normal;
 }
 
 .pad {
@@ -279,7 +281,16 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #add-node-form {
-  display: inline;
+  width: 255px;
+  textarea {
+    width: 227px;
+    margin-top: 8px;
+  }
+}
+
+#filter-panel {
+ max-height: 250px; 
+ overflow-y: scroll;
 }
 
 .edit-details-form input[type="text"], .edit-details-form button[type="button"] {
@@ -363,6 +374,8 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 .navbar {
   margin-bottom: 0;
   min-height: 0;
+  max-height: 32px;
+  overflow: hidden;
   background: @white;
   border: 0;
   border-radius: 0;

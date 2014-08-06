@@ -11,6 +11,11 @@ html(lang="en")
     link(href='/assets/stylesheets/gsdk-base.css', rel='stylesheet')
     link(href='/assets/stylesheets/custom.css', rel='stylesheet')    
     script(type='text/javascript', data-main="main", src="/assets/libs/requirejs/require.js") //loads main.js
+    script.
+      window.prefetch = {};
+      window.prefetch.nodes =!{JSON.stringify(nodes)};
+      window.prefetch.connections =!{JSON.stringify(connections)};
+      window.prefetch.theDocument =!{JSON.stringify(theDocument)};
 
   body
     include header
