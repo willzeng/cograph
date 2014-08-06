@@ -24,7 +24,11 @@
           <button id="archive-connection-button" class="btn btn-warning">Archive</button>
         <% } %>
       </div>
-      <p class="lead"><%= node.attributes.description %></p>
+      <% if (node.attributes.description.length > 0) { %>
+        <p class="lead"><%= node.attributes.description %></p>
+      <% } else { %>
+        <p>Click Edit to add information.</p>
+      <% } %>
       <p>
         <% if (node.attributes.url) { %>
             URL: <a href="<%= node.attributes.url %>"><%= node.attributes.url %></a><br/>
