@@ -61,6 +61,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @svg.append('defs').html(defs)
 
         @workspace = @svg.append("svg:g")
+
         @workspace.append("svg:g").classed("connection-container", true)
         @workspace.append("svg:g").classed("node-container", true)
 
@@ -105,10 +106,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("class", "connection")
           .on "click", (d) =>
             @model.select d
-          .on "mouseover", (conn)  =>
-            @trigger "connection:mouseover", conn
-          .on "mouseout", (conn) =>
-            @trigger "connection:mouseout", conn
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
@@ -117,10 +114,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .style("stroke", (d) => @getColor d)
         text-group = connectionEnter.append("g")
           .attr('class', 'connection-text')
+          .on "mouseover", (conn)  =>
+            @trigger "connection:mouseover", conn
+          .on "mouseout", (conn) =>
+            console.log(d3.event)
+            if(typeof d3.event.toElement.className == 'object' && d3.event.toElement.localName != 'text')
+              @trigger "connection:mouseout", conn
         text-group.append("text")
           .attr("text-anchor", "middle")
         text-group.append("foreignObject")
-          .attr('y', '0')
+          .attr('y', '1')
           .attr('height', @maxInfoBoxHeight)
           .attr('width', @infoBoxWidth)
           .attr('x', '-12')
@@ -173,8 +176,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("x", "-60")
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
-            .attr('class', 'node-title-body')
-        nodeEnter.append("foreignObject")
+          .attr('class', 'node-title-body')
+        nodeInfoText = nodeEnter.append("foreignObject")
           .attr('y', '12')
           .attr('height', @maxInfoBoxHeight)
           .attr('width', @infoBoxWidth)
@@ -182,21 +185,24 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr('class', 'node-info')
           .append('xhtml:body')
             .attr('class', 'node-info-body')
-
-        nodeInnerText
-          .on "dblclick", (d) ->
-            d3.select(this).classed("fixed", d.fixed = false)
+        
+        nodeInnerText 
           .on "click", (d) =>
             # prevents node from being selected on drag
             if (d3.event.defaultPrevented) then return
-            @model.select d
+            @model.select d 
+        node
+          .on "dblclick", (d) ->
+            d3.select(this).classed("fixed", d.fixed = false)
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
           .on "mouseenter", (node) =>
             @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
-            @trigger "node:mouseout", node
+            # perhaps setting the foreignobject height dynamically would be better.
+            if(typeof d3.event.toElement.className == 'object')
+              @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
         # update old and new elements
