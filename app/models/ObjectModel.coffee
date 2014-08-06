@@ -17,6 +17,11 @@ define ['underscore', 'backbone'], (_, Backbone) ->
     ignoredAttributes: ['selected', 'dim']
 
     parse: (resp, options) ->
+      # if a tagToColor dictionary is implemented then it automatically maps
+      # certain tags to certain colors
+      if resp.tags and tagToColor?
+        for tag in resp.tags
+          resp.color = @tagToColor[tag]
       if resp._id then resp._id = parseInt(resp._id, 10)
       resp
 

@@ -24,21 +24,27 @@
           <button id="archive-connection-button" class="btn btn-warning">Archive</button>
         <% } %>
       </div>
-      <p class="lead"><%= node.attributes.description %></p>
+      <% if (node.attributes.description.length > 0) { %>
+        <p class="lead"><%= node.attributes.description %></p>
+      <% } else { %>
+        <p>Click Edit to add information.</p>
+      <% } %>
       <p>
         <% if (node.attributes.url) { %>
-            URL: <a href="<%= attributes.url %>"><%= node.attributes.url %></a><br/>
+            URL: <a href="<%= node.attributes.url %>"><%= node.attributes.url %></a><br/>
         <% }; %>
         <ul class="list-group">
           <% _.each(node.attributes.tags, function(tag) { %>
             <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
           <% }); %>
         </ul>
-        <ul class="list-group">
-          <% _.each(spokes, function(conn) { %>
-            <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
-          <% }); %>
-        </ul>
+        <% if (node.constructor.name === "NodeModel") {%>
+          <ul class="list-group">
+            <% _.each(spokes, function(conn) { %>
+              <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
+            <% }); %>
+          </ul>
+        <% } %>
       </p>
     </div>
   </div>

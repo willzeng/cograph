@@ -19,27 +19,22 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         Backbone.history.start()
 
       routes:
-        '(:id)': 'home'
+        '': 'home'
 
-      home: (docId) =>
-        @graphView.render()
+      home: () =>
+        @workspaceModel.getDocument().set window.prefetch.theDocument
+        @workspaceModel.nodes._docId = window.prefetch.theDocument._id
+        @workspaceModel.connections._docId = window.prefetch.theDocument._id
 
-        if docId
-          @workspaceModel.documentModel.set '_id', docId
-          @workspaceModel.documentModel.fetch
-            error: (err) -> location.href="/errors/missingDocument",
-            success: () => @setAndFetchDoc()
-        else
-          $.when(@workspaceModel.documentModel.save()).then =>
-            @navigate @workspaceModel.documentModel.get '_id'
-            @setAndFetchDoc()
+        if window.prefetch.nodes then @workspaceModel.nodes.set window.prefetch.nodes, {silent:true}
+        if window.prefetch.connections then @workspaceModel.connections.set window.prefetch.connections, {silent:true}
+        @workspaceModel.nodes.trigger "add"
 
-      setAndFetchDoc: ->
-        $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then =>
-          $('.loading-container').remove()
-          @workspaceModel.getTagNames (tags) =>
-            @workspaceModel.filterModel.addInitialTags tags
-            @workspaceModel.filterModel.addNodeTags tags
+        $('.loading-container').remove()
+
+        @workspaceModel.getTagNames (tags) =>
+          @workspaceModel.filterModel.addInitialTags tags
+          @workspaceModel.filterModel.addNodeTags tags
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

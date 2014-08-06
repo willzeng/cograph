@@ -1,76 +1,7 @@
-define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahead', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'socket-io'],
-  ($, _, Backbone, Bootstrap, Bloodhound, typeahead, NodeModel, ConnectionModel, io) ->
+define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahead', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'socket-io', 'text!templates/mobile_alert.html'],
+  ($, _, Backbone, Bootstrap, Bloodhound, typeahead, NodeModel, ConnectionModel, io, mobile_alert) ->
     class MobileView extends Backbone.View
       el: $ 'body'
-
-      initialize: ->
-        @docId = 0
-
-        nodeNameMatcher = () =>
-          findMatches = (q, cb) =>
-            $.get "/document/#{@docId}/nodes", (nodes) =>
-              @nodes = nodes
-              matches = @findMatchingObjects q, nodes
-              cb _.map matches, (match) -> {value: match.name, type: 'node'}
-
-        connectionNameMatcher = () =>
-          findMatches = (q, cb) =>
-            $.get "/document/#{@docId}/connections", (connections) =>
-              matches = @findMatchingObjects q, connections
-              cb _.map matches, (match) -> {value: match.name, type: 'connection'}
-
-        $('#source-node-name').focus ->
-          $('#source-node-name').removeClass('red')
-        $('#destination-node-name').focus ->
-          $('#destination-node-name').removeClass('red')
-        $('#connection-name').focus ->
-          $('#connection-name').removeClass('red')
-        $('#node-name').focus ->
-          $('#node-name').removeClass('red')
-
-        # TYPEAHEADS
-
-        # Source Node
-        $('#source-node-name').typeahead(
-          hint: true,
-          highlight: true,
-          minLength: 1,
-          autoselect: true
-        ,
-          name: 'node-names',
-          source: nodeNameMatcher()
-        )
-
-        $('#source-node-name').on 'typeahead:selected',
-          (e, sugg, dataset) -> $('#connection-name').focus()
-
-        # Target Node
-        $('#destination-node-name').typeahead(
-          hint: true,
-          highlight: true,
-          minLength: 1,
-          autoselect: true
-        ,
-          name: 'node-names',
-          source: nodeNameMatcher()
-        )
-
-        $('#destination-node-name').on 'typeahead:selected',
-          (e, sugg, dataset) => @addConnection()
-
-        # Connection Types
-        $('#connection-name').typeahead(
-          hint: true,
-          highlight: true,
-          minLength: 1,
-          autoselect: true
-        ,
-          name: 'connection-names',
-          source: connectionNameMatcher()
-        )
-
-        $('#connection-name').on 'typeahead:selected',
-          (e, sugg, dataset) -> $('#destination-node-name').focus()
 
       events:
           'click #add-node': 'addNode'
@@ -79,13 +10,75 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
           'click #cancel-connection': 'cancelConnection'
           'click #add-connection': 'addConnection'
 
+      initialize: ->
+        @docId = 0
+
+        $('.name-input').focus (e) ->
+          $(e.currentTarget).removeClass('red')
+
+        # TYPEAHEADS
+
+        # fetch methods for typeaheads
+        nodeNameMatcher = () =>
+          findMatches = (q, cb) =>
+            $.get "/document/#{@docId}/nodes", (nodes) =>
+              @nodes = nodes
+              matches = _.uniq @findMatchingObjects(q, nodes), (match) -> match.name
+              cb _.map matches, (match) -> {value: match.name, type: 'node'}
+
+        connectionNameMatcher = () =>
+          findMatches = (q, cb) =>
+            $.get "/document/#{@docId}/connections", (connections) =>
+              matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
+              cb _.map matches, (match) -> {value: match.name, type: 'connection'}
+
+        typeaheadConfig =
+          hint: false,
+          highlight: true,
+          minLength: 0,
+          autoselect: true
+
+        $('.name-input').blur (e) ->
+          $(e.currentTarget).typeahead('close')
+
+        # trigger typeahead dropdowns with caret buttons
+        $('.typeahead-caret').on 'click', (e) =>
+          targetInput = $(e.currentTarget).attr('data-target')
+          ev = $.Event("keydown")
+          ev.keyCode = ev.which = 40
+          $(targetInput).trigger ev
+          $(targetInput).focus()
+
+        # Source Node
+        $('#source-node-name').typeahead typeaheadConfig,
+          name: 'node-names',
+          source: nodeNameMatcher()
+
+        $('#source-node-name').on 'typeahead:selected',
+          (e, sugg, dataset) -> $('#connection-name').focus()
+
+        # Target Node
+        $('#destination-node-name').typeahead typeaheadConfig,
+          name: 'node-names',
+          source: nodeNameMatcher()
+
+        $('#destination-node-name').on 'typeahead:selected',
+          (e, sugg, dataset) => @addConnection()
+
+        # Connection Types
+        $('#connection-name').typeahead typeaheadConfig,
+          name: 'connection-names',
+          source: connectionNameMatcher()
+
+        $('#connection-name').on 'typeahead:selected',
+          (e, sugg, dataset) -> $('#destination-node-name').focus()
+
       # BUTTONS
 
       # Add Node
       cancelNode: ->
         $('#node-name').removeClass('red')
-        $('input[type="text"]').val("")
-        $('#node-description').val("")
+        $('#node .form-control').val("")
 
       addNode: ->
         if $('#node-name').val() == ""
@@ -101,8 +94,9 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
             _docId: @docId
           newNode.save()
 
-          $('input[type="text"]').val("")
-          $('#node-description').val("")
+          $('#node .form-control').val("")
+          @setupAlert()
+
           [true, newNode.get('name')]
 
       addConnectionNode: ->
@@ -110,17 +104,17 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
         if success[0]
           $('a[data-target="#connection"]').tab('show')
           $('#source-node-name').val success[1]
+          @setupAlert()
 
       # Add Connection
       cancelConnection: ->
-        # $('.connection > input[type="text"]').removeClass('red')
-        $('input').val("")
+        $('.name-input').removeClass 'red'
+        $('#connection .form-control').val("")
 
       addConnection: ->
         validated = true;
         if $('#connection-name').val() == ""
           validated = false
-          console.log "dsds"
           $('#connection-name').addClass('red')
 
         if $('#source-node-name').val() == ""
@@ -145,13 +139,17 @@ define ['jquery', 'underscore', 'backbone', 'bootstrap', 'bloodhound', 'typeahea
             _docId: @docId
           connection.save()
 
-          # $('.connection > input[type="text"]').removeClass('red')
-
-          $('input').val("")
-          $('#connection-description').val("")
-          $('source-node-name').focus()
+          @setupAlert()
+          $('#connection .form-control').blur().val("")
+          $('#source-node-name').focus()
 
       # Helper Methods
+      setupAlert: () ->
+        $('body').append((d) -> _.template(mobile_alert, d))
+        setTimeout () ->
+          $('.alert').remove()
+        , 2500
+
       parseTags: (string) ->
         (tag.trim() for tag in string.split(','))
 

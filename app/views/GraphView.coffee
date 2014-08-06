@@ -4,6 +4,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
     class GraphView extends Backbone.View
       el: $ '#graph'
 
+      events:
+        "contextmenu": "rightClicked"
+
       # Parameters for display
       maxConnTextLength: 20
       maxNodeBoxHeight: 100
@@ -46,9 +49,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           that.currentZoom = that.zoom.translate()
         .on "drag", (d) ->
           d3.select(this).classed("fixed", d.fixed = true)
-          that.trigger "node:drag", d
+          that.trigger "node:drag", d, d3.event
         .on "dragend", (node) =>
-          @trigger "node:dragend", node
+          @trigger "node:dragend", node, d3.event
           @zoom.translate @currentZoom
           @translateLock = false
 
@@ -88,7 +91,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @force.nodes(nodes).links(connections).start()
         @updateDetails()
 
-      updateDetails: ->
+      updateDetails: (incoming) ->
+        if incoming?
+          # don't updateDetails if we have only dimmed the one node
+          if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
@@ -190,8 +196,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
-          .on "mouseover", (node) =>
-            @trigger "node:mouseover", node
+          .on "mouseenter", (node) =>
+            @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
@@ -216,13 +222,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           el = $(t).find('.node-title-body')
           left = el.width()/2+parseInt(el.css('border-left-width'),10)
           top = el.height()/2+parseInt(el.css('border-bottom-width'),10)
+
           $(t)
             .attr('y', - top)
-          dim = t.getBBox()
-          
+
           info = $(t).parent().find('.node-info')
           info
-            .attr('x',dim.x-left)
+            .attr('x',-left)
             .attr('y',top)
 
         # delete unmatching elements
@@ -240,11 +246,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           @connectionAdder.tick
         @force.on "tick", tick
 
+      rightClicked: (e) ->
+        e.preventDefault()
+
       isContainedIn: (node, element) =>
-        node.x+@currentZoom[0] < element.offset().left + element.width() &&
-          node.x+@currentZoom[0] > element.offset().left &&
-          node.y+@currentZoom[1] > element.offset().top &&
-          node.y+@currentZoom[1] < element.offset().top + element.height()
+        node.x < element.offset().left + element.outerWidth() &&
+        node.x > element.offset().left &&
+        node.y > element.offset().top &&
+        node.y < element.offset().top + element.outerHeight()
 
       getColor: (nc) ->
           @model.defaultColors[nc.get('color')]
