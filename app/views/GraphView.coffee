@@ -243,61 +243,52 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
               sh = $('#'+source.get('_id')).find('.node-title-body').height()/2
               th = $('#'+target.get('_id')).find('.node-title-body').height()/2
-
-              # currently only considers 1 line high nodes
               
-              su = ((dy / dx) * 120) / 2 #120 is source.width
+              su = (dy / dx) * (120 / 2)
 
               if(Math.abs(su) > sh)
-                # case: intersects source nodes on top/bottom
-                su = (dx / dy) * (sh)
-                tu = (dx / dy) * (th)
+                # case: intersects source node on top/bottom
+                snu = (dx / dy) * (sh) #source relative x intercept
+                #tu = (dx / dy) * (th) #wrong.
 
-                if(ty < sy)
+                if(ty < sy) #intersect source at top
                   scy = sy - sh
-                  tcy = ty + th
-                  scx = sx - su
-                  tcx = tx + tu
-                else
+                  scx = sx - snu
+                else #intersect source at bottom
                   scy = sy + sh
-                  tcy = ty - th    
-                  scx = sx + su
-                  tcx = tx - tu
-              else 
-                # case: intersects nodes on left/right
-                if(tx < sx)
-                  scx = sx - (120 / 2)
-                  tcx = tx + (120 / 2)
-                  scy = sy - su
-                  tcy = ty + su
+                  scx = sx + snu
+              else
+                #case: intersects source node on side
+                snu = (dy / dx) * (120/2) #source relative y intercept
+
+                if(tx < sx) #intersect source on the right
+                  scx = sx - (120/2)
+                  scy = sy - snu
                 else 
-                  scx = sx + (120 / 2)
-                  tcx = tx - (120 / 2)
-                  scy = sy + su
-                  tcy = ty - su 
+                  scx = sx + (120/2)
+                  scy = sy + snu
+              
+              if(Math.abs(su) > th)
+                # case: intersects target at top/bottom
+                snu = (dx / dy) * (th) #target relative x intercept
 
-              # if(Math.abs(tu) > th)
-              #   tu = (dx / dy) * (th)
+                if(sy < ty) #top
+                  tcy = ty - th
+                  tcx = tx - snu
+                  
+                else #bottom
+                  tcy = ty + th
+                  tcx = tx + snu
+              else
+                #case: intersects target node on side
+                snu = (dy / dx) * (120/2) #target relative y intercept
 
-              #   if(ty < sy)
-              #     scy = sy - sh
-              #     tcy = ty + th
-              #     scx = sx - su
-              #     tcx = tx + su
-              #   else
-              #     scy = sy + sh
-              #     tcy = ty - th    
-              #     scx = sx + su
-              #     tcx = tx - su
-              # else 
-              #   # case: intersect target nodes on left/right
-              #   if(tx < sx)
-              #     tcx = tx + (120 / 2)
-              #     tcy = ty + su
-              #   else 
-              #     tcx = tx - (120 / 2)
-              #     tcy = ty - su 
-
+                if(sx < tx) #intersect target on the right
+                  tcx = tx - (120/2)
+                  tcy = ty - snu
+                else #target on left
+                  tcx = tx + (120/2)
+                  tcy = ty + snu
 
               d3.select(this).attr('x1', scx)
               d3.select(this).attr('y1', scy)
