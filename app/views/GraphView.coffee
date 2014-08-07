@@ -205,6 +205,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
         # update old and new elements
+        node.attr('id', (d) -> d.get('_id'))
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
@@ -238,10 +239,71 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         tick = =>
           connection.selectAll("line")
-            .attr("x1", (d) => @model.getSourceOf(d).x)
-            .attr("y1", (d) => @model.getSourceOf(d).y)
-            .attr("x2", (d) => @model.getTargetOf(d).x)
-            .attr("y2", (d) => @model.getTargetOf(d).y)
+            .each((d, i) ->
+              source = that.model.getSourceOf(d)
+              target = that.model.getTargetOf(d)
+              sx = source.x
+              sy = source.y
+              tx = target.x
+              ty = target.y
+              dy = ty - sy
+              dx = tx - sx
+
+              sh = $('#'+source.get('_id')).find('.node-title-body').height()/2
+              th = $('#'+target.get('_id')).find('.node-title-body').height()/2
+              
+              su = (dy / dx) * (120 / 2)
+
+              if(Math.abs(su) > sh)
+                # case: intersects source node on top/bottom
+                snu = (dx / dy) * (sh) #source relative x intercept
+                #tu = (dx / dy) * (th) #wrong.
+
+                if(ty < sy) #intersect source at top
+                  scy = sy - sh
+                  scx = sx - snu
+                else #intersect source at bottom
+                  scy = sy + sh
+                  scx = sx + snu
+              else
+                #case: intersects source node on side
+                snu = (dy / dx) * (120/2) #source relative y intercept
+
+                if(tx < sx) #intersect source on the right
+                  scx = sx - (120/2)
+                  scy = sy - snu
+                else 
+                  scx = sx + (120/2)
+                  scy = sy + snu
+              
+              if(Math.abs(su) > th)
+                # case: intersects target at top/bottom
+                snu = (dx / dy) * (th) #target relative x intercept
+
+                if(sy < ty) #top
+                  tcy = ty - th
+                  tcx = tx - snu
+                  
+                else #bottom
+                  tcy = ty + th
+                  tcx = tx + snu
+              else
+                #case: intersects target node on side
+                snu = (dy / dx) * (120/2) #target relative y intercept
+
+                if(sx < tx) #intersect target on the right
+                  tcx = tx - (120/2)
+                  tcy = ty - snu
+                else #target on left
+                  tcx = tx + (120/2)
+                  tcy = ty + snu
+
+              d3.select(this).attr('x1', scx)
+              d3.select(this).attr('y1', scy)
+              d3.select(this).attr('x2', tcx)
+              d3.select(this).attr('y2', tcy)
+            )
+           
           connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
@@ -259,3 +321,5 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       getColor: (nc) ->
           @model.defaultColors[nc.get('color')]
+
+      
