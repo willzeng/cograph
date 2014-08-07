@@ -65,5 +65,6 @@ exports.destroy = (data, callback, socket) ->
       socket.emit 'nodes:delete', true
       socket.broadcast.to(parsed._docId).emit 'nodes:delete', parsed
       callback null, parsed
+    , true
 
 # OTHER
