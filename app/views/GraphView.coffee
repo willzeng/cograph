@@ -9,7 +9,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       # Parameters for display
       maxConnTextLength: 20
-      maxNodeBoxHeight: 100
+      maxNodeBoxHeight: 100 #4 lines
       nodeBoxWidth: 120
       maxInfoBoxHeight: 200
       infoBoxWidth: 120

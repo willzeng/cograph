@@ -10,6 +10,7 @@ define ['underscore', 'backbone'], (_, Backbone) ->
       tags: []
       _id: -1
       _docId: 0
+      _height: 1
 
     isNew: ->
       @get(@idAttribute) < 0
