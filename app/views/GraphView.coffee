@@ -1,6 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3',
+define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -62,42 +62,7 @@ define ['jquery', 'underscore', 'backbone', 'd3',
                 .call(@zoom)
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
-        def
-          .append('svg:marker')
-            .attr('id', 'draghead')
-            .attr('viewBox', '0 -5 10 10')
-            .attr('refX', '5')
-            .attr('refY', '0')
-            .attr('markerWidth', '3')
-            .attr('markerHeight', '3')
-            .attr('orient', 'auto')
-            .attr('fill', 'black')
-            .append('svg:path')
-              .attr('d',"M0,-5L10,0L0,5")
-        def
-          .append('svg:marker')
-            .attr('id', 'arrowhead')
-            .attr('viewBox', '0 -5 10 10')
-            .attr('refX', '40')
-            .attr('refY', '0')
-            .attr('markerWidth', '4')
-            .attr('markerHeight', '4')
-            .attr('orient', 'auto')
-            .attr('fill', '#ccc')
-            .append('svg:path')
-              .attr('d',"M0,-5L10,0L0,5")
-        def
-          .append('svg:marker')
-            .attr('id', 'arrowhead-selected')
-            .attr('viewBox', '0 -5 10 10')
-            .attr('refX', '40')
-            .attr('refY', '0')
-            .attr('markerWidth', '4')
-            .attr('markerHeight', '4')
-            .attr('orient', 'auto')
-            .attr('fill', '#3498db')
-            .append('svg:path')
-              .attr('d',"M0,-5L10,0L0,5")
+        (new svgDefs).addDefs def
 
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
