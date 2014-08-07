@@ -61,7 +61,6 @@ define ['jquery', 'underscore', 'backbone', 'd3',
                 .attr('height', height)
                 .call(@zoom)
                 .on("dblclick.zoom", null)
-        console.log(defs)
         def = @svg.append('svg:defs')
         def
           .append('svg:marker')
