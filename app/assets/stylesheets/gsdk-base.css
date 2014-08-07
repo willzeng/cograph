@@ -416,7 +416,6 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 .navbar .navbar-brand {
     font-weight: 600;
     font-size: 20px;
-    margin-top: 1px;
 }
 .navbar-nav > li > a {
 /*    margin-top: 13px;
@@ -574,8 +573,6 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     text-decoration: none;
 }
 .navbar-toggle{
-    margin-top: 19px;
-    margin-bottom: 19px;
     border: 0;
 }
 .navbar-toggle .icon-bar {
