@@ -16,9 +16,17 @@ nav.navbar.navbar-default(role='navigation')
           ul.nav.navbar-nav
             li
               a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
-            li
-              a#open-doc-button(href="") Open
+            li.dropdown
+              a.dropdown-toggle(data-toggle='dropdown', href='#')
+                | Open
+                span.caret
+              ul.dropdown-menu
+                li(role="presentation")
+                  a#open-doc-button(href="") Open GraphDoc
+                li(role="presentation")
+                  a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open Workspace
             li
               a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
             li
               a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
+

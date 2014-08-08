@@ -24,3 +24,11 @@ exports.read = (data, callback, socket) ->
       parsed = utils.parseNodeToClient node._data.data
       socket.emit 'workspace:read', parsed
       callback null, parsed
+
+# DELETE
+exports.destroy = (data, callback, socket) ->
+  id = parseInt data
+  graphDb.getNodeById id, (err, node) ->
+    node.delete () ->
+      parsed = node._data.data
+    , true

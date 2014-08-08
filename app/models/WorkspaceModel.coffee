@@ -171,8 +171,13 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       serialize: ->
         nodes = @nodes.pluck "_id"
         connIds = @connections.pluck "_id"
-        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id}
+        docId = @getDocument().get "_id"
+        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id, _docId:docId}
 
       getWorkspace: (callback) ->
         @sync "read", this,
           success: callback
+
+      deleteWorkspace: (id, callback) ->
+        @socket.emit "workspace:destroy", id
+        callback id
