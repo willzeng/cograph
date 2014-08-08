@@ -4,11 +4,10 @@ utils = require __dirname + '/../utils'
 class WorkspaceHelper
   constructor: (@graphDb) ->
 
-  @workspaceLabel = "_workspace"
-
-  create: (newWorkspace, callback) ->
-    params = {props: newWorkspace}
-    cypherQuery = "CREATE (n:#{@workspaceLabel} { props }) RETURN n;"
+  create: (newWorkspace, callback) =>
+    newWorkspace._docId = parseInt newWorkspace._docId
+    params = {props: newWorkspace, docId:newWorkspace._docId}
+    cypherQuery = "START m=node({ docId }) CREATE (n:_workspace { props })<-[r:HAS]-(m) RETURN n;"
     @graphDb.query cypherQuery, params, (err, results) =>
       if (err) then throw err
       doc = utils.parseCypherResult(results[0], 'n')
