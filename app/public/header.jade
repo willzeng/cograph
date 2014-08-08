@@ -1,22 +1,27 @@
-nav.navbar.navbar-default#menu-bar(role="navigation")
-  .container-fluid
-    .navbar-header
-      a.navbar-brand(href="http://www.graphdocs.com") GraphDocs
-      ul.nav.nav-pills
-        li
-          a#new-doc-button(href="#", data-toggle="modal", data-target="#new-doc-modal")
-            | New
-        li
-          a#open-doc-button(href="#")
-            | Open
-        li
-          a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal")
-            | Workspaces
-        li
-          a#filter-modal-toggle(href="#", data-toggle="modal", data-target="#filters_template")
-            | Filter
-        li
-          a#analytics-button(href="", data-toggle="modal", data-target="#analytics-modal")
-            | Analytics
-      #navbar-menu-title      
-        input.navbar-text#menu-title(type="text", placeholder="Untitled Doc", data-toggle="tooltip", data-placement="bottom", title="Rename Doc")
+nav.navbar.navbar-default(role='navigation')
+    .container-fluid
+        // Brand, toggle and title get grouped for better mobile display
+        .navbar-header
+          button.navbar-toggle(type='button' data-toggle='collapse' data-target='#gdocs-nav')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='http://graphdocs.com') GraphDocs
+          form.navbar-form.navbar-left.main-nav
+            .form-group
+              input#menu-title(type="text" placeholder="Untitled Doc" data-toggle="tooltip" data-placement="bottom" title="Rename Doc")
+        // Collect the nav links, forms, and other content for toggling
+        #gdocs-nav.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li
+              a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
+            li
+              a#open-doc-button(href="") Open
+            li
+              a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Workspaces
+            li
+              a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
+            li
+              a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
+

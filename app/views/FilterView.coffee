@@ -2,7 +2,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/filters_template.htm
   ($, _, Backbone, filtersTemplate) ->
     class FilterView extends Backbone.View
 
-      el: $ '#menu-bar'
+      el: $ '#gdocs-nav'
 
       events:
         'click #filter-modal-toggle': 'openFilterModal'
