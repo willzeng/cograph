@@ -8,7 +8,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       socket: io.connect('')
 
     class MenuView extends Backbone.View
-      el: $ '#menu-bar'
+      el: $ '#gdocs-nav'
 
       events:
         'click #new-doc-button': 'newDocumentModal'

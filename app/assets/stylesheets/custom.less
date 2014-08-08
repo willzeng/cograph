@@ -10,6 +10,8 @@
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
+@bottom-margin:60px;
+
 .node {
   transition: opacity .5s ease-in-out;
 }
@@ -184,7 +186,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #zoom-controls {
   position: absolute;
-  bottom: 40px;
+  bottom: @bottom-margin;
   left: 15px;
 }
 
@@ -208,7 +210,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   font-size: 26pt;
   color: lightgray;
   position: absolute;
-  bottom: 40px;
+  bottom:@bottom-margin;
   left: 70px;
   padding-top:12px;
   text-align: center;
@@ -270,7 +272,8 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .toolbar.bottom {
   position: absolute;
-  bottom: 40px;
+  bottom: @bottom-margin;
+
   .btn {
     margin-right:3px;
     margin-left: 3px;
@@ -299,34 +302,23 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin: 2px 0px;
 }
 
-.navbar-header {
-  width: 100%;
+.main-nav {
+  padding: 0;
+  border: 0;
 }
 
 #menu-title {
   position: relative;
-  left: 0;
-  width: 600px;
   outline: none;
-  background: transparent;
+  background: beige;
   color: black;
   border: 0;
   cursor: pointer;
+  padding: 6px;
 }
 
 #menu-title:focus {
-  background: @white;
   cursor: text;
-}
-
-#menu-bar .nav-pills {
-  a{
-    padding: 5px 15px;
-    border-left: 1px solid #aaa;
-    border-right: 1px solid #aaa;
-  }
-
-  float: left;
 }
 
 .network-share-button {
@@ -370,18 +362,9 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .navbar {
   margin-bottom: 0;
-  min-height: 0;
-  max-height: 32px;
-  overflow: hidden;
   background: @white;
   border: 0;
   border-radius: 0;
-}
-
-.navbar-brand, .navbar-text  {
-  padding: 5px 15px;
-  height: auto;
-  margin: 0px;
 }
 
 .panel-body {
