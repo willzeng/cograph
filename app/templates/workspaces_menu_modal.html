@@ -1,0 +1,10 @@
+<ul class="workspaces-list list-group">
+  <% _.each(workspaces, function(id){ %>
+    <a href=<%= docId %>#<%= id %> target="_blank" class="list-group-item">
+      <%= id %>
+      <button type="button" class="btn btn-danger btn-sm pull-right center-block">
+        <i class="fa fa-trash-o"></i>
+      </button>
+    </a>
+  <% }); %>
+<ul>

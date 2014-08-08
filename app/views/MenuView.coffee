@@ -1,7 +1,8 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
- 'text!templates/analytics_modal.html', 'cs!models/DocumentModel', 'socket-io'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, DocumentModel, io) ->
+ 'text!templates/analytics_modal.html', 'text!templates/workspaces_menu_modal.html',
+ 'cs!models/DocumentModel', 'socket-io'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
@@ -14,6 +15,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #new-doc-button': 'newDocumentModal'
         'click #open-doc-button': 'openDocumentModal'
         'click #analytics-button': 'openAnalyticsModal'
+        'click #workspaces-button': 'openWorkspacesModal'
 
       initialize: ->
         @model.on "document:change", @render, this
@@ -74,3 +76,13 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
+
+      openWorkspacesModal: ->
+        docId = @model.getDocument().get("_id")
+        workspaces = @model.getDocument().get("workspaces")
+        modal = new Backbone.BootstrapModal(
+          content: _.template(workspacesMenuTemplate, {docId:docId, workspaces:workspaces})
+          title: "Workspaces"
+          animate: true
+          showFooter: false
+        ).open()
