@@ -177,3 +177,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       getWorkspace: (callback) ->
         @sync "read", this,
           success: callback
+
+      deleteWorkspace: (id, callback) ->
+        @socket.emit "workspace:destroy", id
+        callback id

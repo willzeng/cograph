@@ -76,6 +76,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
+        false # prevent navigation from appending '#'
 
       openWorkspacesModal: ->
         docId = @model.getDocument().get("_id")
@@ -86,3 +87,12 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           animate: true
           showFooter: false
         ).open()
+
+        modal.on 'shown', () =>
+          $('.delete-workspace').on 'click', (e) =>
+            e.preventDefault()
+            @model.deleteWorkspace $(e.currentTarget).attr('data-id'), (id) =>
+              modal.close()
+              @model.getDocument().set "workspaces", _.filter(workspaces, (x) -> return parseInt(x) != parseInt(id))
+
+        false # prevent navigation from appending '#'
