@@ -18,11 +18,12 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         window.open '/'
 
       openDocumentModal: ->
-        documents = new DocumentCollection
-        $.when(documents.fetch()).then =>
-          modal = new Backbone.BootstrapModal(
-            content: _.template(openDocTemplate, {documents: documents})
-            title: "Open Document"
-            animate: true
-            showFooter: false
-          ).open()
+        documents = new DocumentCollection window.prefetch
+        documents.fetch()
+
+        modal = new Backbone.BootstrapModal(
+          content: _.template(openDocTemplate, {documents: documents})
+          title: "Open Document"
+          animate: true
+          showFooter: false
+        ).open()
