@@ -228,9 +228,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #details-container {
-  position: absolute;
-  width: 100%;
-  padding: 8px 0px 0 0px;
   -ms-word-break: break-all;
   word-break: break-all;
   word-break: break-word;
@@ -276,6 +273,11 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 .toolbar.bottom {
   position: absolute;
   bottom: @bottom-margin;
+
+  .btn {
+    margin-right:3px;
+    margin-left: 3px;
+  }
 }
 
 .controls {
