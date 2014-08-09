@@ -5,6 +5,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
       events:
         'click #sharing-button': 'openShareModal'
+        'click #save-workspace-button': 'saveWorkspace'
 
       openShareModal: ->
         @newShareModal = new Backbone.BootstrapModal(
@@ -18,3 +19,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
         $('button', @newShareModal.$el).click () =>
           @newShareModal.close()
+
+      saveWorkspace: ->
+        @model.sync "create", @model,
+          success: (savedModel) => @trigger "save:workspace", savedModel._id

@@ -1,6 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
+define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -61,7 +61,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                 .attr('height', height)
                 .call(@zoom)
                 .on("dblclick.zoom", null)
-        @svg.append('defs').html(defs)
+        def = @svg.append('svg:defs')
+        (new svgDefs).addDefs def
 
         @workspace = @svg.append("svg:g")
         @workspace.append("svg:g").classed("connection-container", true)
@@ -108,6 +109,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("class", "connection")
           .on "click", (d) =>
             @model.select d
+            @model.trigger "conn:clicked", d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
@@ -193,6 +195,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
             # prevents node from being selected on drag
             if (d3.event.defaultPrevented) then return
             @model.select d
+            @model.trigger "node:clicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)

@@ -2,7 +2,6 @@ extends layout
 
 block content
   #sidebar
-    #details-container.controls
   #graph
     .loading-container
       i.fa.fa-circle-o-notch.fa-spin.fa-5x
@@ -24,6 +23,8 @@ block content
           button.btn.btn-primary(type="submit")
             i.fa.fa-plus
     .toolbar.bottom.right.controls
+      button#save-workspace-button.btn.btn-primary
+        div Save Workspace
       button#sharing-button.btn.btn-primary
         div Share GraphDoc
     #zoom-controls.btn-group-vertical.controls
