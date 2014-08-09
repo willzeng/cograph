@@ -19,7 +19,7 @@ requirejs.config({
     'b-iosync': '/assets/libs/backbone.iobind/dist/backbone.iosync',
     'b-iobind': '/assets/libs/backbone.iobind/dist/backbone.iobind',
     'caret': '/assets/libs/caret.js/dist/jquery.caret.min',
-    'atwho': '/assets/libs/jquery.atwho/dist/js/jquery.atwho.min'
+    'atwho': '/assets/libs/targeted-atwho/dist/js/jquery.atwho.min'
   },
   shim: {
     'backbone': {

@@ -104,12 +104,14 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         Backbone.Form.editors.AtWhoEditor = Backbone.Form.editors.TextArea.extend
           render: () ->
             # Call the parent's render method
-            Backbone.Form.editors.Text.prototype.render.call this
+            Backbone.Form.editors.TextArea.prototype.render.call this
             # Then make the editor's element have atwho.
             this.$el.atwho
               at: "@"
-              data:['Peter', 'Tom', 'Anne']
+              data: ['Tag', 'One', 'Two']
+              target: ".modal-content"
             return this
+
           # The set value must correct
           setValue: (value) ->
             this.$el.val()
