@@ -14,12 +14,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
         type: 'Text'
         validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ]
       description:
-        type: 'TextArea'
-      tags:
-        type: 'List'
-        itemType: 'Text'
-        validators: [type: 'regexp', regexp: /^\w+$/]
-      details:
         type: 'AtWhoEditor'
 
     validate: ->

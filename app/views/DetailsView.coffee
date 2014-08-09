@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap', 'bb-modal',
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
- 'bootstrap-color', 'atwho'],
+ 'bootstrap-color', 'atwho', 'twittertext'],
   ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho) ->
     class DetailsView extends Backbone.View
       el: $ 'body'
@@ -114,6 +114,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
               target: ".modal-content"
             return this
 
-          # The set value must correct
-          setValue: (value) ->
+          # This parses the text to pull out mentions
+          getValue: () ->
+            str = this.$el.val()
+            @model.set "tags", twttr.txt.extractHashtags(str)
+            names = twttr.txt.extractMentions str
             this.$el.val()
