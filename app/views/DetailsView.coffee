@@ -24,10 +24,6 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
         @setupAtWho()
 
-        $('#inputor').atwho
-          at: "@"
-          data:['Peter', 'Tom', 'Anne']
-
       openDetails: (nodeConnection) ->
         @currentNC = nodeConnection
         workspaceSpokes = @model.getSpokes nodeConnection
