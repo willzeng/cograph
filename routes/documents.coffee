@@ -66,7 +66,7 @@ exports.prefetch = (req, resp, callback) ->
   docLabel = "_doc_#{id || 0}"
   # Get the document
   params = {id:parseInt(id)}
-  cypherQuery = "START n=node({id}) WHERE (n:_document) MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace;"
+  cypherQuery = "START n=node({id}) MATCH (n:_document) OPTIONAL MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace;"
   graphDb.query cypherQuery, params, (err, results) ->
     if err or results.length is 0 then resp.redirect "/errors/missingDocument"
     else
