@@ -97,6 +97,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
                 @model.putConnection new ConnectionModel conn for conn in connections
 
       setupAtWho: ->
+        that = this
+
         Backbone.Form.editors.AtWhoEditor = Backbone.Form.editors.TextArea.extend
           render: () ->
             # Call the parent's render method
@@ -104,7 +106,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             # Then make the editor's element have atwho.
             this.$el.atwho
               at: "@"
-              data: ['Tag', 'One', 'Two']
+              data: that.model.nodes.pluck('name')
+              target: ".modal-content"
+            .atwho
+              at: "#"
+              data: that.model.filterModel.getTags('node')
               target: ".modal-content"
             return this
 
