@@ -3,6 +3,7 @@
   padding: 0;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -59,15 +60,30 @@ input[type="button"] {
   border: 1px solid white;
   background: transparent;
   border-radius: 4px;
-  padding: 10px 20px;
-  margin: 40px 7px 0px 7px;
+  padding: 10px 15px;
+  margin: 30px 7px 0px 7px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
-input[type="button"]:hover {
-  background: white;
-  color: #333;
+#create {
+  background: tomato;
+  border: 0;
+  font-weight: 700;
+}
+
+#create:hover {
+  background: lighten(tomato, 5%)
+}
+
+#open {
+  background: teal;
+  border: 0;
+  font-weight: 700;
+}
+
+#open:hover {
+  background: lighten(teal, 5%)
 }
 
 .light {
@@ -78,4 +94,49 @@ input[type="button"]:hover {
 .highlight {
   color: #c0392b;
   border-bottom: 1px solid #c0392b;
+}
+
+@media (max-device-width: 480px) {
+  #container {
+    margin: 0;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  #circle {
+    display: none;
+  }
+
+  html, body {
+    color: #222;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  * {
+    overflow: hidden !important;
+  }
+
+  #splash {
+    font-size: 100pt;
+  }
+
+  #tagline {
+    font-size: 60pt;
+  }
+
+  input[type="button"] {
+    width: 50%;
+    margin: 0;
+    margin-top: 50px;
+    font-size: 50pt;
+    padding: 50px;
+  }
+
+  .modal-content, .modal-header h4 {
+    font-size: 50pt;
+  }
 }
