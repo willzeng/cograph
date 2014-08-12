@@ -93,11 +93,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           c.target = @model.getTargetOf c
 
         n = nodes.length*nodes.length+50
+        @force.nodes(nodes).links(connections).start()
+        for i in [0..n] by 1
+          @force.tick()
+        @force.stop()
+
         setTimeout () =>
-          @force.nodes(nodes).links(connections).start()
-          for i in [0..n] by 1
-            @force.tick()
-          @force.stop()
           @updateDetails()
         , 10
 
@@ -267,7 +268,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
-        tick()
+
+        if incoming?
+          # certain changes should not activate a tick event
+          ignoredTick = ['dim','id','_id','selected','fixed']
+          changedAttrs = (k for k,v of incoming.changed)
+          if (_.difference changedAttrs, ignoredTick).length > 0 then tick()
+        else
+          # this is the tick for the initial render
+          tick()
         @force.on "tick", tick
 
       rightClicked: (e) ->
