@@ -28,12 +28,12 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           name: 'node-names',
           source: nodeNameMatcher(@model)
           templates:
-            header: '<h4 class="text-center">Node Names</h4>'
+            header: '<span class="search-title">Node Names</span>'
         ,
           name: 'tags'
           source: findTagMatches
           templates:
-            header: '<h4 class="text-center">Labels</h4>'
+            header: '<span class="search-title">Labels</span>'
         )
 
         $('#search-input').on 'typeahead:selected',

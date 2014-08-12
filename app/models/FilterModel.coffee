@@ -13,6 +13,10 @@ define ['backbone', 'cs!models/NodeModel'], (Backbone, NodeModel) ->
     addNodeTags: (add) ->
       @set 'node_tags', _.union(@get('node_tags'), add)
 
+    getTags: (nc) ->
+      _.filter @get(nc+'_tags'), (tag) ->
+        tag isnt "untagged"
+
     passes: (node) =>
       allowUntagged = _.contains @get('node_tags'), 'untagged'
       (_.intersection node.get('tags'), @get('node_tags')).length > 0 or ((node.get('tags').length is 0) and allowUntagged)

@@ -4,6 +4,8 @@ GraphDocs
 How to Run
 ----------
 
+## Neo4j Server 2.1.3 Required
+
 `npm install` should install your node modules in the `node_modules/` folder.
 
 `npm install -g bower` should install bower to your global path.

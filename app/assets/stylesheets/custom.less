@@ -31,6 +31,7 @@
 }
 
 .node-title-body {
+  text-align: center;
   background: white;
   -ms-word-break: break-all;
   word-break: break-all;
@@ -166,7 +167,7 @@ svg {
 }
 
 .uptwo {
-  margin-top: -2px;
+  margin-top: -15px;
 }
 
 input[type="text"]::-webkit-input-placeholder { /* WebKit browsers */
@@ -225,6 +226,8 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .close {
   outline: none;
+  font-size: 40px;
+  opacity: 0.4;
 }
 
 #details-container {
@@ -304,6 +307,20 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .main-nav {
   padding: 0;
+  border: 0;
+}
+
+.search-title {
+  padding: 12px 16px;
+  font-size: 16pt;
+}
+
+.modal-body {
+  max-height: 600px; // #TODO make this relative to the window height.
+  overflow-y: scroll;
+}
+
+.panel {
   border: 0;
 }
 
@@ -404,4 +421,26 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .bootstrap-colorpalette .btn-color:hover {
     border: 1px solid #000;
+}
+
+.node-toolbar button {
+  padding:  2px 4px;
+  color: gray;
+  border: 0;
+  background: none;
+  outline: none;
+}
+
+.node-toolbar button:hover {
+  color: #3366BB;
+}
+
+.node-toolbar button:active {
+  color: #0645AD;
+}
+
+.node-toolbar {
+  text-align: middle;
+  padding: 3px 3px 3px 6px;
+  border-bottom: 1px solid gray;
 }

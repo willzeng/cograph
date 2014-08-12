@@ -28,14 +28,8 @@ exports.read = (req, resp) ->
       resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
-  console.log "Get all Documents Query Requested"
-  docLabel = '_document'
-  cypherQuery = "match (n:#{docLabel}) return n;"
-  params = {}
-  graphDb.query cypherQuery, params, (err, results) ->
-    if err then console.log err
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    resp.send nodes
+  serverDocument.getAll (docs) ->
+    resp.send docs
 
 exports.analytics = (req, resp) ->
   id = req.params.id
@@ -95,7 +89,6 @@ exports.prefetch = (req, resp, callback) ->
         connections = (utils.parseCypherResult(connection, 'r') for connection in results) || {}
         callback {nodes:parsedNodes, connections:connections, theDocument: theDocument}
 
-
 # UPDATE
 exports.update = (req, resp) ->
   id = req.params.id
@@ -109,3 +102,6 @@ exports.destroy = (req, resp) ->
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
+
+# HELPERS
+exports.helper = serverDocument
