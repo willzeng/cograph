@@ -111,12 +111,15 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @removeConnection model
         model.destroy()
 
-      deSelect: (model) ->
-        model.set 'selected', false
+      deSelect: (model, silent) ->
+        if silent
+          model.set {selected:false}, {silent:true}
+        else
+          model.set 'selected', false
 
       select: (model) ->
-        @nodes.each (d) => @deSelect d
-        @connections.each (d) => @deSelect d
+        @nodes.each (d) => @deSelect d, true
+        @connections.each (d) => @deSelect d, true
         model.set 'selected', true
 
       getSourceOf: (connection) ->
