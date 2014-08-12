@@ -271,7 +271,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         if incoming?
           # certain changes should not activate a tick event
-          ignoredTick = ['dim','id','_id','selected','fixed']
+          ignoredTick = ['dim','id','_id','selected','fixed','name']
           changedAttrs = (k for k,v of incoming.changed)
           if (_.difference changedAttrs, ignoredTick).length > 0 then tick()
         else
