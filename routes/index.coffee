@@ -25,7 +25,8 @@ router.get '/mobile', (request, response) ->
   response.render('mobile.jade')
 
 router.get '/landing', (request, response)->
-  response.render('landing.jade')
+  documents.helper.getAll (docs) ->
+    response.render 'landing.jade', {docs:docs}
 
 router.get '/errors/missingDocument', (request, response)->
   response.render('errors/missingDocument.jade')
