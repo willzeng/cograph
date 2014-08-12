@@ -34,12 +34,12 @@
     "new-bb-modal": "~0.9.1",
     "bootstrap-colorpalette": "~0.0.1",
     "share-button": "~0.4.1",
-    "backbone.iobind": "~0.4.7"
+    "backbone.iobind": "~0.4.7",
+    "caret.js": "~0.1.0",
+    "targeted-atwho": "~0.5.1",
+    "twitter-text": "~1.9.4"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"
-  },
-  "resolutions": {
-    "jquery": ">= 1.9.0"
   }
 }

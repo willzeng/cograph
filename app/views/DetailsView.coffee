@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap', 'bb-modal',
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
- 'bootstrap-color'],
-  ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker) ->
+ 'bootstrap-color', 'atwho', 'twittertext'],
+  ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho) ->
     class DetailsView extends Backbone.View
       el: $ 'body'
 
@@ -21,6 +21,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @model.on 'conn:clicked', @openDetails, this
         @model.on 'node:clicked', @openDetails, this
         @model.on 'create:connection', @openAndEditConnection, this
+
+        @setupAtWho()
 
       openDetails: (nodeConnection) ->
         @currentNC = nodeConnection
@@ -93,3 +95,28 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             if @model.putNode newNode #this checks to see if the node has passed the filter
               newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new ConnectionModel conn for conn in connections
+
+      setupAtWho: ->
+        that = this
+
+        Backbone.Form.editors.AtWhoEditor = Backbone.Form.editors.TextArea.extend
+          render: () ->
+            # Call the parent's render method
+            Backbone.Form.editors.TextArea.prototype.render.call this
+            # Then make the editor's element have atwho.
+            this.$el.atwho
+              at: "@"
+              data: that.model.nodes.pluck('name')
+              target: ".modal-content"
+            .atwho
+              at: "#"
+              data: that.model.filterModel.getTags('node')
+              target: ".modal-content"
+            return this
+
+          # This parses the text to pull out mentions
+          getValue: () ->
+            str = this.$el.val()
+            @model.set "tags", twttr.txt.extractHashtags(str)
+            names = twttr.txt.extractMentions str
+            this.$el.val()
