@@ -54,6 +54,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @trigger "node:dragend", node, d3.event
           @zoom.translate @currentZoom
           @translateLock = false
+          @force.stop()
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")

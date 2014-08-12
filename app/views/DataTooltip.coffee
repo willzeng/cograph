@@ -19,7 +19,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
           @emptyTooltip()
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
-          window.clearTimeout(@highlightTimer)
           @model.dehighlight()
           @emptyTooltip()
 
@@ -31,9 +30,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
           [@model.getSourceOf(c), @model.getTargetOf(c)]
         nodesToHL.push node
 
-        @highlightTimer = setTimeout () =>
-            @model.highlight(nodesToHL, connectionsToHL)
-          , 600
+        @model.highlight(nodesToHL, connectionsToHL)
 
       showToolTip: (event) ->
         $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
