@@ -1,5 +1,5 @@
-define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip_node.html', 'text!templates/data_tooltip_connection.html'],
-  ($, d3, _, Backbone, dataTooltipTemplateNode, dataTooltipTemplateConnection) ->
+define ['jquery', 'd3',  'underscore', 'backbone'],
+  ($, d3, _, Backbone) ->
     class DataTooltip extends Backbone.View
       el: $ '#graph'
 

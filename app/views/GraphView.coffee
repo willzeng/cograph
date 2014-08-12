@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip_connection.html', 'text!templates/data_tooltip_node.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popoverConn, popoverNode, nodeTitle) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
+  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -117,7 +117,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
-            console.log(d3.event)
             if(typeof d3.event.toElement.className == 'object' && d3.event.toElement.localName != 'text')
               @trigger "connection:mouseout", conn
         text-group.append("text")
@@ -150,7 +149,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
               return d.get("name").substring(0,@maxConnTextLength-3)+"..."
         )
         connection.select('.connection-info-body')
-          .html((d) -> _.template(popoverConn, d))
+          .html((d) -> _.template(popover, d))
 
         # move the popover info to align with the left of the text
         for t in connection.select('text')[0]
@@ -215,7 +214,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .html((d) -> _.template(nodeTitle, d))
           .style("background", (d) => @getColor d)
         node.select('.node-info-body')
-          .html((d) -> _.template(popoverNode, d))
+          .html((d) -> _.template(popover, d))
 
         # move the popover info to align with the left of the text
         # construct the node boxes
@@ -256,4 +255,4 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.y < element.offset().top + element.outerHeight()
 
       getColor: (nc) ->
-          @model.defaultColors[nc.get('color')]
+        @model.defaultColors[nc.get('color')]
