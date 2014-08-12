@@ -17,6 +17,19 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
     isNew: ->
       @get(@idAttribute) < 0
 
+    serialize: ->
+      if @get('workspaces')[0]?
+        {name:@get('name'), _id:@get('_id'), workspaces:@get('workspaces')}
+      else
+        {name:@get('name'), _id:@get('_id')}
+
+    sync: (method, model, options) ->
+      options = options || {}
+      options.data = @serialize()
+      options.contentType = 'application/json'
+      Backbone.sync.apply(this, [method, model, options])
+
+    # Getter methods
     getNodeNames: (cb) ->
       $.get @url() + '/nodes/names', {}, (names) =>
         cb names
