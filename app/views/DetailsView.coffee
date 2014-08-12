@@ -35,6 +35,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           animate: false
           showFooter: false
         ).open()
+        @editNodeConnection()
 
       updateColor: (color) ->
         $('#details-container .panel-heading').css 'background', color
