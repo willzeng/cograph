@@ -1,6 +1,6 @@
 <ul class="document-list list-group">
   <% documents.each(function(document){ %>
-    <a href="#<%= document.id %>" target="_blank" class="list-group-item">
+    <a href="<%= document.id %>" target="_blank" class="list-group-item">
       <%= document.get('name') %>
     </a>
   <% }); %>

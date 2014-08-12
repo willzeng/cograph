@@ -4,6 +4,7 @@ define ['jquery', 'underscore', 'backbone'],
       el: $ '#graph'
       that = this
       initialize: ->
+
         @graphView = @attributes.graphView
 
         @graphView.on "node:drag", (node, e) =>

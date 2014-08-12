@@ -1,8 +1,11 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
+define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
+
+      events:
+        "contextmenu": "rightClicked"
 
       # Parameters for display
       maxConnTextLength: 20
@@ -58,7 +61,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                 .attr('height', height)
                 .call(@zoom)
                 .on("dblclick.zoom", null)
-        @svg.append('defs').html(defs)
+        def = @svg.append('svg:defs')
+        (new svgDefs).addDefs def
 
         @workspace = @svg.append("svg:g")
 
@@ -106,6 +110,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("class", "connection")
           .on "click", (d) =>
             @model.select d
+            @model.trigger "conn:clicked", d
+          .on "mouseover", (conn)  =>
+            @trigger "connection:mouseover", conn
+          .on "mouseout", (conn) =>
+            @trigger "connection:mouseout", conn
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
@@ -193,6 +202,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
+            @model.select d
+            @model.trigger "node:clicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
@@ -247,6 +258,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
         @force.on "tick", tick
+
+      rightClicked: (e) ->
+        e.preventDefault()
 
       isContainedIn: (node, element) =>
         node.x < element.offset().left + element.outerWidth() &&
