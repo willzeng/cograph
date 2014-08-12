@@ -89,8 +89,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         _.each connections, (c) =>
           c.source = @model.getSourceOf c
           c.target = @model.getTargetOf c
-        @force.nodes(nodes).links(connections).start()
-        @updateDetails()
+
+        n = nodes.length*nodes.length+50
+        setTimeout () =>
+          @force.nodes(nodes).links(connections).start()
+          for i in [0..n] by 1
+            @force.tick()
+          @force.stop()
+          @updateDetails()
+        , 10
 
       updateDetails: (incoming) ->
         if incoming?
@@ -247,6 +254,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
+        tick()
         @force.on "tick", tick
 
       rightClicked: (e) ->
