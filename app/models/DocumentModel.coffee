@@ -8,6 +8,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
     defaults:
       name: 'Untitled'
       _id: -1
+      workspaces: []
 
     initialize: ->
       @socket.on @urlRoot+":update", (objData) =>

@@ -1,19 +1,21 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
- 'text!templates/analytics_modal.html', 'cs!models/DocumentModel', 'socket-io'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, DocumentModel, io) ->
+ 'text!templates/analytics_modal.html', 'text!templates/workspaces_menu_modal.html',
+ 'cs!models/DocumentModel', 'socket-io'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
       socket: io.connect('')
 
     class MenuView extends Backbone.View
-      el: $ '#menu-bar'
+      el: $ '#gdocs-nav'
 
       events:
         'click #new-doc-button': 'newDocumentModal'
         'click #open-doc-button': 'openDocumentModal'
         'click #analytics-button': 'openAnalyticsModal'
+        'click #workspaces-button': 'openWorkspacesModal'
 
       initialize: ->
         @model.on "document:change", @render, this
@@ -53,7 +55,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         docName = $('#newDocName', @newDocModal.el).val()
         newDocument = new DocumentModel(name: docName)
         $.when(newDocument.save()).then =>
-          window.open '/#'+newDocument.get('_id')
+          window.open '/'+newDocument.get('_id')
 
       openDocumentModal: ->
         documents = new DocumentCollection
@@ -64,6 +66,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
+        false # prevent navigation from appending '#'
 
       openAnalyticsModal: ->
         @model.getDocument().getAnalytics (analyticsData) ->
@@ -73,3 +76,23 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             animate: true
             showFooter: false
           ).open()
+        false # prevent navigation from appending '#'
+
+      openWorkspacesModal: ->
+        docId = @model.getDocument().get("_id")
+        workspaces = @model.getDocument().get("workspaces")
+        modal = new Backbone.BootstrapModal(
+          content: _.template(workspacesMenuTemplate, {docId:docId, workspaces:workspaces})
+          title: "Workspaces"
+          animate: true
+          showFooter: false
+        ).open()
+
+        modal.on 'shown', () =>
+          $('.delete-workspace').on 'click', (e) =>
+            e.preventDefault()
+            @model.deleteWorkspace $(e.currentTarget).attr('data-id'), (id) =>
+              modal.close()
+              @model.getDocument().set "workspaces", _.filter(workspaces, (x) -> return parseInt(x) != parseInt(id))
+
+        false # prevent navigation from appending '#'

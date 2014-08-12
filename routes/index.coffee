@@ -7,8 +7,19 @@ connections = require './connections'
 documents = require './documents'
 search = require './search'
 
+#defines a function to extract parameters using regex's
+router.param utils.paramExtract
+integerRegex = /^\d+$/
+router.param 'id', integerRegex
+router.param 'docId', integerRegex
+
 router.get '/', (request, response) ->
-  response.render('index.jade')
+  documents.addBlank (savedDocument) ->
+    response.redirect "/#{savedDocument._id}"
+
+router.get '/:id', (request, response) ->
+  documents.prefetch request, response, (prefetched) ->
+    response.render 'index.jade', prefetched
 
 router.get '/mobile', (request, response) ->
   response.render('mobile.jade')
@@ -18,12 +29,6 @@ router.get '/landing', (request, response)->
 
 router.get '/errors/missingDocument', (request, response)->
   response.render('errors/missingDocument.jade')
-
-#defines a function to extract parameters using regex's
-router.param utils.paramExtract
-integerRegex = /^\d+$/
-router.param 'id', integerRegex
-router.param 'docId', integerRegex
 
 # Documents
 router.post     '/document',           documents.create

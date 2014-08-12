@@ -8,38 +8,61 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
-        @detailsView = new DetailsView model: @workspaceModel
+        @detailsView = new DetailsView {model: @workspaceModel, attributes: {graphView: @graphView}}
         @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
-        @shareView = new ShareView()
+        @shareView = new ShareView model: @workspaceModel
+        @shareView.on "save:workspace", (workspaceId) => @navigate ""+workspaceId
 
         window.gm = @workspaceModel
         Backbone.history.start()
 
       routes:
-        '(:id)': 'home'
+        '': 'home'
+        '(:id)': 'workspace'
 
-      home: (docId) =>
-        @graphView.render()
+      home: () =>
+        @setDoc()
+        @loadGraph()
 
-        if docId
-          @workspaceModel.documentModel.set '_id', docId
-          @workspaceModel.documentModel.fetch
-            error: (err) -> location.href="/errors/missingDocument",
-            success: () => @setAndFetchDoc()
-        else
-          $.when(@workspaceModel.documentModel.save()).then =>
-            @navigate @workspaceModel.documentModel.get '_id'
-            @setAndFetchDoc()
+      # This navigates to a workspace specified by the id
+      workspace: (id) ->
+        id = parseInt id
+        @setDoc()
 
-      setAndFetchDoc: ->
-        $.when(@workspaceModel.setDocument @workspaceModel.documentModel).then =>
-          $('.loading-container').remove()
-          @workspaceModel.getTagNames (tags) =>
-            @workspaceModel.filterModel.addInitialTags tags
-            @workspaceModel.filterModel.addNodeTags tags
+        @workspaceModel._id = id
+        @workspaceModel.getWorkspace (w) =>
+          nodeFilter = (node) -> _.contains w.nodes, node._id
+          connFilter = (conn) -> _.contains w.connections, conn._id
+          @loadGraph nodeFilter, connFilter
+          @workspaceModel.filterModel.set 'node_tags', w.nodeTags
+
+      # Load a graph based on preset filters
+      # Defaults to loading the whole prefetch
+      loadGraph: (nodeFilter, connFilter) ->
+        if !(nodeFilter?) then nodeFilter = (x) -> true
+        if !(connFilter?) then connFilter = (x) -> true
+
+        if window.prefetch.nodes
+          workspaceNodes = _.filter window.prefetch.nodes, nodeFilter
+          @workspaceModel.nodes.set workspaceNodes, {silent:true}
+        if window.prefetch.connections
+          workspaceConns = _.filter window.prefetch.connections, connFilter
+          @workspaceModel.connections.set workspaceConns, {silent:true}
+
+        @workspaceModel.nodes.trigger "add"
+        $('.loading-container').remove()
+
+      setDoc: ->
+        @workspaceModel.getDocument().set window.prefetch.theDocument
+        @workspaceModel.nodes._docId = window.prefetch.theDocument._id
+        @workspaceModel.connections._docId = window.prefetch.theDocument._id
+
+        @workspaceModel.getTagNames (tags) =>
+          @workspaceModel.filterModel.addInitialTags tags
+          @workspaceModel.filterModel.addNodeTags tags
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
