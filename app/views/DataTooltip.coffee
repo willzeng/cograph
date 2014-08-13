@@ -54,8 +54,8 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
           @model.removeConnection nc
 
       expandNode: (event) ->
-        removeId = parseInt $(event.currentTarget).attr("data-id")
-        expandedNode = @model.nodes.findWhere {_id:removeId}
+        expandId = parseInt $(event.currentTarget).attr("data-id")
+        expandedNode = @model.nodes.findWhere {_id:expandId}
         window.nc = expandedNode
         expandedNode.getNeighbors (neighbors) =>
           for node in neighbors

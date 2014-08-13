@@ -3,6 +3,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
     class ConnectionAdder extends Backbone.View
       el: $ '#graph'
 
+      events:
+        'click .node-connect': 'createDragLine'
+
       initialize: ->
         that = this
         @svg = @attributes.svg
@@ -17,26 +20,34 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
         @attributes.svg.on "mousemove", () ->
           that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
-        @graphView.on 'node:right-click', (node, e) ->
-          if that.creatingConnection
-            that.drag_line.classed('hidden', true)
-            if node != that.drag_line.datum()
-              connection = new ConnectionModel
-                source: that.drag_line.datum().get('_id')
-                target: node.get('_id')
-                _docId: @model.documentModel.get('_id')
-              $.when(connection.save()).then =>
-                newConn = @model.putConnection connection
-                @model.select newConn
-                @model.newConnectionCreated newConn
-          else
-            #origin is mouse position
-            offset = $('svg').offset()
-            that.drag_line.classed('hidden', false)
-              .datum(node)
-              .attr("x1", (d) => e.pageX-offset.left)
-              .attr("y1", (d) => e.pageY-offset.top)
-          that.creatingConnection = !that.creatingConnection
+        @creatingConnection = false
+        @model.on "node:clicked", (node) =>
+          if @creatingConnection
+            @makeConnection node
+            @creatingConnection = !@creatingConnection
+
+      makeConnection: (node) =>
+        @drag_line.classed('hidden', true)
+        if node != @drag_line.datum()
+          connection = new ConnectionModel
+            source: @drag_line.datum().get('_id')
+            target: node.get('_id')
+            _docId: @model.documentModel.get('_id')
+          $.when(connection.save()).then =>
+            newConn = @model.putConnection connection
+            @model.select newConn
+            @model.newConnectionCreated newConn
+
+      createDragLine: (e) ->
+        connectId = parseInt $(e.currentTarget).attr("data-id")
+        node = @model.nodes.findWhere {_id:connectId}
+        #origin is mouse position
+        offset = $('svg').offset()
+        @drag_line.classed('hidden', false)
+          .datum(node)
+          .attr("x1", (d) => e.pageX-offset.left)
+          .attr("y1", (d) => e.pageY-offset.top)
+        @creatingConnection = !@creatingConnection
 
       tick: =>
         @drag_line

@@ -2,7 +2,7 @@
   <% if(constructor.name === "NodeModel"){ %>
   <button type="button" class="node-fix"><i class="fa fa-thumb-tack"></i></button>
   <button type="button" class="node-expand" data-id=<%=attributes._id%>><i class="fa fa-expand"></i></button>
-  <button type="button" class="node-connect"><i class="fa fa-link"></i></button>
+  <button type="button" class="node-connect" data-id=<%=attributes._id%>><i class="fa fa-link"></i></button>
   <% } %>
   <button type="button" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-archive"></i></button>
 </div>

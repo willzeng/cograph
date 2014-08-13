@@ -94,6 +94,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @updateDetails()
 
       updateDetails: (incoming) ->
+        that = this
         if incoming?
           # don't updateDetails if we have only dimmed the one node
           if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
@@ -196,15 +197,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         
         nodeInnerText 
           .on "click", (d) =>
-            # prevents node from being selected on drag
-            if (d3.event.defaultPrevented) then return
-            @model.select d 
             @model.trigger "node:clicked", d
         node
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
-            @model.select d
-            @model.trigger "node:clicked", d
+            that.model.select d
+            that.model.trigger "node:dblclicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
