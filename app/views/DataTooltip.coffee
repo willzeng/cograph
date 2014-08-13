@@ -8,6 +8,7 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
         'mouseenter .connection' : 'showToolTip'
         'click .node-archive': 'archiveObj'
         'click .node-expand': 'expandNode'
+        'click .node-fix': 'toggleFix'
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
@@ -63,3 +64,8 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
             if @model.putNode newNode #this checks to see if the node has passed the filter
               newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new @model.connections.model conn for conn in connections
+
+      toggleFix: (event) ->
+        unfixId = parseInt $(event.currentTarget).attr("data-id")
+        unfixNode = @model.nodes.findWhere {_id:unfixId}
+        unfixNode.fixed = 0 # unpin the node
