@@ -54,6 +54,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @trigger "node:dragend", node, d3.event
           @zoom.translate @currentZoom
           @translateLock = false
+          @force.stop()
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -90,13 +91,23 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         _.each connections, (c) =>
           c.source = @model.getSourceOf c
           c.target = @model.getTargetOf c
+
+        n = nodes.length*nodes.length+50
         @force.nodes(nodes).links(connections).start()
-        @updateDetails()
+        for i in [0..n] by 1
+          @force.tick()
+        @force.stop()
+
+        setTimeout () =>
+          @updateDetails()
+        , 10
 
       updateDetails: (incoming) ->
         if incoming?
-          # don't updateDetails if we have only dimmed the one node
-          if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
+          ignoredList = ['dim','id','_id']
+          changedAttrs = (k for k,v of incoming.changed)
+          if (_.difference changedAttrs, ignoredList).length is 0 then return
+
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
@@ -258,6 +269,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
+
+        if incoming?
+          # certain changes should not activate a tick event
+          ignoredTick = ['dim','id','_id','selected','fixed','name']
+          changedAttrs = (k for k,v of incoming.changed)
+          if (_.difference changedAttrs, ignoredTick).length > 0 then tick()
+        else
+          # this is the tick for the initial render
+          tick()
         @force.on "tick", tick
 
       rightClicked: (e) ->

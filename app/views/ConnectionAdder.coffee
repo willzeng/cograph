@@ -25,10 +25,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
                 source: that.drag_line.datum().get('_id')
                 target: node.get('_id')
                 _docId: @model.documentModel.get('_id')
-              $.when(connection.save()).then =>
-                newConn = @model.putConnection connection
-                @model.select newConn
-                @model.newConnectionCreated newConn
+                selected: true #autoselect the new connection
+              connection.save()
+              newConn = @model.putConnection connection
+              @model.newConnectionCreated newConn
           else
             #origin is mouse position
             offset = $('svg').offset()
