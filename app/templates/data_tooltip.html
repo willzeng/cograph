@@ -1,10 +1,10 @@
 <div class="node-toolbar">
   <% if(constructor.name === "NodeModel"){ %>
-  <button type="button"><i class="fa fa-thumb-tack node-fix"></i></button>
-  <button type="button"><i class="fa fa-plus-circle node-add-related"></i></button>
-  <button type="button"><i class="fa fa-link node-connect"></i></button>
+  <button type="button" class="node-fix"><i class="fa fa-thumb-tack"></i></button>
+  <button type="button" class="node-add-related"><i class="fa fa-plus-circle"></i></button>
+  <button type="button" class="node-connect"><i class="fa fa-link"></i></button>
   <% } %>
-  <button type="button"><i class="fa fa-archive node-archive"></i></button>
+  <button type="button" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-archive"></i></button>
 </div>
 <% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags)){ %>
   <div class="pad">

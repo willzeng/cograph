@@ -6,6 +6,7 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
       events:
         'mouseenter .node-title-body' : 'showToolTip'
         'mouseenter .connection' : 'showToolTip'
+        'click .node-archive': 'archiveObj'
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
@@ -42,3 +43,11 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
         $('.connection-info-body').removeClass('shown')
+
+      archiveObj: (event) ->
+        removeId = parseInt $(event.currentTarget).attr("data-id")
+        nc = @model.nodes.findWhere {_id:removeId}
+        if nc.constructor.name is "NodeModel"
+          @model.removeNode nc
+        else if nc.constructor.name is "ConnectionModel"
+          @model.removeConnection nc
