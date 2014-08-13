@@ -116,8 +116,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       updateDetails: (incoming) ->
         if incoming?
-          # don't updateDetails if we have only dimmed the one node
-          if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
+          ignoredList = ['dim','id','_id']
+          changedAttrs = (k for k,v of incoming.changed)
+          if (_.difference changedAttrs, ignoredList).length is 0 then return
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
