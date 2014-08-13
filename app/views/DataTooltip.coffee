@@ -44,9 +44,10 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
             @model.highlight(nodesToHL, connectionsToHL)
           , 600
 
-      showToolTip: (event) ->
-        $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
-        $(event.currentTarget).find('.connection-info-body').addClass('shown')
+      showToolTip: (event) =>
+        if !(@ignoreMouse)
+          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
+          $(event.currentTarget).find('.connection-info-body').addClass('shown')
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
