@@ -16,7 +16,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       initialize: ->
         that = this
-        @model.nodes.on 'add remove', @updateForceGraph, this
+        @drawing = true
+        @model.nodes.on 'add', @backgroundRender, this
+        @model.nodes.on 'remove', @updateForceGraph, this
         @model.connections.on 'add remove', @updateForceGraph, this
         @model.nodes.on 'change', @updateDetails, this
         @model.connections.on 'change', @updateDetails, this
@@ -54,6 +56,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @trigger "node:dragend", node, d3.event
           @zoom.translate @currentZoom
           @translateLock = false
+          @force.stop()
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -84,13 +87,31 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
 
-      updateForceGraph: ->
+      loadForce: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
         _.each connections, (c) =>
           c.source = @model.getSourceOf c
           c.target = @model.getTargetOf c
         @force.nodes(nodes).links(connections).start()
+
+      backgroundRender: ->
+        @loadForce()
+        n = @model.nodes.models.length*@model.nodes.models.length*@model.nodes.models.length+50
+
+        @drawing = false
+        for i in [0..n] by 1
+          @force.tick()
+        @force.stop()
+        @drawing = true
+
+        setTimeout () =>
+          @updateDetails()
+          @force.tick()
+        , 10
+
+      updateForceGraph: ->
+        @loadForce()
         @updateDetails()
 
       updateDetails: (incoming) ->
@@ -257,7 +278,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
-        @force.on "tick", tick
+
+        tick()
+        @force.on "tick", () =>
+          if @drawing then tick()
 
       rightClicked: (e) ->
         e.preventDefault()
