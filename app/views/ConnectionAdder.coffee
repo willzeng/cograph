@@ -8,17 +8,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
 
       initialize: ->
         that = this
-        @svg = @attributes.svg
         @graphView = @attributes.graphView
 
-        @drag_line = @svg.append('svg:line')
+        @drag_line = @graphView.workspace.append('svg:line')
                       .attr('class', 'dragline hidden')
                       .attr("marker-end", "url(#draghead)")
                       .datum(x:0, y:0)
         @creatingConnection = false
 
-        @attributes.svg.on "mousemove", () ->
-          that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
+        @graphView.svg.on "mousemove", () ->
+          mouseX = (d3.mouse(this)[0]-that.graphView.zoom.translate()[0])*1/that.graphView.zoom.scale()
+          mouseY = (d3.mouse(this)[1]-that.graphView.zoom.translate()[1])*1/that.graphView.zoom.scale()
+          that.drag_line.attr('x2', mouseX).attr('y2', mouseY)
 
         @creatingConnection = false
         @model.on "node:clicked", (node) =>
@@ -41,8 +42,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
       createDragLine: (e) ->
         connectId = parseInt $(e.currentTarget).attr("data-id")
         node = @model.nodes.findWhere {_id:connectId}
-        #origin is mouse position
-        offset = $('svg').offset()
         @drag_line.classed('hidden', false)
           .datum(node)
           .attr("x1", (d) => node.x)
@@ -52,5 +51,5 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
       tick: =>
         that = this
         @drag_line
-          .attr("x1", (d) => d.x + that.graphView.zoom.translate()[0])
-          .attr("y1", (d) => d.y + that.graphView.zoom.translate()[1])
+          .attr("x1", (d) => d.x)
+          .attr("y1", (d) => d.y)

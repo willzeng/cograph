@@ -71,7 +71,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @connectionAdder = new ConnectionAdder
           model: @model
-          attributes: {force: @force, svg: @svg, graphView: this}
+          attributes: {force: @force, graphView: this}
 
         @trashBin = new TrashBin
           model: @model
