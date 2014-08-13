@@ -224,8 +224,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         node
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
-            @model.select d
-            @model.trigger "node:clicked", d
+            that.model.select d
+            that.model.trigger "node:clicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
