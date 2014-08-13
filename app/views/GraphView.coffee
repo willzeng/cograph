@@ -220,6 +220,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             # prevents node from being selected on drag
             if (d3.event.defaultPrevented) then return
             @model.select d 
+            @model.trigger "node:clicked", d
         node
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
