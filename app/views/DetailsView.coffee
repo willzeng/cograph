@@ -70,8 +70,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       saveNodeConnection: (e) ->
         e.preventDefault()
-        $.when(@nodeConnectionForm.commit()).then ->
-          $(document).dequeue 'conn:creation'
+        @nodeConnectionForm.commit()
         @nodeConnectionForm.model.save()
         @closeDetail()
         false
@@ -127,22 +126,20 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             for name in names
               targetNode = that.model.nodes.findWhere({name:name})
 
-              # we add these functions to a queue to makes sure we do not duplicate connections
-              # they are dequeued when the form has been committed
-              $(document).queue 'conn:creation', () =>
-                # get existing connections
-                spokes = that.model.connections.filter (c) =>
-                  c.get('source') is @model.get('_id')
-                neighbors = spokes.map (c) -> that.model.getSourceOf c
-                # create a connection only if there is not already one
-                if !(_.contains neighbors, name)
-                  connection = new ConnectionModel
-                      source: @model.get('_id')
-                      target: targetNode.get('_id')
-                      _docId: that.model.documentModel.get('_id')
-                      description: @model.get('description')
-                    connection.save()
-                    connection.selected = true
-                    newConn = that.model.putConnection connection
+              # get existing connections
+              spokes = that.model.connections.filter (c) =>
+                c.get('source') is @model.get('_id')
+              neighbors = spokes.map (c) -> that.model.getTargetOf(c).get('name')
+
+              # create a connection only if there is not already one
+              if !(_.contains neighbors, name)
+                connection = new ConnectionModel
+                    source: @model.get('_id')
+                    target: targetNode.get('_id')
+                    _docId: that.model.documentModel.get('_id')
+                    description: @model.get('description')
+                connection.save()
+                connection.selected = true
+                newConn = that.model.putConnection connection
 
             this.$el.val()
