@@ -12,16 +12,25 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
 
         @graphView = @attributes.graphView
 
+        @ignoreMouse = false
+
         @graphView.on 'node:mouseenter', (node) =>
-          @highlight node
+          if !(@ignoreMouse) then @highlight node
 
         @graphView.on 'connection:mouseout', (conn) =>
-          @emptyTooltip()
+          if !(@ignoreMouse) then @emptyTooltip()
+
+        @graphView.on 'node:drag', () =>
+          @ignoreMouse = true
+
+        @graphView.on 'node:dragend', () =>
+          @ignoreMouse = false
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
-          window.clearTimeout(@highlightTimer)
-          @model.dehighlight()
-          @emptyTooltip()
+          if !(@ignoreMouse)
+            window.clearTimeout(@highlightTimer)
+            @model.dehighlight()
+            @emptyTooltip()
 
       highlight: (node) ->
         connectionsToHL = @model.connections.filter (c) ->
