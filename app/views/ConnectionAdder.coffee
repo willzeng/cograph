@@ -45,11 +45,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
         offset = $('svg').offset()
         @drag_line.classed('hidden', false)
           .datum(node)
-          .attr("x1", (d) => e.pageX-offset.left)
-          .attr("y1", (d) => e.pageY-offset.top)
+          .attr("x1", (d) => node.x)
+          .attr("y1", (d) => node.y)
         @creatingConnection = !@creatingConnection
 
       tick: =>
+        that = this
         @drag_line
-          .attr("x1", (d) => d.x + @graphView.zoom.translate[0])
-          .attr("y1", (d) => d.y + @graphView.zoom.translate[1])
+          .attr("x1", (d) => d.x + that.graphView.zoom.translate()[0])
+          .attr("y1", (d) => d.y + that.graphView.zoom.translate()[1])
