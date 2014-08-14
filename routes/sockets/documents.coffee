@@ -20,22 +20,16 @@ exports.read = (data, callback, socket) ->
   id = data._id
   graphDb.getNodeById id, (err, node) ->
     if err
-      console.log 'Something broke!'
+      console.error 'Something broke!', err
     else
       parsed = utils.parseNodeToClient node._data.data
       socket.emit 'document:read', parsed
       callback null, parsed
 
 exports.readCollection = (data, callback, socket) ->
-  console.log "get the document collection"
-  docLabel = '_document'
-  cypherQuery = "match (n:#{docLabel}) return n;"
-  params = {}
-  graphDb.query cypherQuery, params, (err, results) ->
-    if err then throw err
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    socket.emit 'documents:read', nodes
-    callback null, nodes
+    serverDocument.getAll (docs) ->
+      socket.emit 'documents:read', docs
+      callback null, docs
 
 # UPDATE
 exports.update = (data, callback, socket) ->

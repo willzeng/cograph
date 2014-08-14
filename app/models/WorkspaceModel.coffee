@@ -31,6 +31,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       url: -> "nodes"
 
     class WorkspaceModel extends Backbone.Model
+      socket: io.connect("")
+      urlRoot: -> "workspace"
+      _id: 0
 
       selectedColor: '#3498db'
 
@@ -89,8 +92,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       putConnection: (connectionModel) ->
         @connections.add connectionModel
 
-      newConnectionCreated: ->
-        @trigger 'create:connection'
+      newConnectionCreated: (conn) ->
+        @trigger 'create:connection', conn
 
       removeNode: (node) ->
         @connections.remove @connections.where {'source': node.get('_id')}
@@ -108,12 +111,15 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @removeConnection model
         model.destroy()
 
-      deSelect: (model) ->
-        model.set 'selected', false
+      deSelect: (model, silent) ->
+        if silent
+          model.set {selected:false}, {silent:true}
+        else
+          model.set 'selected', false
 
       select: (model) ->
-        @nodes.each (d) => @deSelect d
-        @connections.each (d) => @deSelect d
+        @nodes.each (d) => @deSelect d, true
+        @connections.each (d) => @deSelect d, true
         model.set 'selected', true
 
       getSourceOf: (connection) ->
@@ -131,12 +137,14 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           d.set 'dim', true
         _.each connectionsToHL, (d) ->
           d.set 'dim', false
+        @nodes.trigger "change"
 
       dehighlight: () ->
         @connections.each (d) ->
           d.set 'dim', false
         @nodes.each (d) ->
           d.set 'dim', false
+        @nodes.trigger "change"
 
       getSpokes: (node) ->
         (@connections.where {'source': node.get('_id')}).concat @connections.where {'target': node.get('_id')}
@@ -155,3 +163,24 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       getNodesByTag: (tag, cb) ->
         @documentModel.getNodesByTag(tag, cb)
+
+      # Syncing Workspaces
+      sync: (method, model, options) ->
+        options = options || {}
+        options.data = @serialize()
+        options.contentType = 'application/json'
+        Backbone.sync.apply(this, [method, model, options])
+
+      serialize: ->
+        nodes = @nodes.pluck "_id"
+        connIds = @connections.pluck "_id"
+        docId = @getDocument().get "_id"
+        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id, _docId:docId}
+
+      getWorkspace: (callback) ->
+        @sync "read", this,
+          success: callback
+
+      deleteWorkspace: (id, callback) ->
+        @socket.emit "workspace:destroy", id
+        callback id

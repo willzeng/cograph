@@ -1,22 +1,24 @@
-define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.html'],
-  ($, d3, _, Backbone, dataTooltipTemplate) ->
+define ['jquery', 'd3',  'underscore', 'backbone'],
+  ($, d3, _, Backbone) ->
     class DataTooltip extends Backbone.View
       el: $ '#graph'
 
       events:
-        'mouseover .node-title-body' : 'showToolTip'
-        'mouseover .connection' : 'showToolTip'
+        'mouseenter .node-title-body' : 'showToolTip'
+        'mouseenter .connection' : 'showToolTip'
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
 
         @graphView = @attributes.graphView
 
-        @graphView.on 'node:mouseover', (node) =>
+        @graphView.on 'node:mouseenter', (node) =>
           @highlight node
 
-        @graphView.on 'node:mouseout node:right-click connection:mouseout', (nc) =>
-          window.clearTimeout(@isHoveringANode)
+        @graphView.on 'connection:mouseout', (conn) =>
+          @emptyTooltip()
+
+        @graphView.on 'node:mouseout node:right-click', (nc) =>
           window.clearTimeout(@highlightTimer)
           @model.dehighlight()
           @emptyTooltip()

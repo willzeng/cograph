@@ -13,6 +13,11 @@ exports.create = (req, resp) ->
   serverDocument.create newDocument, (savedDocument) ->
     resp.send savedDocument
 
+exports.addBlank = (callback) ->
+  newDocument = {name:"Untitled Document"}
+  serverDocument.create newDocument, (savedDocument) ->
+    callback savedDocument
+
 # READ
 exports.read = (req, resp) ->
   id = req.params.id
@@ -23,14 +28,8 @@ exports.read = (req, resp) ->
       resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
-  console.log "Get all Documents Query Requested"
-  docLabel = '_document'
-  cypherQuery = "match (n:#{docLabel}) return n;"
-  params = {}
-  graphDb.query cypherQuery, params, (err, results) ->
-    if err then console.log err
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    resp.send nodes
+  serverDocument.getAll (docs) ->
+    resp.send docs
 
 exports.analytics = (req, resp) ->
   id = req.params.id
@@ -56,6 +55,40 @@ exports.fullgraph = (req, resp) ->
   graphDb.query cypherQuery, params, (err, results) ->
     resp.send ([res.source, res.target] for res in results)
 
+exports.prefetch = (req, resp, callback) ->
+  id = req.params.id[0]
+  docLabel = "_doc_#{id || 0}"
+  # Get the document
+  params = {id:parseInt(id)}
+  cypherQuery = "START n=node({id}) MATCH (n:_document) OPTIONAL MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace;"
+  graphDb.query cypherQuery, params, (err, results) ->
+    if err or results.length is 0 then resp.redirect "/errors/missingDocument"
+    else
+      # Get the document
+      parsed = results[0].node._data.data
+      theDocument = utils.parseNodeToClient parsed
+
+      # Get the document's workspaces
+      theDocument.workspaces = (space.workspace for space in results)
+
+    # Get all nodes
+    # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
+    cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
+    params = {}
+    graphDb.query cypherQuery, params, (err, results) ->
+      if err then throw err
+      parsedNodes = []
+      for node in results
+        nodeData = node.n._data.data
+        nodeData.tags = node['labels(n)']
+        parsedNodes.push utils.parseNodeToClient nodeData
+
+      # Get all connections
+      cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
+      graphDb.query cypherQuery, {}, (err, results) ->
+        connections = (utils.parseCypherResult(connection, 'r') for connection in results) || {}
+        callback {nodes:parsedNodes, connections:connections, theDocument: theDocument}
+
 # UPDATE
 exports.update = (req, resp) ->
   id = req.params.id
@@ -69,3 +102,6 @@ exports.destroy = (req, resp) ->
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
+
+# HELPERS
+exports.helper = serverDocument
