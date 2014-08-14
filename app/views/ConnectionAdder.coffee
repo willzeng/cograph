@@ -48,6 +48,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
           .attr("y1", (d) => node.y)
         @creatingConnection = !@creatingConnection
 
+      clearDragLine: ->
+        @drag_line.classed('hidden', true)
+        @creatingConnection = false
+
       tick: =>
         that = this
         @drag_line

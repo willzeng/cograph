@@ -260,6 +260,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       rightClicked: (e) ->
         e.preventDefault()
+        @connectionAdder.clearDragLine()
 
       isContainedIn: (node, element) =>
         node.x < element.offset().left + element.outerWidth() &&
