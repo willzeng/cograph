@@ -74,7 +74,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @connectionAdder = new ConnectionAdder
           model: @model
-          attributes: {force: @force, svg: @svg, graphView: this}
+          attributes: {force: @force, graphView: this}
 
         @trashBin = new TrashBin
           model: @model
@@ -115,6 +115,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @updateDetails()
 
       updateDetails: (incoming) ->
+        that = this
+
         if incoming?
           ignoredList = ['dim','id','_id']
           changedAttrs = (k for k,v of incoming.changed)
@@ -207,6 +209,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
           .attr('class', 'node-title-body')
+        nodeConnector = nodeEnter.append("circle")
+          .attr('r', '5')
+          .attr('cx', '-70')
+          .attr('cy', '0')
+          .attr('class', 'node-connector')
+          .attr('fill', '#222') 
         nodeInfoText = nodeEnter.append("foreignObject")
           .attr('y', '12')
           .attr('height', @maxInfoBoxHeight)
@@ -216,17 +224,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .append('xhtml:body')
             .attr('class', 'node-info-body')
         
+
         nodeInnerText 
           .on "click", (d) =>
-            # prevents node from being selected on drag
-            if (d3.event.defaultPrevented) then return
-            @model.select d 
             @model.trigger "node:clicked", d
         node
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
             that.model.select d
-            that.model.trigger "node:clicked", d
+            that.model.trigger "node:dblclicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
@@ -246,7 +252,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .call(@force.drag)
         node.select('.node-title-body')
           .html((d) -> _.template(nodeTitle, d))
-          .style("background", (d) => @getColor d)
+        node.select('.node-connector')
+          .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
 
@@ -272,21 +279,27 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         tick = =>
           connection.selectAll("line")
-            .attr("x1", (d) => @model.getSourceOf(d).x)
+            .attr("x1", (d) => @model.getSourceOf(d).x-(@nodeBoxWidth/2+10))
             .attr("y1", (d) => @model.getSourceOf(d).y)
-            .attr("x2", (d) => @model.getTargetOf(d).x)
+            .attr("x2", (d) => @model.getTargetOf(d).x-(@nodeBoxWidth/2+10))
             .attr("y2", (d) => @model.getTargetOf(d).y)
           connection.select(".connection-text")
-            .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
+            .attr("transform", (d) => "translate(#{((@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x)-(@nodeBoxWidth/2+10)},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
+<<<<<<< HEAD
           @connectionAdder.tick
 
         tick()
         @force.on "tick", () =>
           if @drawing then tick()
+=======
+          @connectionAdder.tick()
+        @force.on "tick", tick
+>>>>>>> dev
 
       rightClicked: (e) ->
         e.preventDefault()
+        @connectionAdder.clearDragLine()
 
       isContainedIn: (node, element) =>
         node.x < element.offset().left + element.outerWidth() &&

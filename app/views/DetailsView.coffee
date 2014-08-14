@@ -19,7 +19,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @graphView = @attributes.graphView
 
         @model.on 'conn:clicked', @openDetails, this
-        @model.on 'node:clicked', @openDetails, this
+        @model.on 'node:dblclicked', @openDetails, this
         @model.on 'create:connection', @openAndEditConnection, this
 
         @setupAtWho()
@@ -72,6 +72,14 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         e.preventDefault()
         @nodeConnectionForm.commit()
         @nodeConnectionForm.model.save()
+
+        newConns = _.uniq @mentionedConns, (conn) ->
+          conn.get 'target'
+
+        for c in newConns
+          c.save()
+          @model.putConnection c
+
         @closeDetail()
         false
 
@@ -99,6 +107,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       setupAtWho: ->
         that = this
+        @mentionedConns = [] # this stores newly mentioned conns
 
         Backbone.Form.editors.AtWhoEditor = Backbone.Form.editors.TextArea.extend
           render: () ->
@@ -107,7 +116,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             # Then make the editor's element have atwho.
             this.$el.atwho
               at: "@"
-              data: that.model.nodes.pluck('name')
+              data: _.filter that.model.nodes.pluck('name'), (name) => name isnt @model.get('name')
               target: ".modal-content"
             .atwho
               at: "#"
@@ -119,5 +128,25 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           getValue: () ->
             str = this.$el.val()
             @model.set "tags", twttr.txt.extractHashtags(str)
+
+            # Create connections to mentioned nodes
             names = twttr.txt.extractMentions str
+
+            for name in names when name isnt @model.get('name')
+              targetNode = that.model.nodes.findWhere({name:name})
+              # get existing connections
+              spokes = that.model.connections.filter (c) =>
+                c.get('source') is @model.get('_id')
+              neighbors = spokes.map (c) -> that.model.getTargetOf(c).get('name')
+
+              # create a connection only if there is not already one
+              if targetNode? and !(_.contains neighbors, name)
+                connection = new ConnectionModel
+                    source: @model.get('_id')
+                    target: targetNode.get('_id')
+                    _docId: that.model.documentModel.get('_id')
+                    description: str
+
+                that.mentionedConns.push connection
+
             this.$el.val()
