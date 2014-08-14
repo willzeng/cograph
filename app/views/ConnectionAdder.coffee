@@ -10,6 +10,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
         that = this
         @graphView = @attributes.graphView
 
+        @nodeBoxOffset = @graphView.nodeBoxWidth/2+10
         @drag_line = @graphView.workspace.append('svg:line')
                       .attr('class', 'dragline hidden')
                       .attr("marker-end", "url(#draghead)")
@@ -44,7 +45,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
         node = @model.nodes.findWhere {_id:connectId}
         @drag_line.classed('hidden', false)
           .datum(node)
-          .attr("x1", (d) => node.x)
+          .attr("x1", (d) => node.x-@nodeBoxOffset)
           .attr("y1", (d) => node.y)
         @creatingConnection = !@creatingConnection
 
@@ -55,5 +56,5 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
       tick: =>
         that = this
         @drag_line
-          .attr("x1", (d) => d.x)
+          .attr("x1", (d) => d.x-@nodeBoxOffset)
           .attr("y1", (d) => d.y)
