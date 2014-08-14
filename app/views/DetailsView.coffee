@@ -72,6 +72,14 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         e.preventDefault()
         @nodeConnectionForm.commit()
         @nodeConnectionForm.model.save()
+
+        newConns = _.uniq @mentionedConns, (conn) ->
+          conn.get 'target'
+
+        for c in newConns
+          c.save()
+          @model.putConnection c
+
         @closeDetail()
         false
 
@@ -99,6 +107,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       setupAtWho: ->
         that = this
+        @mentionedConns = [] # this stores newly mentioned conns
 
         Backbone.Form.editors.AtWhoEditor = Backbone.Form.editors.TextArea.extend
           render: () ->
@@ -125,21 +134,19 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
             for name in names
               targetNode = that.model.nodes.findWhere({name:name})
-
               # get existing connections
               spokes = that.model.connections.filter (c) =>
                 c.get('source') is @model.get('_id')
               neighbors = spokes.map (c) -> that.model.getTargetOf(c).get('name')
 
               # create a connection only if there is not already one
-              if !(_.contains neighbors, name)
+              if targetNode? and !(_.contains neighbors, name)
                 connection = new ConnectionModel
                     source: @model.get('_id')
                     target: targetNode.get('_id')
                     _docId: that.model.documentModel.get('_id')
-                    description: @model.get('description')
-                connection.save()
-                connection.selected = true
-                newConn = that.model.putConnection connection
+                    description: str
+
+                that.mentionedConns.push connection
 
             this.$el.val()
