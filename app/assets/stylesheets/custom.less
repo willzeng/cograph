@@ -20,19 +20,25 @@
   opacity: 0.3;
 }
 
-.node.fixed .node-title-body {
-  border: 2px dashed @orange;
+.node.fixed .node-connector {
+  stroke-width: 1px;
+  stroke: orange;
 }
 
-.node.selected .node-title-body {
-  -webkit-box-shadow: 0px 0px 30px 0px rgba(116,221,252,1);
-  -moz-box-shadow: 0px 0px 30px 0px rgba(116,221,252,1);
-  box-shadow: 0px 0px 30px 0px rgba(116,221,252,1);
+.node.selected .node-connector {
+  stroke-width: 1px;
+  stroke: @selected-color;
+}
+
+.node-title-body:hover {
+  background: white;
 }
 
 .node-title-body {
-  text-align: center;
-  background: white;
+  // text-align: center;
+  background: transparent;
+  color: #222;
+  // background: rgba(256,256,256,0.4);
   -ms-word-break: break-all;
   word-break: break-all;
 
@@ -56,7 +62,7 @@
 }
 
 .pad {
-  padding: 8px;
+  padding: 6px;
 }
 
 .node-info-body.shown, .connection-info-body.shown {
@@ -85,7 +91,7 @@
 
 .connection line {
   stroke: @connection-color;
-  stroke-width: 4px;
+  stroke-width: 6px;
   stroke-linecap:round;
   opacity: 0.5;
   cursor: pointer;

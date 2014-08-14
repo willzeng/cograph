@@ -17,7 +17,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
         @attributes.svg.on "mousemove", () ->
           that.drag_line.attr('x2', d3.mouse(this)[0]).attr('y2', d3.mouse(this)[1])
 
-        @graphView.on 'node:right-click', (node, e) ->
+        @graphView.on 'node:click', (node) ->
           if that.creatingConnection
             that.drag_line.classed('hidden', true)
             if node != that.drag_line.datum()
