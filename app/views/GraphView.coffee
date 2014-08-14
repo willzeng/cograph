@@ -248,15 +248,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           $(t)
             .attr('y', - top)
 
-
           info = $(t).parent().find('.node-info')
           info
             .attr('x',-left)
             .attr('y',top)
-
-          # $(t).parent().find('.node-connector').attr('cx', -left-8)
-          # $(t).parent().find('.node-connector-rect').attr('x', -left-8)
-
 
         # delete unmatching elements
         node.exit().remove()
