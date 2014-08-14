@@ -20,8 +20,9 @@
   opacity: 0.3;
 }
 
-.node.fixed .node-title-body {
-  border: 1px dashed @orange;
+.node.fixed .node-connector {
+  stroke-width: 1px;
+  stroke: orange;
 }
 
 .node.selected .node-title-body {
@@ -30,12 +31,15 @@
   box-shadow: 0px 0px 30px 0px rgba(116,221,252,1);
 }
 
+.node-title-body:hover {
+  background: white;
+}
+
 .node-title-body {
   // text-align: center;
   background: transparent;
   color: #222;
   // background: rgba(256,256,256,0.4);
-  border-radius: 4px;
   -ms-word-break: break-all;
   word-break: break-all;
 
