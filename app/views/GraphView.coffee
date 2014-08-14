@@ -286,16 +286,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{((@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x)-(@nodeBoxWidth/2+10)},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
-<<<<<<< HEAD
           @connectionAdder.tick
 
         tick()
         @force.on "tick", () =>
           if @drawing then tick()
-=======
-          @connectionAdder.tick()
-        @force.on "tick", tick
->>>>>>> dev
 
       rightClicked: (e) ->
         e.preventDefault()
