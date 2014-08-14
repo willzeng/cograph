@@ -52,7 +52,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           workspaceConns = _.filter window.prefetch.connections, connFilter
           @workspaceModel.connections.set workspaceConns, {silent:true}
 
-        @workspaceModel.nodes.trigger "add"
+        @workspaceModel.trigger "init"
         $('.loading-container').remove()
 
       setDoc: ->

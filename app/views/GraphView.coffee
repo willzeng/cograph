@@ -17,8 +17,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       initialize: ->
         that = this
         @drawing = true
-        @model.nodes.on 'add', @backgroundRender, this
-        @model.nodes.on 'remove', @updateForceGraph, this
+        @model.on 'init', @backgroundRender, this
+        @model.nodes.on 'add remove', @updateForceGraph, this
         @model.connections.on 'add remove', @updateForceGraph, this
         @model.nodes.on 'change', @updateDetails, this
         @model.connections.on 'change', @updateDetails, this
@@ -113,6 +113,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       updateForceGraph: ->
         @loadForce()
         @updateDetails()
+        setTimeout () =>
+          @force.stop()
+        , 1500
 
       updateDetails: (incoming) ->
         that = this
