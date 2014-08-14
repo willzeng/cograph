@@ -116,7 +116,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             # Then make the editor's element have atwho.
             this.$el.atwho
               at: "@"
-              data: that.model.nodes.pluck('name')
+              data: _.filter that.model.nodes.pluck('name'), (name) => name isnt @model.get('name')
               target: ".modal-content"
             .atwho
               at: "#"
@@ -132,7 +132,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             # Create connections to mentioned nodes
             names = twttr.txt.extractMentions str
 
-            for name in names
+            for name in names when name isnt @model.get('name')
               targetNode = that.model.nodes.findWhere({name:name})
               # get existing connections
               spokes = that.model.connections.filter (c) =>
