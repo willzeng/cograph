@@ -177,13 +177,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         # new elements
         nodeEnter = node.enter().append("g")
-        nodeEnter.append("rect")
-          .attr('height', '2')
-          .attr('width', '10')
-          .attr('x', '-70')
-          .attr('y', '-1')
-          .attr('class', 'node-connector-rect')
-          .attr('fill', 'black')
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
           .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
@@ -238,7 +231,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .call(@force.drag)
         node.select('.node-title-body')
           .html((d) -> _.template(nodeTitle, d))
-          .style("background", (d) => @getColor d)
+        node.select('.node-connector')
+          .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
 
