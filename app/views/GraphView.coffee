@@ -95,6 +95,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       updateDetails: (incoming) ->
         that = this
+
         if incoming?
           # don't updateDetails if we have only dimmed the one node
           if incoming.hasChanged('dim') and incoming.changedAttributes.length then return

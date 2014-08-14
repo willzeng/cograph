@@ -15,16 +15,25 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
 
         @graphView = @attributes.graphView
 
+        @ignoreMouse = false
+
         @graphView.on 'node:mouseenter', (node) =>
-          @highlight node
+          if !(@ignoreMouse) then @highlight node
 
         @graphView.on 'connection:mouseout', (conn) =>
-          @emptyTooltip()
+          if !(@ignoreMouse) then @emptyTooltip()
+
+        @graphView.on 'node:drag', () =>
+          @ignoreMouse = true
+
+        @graphView.on 'node:dragend', () =>
+          @ignoreMouse = false
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
-          window.clearTimeout(@highlightTimer)
-          @model.dehighlight()
-          @emptyTooltip()
+          if !(@ignoreMouse)
+            window.clearTimeout(@highlightTimer)
+            @model.dehighlight()
+            @emptyTooltip()
 
       highlight: (node) ->
         connectionsToHL = @model.connections.filter (c) ->
@@ -38,9 +47,10 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
             @model.highlight(nodesToHL, connectionsToHL)
           , 600
 
-      showToolTip: (event) ->
-        $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
-        $(event.currentTarget).find('.connection-info-body').addClass('shown')
+      showToolTip: (event) =>
+        if !(@ignoreMouse)
+          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
+          $(event.currentTarget).find('.connection-info-body').addClass('shown')
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
