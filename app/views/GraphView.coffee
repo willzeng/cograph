@@ -71,7 +71,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @connectionAdder = new ConnectionAdder
           model: @model
-          attributes: {force: @force, svg: @svg, graphView: this}
+          attributes: {force: @force, graphView: this}
 
         @trashBin = new TrashBin
           model: @model
@@ -205,15 +205,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         nodeInnerText 
           .on "click", (d) =>
-            # prevents node from being selected on drag
-            if (d3.event.defaultPrevented) then return
-            @model.select d 
             @model.trigger "node:clicked", d
         node
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
             that.model.select d
-            that.model.trigger "node:clicked", d
+            that.model.trigger "node:dblclicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
@@ -267,11 +264,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{((@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x)-(@nodeBoxWidth/2+10)},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
-          @connectionAdder.tick
+          @connectionAdder.tick()
         @force.on "tick", tick
 
       rightClicked: (e) ->
         e.preventDefault()
+        @connectionAdder.clearDragLine()
 
       isContainedIn: (node, element) =>
         node.x < element.offset().left + element.outerWidth() &&
