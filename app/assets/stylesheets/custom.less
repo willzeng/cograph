@@ -12,6 +12,49 @@
 
 @bottom-margin:60px;
 
+/*==============GENERAL AND HELPER==============*/
+
+html, body {
+  overflow: hidden;
+  background: #284552;
+  height: 100%;
+}
+
+#main-container {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#graph {
+  width: 100%;
+  height: 100%;
+  right:0;
+  position: fixed;
+}
+
+.filled-white {
+  background: white !important;
+}
+
+.pad {
+  padding: 6px;
+}
+
+.uptwo {
+  margin-top: -15px;
+}
+
+/*==============NODES==============*/
+
 .node {
   transition: opacity .5s ease-in-out;
 }
@@ -30,25 +73,25 @@
   stroke: @selected-color;
 }
 
-.node-title-body:hover {
-  background: white;
-}
-
 .node-title-body {
-  // text-align: center;
   background: transparent;
   color: #222;
-  // background: rgba(256,256,256,0.4);
   -ms-word-break: break-all;
   word-break: break-all;
-
   word-break: break-word;
-
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
-
   height: auto;
+  cursor: pointer;
+  font: 16px sans-serif;
+  font-weight:bold;
+  text-anchor: middle;
+  fill: @text-color;
+}
+
+.node-title-body:hover {
+  background: white;
 }
 
 .node-info-body, .connection-info-body {
@@ -61,10 +104,6 @@
   line-height: normal;
 }
 
-.pad {
-  padding: 6px;
-}
-
 .node-info-body.shown, .connection-info-body.shown {
   display: block;
 }
@@ -73,13 +112,31 @@
   stroke: #bbb;
 }
 
-.node-title-body {
-  cursor: pointer;
-  font: 16px sans-serif;
-  font-weight:bold;
-  text-anchor: middle;
-  fill: @text-color;
+
+/* NODE TOOLBAR */
+.node-toolbar {
+  text-align: middle;
+  padding: 3px 3px 3px 6px;
+  border-bottom: 1px solid gray;
 }
+
+.node-toolbar button {
+  padding:  2px 4px;
+  color: gray;
+  border: 0;
+  background: none;
+  outline: none;
+}
+
+.node-toolbar button:hover {
+  color: #3366BB;
+}
+
+.node-toolbar button:active {
+  color: #0645AD;
+}
+
+/*==============CONNECTIONS==============*/
 
 .connection text {
   font: 15px sans-serif;
@@ -130,6 +187,9 @@
   opacity: 0.3;
 }
 
+/*==============DRAGLINE==============*/
+/*This styles the temporary line used to add connections*/
+
 line {
   fill: none;
   stroke: #000;
@@ -145,36 +205,7 @@ line.hidden {
   stroke-width: 0;
 }
 
-html, body {
-  overflow: hidden;
-  background: #284552;
-  height: 100%;
-}
-
-#main-container {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-}
-
-svg {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-#graph {
-  width: 100%;
-  height: 100%;
-  right:0;
-  position: fixed;
-}
-
-.uptwo {
-  margin-top: -15px;
-}
+/*==============INPUTS==============*/
 
 input[type="text"]::-webkit-input-placeholder { /* WebKit browsers */
     color:    #999;
@@ -191,80 +222,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #999;
 }
 
-#zoom-controls {
-  position: absolute;
-  bottom: @bottom-margin;
-  left: 15px;
-}
-
-#sidebar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 0;
-  background: darken(#284552,10%);
-  overflow-y: auto;
-}
-
-#sidebar-toggle {
-  margin: 10px 0 0 0;
-}
-
-#trash-bin {
-  height: 81px;
-  width: 200px;
-  font-size: 26pt;
-  color: lightgray;
-  position: absolute;
-  bottom:@bottom-margin;
-  left: 70px;
-  padding-top:12px;
-  text-align: center;
-  border: 4px dashed lightgray;
-  border-radius: 0px;
-}
-
-#trash-bin.selected {
-  border-color:@selected-color;
-  color:@selected-color;
-}
-
-.close {
-  outline: none;
-  font-size: 40px;
-  opacity: 0.4;
-}
-
-#details-container {
-  -ms-word-break: break-all;
-  word-break: break-all;
-  word-break: break-word;
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto;
-  .panel {
-    border-radius: 0;
-  }
-}
-
-.detail-controls{
-  padding-bottom: 10px;
-}
-
-.data-tooltip-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.data-tooltip {
-  background: @data-tooltip-color;
-  color: white;
-  font-size: 12px;
-  border: 1px solid white;
-  max-width: 300px;
-}
+/*==============CONTROLS==============*/
 
 .toolbar {
   position: absolute;
@@ -293,13 +251,63 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   z-index: @controls-z-index;
 }
 
-#add-node-form {
-  display: inline;
+#zoom-controls {
+  position: absolute;
+  bottom: @bottom-margin;
+  left: 15px;
 }
 
-#filter-panel {
- max-height: 250px; 
- overflow-y: scroll;
+#trash-bin {
+  height: 81px;
+  width: 200px;
+  font-size: 26pt;
+  color: lightgray;
+  position: absolute;
+  bottom:@bottom-margin;
+  left: 70px;
+  padding-top:12px;
+  text-align: center;
+  border: 4px dashed lightgray;
+  border-radius: 0px;
+}
+
+#trash-bin.selected {
+  border-color:@selected-color;
+  color:@selected-color;
+}
+
+/*==============SIDEBAR==============*/
+
+#sidebar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: darken(#284552,10%);
+  overflow-y: auto;
+}
+
+#sidebar-toggle {
+  margin: 10px 0 0 0;
+}
+
+/*==============DETAILS==============*/
+
+#details-container {
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+  .panel {
+    border-radius: 0;
+  }
+}
+
+.detail-controls{
+  padding-bottom: 10px;
 }
 
 .edit-details-form input[type="text"], .edit-details-form button[type="button"] {
@@ -311,6 +319,8 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin: 2px 0px;
 }
 
+/*==============OTHER==============*/
+
 .main-nav {
   padding: 0;
   border: 0;
@@ -321,13 +331,13 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   font-size: 16pt;
 }
 
-.modal-body {
-  max-height: 600px; // #TODO make this relative to the window height.
-  overflow-y: scroll;
+#add-node-form {
+  display: inline;
 }
 
-.panel {
-  border: 0;
+#filter-panel {
+ max-height: 250px;
+ overflow-y: scroll;
 }
 
 #menu-title {
@@ -397,12 +407,27 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   border-radius: 0;
 }
 
+.panel {
+  border: 0;
+}
+
 .panel-body {
   padding: 10px 15px;
 }
 
 .form-control {
   border-radius: 0 !important;
+}
+
+.close {
+  outline: none;
+  font-size: 40px;
+  opacity: 0.4;
+}
+
+.modal-body {
+  max-height: 600px; // #TODO make this relative to the window height.
+  overflow-y: scroll;
 }
 
 // Bootstrap-colorpalette
@@ -427,26 +452,4 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .bootstrap-colorpalette .btn-color:hover {
     border: 1px solid #000;
-}
-
-.node-toolbar button {
-  padding:  2px 4px;
-  color: gray;
-  border: 0;
-  background: none;
-  outline: none;
-}
-
-.node-toolbar button:hover {
-  color: #3366BB;
-}
-
-.node-toolbar button:active {
-  color: #0645AD;
-}
-
-.node-toolbar {
-  text-align: middle;
-  padding: 3px 3px 3px 6px;
-  border-bottom: 1px solid gray;
 }
