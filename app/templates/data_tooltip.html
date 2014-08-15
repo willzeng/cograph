@@ -9,7 +9,8 @@
 <% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags)){ %>
   <div class="pad">
     <div>
-    <%= attributes.description %>
+    <% linkified = attributes.description.replace(/#(\S*)/g,'<a class="tag-link" data-tag=$1 href="">#$1</a>'); %>
+    <%= linkified %>
     </div>
     <% if(_.some(attributes.tags)){ %>
       <div>

@@ -255,6 +255,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # delete unmatching elements
         node.exit().remove()
 
+        # set-up clickable tags
+        $('.tag-link').on "click", (e) =>
+          e.preventDefault()
+          tag = $(e.currentTarget).attr('data-tag')
+          @trigger 'tag:click', tag
+
         tick = =>
           connection.selectAll("line")
             .attr("x1", (d) => @model.getSourceOf(d).x-(@nodeBoxWidth/2+10))

@@ -14,7 +14,13 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView model: @workspaceModel
+
         @shareView.on "save:workspace", (workspaceId) => @navigate ""+workspaceId
+        @graphView.on "tag:click", (tag) =>
+          @workspaceModel.filterModel.set "node_tags", [tag]
+          @workspaceModel.filter()
+          @searchView.search {value:tag, type:"tag"}
+          @navigate "search/"+tag
 
         window.gm = @workspaceModel
         Backbone.history.start()
@@ -22,6 +28,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
       routes:
         '': 'home'
         '(:id)': 'workspace'
+        'search/:tag': 'loadByTag'
 
       home: () =>
         @setDoc()
@@ -63,6 +70,11 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @workspaceModel.getTagNames (tags) =>
           @workspaceModel.filterModel.addInitialTags tags
           @workspaceModel.filterModel.addNodeTags tags
+
+      loadByTag: (tag) ->
+        @setDoc()
+        @searchView.search {value:tag, type:"tag"}
+        $('.loading-container').remove()
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)
