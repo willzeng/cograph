@@ -1,5 +1,5 @@
-define ['jquery', 'd3',  'underscore', 'backbone'],
-  ($, d3, _, Backbone) ->
+define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
+  ($, d3, _, Backbone, linkify) ->
     class DataTooltip extends Backbone.View
       el: $ '#graph'
 
@@ -49,8 +49,8 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
 
       showToolTip: (event) =>
         if !(@ignoreMouse)
-          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
-          $(event.currentTarget).find('.connection-info-body').addClass('shown')
+          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown').linkify()
+          $(event.currentTarget).find('.connection-info-body').addClass('shown').linkify()
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
