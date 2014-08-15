@@ -57,6 +57,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
       setDoc: ->
         @workspaceModel.getDocument().set window.prefetch.theDocument
+        # We need to join the right socket session
+        @workspaceModel.socket.emit 'open:document', window.prefetch.theDocument
         @workspaceModel.nodes._docId = window.prefetch.theDocument._id
         @workspaceModel.connections._docId = window.prefetch.theDocument._id
 
