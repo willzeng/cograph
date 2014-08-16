@@ -7,18 +7,37 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         'focusout textarea': 'lessInformation'
         'focus .node-input': 'moreInformation'
         'submit': 'addNode'
+        'focusout .node-input': 'lessInformation'
 
       initialize: ->
-        window.nm  = NodeModel
+        $('.node-description > textarea').on 'keydown', (e) =>
+          keyCode = e.keyCode || e.which
+          if keyCode == 13 # code for ENTER
+            @addNode()
 
       moreInformation: ->
         @$el.find('.node-description').removeClass 'hide'
+        @descriptionFocus = false
+        $('.node-description').hover () =>
+          @descriptionFocus = true
+        , () => @descriptionFocus = false
+
+        # TAB focues on description
+        $('.node-input').on 'keydown', (e) =>
+          keyCode = e.keyCode || e.which
+          if keyCode == 9 # code for TAB
+            e.preventDefault()
+            @descriptionFocus = true
+            $('.node-description > textarea').focus()
+            @descriptionFocus = false
 
       lessInformation: (e) ->
-        @$el.find('.node-description').addClass 'hide'
+        # Don't hide info if focusing on it
+        if !@descriptionFocus
+          @$el.find('.node-description').addClass 'hide'
 
       addNode: (e) ->
-        e.preventDefault()
+        if e? then e.preventDefault()
 
         attributes = {_dodId: @model.nodes._docId}
         _.each $('#add-node-form').serializeArray(), (obj) ->
@@ -29,5 +48,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           node.save()
           @model.select @model.putNode node
           @$el[0].reset() # blanks out the form fields
+          @lessInformation()
         else
           $('input', @el).attr('placeholder', node.validate())
