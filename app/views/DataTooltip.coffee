@@ -1,27 +1,39 @@
-define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.html'],
-  ($, d3, _, Backbone, dataTooltipTemplate) ->
+define ['jquery', 'd3',  'underscore', 'backbone'],
+  ($, d3, _, Backbone) ->
     class DataTooltip extends Backbone.View
       el: $ '#graph'
 
       events:
         'mouseenter .node-title-body' : 'showToolTip'
         'mouseenter .connection' : 'showToolTip'
+        'click .node-archive': 'archiveObj'
+        'click .node-expand': 'expandNode'
+        'click .node-fix': 'toggleFix'
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
 
         @graphView = @attributes.graphView
 
+        @ignoreMouse = false
+
         @graphView.on 'node:mouseenter', (node) =>
-          @highlight node
+          if !(@ignoreMouse) then @highlight node
 
         @graphView.on 'connection:mouseout', (conn) =>
-          @emptyTooltip()
+          if !(@ignoreMouse) then @emptyTooltip()
+
+        @graphView.on 'node:drag', () =>
+          @ignoreMouse = true
+
+        @graphView.on 'node:dragend', () =>
+          @ignoreMouse = false
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
-          window.clearTimeout(@highlightTimer)
-          @model.dehighlight()
-          @emptyTooltip()
+          if !(@ignoreMouse)
+            window.clearTimeout(@highlightTimer)
+            @model.dehighlight()
+            @emptyTooltip()
 
       highlight: (node) ->
         connectionsToHL = @model.connections.filter (c) ->
@@ -35,10 +47,35 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'text!templates/data_tooltip.
             @model.highlight(nodesToHL, connectionsToHL)
           , 600
 
-      showToolTip: (event) ->
-        $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
-        $(event.currentTarget).find('.connection-info-body').addClass('shown')
+      showToolTip: (event) =>
+        if !(@ignoreMouse)
+          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
+          $(event.currentTarget).find('.connection-info-body').addClass('shown')
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
         $('.connection-info-body').removeClass('shown')
+
+      archiveObj: (event) ->
+        removeId = parseInt $(event.currentTarget).attr("data-id")
+        nc = @model.nodes.findWhere {_id:removeId}
+        if nc.constructor.name is "NodeModel"
+          @model.removeNode nc
+        else if nc.constructor.name is "ConnectionModel"
+          @model.removeConnection nc
+
+      expandNode: (event) ->
+        expandId = parseInt $(event.currentTarget).attr("data-id")
+        expandedNode = @model.nodes.findWhere {_id:expandId}
+        window.nc = expandedNode
+        expandedNode.getNeighbors (neighbors) =>
+          for node in neighbors
+            newNode = new expandedNode.constructor node
+            if @model.putNode newNode #this checks to see if the node has passed the filter
+              newNode.getConnections @model.nodes, (connections) =>
+                @model.putConnection new @model.connections.model conn for conn in connections
+
+      toggleFix: (event) ->
+        unfixId = parseInt $(event.currentTarget).attr("data-id")
+        unfixNode = @model.nodes.findWhere {_id:unfixId}
+        unfixNode.fixed = 0 # unpin the node

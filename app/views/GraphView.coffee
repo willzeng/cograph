@@ -1,6 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
+define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, defs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -9,7 +9,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
       # Parameters for display
       maxConnTextLength: 20
-      maxNodeBoxHeight: 100
+      maxNodeBoxHeight: 100 #4 lines
       nodeBoxWidth: 120
       maxInfoBoxHeight: 200
       infoBoxWidth: 120
@@ -61,15 +61,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
                 .attr('height', height)
                 .call(@zoom)
                 .on("dblclick.zoom", null)
-        @svg.append('defs').html(defs)
+        def = @svg.append('svg:defs')
+        (new svgDefs).addDefs def
 
         @workspace = @svg.append("svg:g")
+
         @workspace.append("svg:g").classed("connection-container", true)
         @workspace.append("svg:g").classed("node-container", true)
 
         @connectionAdder = new ConnectionAdder
           model: @model
-          attributes: {force: @force, svg: @svg, graphView: this}
+          attributes: {force: @force, graphView: this}
 
         @trashBin = new TrashBin
           model: @model
@@ -92,6 +94,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         @updateDetails()
 
       updateDetails: (incoming) ->
+        that = this
+
         if incoming?
           # don't updateDetails if we have only dimmed the one node
           if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
@@ -108,6 +112,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("class", "connection")
           .on "click", (d) =>
             @model.select d
+            @model.trigger "conn:clicked", d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
@@ -120,10 +125,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .style("stroke", (d) => @getColor d)
         text-group = connectionEnter.append("g")
           .attr('class', 'connection-text')
+          .on "mouseover", (conn)  =>
+            @trigger "connection:mouseover", conn
+          .on "mouseout", (conn) =>
+            if(typeof d3.event.toElement.className == 'object' && d3.event.toElement.localName != 'text')
+              @trigger "connection:mouseout", conn
         text-group.append("text")
           .attr("text-anchor", "middle")
         text-group.append("foreignObject")
-          .attr('y', '0')
+          .attr('y', '1')
           .attr('height', @maxInfoBoxHeight)
           .attr('width', @infoBoxWidth)
           .attr('x', '-12')
@@ -176,8 +186,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr("x", "-60")
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
-            .attr('class', 'node-title-body')
-        nodeEnter.append("foreignObject")
+          .attr('class', 'node-title-body')
+        nodeConnector = nodeEnter.append("circle")
+          .attr('r', '5')
+          .attr('cx', '-70')
+          .attr('cy', '0')
+          .attr('class', 'node-connector')
+          .attr('fill', '#222') 
+        nodeInfoText = nodeEnter.append("foreignObject")
           .attr('y', '12')
           .attr('height', @maxInfoBoxHeight)
           .attr('width', @infoBoxWidth)
@@ -185,21 +201,25 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .attr('class', 'node-info')
           .append('xhtml:body')
             .attr('class', 'node-info-body')
+        
 
-        nodeInnerText
+        nodeInnerText 
+          .on "click", (d) =>
+            @model.trigger "node:clicked", d
+        node
           .on "dblclick", (d) ->
             d3.select(this).classed("fixed", d.fixed = false)
-          .on "click", (d) =>
-            # prevents node from being selected on drag
-            if (d3.event.defaultPrevented) then return
-            @model.select d
+            that.model.select d
+            that.model.trigger "node:dblclicked", d
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
           .on "mouseenter", (node) =>
             @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
-            @trigger "node:mouseout", node
+            # perhaps setting the foreignobject height dynamically would be better.
+            if(typeof d3.event.toElement.className == 'object')
+              @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
         # update old and new elements
@@ -210,7 +230,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
           .call(@force.drag)
         node.select('.node-title-body')
           .html((d) -> _.template(nodeTitle, d))
-          .style("background", (d) => @getColor d)
+        node.select('.node-connector')
+          .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
 
@@ -236,18 +257,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
 
         tick = =>
           connection.selectAll("line")
-            .attr("x1", (d) => @model.getSourceOf(d).x)
+            .attr("x1", (d) => @model.getSourceOf(d).x-(@nodeBoxWidth/2+10))
             .attr("y1", (d) => @model.getSourceOf(d).y)
-            .attr("x2", (d) => @model.getTargetOf(d).x)
+            .attr("x2", (d) => @model.getTargetOf(d).x-(@nodeBoxWidth/2+10))
             .attr("y2", (d) => @model.getTargetOf(d).y)
           connection.select(".connection-text")
-            .attr("transform", (d) => "translate(#{(@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
+            .attr("transform", (d) => "translate(#{((@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x)-(@nodeBoxWidth/2+10)},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
-          @connectionAdder.tick
+          @connectionAdder.tick()
         @force.on "tick", tick
 
       rightClicked: (e) ->
         e.preventDefault()
+        @connectionAdder.clearDragLine()
 
       isContainedIn: (node, element) =>
         node.x < element.offset().left + element.outerWidth() &&
@@ -256,4 +278,4 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'text!templates/d3_defs.html'
         node.y < element.offset().top + element.outerHeight()
 
       getColor: (nc) ->
-          @model.defaultColors[nc.get('color')]
+        @model.defaultColors[nc.get('color')]

@@ -28,14 +28,8 @@ exports.read = (req, resp) ->
       resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
-  console.log "Get all Documents Query Requested"
-  docLabel = '_document'
-  cypherQuery = "match (n:#{docLabel}) return n;"
-  params = {}
-  graphDb.query cypherQuery, params, (err, results) ->
-    if err then console.log err
-    nodes = (utils.parseCypherResult(node, 'n') for node in results)
-    resp.send nodes
+  serverDocument.getAll (docs) ->
+    resp.send docs
 
 exports.analytics = (req, resp) ->
   id = req.params.id
@@ -66,12 +60,16 @@ exports.prefetch = (req, resp, callback) ->
   docLabel = "_doc_#{id || 0}"
   # Get the document
   params = {id:parseInt(id)}
-  cypherQuery = "START n=node({id}) WHERE (n:_document) RETURN n AS node;"
+  cypherQuery = "START n=node({id}) MATCH (n:_document) OPTIONAL MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace;"
   graphDb.query cypherQuery, params, (err, results) ->
     if err or results.length is 0 then resp.redirect "/errors/missingDocument"
     else
+      # Get the document
       parsed = results[0].node._data.data
       theDocument = utils.parseNodeToClient parsed
+
+      # Get the document's workspaces
+      theDocument.workspaces = (space.workspace for space in results)
 
     # Get all nodes
     # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
@@ -91,7 +89,6 @@ exports.prefetch = (req, resp, callback) ->
         connections = (utils.parseCypherResult(connection, 'r') for connection in results) || {}
         callback {nodes:parsedNodes, connections:connections, theDocument: theDocument}
 
-
 # UPDATE
 exports.update = (req, resp) ->
   id = req.params.id
@@ -105,3 +102,6 @@ exports.destroy = (req, resp) ->
   console.log "Delete Document Query Requested"
   graphDb.getNodeById id, (err, node) ->
     node.delete () -> true
+
+# HELPERS
+exports.helper = serverDocument

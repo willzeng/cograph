@@ -23,5 +23,14 @@ class DocumentHelper
       node = utils.parseCypherResult(results[0], 'n')
       callback utils.parseNodeToClient node
 
+  getAll: (callback) ->
+    docLabel = '_document'
+    cypherQuery = "match (n:#{docLabel}) return n;"
+    params = {}
+    @graphDb.query cypherQuery, params, (err, results) ->
+      if err then throw err
+      nodes = (utils.parseCypherResult(node, 'n') for node in results)
+      callback nodes
+
 
 module.exports = DocumentHelper

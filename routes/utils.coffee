@@ -27,7 +27,7 @@ utils =
   # goes into `_data.data` and returns an object that corresponds to attributes of a node
   parseCypherResult: (obj, name) ->
     objData = obj[name]._data.data
-    objData.id = objData._id = @trim obj[name]._data.self
+    objData.id = objData._id = parseInt @trim obj[name]._data.self
     objData
 
   listToLabels: (list, prefix) ->

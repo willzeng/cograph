@@ -1,13 +1,21 @@
+<div class="node-toolbar">
+  <% if(constructor.name === "NodeModel"){ %>
+  <button type="button" class="node-fix" data-id=<%=attributes._id%>><i class="fa fa-thumb-tack"></i></button>
+  <button type="button" class="node-expand" data-id=<%=attributes._id%>><i class="fa fa-expand"></i></button>
+  <button type="button" class="node-connect" data-id=<%=attributes._id%>><i class="fa fa-link"></i></button>
+  <% } %>
+  <button type="button" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-archive"></i></button>
+</div>
 <% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags)){ %>
   <div class="pad">
+    <div>
+    <%= attributes.description %>
+    </div>
+    <% if(_.some(attributes.tags)){ %>
       <div>
-      <%= attributes.description %>
+      <i class="fa fa-tags"></i>
+      <%= attributes.tags.join(", ") %>
       </div>
-      <% if(_.some(attributes.tags)){ %>
-        <div>
-        <i class="fa fa-tags"></i>
-        <%= attributes.tags.join(", ") %>
-        </div>
-      <% } %>
+    <% } %>
   </div>
 <% } %>

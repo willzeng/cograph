@@ -1,0 +1,40 @@
+define [], () ->
+  class svgDefs
+
+    addDefs: (def) ->
+      def
+        .append('svg:marker')
+          .attr('id', 'draghead')
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', '5')
+          .attr('refY', '0')
+          .attr('markerWidth', '3')
+          .attr('markerHeight', '3')
+          .attr('orient', 'auto')
+          .attr('fill', 'black')
+          .append('svg:path')
+            .attr('d',"M0,-5L10,0L0,5")
+      def
+        .append('svg:marker')
+          .attr('id', 'arrowhead')
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', '11')
+          .attr('refY', '0')
+          .attr('markerWidth', '3')
+          .attr('markerHeight', '3')
+          .attr('orient', 'auto')
+          .attr('fill', '#ccc')
+          .append('svg:path')
+            .attr('d',"M0,-3L8,0L0,3")
+      def
+        .append('svg:marker')
+          .attr('id', 'arrowhead-selected')
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', '11')
+          .attr('refY', '0')
+          .attr('markerWidth', '3')
+          .attr('markerHeight', '3')
+          .attr('orient', 'auto')
+          .attr('fill', '#3498db')
+          .append('svg:path')
+            .attr('d',"M0,-3L8,0L0,3")

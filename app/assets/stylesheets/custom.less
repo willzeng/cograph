@@ -10,6 +10,8 @@
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
+@bottom-margin:60px;
+
 .node {
   transition: opacity .5s ease-in-out;
 }
@@ -18,18 +20,25 @@
   opacity: 0.3;
 }
 
-.node.fixed .node-title-body {
-  border: 2px dashed @orange;
+.node.fixed .node-connector {
+  stroke-width: 1px;
+  stroke: orange;
 }
 
-.node.selected .node-title-body {
-  -webkit-box-shadow: 0px 0px 30px 0px rgba(116,221,252,1);
-  -moz-box-shadow: 0px 0px 30px 0px rgba(116,221,252,1);
-  box-shadow: 0px 0px 30px 0px rgba(116,221,252,1);
+.node.selected .node-connector {
+  stroke-width: 1px;
+  stroke: @selected-color;
+}
+
+.node-title-body:hover {
+  background: white;
 }
 
 .node-title-body {
-  background: white;
+  // text-align: center;
+  background: transparent;
+  color: #222;
+  // background: rgba(256,256,256,0.4);
   -ms-word-break: break-all;
   word-break: break-all;
 
@@ -53,7 +62,7 @@
 }
 
 .pad {
-  padding: 8px;
+  padding: 6px;
 }
 
 .node-info-body.shown, .connection-info-body.shown {
@@ -82,7 +91,7 @@
 
 .connection line {
   stroke: @connection-color;
-  stroke-width: 4px;
+  stroke-width: 6px;
   stroke-linecap:round;
   opacity: 0.5;
   cursor: pointer;
@@ -164,7 +173,7 @@ svg {
 }
 
 .uptwo {
-  margin-top: -2px;
+  margin-top: -15px;
 }
 
 input[type="text"]::-webkit-input-placeholder { /* WebKit browsers */
@@ -184,7 +193,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #zoom-controls {
   position: absolute;
-  bottom: 40px;
+  bottom: @bottom-margin;
   left: 15px;
 }
 
@@ -208,7 +217,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   font-size: 26pt;
   color: lightgray;
   position: absolute;
-  bottom: 40px;
+  bottom:@bottom-margin;
   left: 70px;
   padding-top:12px;
   text-align: center;
@@ -223,12 +232,11 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .close {
   outline: none;
+  font-size: 40px;
+  opacity: 0.4;
 }
 
 #details-container {
-  position: absolute;
-  width: 100%;
-  padding: 8px 0px 0 0px;
   -ms-word-break: break-all;
   word-break: break-all;
   word-break: break-word;
@@ -273,7 +281,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .toolbar.bottom {
   position: absolute;
-  bottom: 40px;
+  bottom: @bottom-margin;
+
+  .btn {
+    margin-right:3px;
+    margin-left: 3px;
+  }
 }
 
 .controls {
@@ -302,34 +315,37 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin: 2px 0px;
 }
 
-.navbar-header {
-  width: 100%;
+.main-nav {
+  padding: 0;
+  border: 0;
+}
+
+.search-title {
+  padding: 12px 16px;
+  font-size: 16pt;
+}
+
+.modal-body {
+  max-height: 600px; // #TODO make this relative to the window height.
+  overflow-y: scroll;
+}
+
+.panel {
+  border: 0;
 }
 
 #menu-title {
   position: relative;
-  left: 0;
-  width: 600px;
   outline: none;
-  background: transparent;
+  background: beige;
   color: black;
   border: 0;
   cursor: pointer;
+  padding: 6px;
 }
 
 #menu-title:focus {
-  background: @white;
   cursor: text;
-}
-
-#menu-bar .nav-pills {
-  a{
-    padding: 5px 15px;
-    border-left: 1px solid #aaa;
-    border-right: 1px solid #aaa;
-  }
-
-  float: left;
 }
 
 .network-share-button {
@@ -353,6 +369,13 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   }
 }
 
+.workspaces-list {
+  .btn-danger{
+    position: relative;
+    bottom: 5px;
+  }
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
@@ -373,18 +396,9 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .navbar {
   margin-bottom: 0;
-  min-height: 0;
-  max-height: 32px;
-  overflow: hidden;
   background: @white;
   border: 0;
   border-radius: 0;
-}
-
-.navbar-brand, .navbar-text  {
-  padding: 5px 15px;
-  height: auto;
-  margin: 0px;
 }
 
 .panel-body {
@@ -417,4 +431,26 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .bootstrap-colorpalette .btn-color:hover {
     border: 1px solid #000;
+}
+
+.node-toolbar button {
+  padding:  2px 4px;
+  color: gray;
+  border: 0;
+  background: none;
+  outline: none;
+}
+
+.node-toolbar button:hover {
+  color: #3366BB;
+}
+
+.node-toolbar button:active {
+  color: #0645AD;
+}
+
+.node-toolbar {
+  text-align: middle;
+  padding: 3px 3px 3px 6px;
+  border-bottom: 1px solid gray;
 }

@@ -1,52 +1,53 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <h4 class="panel-title">
-      <a data-toggle="collapse" data-parent="#details-container" href="#collapse-one">
-        <%= node.attributes.name %>
-      </a>
-      <div class="pull-right uptwo">
-        <button type="button" class="close" aria-hidden="true">
-          ×
-        </button>
-      </div>
-    </h4>
-  </div>
+<div id='details-container'>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#details-container" href="#collapse-one">
+          <%= node.attributes.name %>
+        </a>
+        <div class="pull-right uptwo">
+          <button type="button" class="close" aria-hidden="true">
+            ×
+          </button>
+        </div>
+      </h4>
+    </div>
 
-  <div id="collapse-one" class="panel-collapse collapse in">
-    <div class="panel-body">
-      <div class="detail-controls">
-        <% if (node.constructor.name === "NodeModel") {%>
-          <button id="edit-node-button" class="btn btn-primary">Edit</button>
-          <button id="expand-node-button" class="btn btn-default">Expand</button>
-          <button id="archive-node-button" class="btn btn-warning">Archive</button>
-        <% } else { %>
-          <button id="edit-connection-button" class="btn btn-default">Edit</button>
-          <button id="archive-connection-button" class="btn btn-warning">Archive</button>
-        <% } %>
-      </div>
-      <% if (node.attributes.description.length > 0) { %>
-        <p class="lead"><%= node.attributes.description %></p>
-      <% } else { %>
-        <p>Click Edit to add information.</p>
-      <% } %>
-      <p>
-        <% if (node.attributes.url) { %>
-            URL: <a href="<%= node.attributes.url %>"><%= node.attributes.url %></a><br/>
-        <% }; %>
-        <ul class="list-group">
-          <% _.each(node.attributes.tags, function(tag) { %>
-            <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
-          <% }); %>
-        </ul>
-        <% if (node.constructor.name === "NodeModel") {%>
+    <div id="collapse-one" class="panel-collapse collapse in">
+      <div class="panel-body">
+        <div class="detail-controls">
+          <% if (node.constructor.name === "NodeModel") {%>
+            <button id="edit-node-button" class="btn btn-primary">Edit</button>
+            <button id="expand-node-button" class="btn btn-default">Expand</button>
+            <button id="archive-node-button" class="btn btn-warning">Archive</button>
+          <% } else { %>
+            <button id="edit-connection-button" class="btn btn-default">Edit</button>
+            <button id="archive-connection-button" class="btn btn-warning">Archive</button>
+          <% } %>
+        </div>
+          <% if (node.attributes.description.length > 0) { %>
+            <p class="lead"><%= node.attributes.description %></p>
+          <% } else { %>
+            <p>Click Edit to add information.</p>
+          <% } %>
+          <% if (node.attributes.url) { %>
+              URL: <a href="<%= node.attributes.url %>"><%= node.attributes.url %></a><br/>
+          <% }; %>
           <ul class="list-group">
-            <% _.each(spokes, function(conn) { %>
-              <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
+            <% _.each(node.attributes.tags, function(tag) { %>
+              <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
             <% }); %>
           </ul>
-        <% } %>
-      </p>
+          <% if (node.constructor.name === "NodeModel") {%>
+            <ul class="list-group">
+              <% _.each(spokes, function(conn) { %>
+                <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
+              <% }); %>
+            </ul>
+          <% } %>
+        </p>
+      </div>
     </div>
-  </div>
 
+  </div>
 </div>
