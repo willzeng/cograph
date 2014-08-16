@@ -1,5 +1,6 @@
-define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel'],
-  ($, _, Backbone, WorkspaceModel, NodeModel) ->
+define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel',
+'atwho', 'twittertext'],
+  ($, _, Backbone, WorkspaceModel, NodeModel, atwho, twittertext) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
 
@@ -30,6 +31,16 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
             @descriptionFocus = true
             $('.node-description > textarea').focus()
             @descriptionFocus = false
+
+        # Add atwho dropdowns to the description box
+        $('.node-description > textarea').atwho
+          at: "@"
+          data: @model.nodes.pluck('name')
+          target: "#add-node-form"
+        .atwho
+          at: "#"
+          data: @model.filterModel.getTags('node')
+          target: "#add-node-form"
 
       lessInformation: (e) ->
         # Don't hide info if focusing on it
