@@ -13,7 +13,7 @@
 @bottom-margin:60px;
 
 .node {
-  transition: opacity .5s ease-in-out;
+  /*transition: opacity .5s ease-in-out;*/
 }
 
 .node.dim {
@@ -31,7 +31,7 @@
 }
 
 .node-title-body:hover {
-  background: white;
+  background: @white;
 }
 
 .node-title-body {
@@ -52,7 +52,7 @@
 }
 
 .node-info-body, .connection-info-body {
-  background: white;
+  background: @white;
   display: none;
   color: gray;
   cursor: pointer;
@@ -82,11 +82,11 @@
 }
 
 .connection text {
-  font: 15px sans-serif;
+  font: 12px sans-serif;
   text-anchor: middle;
-  fill: #fff;
+  fill: @black;
   cursor: pointer;
-  text-shadow: 0 1px 0 #333, 1px 0 0 #333, 0 -1px 0 #333, -1px 0 0 #333;
+  text-shadow: 0 1px 0 #eee, 1px 0 0 #eee, 0 -1px 0 #eee, -1px 0 0 #eee;
 }
 
 .connection line {
@@ -147,7 +147,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: #284552;
+  background: #efefef;
   height: 100%;
 }
 
