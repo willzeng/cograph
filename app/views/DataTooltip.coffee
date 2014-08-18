@@ -71,7 +71,6 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
       expandNode: (event) ->
         expandId = parseInt $(event.currentTarget).attr("data-id")
         expandedNode = @model.nodes.findWhere {_id:expandId}
-        window.nc = expandedNode
         expandedNode.getNeighbors (neighbors) =>
           for node in neighbors
             newNode = new expandedNode.constructor node
