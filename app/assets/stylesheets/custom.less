@@ -38,10 +38,6 @@
   background: @white;
 }
 
-.filled-white {
-  background: white !important;
-}
-
 .node-title-body {
   // text-align: center;
   background: transparent;
@@ -58,11 +54,14 @@
   height: auto;
 }
 
+.node, .connection {
+  cursor: pointer;
+}
+
 .node-info-body, .connection-info-body {
   background: @white;
   display: none;
   color: gray;
-  cursor: pointer;
   height: auto;
   font-size: 14px;
   line-height: normal;
@@ -70,6 +69,10 @@
 
 .pad {
   padding: 6px;
+}
+
+.node-title-body.shown {
+  background: @white;
 }
 
 .node-info-body.shown, .connection-info-body.shown {

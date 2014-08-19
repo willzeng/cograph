@@ -18,6 +18,7 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
         @ignoreMouse = false
 
         @graphView.on 'node:mouseenter', (node) =>
+          @showToolTip(d3.event)
           if !(@ignoreMouse) then @highlight node
 
         @graphView.on 'connection:mouseout', (conn) =>
@@ -46,17 +47,13 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
 
       showToolTip: (event) =>
         if !(@ignoreMouse)
+          @emptyTooltip()
+          $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
           $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
           $(event.currentTarget).find('.connection-info-body').addClass('shown')
-          # Set up correct tooltip hover
-          $('.node-info-body').hover (e) ->
-            nearestTitle = $(e.currentTarget.parentNode).siblings('.node-title').children()
-            nearestTitle.addClass "filled-white"
-          , (e) ->
-            nearestTitle = $(e.currentTarget.parentNode).siblings('.node-title').children()
-            nearestTitle.removeClass "filled-white"
 
       emptyTooltip: () ->
+        $('.node-title-body').removeClass('shown')
         $('.node-info-body').removeClass('shown')
         $('.connection-info-body').removeClass('shown')
 
