@@ -15,6 +15,7 @@ define ['jquery', 'underscore', 'backbone'],
 
         @graphView.on "node:dragend", (node, e) =>
           if @graphView.isContainedIn e.sourceEvent, $('#trash-bin')
+            @model.resetUndo()
             @model.deSelect node
             spokes = @model.connections.filter (c) ->
               (c.get('source') is node.get('_id')) or (c.get('target') is node.get('_id'))

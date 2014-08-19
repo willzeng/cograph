@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/UndoView', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, UndoView, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -86,6 +86,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
+
+        @undoView = new UndoView
+          model: @model
+
 
       loadForce: ->
         nodes = @model.nodes.models
