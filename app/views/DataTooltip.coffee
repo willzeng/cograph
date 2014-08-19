@@ -78,7 +78,8 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
               newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new @model.connections.model conn for conn in connections
 
-      toggleFix: (event) ->
+      toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
         unfixNode = @model.nodes.findWhere {_id:unfixId}
-        unfixNode.fixed = 0 # unpin the node
+        d3.select(event.currentTarget).classed('fixed', unfixNode.fixed = !unfixNode.fixed)
+        @graphView.updateDetails()
