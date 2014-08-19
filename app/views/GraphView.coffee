@@ -204,6 +204,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         # new elements
         nodeEnter = node.enter().append("g")
+        nodeRectangle = nodeEnter.append('rect')
+          .attr('x', '-80')
+          .attr('y', '-15')
+          .attr('width', '20')
+          .attr('height', '30')
+          .attr('fill', 'transparent')
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
           .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
@@ -227,7 +233,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .append('xhtml:body')
             .attr('class', 'node-info-body')
         
-
+        nodeRectangle
+          .on "click", (d) =>
+            @model.trigger "node:clicked", d
+        nodeConnector
+          .on "click", (d) =>
+            @model.trigger "node:clicked", d
         nodeInnerText 
           .on "click", (d) =>
             @model.trigger "node:clicked", d
@@ -243,7 +254,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             # perhaps setting the foreignobject height dynamically would be better.
-            if(typeof d3.event.toElement.className == 'object')
+            if(!$(d3.event.toElement).closest('.node').length)
               @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
