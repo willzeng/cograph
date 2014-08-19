@@ -47,6 +47,7 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
 
       showToolTip: (event) =>
         if !(@ignoreMouse)
+          @emptyTooltip()
           $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
           $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
           $(event.currentTarget).find('.connection-info-body').addClass('shown')
