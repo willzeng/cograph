@@ -50,13 +50,6 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
           $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
           $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
           $(event.currentTarget).find('.connection-info-body').addClass('shown')
-          # Set up correct tooltip hover
-          $('.node-info-body').hover (e) ->
-            nearestTitle = $(e.currentTarget.parentNode).siblings('.node-title').children()
-            nearestTitle.addClass "filled-white"
-          , (e) ->
-            nearestTitle = $(e.currentTarget.parentNode).siblings('.node-title').children()
-            nearestTitle.removeClass "filled-white"
 
       emptyTooltip: () ->
         $('.node-title-body').removeClass('shown')
