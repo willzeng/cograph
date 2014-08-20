@@ -13,7 +13,7 @@
 @bottom-margin:60px;
 
 .node {
-  transition: opacity .5s ease-in-out;
+  /*transition: opacity .5s ease-in-out;*/
 }
 
 .node.dim {
@@ -25,20 +25,23 @@
   stroke: orange;
 }
 
+.node.fixed .node-fix {
+  color: @fixed-color;
+}
+
 .node.selected .node-connector {
   stroke-width: 1px;
   stroke: @selected-color;
 }
 
 .node-title-body:hover {
-  background: white;
+  background: @white;
 }
 
 .node-title-body {
   // text-align: center;
   background: transparent;
   color: #222;
-  // background: rgba(256,256,256,0.4);
   -ms-word-break: break-all;
   word-break: break-all;
 
@@ -51,11 +54,14 @@
   height: auto;
 }
 
+.node, .connection {
+  cursor: pointer;
+}
+
 .node-info-body, .connection-info-body {
-  background: white;
+  background: @white;
   display: none;
   color: gray;
-  cursor: pointer;
   height: auto;
   font-size: 14px;
   line-height: normal;
@@ -63,6 +69,10 @@
 
 .pad {
   padding: 6px;
+}
+
+.node-title-body.shown {
+  background: @white;
 }
 
 .node-info-body.shown, .connection-info-body.shown {
@@ -82,11 +92,11 @@
 }
 
 .connection text {
-  font: 15px sans-serif;
+  font: 12px sans-serif;
   text-anchor: middle;
-  fill: #fff;
+  fill: @black;
   cursor: pointer;
-  text-shadow: 0 1px 0 #333, 1px 0 0 #333, 0 -1px 0 #333, -1px 0 0 #333;
+  text-shadow: 0 1px 0 #eee, 1px 0 0 #eee, 0 -1px 0 #eee, -1px 0 0 #eee;
 }
 
 .connection line {
@@ -118,7 +128,6 @@
 }
 
 .connection.selected text {
-  fill: @selected-color;
   /*text-shadow: 0 2px 0 white, 2px 0 0 white, 0 -2px 0 white, -2px 0 0 white;*/
 }
 
@@ -147,7 +156,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: #284552;
+  background: #efefef;
   height: 100%;
 }
 

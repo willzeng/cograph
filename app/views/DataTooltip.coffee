@@ -18,6 +18,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         @ignoreMouse = false
 
         @graphView.on 'node:mouseenter', (node) =>
+          @showToolTip(d3.event)
           if !(@ignoreMouse) then @highlight node
 
         @graphView.on 'connection:mouseout', (conn) =>
@@ -31,7 +32,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
           if !(@ignoreMouse)
-            window.clearTimeout(@highlightTimer)
             @model.dehighlight()
             @emptyTooltip()
 
@@ -43,16 +43,17 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           [@model.getSourceOf(c), @model.getTargetOf(c)]
         nodesToHL.push node
 
-        @highlightTimer = setTimeout () =>
-            @model.highlight(nodesToHL, connectionsToHL)
-          , 600
+        @model.highlight(nodesToHL, connectionsToHL)
 
       showToolTip: (event) =>
         if !(@ignoreMouse)
+          @emptyTooltip()
+          $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
           $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown').linkify()
           $(event.currentTarget).find('.connection-info-body').addClass('shown').linkify()
 
       emptyTooltip: () ->
+        $('.node-title-body').removeClass('shown')
         $('.node-info-body').removeClass('shown')
         $('.connection-info-body').removeClass('shown')
 
@@ -67,7 +68,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
       expandNode: (event) ->
         expandId = parseInt $(event.currentTarget).attr("data-id")
         expandedNode = @model.nodes.findWhere {_id:expandId}
-        window.nc = expandedNode
         expandedNode.getNeighbors (neighbors) =>
           for node in neighbors
             newNode = new expandedNode.constructor node
@@ -75,7 +75,8 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
               newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new @model.connections.model conn for conn in connections
 
-      toggleFix: (event) ->
+      toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
         unfixNode = @model.nodes.findWhere {_id:unfixId}
-        unfixNode.fixed = 0 # unpin the node
+        d3.select(event.currentTarget).classed('fixed', unfixNode.fixed = !unfixNode.fixed)
+        @graphView.updateForceGraph()

@@ -9,10 +9,10 @@ define ['jquery', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel']
       addNode: ->
         node_name = $('input', @el).val()
         docId = @model.nodes._docId
-        node = new NodeModel {name: node_name, _docId: docId}
+        node = new NodeModel {name: node_name, _docId: docId, selected:true}
         if node.isValid()
           node.save()
-          @model.select @model.putNode node
+          @model.putNode node
           $('input', @el).val('')
         else
           $('input', @el).attr('placeholder', 'Node must have name!')

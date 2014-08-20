@@ -6,16 +6,24 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       socket: io.connect("")
 
       initialize: ->
-        @socket.on @url()+":create", (objData) =>
-          @add new @model objData, {parse:true}
+        @initBroadcastCreate()
 
         @socket.on @url()+":update", (objData) =>
           objData._id = parseInt(objData._id)
           id = objData._id
-          @findWhere({_id:id}).set objData
+          existingObj = @findWhere {_id:id}
+          if existingObj? then existingObj.set objData
 
+        @initBroadcastDelete()
+
+      initBroadcastCreate: ->
+        @socket.on @url()+":create", (objData) =>
+          @add new @model objData, {parse:true}
+
+      initBroadcastDelete: ->
         @socket.on @url()+":delete", (objData) =>
-          @remove new @model objData
+          existingObj = @findWhere {_id:objData._id}
+          if existingObj? then @remove existingObj
 
       # Extend sync to pass through the current document on read
       sync: (method, model, options) ->
@@ -26,9 +34,18 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       model: ConnectionModel
       url: -> "connections"
 
+      initBroadcastCreate: ->
+        @socket.on @url()+":create", (objData) =>
+          @trigger "create:req", new @model objData, {parse:true}
+
     class NodeCollection extends ObjectCollection
       model: NodeModel
       url: -> "nodes"
+
+      initBroadcastDelete: ->
+        @socket.on @url()+":delete", (objData) =>
+          existingObj = @findWhere {_id:objData._id}
+          if existingObj? then @trigger "remove:req", existingObj
 
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
@@ -50,7 +67,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket = io.connect('')
 
         @nodes = new NodeCollection()
+        @nodes.on "remove:req", (reqDelete) =>
+          @removeNode reqDelete
+
         @connections = new ConnectionCollection()
+        @connections.on "create:req", (reqCreate) =>
+          @putConnection reqCreate
 
         @filterModel = new FilterModel()
         @nodes.on "change:tags", @updateFilter, this
@@ -89,8 +111,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         node = new NodeModel data
         @putNode node, options
 
+      # only put a connection when its source and target are on the wkspace
       putConnection: (connectionModel) ->
-        @connections.add connectionModel
+        sourceID = connectionModel.get 'source'
+        targetId = connectionModel.get 'target'
+        if @nodes.findWhere({_id:sourceID}) and @nodes.findWhere({_id:targetId})
+          @connections.add connectionModel
 
       newConnectionCreated: (conn) ->
         @trigger 'create:connection', conn

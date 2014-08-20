@@ -17,6 +17,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       initialize: ->
         that = this
+        @drawing = true
+        @model.on 'init', @backgroundRender, this
         @model.nodes.on 'add remove', @updateForceGraph, this
         @model.connections.on 'add remove', @updateForceGraph, this
         @model.nodes.on 'change', @updateDetails, this
@@ -55,6 +57,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @trigger "node:dragend", node, d3.event
           @zoom.translate @currentZoom
           @translateLock = false
+          @force.stop()
 
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
@@ -85,21 +88,43 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
 
-      updateForceGraph: ->
+      loadForce: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
         _.each connections, (c) =>
           c.source = @model.getSourceOf c
           c.target = @model.getTargetOf c
         @force.nodes(nodes).links(connections).start()
+
+      backgroundRender: ->
+        @loadForce()
+        n = @model.nodes.models.length*@model.nodes.models.length*@model.nodes.models.length+50
+
+        @drawing = false
+        for i in [0..n] by 1
+          @force.tick()
+        @force.stop()
+        @drawing = true
+
+        setTimeout () =>
+          @updateDetails()
+          @force.tick()
+        , 10
+
+      updateForceGraph: ->
+        @loadForce()
         @updateDetails()
+        setTimeout () =>
+          @force.stop()
+        , 1500
 
       updateDetails: (incoming) ->
         that = this
 
         if incoming?
-          # don't updateDetails if we have only dimmed the one node
-          if incoming.hasChanged('dim') and incoming.changedAttributes.length then return
+          ignoredList = ['dim','id','_id']
+          changedAttrs = (k for k,v of incoming.changed)
+          if (_.difference changedAttrs, ignoredList).length is 0 then return
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
@@ -117,7 +142,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
-            @trigger "connection:mouseout", conn
+            if(!$(d3.event.toElement).closest('.connection').length)
+              @trigger "connection:mouseout", conn
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
@@ -126,11 +152,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .style("stroke", (d) => @getColor d)
         text-group = connectionEnter.append("g")
           .attr('class', 'connection-text')
-          .on "mouseover", (conn)  =>
-            @trigger "connection:mouseover", conn
-          .on "mouseout", (conn) =>
-            if(typeof d3.event.toElement.className == 'object' && d3.event.toElement.localName != 'text')
-              @trigger "connection:mouseout", conn
         text-group.append("text")
           .attr("text-anchor", "middle")
         text-group.append("foreignObject")
@@ -180,6 +201,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         # new elements
         nodeEnter = node.enter().append("g")
+        nodeRectangle = nodeEnter.append('rect')
+          .attr('x', '-80')
+          .attr('y', '-15')
+          .attr('width', '20')
+          .attr('height', '30')
+          .attr('fill', 'transparent')
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
           .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
@@ -203,13 +230,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .append('xhtml:body')
             .attr('class', 'node-info-body')
         
-
+        nodeRectangle
+          .on "click", (d) =>
+            @model.trigger "node:clicked", d
+        nodeConnector
+          .on "click", (d) =>
+            @model.trigger "node:clicked", d
         nodeInnerText 
           .on "click", (d) =>
             @model.trigger "node:clicked", d
         node
           .on "dblclick", (d) ->
-            d3.select(this).classed("fixed", d.fixed = false)
             that.model.select d
             that.model.trigger "node:dblclicked", d
           .on "contextmenu", (node) ->
@@ -219,7 +250,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             # perhaps setting the foreignobject height dynamically would be better.
-            if(typeof d3.event.toElement.className == 'object')
+            if(!$(d3.event.toElement).closest('.node').length)
               @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
@@ -256,6 +287,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # delete unmatching elements
         node.exit().remove()
 
+        # set-up clickable tags
+        $('.tag-link').on "click", (e) =>
+          e.preventDefault()
+          tag = $(e.currentTarget).attr('data-tag')
+          @trigger 'tag:click', tag
+
         tick = =>
           connection.selectAll("line")
             .attr("x1", (d) => @model.getSourceOf(d).x-(@nodeBoxWidth/2+10))
@@ -265,8 +302,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           connection.select(".connection-text")
             .attr("transform", (d) => "translate(#{((@model.getSourceOf(d).x-@model.getTargetOf(d).x)/2+@model.getTargetOf(d).x)-(@nodeBoxWidth/2+10)},#{(@model.getSourceOf(d).y-@model.getTargetOf(d).y)/2+@model.getTargetOf(d).y})")
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
-          @connectionAdder.tick()
-        @force.on "tick", tick
+          @connectionAdder.tick
+
+        tick()
+        @force.on "tick", () =>
+          if @drawing then tick()
 
       rightClicked: (e) ->
         e.preventDefault()
