@@ -221,15 +221,40 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin: 10px 0 0 0;
 }
 
+#last-action {
+  position: absolute;
+  bottom: @bottom-margin;
+  z-index: @controls-z-index;
+  margin: 0 auto;
+  height: 35px;
+  width: 400px;
+  left: 50%;
+  margin-left: -200px;
+  text-align: center;
+  font-weight: 600;
+
+  #undo-last-action {
+    cursor: pointer;
+  }
+  #undo-last-action:before {
+    margin-right: 5px;
+    content: '\f0e2';
+    font-family: FontAwesome;
+  }
+  #undo-last-action:hover {
+    text-decoration: none;
+  }
+}
+
 #trash-bin {
   height: 81px;
   width: 200px;
   font-size: 26pt;
   color: lightgray;
   position: absolute;
-  bottom:@bottom-margin;
+  bottom: @bottom-margin;
   left: 70px;
-  padding-top:12px;
+  padding-top: 12px;
   text-align: center;
   border: 4px dashed lightgray;
   border-radius: 0px;

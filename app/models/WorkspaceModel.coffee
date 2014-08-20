@@ -79,6 +79,22 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
         @documentModel = new DocumentModel()
 
+        # Undo Last Action
+        @undoNodes = new NodeCollection()
+        @undoConnections = new ConnectionCollection()
+        @undoActionType = null
+
+      resetUndo: (NC) ->
+        @undoNodes.reset()
+        @undoConnections.reset()
+        @undoActionNC = null
+        @undoActionType = null
+
+      redo: () ->
+        @nodes.add(@undoNodes.models)
+        @connections.add(@undoConnections.models)
+        @resetUndo
+
       updateFilter: (node) ->
         @filterModel.set 'initial_tags', _.union(@filterModel.get('node_tags'), node.get('tags'))
         @filterModel.addNodeTags node.get('tags')
@@ -122,18 +138,26 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @trigger 'create:connection', conn
 
       removeNode: (node) ->
-        @connections.remove @connections.where {'source': node.get('_id')}
-        @connections.remove @connections.where {'target': node.get('_id')}
+        @undoActionType = "remove"
+        @undoNodes.add(node)
+        @removeConnection @connections.where {'source': node.get('_id')}
+        @removeConnection @connections.where {'target': node.get('_id')}
         @nodes.remove node
 
       removeConnection: (model) ->
+        @undoActionType = "remove"
+        @undoConnections.add(model)
         @connections.remove model
 
       deleteNode: (model) ->
+        @undoActionType = "delete"
+        @undoNodes.add(model.clone())
         @removeNode model
         model.destroy()
 
       deleteConnection: (model) ->
+        @undoActionType = "delete"
+        @undoConnections.add(model.clone())
         @removeConnection model
         model.destroy()
 

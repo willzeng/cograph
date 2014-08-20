@@ -84,6 +84,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         false
 
       archiveObj: ->
+        @model.resetUndo()
         if @currentNC.constructor.name is "NodeModel"
           @model.removeNode @currentNC
         else if @currentNC.constructor.name is "ConnectionModel"
@@ -91,6 +92,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @closeDetail()
 
       deleteObj: ->
+        @model.resetUndo()
         if @currentNC.constructor.name is "NodeModel"
           @model.deleteNode @currentNC
         else if @currentNC.constructor.name is "ConnectionModel"
