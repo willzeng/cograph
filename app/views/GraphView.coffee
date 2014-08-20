@@ -23,6 +23,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @model.nodes.on 'change', @updateDetails, this
         @model.connections.on 'change', @updateDetails, this
 
+        @model.on 'found:node', @centerOn, this
+
         @translateLock = false
 
         width = $(@el).width()
@@ -316,6 +318,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         node.x > element.offset().left &&
         node.y > element.offset().top &&
         node.y < element.offset().top + element.outerHeight()
+
+      centerOn: (node) =>
+        translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
+        #update translate values
+        @zoom.translate([translateParams[0], translateParams[1]])
+        #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
       getColor: (nc) ->
         @model.defaultColors[nc.get('color')]
