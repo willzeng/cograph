@@ -141,7 +141,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
-            @trigger "connection:mouseout", conn
+            if(!$(d3.event.toElement).closest('.connection').length)
+              @trigger "connection:mouseout", conn
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
@@ -150,11 +151,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .style("stroke", (d) => @getColor d)
         text-group = connectionEnter.append("g")
           .attr('class', 'connection-text')
-          .on "mouseover", (conn)  =>
-            @trigger "connection:mouseover", conn
-          .on "mouseout", (conn) =>
-            if(typeof d3.event.toElement.className == 'object' && d3.event.toElement.localName != 'text')
-              @trigger "connection:mouseout", conn
         text-group.append("text")
           .attr("text-anchor", "middle")
         text-group.append("foreignObject")
