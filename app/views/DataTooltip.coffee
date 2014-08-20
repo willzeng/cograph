@@ -79,4 +79,4 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
         unfixId = parseInt $(event.currentTarget).attr("data-id")
         unfixNode = @model.nodes.findWhere {_id:unfixId}
         d3.select(event.currentTarget).classed('fixed', unfixNode.fixed = !unfixNode.fixed)
-        @graphView.updateDetails()
+        @graphView.updateForceGraph()
