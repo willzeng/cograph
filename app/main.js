@@ -40,10 +40,10 @@ requirejs.config({
       deps: ['underscore', 'jquery', 'backbone']
     },
     'b-iosync': {
-      deps: ['underscore','backbone']
+      deps: ['underscore','backbone', 'socket-io']
     },
     'b-iobind': {
-      deps: ['underscore','backbone']
+      deps: ['underscore','backbone', 'socket-io']
     },
     'caret': {
       deps: ['jquery']

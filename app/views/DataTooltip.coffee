@@ -31,7 +31,6 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
           if !(@ignoreMouse)
-            window.clearTimeout(@highlightTimer)
             @model.dehighlight()
             @emptyTooltip()
 
@@ -43,14 +42,19 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
           [@model.getSourceOf(c), @model.getTargetOf(c)]
         nodesToHL.push node
 
-        @highlightTimer = setTimeout () =>
-            @model.highlight(nodesToHL, connectionsToHL)
-          , 600
+        @model.highlight(nodesToHL, connectionsToHL)
 
       showToolTip: (event) =>
         if !(@ignoreMouse)
           $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown')
           $(event.currentTarget).find('.connection-info-body').addClass('shown')
+          # Set up correct tooltip hover
+          $('.node-info-body').hover (e) ->
+            nearestTitle = $(e.currentTarget.parentNode).siblings('.node-title').children()
+            nearestTitle.addClass "filled-white"
+          , (e) ->
+            nearestTitle = $(e.currentTarget.parentNode).siblings('.node-title').children()
+            nearestTitle.removeClass "filled-white"
 
       emptyTooltip: () ->
         $('.node-info-body').removeClass('shown')
@@ -67,7 +71,6 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
       expandNode: (event) ->
         expandId = parseInt $(event.currentTarget).attr("data-id")
         expandedNode = @model.nodes.findWhere {_id:expandId}
-        window.nc = expandedNode
         expandedNode.getNeighbors (neighbors) =>
           for node in neighbors
             newNode = new expandedNode.constructor node
@@ -75,7 +78,8 @@ define ['jquery', 'd3',  'underscore', 'backbone'],
               newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new @model.connections.model conn for conn in connections
 
-      toggleFix: (event) ->
+      toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
         unfixNode = @model.nodes.findWhere {_id:unfixId}
-        unfixNode.fixed = 0 # unpin the node
+        d3.select(event.currentTarget).classed('fixed', unfixNode.fixed = !unfixNode.fixed)
+        @graphView.updateDetails()
