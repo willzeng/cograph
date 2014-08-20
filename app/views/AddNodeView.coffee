@@ -11,9 +11,16 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         'focusout .node-input': 'lessInformation'
 
       initialize: ->
-        $('.node-description > textarea').on 'keydown', (e) =>
+        @descriptionArea = $('.node-description > textarea')
+        @descriptionArea.on 'shown.atwho', (e) =>
+          @showingAtWho = true
+        @descriptionArea.on 'hidden.atwho', (e) =>
+          @showingAtWho = false
+
+        @descriptionArea.on 'keydown', (e) =>
           keyCode = e.keyCode || e.which
-          if keyCode == 13 # code for ENTER
+          # code for ENTER
+          if keyCode == 13 and !@showingAtWho
             @addNode()
 
       moreInformation: ->
@@ -29,11 +36,11 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           if keyCode == 9 # code for TAB
             e.preventDefault()
             @descriptionFocus = true
-            $('.node-description > textarea').focus()
+            @descriptionArea.focus()
             @descriptionFocus = false
 
         # Add atwho dropdowns to the description box
-        $('.node-description > textarea').atwho
+        @descriptionArea.atwho
           at: "@"
           data: @model.nodes.pluck('name')
           target: "#add-node-form"
@@ -46,19 +53,38 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         # Don't hide info if focusing on it
         if !@descriptionFocus
           @$el.find('.node-description').addClass 'hide'
+          @descriptionArea.atwho 'destroy'
 
       addNode: (e) ->
         if e? then e.preventDefault()
 
-        attributes = {_dodId: @model.nodes._docId}
+        attributes = {_docId: @model.nodes._docId}
         _.each $('#add-node-form').serializeArray(), (obj) ->
           attributes[obj.name] = obj.value
 
+        attributes.selected = true
+
         node = new NodeModel attributes
         if node.isValid()
-          node.save()
-          @model.select @model.putNode node
+          @model.putNode node
+          node.set "tags", twttr.txt.extractHashtags attributes.description
+
+          $.when(node.save()).then =>
+            # Create connections to mentioned nodes
+            names = twttr.txt.extractMentions attributes.description
+
+            for name in _.uniq names
+              targetNode = @model.nodes.findWhere {name:name}
+              if targetNode?
+                connection = new @model.connections.model
+                    source: node.get('_id')
+                    target: targetNode.get('_id')
+                    _docId: @model.documentModel.get('_id')
+                    description: node.get('description')
+                connection.save()
+                @model.putConnection connection
+
           @$el[0].reset() # blanks out the form fields
-          @lessInformation()
+          @descriptionFocus = false
         else
           $('input', @el).attr('placeholder', node.validate())
