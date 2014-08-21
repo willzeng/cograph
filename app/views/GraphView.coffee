@@ -7,6 +7,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       events:
         "contextmenu": "rightClicked"
+        "click #grid-view-button": "gridView"
+        "click #graph-view-button": "resetPositions"
 
       # Parameters for display
       maxConnTextLength: 20
@@ -317,7 +319,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @force.on "tick", () =>
           if @drawing then tick()
 
-      gridView: =>
+      gridView: ->
         @gridViewOn = true
         @force.stop()
         @model.dehighlight()
@@ -336,7 +338,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             "translate(#{(i%columnNum)*spacing[0]+350-@zoom.translate()[0]},#{Math.floor(i/columnNum)*spacing[1]+100-@zoom.translate()[1]})"
         @updateDetails()
 
-      resetPositions: =>
+      resetPositions: ->
         @gridViewOn = false
         theNodes = d3.select(".node-container")
           .selectAll(".node")
@@ -345,6 +347,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         theNodes.transition()
           .duration(resetDuration)
           .attr "transform", (d) -> "translate(#{d.x},#{d.y})"
+        @dataTooltip.emptyTooltip()
         setTimeout =>
           @updateDetails()
         , resetDuration
