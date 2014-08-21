@@ -18,9 +18,12 @@ block content
       .navbar-right.navbar-form
         form#add-node-form
           .form-group
-            input.form-control(type="text", name='node-name', placeholder="Add something")
+            input.node-input.form-control(type="text", name='name', placeholder="Add something")
           button.btn.btn-primary(type="submit")
             i.fa.fa-plus
+          .form-group.node-description.hide
+            textarea.form-control(name='description', placeholder="Enter a description")
+
     .toolbar.bottom.right.controls
       button#save-workspace-button.btn.btn-primary
         div Save Workspace
