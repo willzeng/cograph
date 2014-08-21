@@ -16,6 +16,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       infoBoxWidth: 120
 
       initialize: ->
+        @gridViewOn = false
+
         that = this
         @drawing = true
         @model.on 'init', @backgroundRender, this
@@ -130,6 +132,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
+        if @gridViewOn then connections = []
         # old elements
         connection = d3.select(".connection-container")
           .selectAll(".connection")
@@ -306,9 +309,24 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
 
-        tick()
+        if @gridViewOn
+          # Place nodes in a grid
+          spacing = [175,125] # Horizontal and Vertical node spacing
+          padding = [350,150] # Left and top padding respectively
+          columnNum = 1+Math.floor ($(window).width()-padding[0])/spacing[0]
+          sortedCIds = (n.cid for n in @model.nodes.models).sort()
+          node.attr "transform", (d) ->
+            i = sortedCIds.indexOf d.cid
+            "translate(#{(i%columnNum)*spacing[0]+350},#{Math.floor(i/columnNum)*spacing[1]+100})"
+        else
+          tick()
         @force.on "tick", () =>
           if @drawing then tick()
+
+      gridView: =>
+        @gridViewOn = !@gridViewOn
+        @force.stop()
+        @updateDetails()
 
       rightClicked: (e) ->
         e.preventDefault()
