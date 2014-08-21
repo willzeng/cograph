@@ -65,20 +65,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 .call(@zoom)
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
-        (new svgDefs).addDefs def
-        for color,hex of @model.defaultColors
-          def
-            .append('svg:marker')
-              .attr('id', 'arrowhead-'+color)
-              .attr('viewBox', '0 -5 10 10')
-              .attr('refX', '8')
-              .attr('refY', '0')
-              .attr('markerWidth', '5')
-              .attr('markerHeight', '5')
-              .attr('orient', 'auto')
-              .attr('fill', hex)
-              .append('svg:path')
-                .attr('d',"M0,-3L8,0L0,3")
+        (new svgDefs).addDefs def, @model.defaultColors
 
         @workspace = @svg.append("svg:g")
 
