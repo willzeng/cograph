@@ -331,9 +331,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .data(@model.nodes.models, (node) -> node.cid)
         theNodes.transition()
           .duration(1200)
-          .attr "transform", (d) ->
+          .attr "transform", (d) =>
             i = sortedCIds.indexOf d.cid
-            "translate(#{(i%columnNum)*spacing[0]+350},#{Math.floor(i/columnNum)*spacing[1]+100})"
+            "translate(#{(i%columnNum)*spacing[0]+350-@zoom.translate()[0]},#{Math.floor(i/columnNum)*spacing[1]+100-@zoom.translate()[1]})"
         @updateDetails()
 
       resetPositions: =>
