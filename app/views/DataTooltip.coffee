@@ -19,7 +19,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
         @graphView.on 'node:mouseenter', (node) =>
           @showToolTip(d3.event)
-          if !(@ignoreMouse) then @highlight node
+          if !(@ignoreMouse) and (!@graphView.gridViewOn) then @highlight node
 
         @graphView.on 'connection:mouseout', (conn) =>
           if !(@ignoreMouse) then @emptyTooltip()
@@ -31,7 +31,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           @ignoreMouse = false
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
-          if !(@ignoreMouse)
+          if !(@ignoreMouse) and (!@graphView.gridViewOn)
             @model.dehighlight()
             @emptyTooltip()
 
@@ -46,7 +46,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         @model.highlight(nodesToHL, connectionsToHL)
 
       showToolTip: (event) =>
-        if !(@ignoreMouse)
+        if !(@ignoreMouse) and (!@graphView.gridViewOn)
           @emptyTooltip()
           $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
           $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown').linkify()

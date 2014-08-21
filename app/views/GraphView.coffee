@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 
-  'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  'text!templates/data_tooltip.html', 'text!templates/node-title.html', 'linkify'],
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle, linkify) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -310,23 +310,44 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @connectionAdder.tick
 
         if @gridViewOn
-          # Place nodes in a grid
-          spacing = [175,125] # Horizontal and Vertical node spacing
-          padding = [350,150] # Left and top padding respectively
-          columnNum = 1+Math.floor ($(window).width()-padding[0])/spacing[0]
-          sortedCIds = (n.cid for n in @model.nodes.models).sort()
-          node.attr "transform", (d) ->
-            i = sortedCIds.indexOf d.cid
-            "translate(#{(i%columnNum)*spacing[0]+350},#{Math.floor(i/columnNum)*spacing[1]+100})"
+          $('.node-title-body').addClass('shown')
+          $('.node-info-body').addClass('shown').linkify()
         else
           tick()
         @force.on "tick", () =>
           if @drawing then tick()
 
       gridView: =>
-        @gridViewOn = !@gridViewOn
+        @gridViewOn = true
         @force.stop()
+        @model.dehighlight()
+        # Place nodes in a grid
+        spacing = [175,125] # Horizontal and Vertical node spacing
+        padding = [350,150] # Left and top padding respectively
+        columnNum = 1+Math.floor ($(window).width()-padding[0])/spacing[0]
+        sortedCIds = (n.cid for n in @model.nodes.models).sort()
+        theNodes = d3.select(".node-container")
+          .selectAll(".node")
+          .data(@model.nodes.models, (node) -> node.cid)
+        theNodes.transition()
+          .duration(1200)
+          .attr "transform", (d) ->
+            i = sortedCIds.indexOf d.cid
+            "translate(#{(i%columnNum)*spacing[0]+350},#{Math.floor(i/columnNum)*spacing[1]+100})"
         @updateDetails()
+
+      resetPositions: =>
+        @gridViewOn = false
+        theNodes = d3.select(".node-container")
+          .selectAll(".node")
+          .data(@model.nodes.models, (node) -> node.cid)
+        resetDuration = 1200
+        theNodes.transition()
+          .duration(resetDuration)
+          .attr "transform", (d) -> "translate(#{d.x},#{d.y})"
+        setTimeout =>
+          @updateDetails()
+        , resetDuration
 
       rightClicked: (e) ->
         e.preventDefault()
