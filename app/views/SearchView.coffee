@@ -44,8 +44,13 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           node = @findLocalNode sugg.value
           if node
             @model.select node
+            @model.trigger "found:node", node
           else
-            @getNodeByName sugg.value
+            @getNodeByName sugg.value, (node) =>
+              # Give the graph some time to settle before centering
+              setTimeout () =>
+                @model.trigger "found:node", @model.nodes.findWhere {_id:node._id}
+              , 1500
         else if sugg.type == 'tag'
           @model.getNodesByTag sugg.value, (nodes) =>
             for node in nodes
@@ -65,9 +70,10 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         matchedNames = @findMatchingNames(name, @model.nodes.pluck('name'))
         @model.nodes.findWhere name: matchedNames[0]
 
-      getNodeByName: (name) ->
+      getNodeByName: (name, cb) ->
         @model.getNodeByName name, (node) =>
           @addNode node
+          cb node
 
       findMatchingNames: (query, allNames) ->
         regex = new RegExp(query,'i')
