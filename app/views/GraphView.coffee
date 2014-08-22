@@ -406,9 +406,5 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
-      parseTransform: (str) ->
-        split = str.split(",")
-        [parseInt split[0].slice(10), parseInt split[1].slice(1,-1)]
-
       getColor: (nc) ->
         @model.defaultColors[nc.get('color')]
