@@ -80,7 +80,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @grid.spacing = [175,125] # Horizontal and Vertical node spacing
         @grid.padding = [350,150] # Left and top padding respectively
 
-
         @workspace = @svg.append("svg:g")
 
         @workspace.append("svg:g").classed("connection-container", true)
@@ -146,6 +145,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         nodes = @model.nodes.models
         connections = @model.connections.models
         if @gridViewOn then connections = []
+
         # old elements
         connection = d3.select(".connection-container")
           .selectAll(".connection")
@@ -346,13 +346,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         theNodes.transition()
           .duration(transitionDuration)
           .attr "transform", (d, i) =>
-            # if nodes are added in gridView mode then start them at those positions
-            # in the force graph
-            gridX = (i%columnNum)*@grid.spacing[0]+@grid.padding[0]-@zoom.translate()[0]
-            gridY = Math.floor(i/columnNum)*@grid.spacing[1]+100-@zoom.translate()[1]
-            if !(d.x) then d.x = gridX
-            if !(d.y) then d.y = gridY
-            "translate(#{gridX},#{gridY})"
+            pos = @placeInGrid d, i
+            "translate(#{pos.x},#{pos.y})"
         @updateDetails()
 
       resetPositions: ->
@@ -362,16 +357,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @model.connections.on 'add remove', @updateForceGraph, this
         @model.connections.on 'change', @updateDetails, this
 
-        columnNum = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
         theNodes = d3.select(".node-container").selectAll(".node")
         resetDuration = 1200
         theNodes.transition()
           .duration(resetDuration)
           .attr "transform", (d, i) =>
-            gridX = (i%columnNum)*@grid.spacing[0]+@grid.padding[0]-@zoom.translate()[0]
-            gridY = Math.floor(i/columnNum)*@grid.spacing[1]+100-@zoom.translate()[1]
-            if !(d.x) then d.x = gridX
-            if !(d.y) then d.y = gridY
+            @placeInGrid d, i
             "translate(#{d.x},#{d.y})"
         @dataTooltip.emptyTooltip()
 
@@ -382,6 +373,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         setTimeout =>
           @updateDetails()
         , resetDuration
+
+      placeInGrid: (d, i) ->
+        columnNum = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
+        gridX = (i%columnNum)*@grid.spacing[0]+@grid.padding[0]-@zoom.translate()[0]
+        gridY = Math.floor(i/columnNum)*@grid.spacing[1]+100-@zoom.translate()[1]
+        # if the node has no force graph pos then give it a grid pos
+        if !(d.x) then d.x = gridX
+        if !(d.y) then d.y = gridY
+        {x:gridX, y:gridY}
 
       rightClicked: (e) ->
         e.preventDefault()
@@ -395,12 +395,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       centerOn: (node) =>
         if @gridViewOn
-          columnNum = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
           sortedCIds = (n.cid for n in @model.nodes.models).sort()
           i = sortedCIds.indexOf node.cid
-          gridX = (i%columnNum)*@grid.spacing[0]+@grid.padding[0]
-          gridY = Math.floor(i/columnNum)*@grid.spacing[1]+100
-          translateParams = [$(window).width()/2-gridX*@zoom.scale(),$(window).height()/2-gridY*@zoom.scale()]
+          pos = @placeInGrid node, i
+          translateParams = [$(window).width()/2-pos.x*@zoom.scale(),$(window).height()/2-pos.y*@zoom.scale()]
         else
           translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
         #update translate values
