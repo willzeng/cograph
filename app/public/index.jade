@@ -12,15 +12,18 @@ block content
             input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
           button.btn.btn-primary(type="button")
             i.fa.fa-search
-        button#sidebar-toggle.btn.btn-default
+        button#sidebar-toggle.btn.btn-default(title="toggle sidebar")
             i.fa.fa-arrows-h
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form
           .form-group
-            input.form-control(type="text", name='node-name', placeholder="Add something")
+            input.node-input.form-control(type="text", name='name', placeholder="Add something")
           button.btn.btn-primary(type="submit")
             i.fa.fa-plus
+          .form-group.node-description.hide
+            textarea.form-control(name='description', placeholder="Enter a description")
+
     .toolbar.bottom.right.controls
       button#grid-view-button.btn.btn-primary
         div Grid
@@ -31,10 +34,10 @@ block content
       button#sharing-button.btn.btn-primary
         div Share GraphDoc
     #zoom-controls.btn-group-vertical.controls
-      button#zoom-in-button.btn.btn-primary
+      button#zoom-in-button.btn.btn-primary(title="Zoom In")
         i.glyphicon.glyphicon-plus
-      button#zoom-out-button.btn.btn-primary
+      button#zoom-out-button.btn.btn-primary(title="Zoom Out")
         i.glyphicon.glyphicon-minus
-    #trash-bin.controls
+    #trash-bin.controls(title="Drag a node here to Archive it")
       i.fa.fa-archive
   .data-tooltip-container

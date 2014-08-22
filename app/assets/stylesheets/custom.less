@@ -30,7 +30,7 @@
 }
 
 .node.selected .node-connector {
-  stroke-width: 1px;
+  stroke-width: 2px;
   stroke: @selected-color;
 }
 
@@ -303,7 +303,11 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #add-node-form {
-  display: inline;
+  width: 255px;
+  textarea {
+    width: 230px;
+    margin-top: 8px;
+  }
 }
 
 #filter-panel {

@@ -71,7 +71,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 .call(@zoom)
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
-        (new svgDefs).addDefs def
+        (new svgDefs).addDefs def, @model.defaultColors
 
         # GridView parameters
         @gridViewOn = false
@@ -184,14 +184,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
-          .classed('selected', (d) -> d.get('selected'))
           .each (d,i) ->
             line = d3.select(this).select("line.visible-line")
-            line.style("stroke", (d) -> that.getColor d)
+            if !d.get('selected')
+              line.style("stroke", (d) -> that.getColor d)
+            else 
+              line.style("stroke", that.model.selectedColor)
+            
+            if d.get('color')
+              line.attr("marker-end", "url(#arrowhead-"+d.get('color')+")")
+            else 
+              line.attr("marker-end", "url(#arrowhead)")
             if d.get('selected')
               line.attr("marker-end", "url(#arrowhead-selected)")
-            else
-              line.attr("marker-end", "url(#arrowhead)")
+          .classed('selected', (d) -> d.get('selected'))
+          
+            
         connection.select("text")
           .text((d) =>
             if(d.get("name").length < @maxConnTextLength)
