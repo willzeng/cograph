@@ -41,13 +41,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             @model.newConnectionCreated newConn
 
       createDragLine: (e) ->
-        connectId = parseInt $(e.currentTarget).attr("data-id")
-        node = @model.nodes.findWhere {_id:connectId}
-        @drag_line.classed('hidden', false)
-          .datum(node)
-          .attr("x1", (d) => node.x-@nodeBoxOffset)
-          .attr("y1", (d) => node.y)
-        @creatingConnection = !@creatingConnection
+        if !(@graphView.gridViewOn)
+          connectId = parseInt $(e.currentTarget).attr("data-id")
+          node = @model.nodes.findWhere {_id:connectId}
+          @drag_line.classed('hidden', false)
+            .datum(node)
+            .attr("x1", (d) => node.x-@nodeBoxOffset)
+            .attr("y1", (d) => node.y)
+          @creatingConnection = !@creatingConnection
 
       clearDragLine: ->
         @drag_line.classed('hidden', true)

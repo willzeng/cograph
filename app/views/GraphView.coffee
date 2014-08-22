@@ -18,8 +18,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       infoBoxWidth: 120
 
       initialize: ->
-        @gridViewOn = false
-
         that = this
         @drawing = true
         @model.on 'init', @backgroundRender, this
@@ -57,8 +55,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           that.translateLock = true
           that.currentZoom = that.zoom.translate()
         .on "drag", (d) ->
-          d3.select(this).classed("fixed", d.fixed = true)
-          that.trigger "node:drag", d, d3.event
+          if !(@gridViewOn)
+            d3.select(this).classed("fixed", d.fixed = true)
+            that.trigger "node:drag", d, d3.event
         .on "dragend", (node) =>
           @trigger "node:dragend", node, d3.event
           @zoom.translate @currentZoom
@@ -73,6 +72,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
         (new svgDefs).addDefs def
+
+        # GridView parameters
+        @gridViewOn = false
+        @updateForceFlag = false
+        @grid = {}
+        @grid.spacing = [175,125] # Horizontal and Vertical node spacing
+        @grid.padding = [350,150] # Left and top padding respectively
+
 
         @workspace = @svg.append("svg:g")
 
@@ -118,11 +125,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         , 10
 
       updateForceGraph: ->
-        @loadForce()
-        @updateDetails()
-        setTimeout () =>
-          @force.stop()
-        , 1500
+        if @gridViewOn
+          @updateForceFlag = true # this flag stores if we will later need to reupdate the force graph
+          @gridView {duration:0}
+        else
+          @loadForce()
+          @updateDetails()
+          setTimeout () =>
+            @force.stop()
+          , 1500
 
       updateDetails: (incoming) ->
         that = this
@@ -317,37 +328,57 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         else
           tick()
         @force.on "tick", () =>
-          if @drawing then tick()
+          if @drawing and !(@gridViewOn) then tick()
 
-      gridView: ->
+      gridView: (options) ->
         @gridViewOn = true
         @force.stop()
         @model.dehighlight()
+
+        # ignore connection events
+        @model.connections.off 'add remove', @updateForceGraph
+        @model.connections.off 'change', @updateDetails
+
         # Place nodes in a grid
-        spacing = [175,125] # Horizontal and Vertical node spacing
-        padding = [350,150] # Left and top padding respectively
-        columnNum = 1+Math.floor ($(window).width()-padding[0])/spacing[0]
-        sortedCIds = (n.cid for n in @model.nodes.models).sort()
-        theNodes = d3.select(".node-container")
-          .selectAll(".node")
-          .data(@model.nodes.models, (node) -> node.cid)
+        transitionDuration = if options.duration? then options.duration else 1200
+        columnNum = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
+        theNodes = d3.select(".node-container").selectAll(".node")
         theNodes.transition()
-          .duration(1200)
-          .attr "transform", (d) =>
-            i = sortedCIds.indexOf d.cid
-            "translate(#{(i%columnNum)*spacing[0]+350-@zoom.translate()[0]},#{Math.floor(i/columnNum)*spacing[1]+100-@zoom.translate()[1]})"
+          .duration(transitionDuration)
+          .attr "transform", (d, i) =>
+            # if nodes are added in gridView mode then start them at those positions
+            # in the force graph
+            gridX = (i%columnNum)*@grid.spacing[0]+@grid.padding[0]-@zoom.translate()[0]
+            gridY = Math.floor(i/columnNum)*@grid.spacing[1]+100-@zoom.translate()[1]
+            if !(d.x) then d.x = gridX
+            if !(d.y) then d.y = gridY
+            "translate(#{gridX},#{gridY})"
         @updateDetails()
 
       resetPositions: ->
         @gridViewOn = false
-        theNodes = d3.select(".node-container")
-          .selectAll(".node")
-          .data(@model.nodes.models, (node) -> node.cid)
+
+        # reinitialize listening to connections
+        @model.connections.on 'add remove', @updateForceGraph, this
+        @model.connections.on 'change', @updateDetails, this
+
+        columnNum = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
+        theNodes = d3.select(".node-container").selectAll(".node")
         resetDuration = 1200
         theNodes.transition()
           .duration(resetDuration)
-          .attr "transform", (d) -> "translate(#{d.x},#{d.y})"
+          .attr "transform", (d, i) =>
+            gridX = (i%columnNum)*@grid.spacing[0]+@grid.padding[0]-@zoom.translate()[0]
+            gridY = Math.floor(i/columnNum)*@grid.spacing[1]+100-@zoom.translate()[1]
+            if !(d.x) then d.x = gridX
+            if !(d.y) then d.y = gridY
+            "translate(#{d.x},#{d.y})"
         @dataTooltip.emptyTooltip()
+
+        # if we need to update the force graph then start the force
+        if @updateForceFlag then @force.start()
+        @updateForceFlag = false
+
         setTimeout =>
           @updateDetails()
         , resetDuration
@@ -363,11 +394,23 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         node.y < element.offset().top + element.outerHeight()
 
       centerOn: (node) =>
-        translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
+        if @gridViewOn
+          columnNum = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
+          sortedCIds = (n.cid for n in @model.nodes.models).sort()
+          i = sortedCIds.indexOf node.cid
+          gridX = (i%columnNum)*@grid.spacing[0]+@grid.padding[0]
+          gridY = Math.floor(i/columnNum)*@grid.spacing[1]+100
+          translateParams = [$(window).width()/2-gridX*@zoom.scale(),$(window).height()/2-gridY*@zoom.scale()]
+        else
+          translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
         #update translate values
         @zoom.translate([translateParams[0], translateParams[1]])
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
+
+      parseTransform: (str) ->
+        split = str.split(",")
+        [parseInt split[0].slice(10), parseInt split[1].slice(1,-1)]
 
       getColor: (nc) ->
         @model.defaultColors[nc.get('color')]

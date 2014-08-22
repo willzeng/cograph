@@ -53,9 +53,10 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           $(event.currentTarget).find('.connection-info-body').addClass('shown').linkify()
 
       emptyTooltip: () ->
-        $('.node-title-body').removeClass('shown')
-        $('.node-info-body').removeClass('shown')
-        $('.connection-info-body').removeClass('shown')
+        if (!@graphView.gridViewOn)
+          $('.node-title-body').removeClass('shown')
+          $('.node-info-body').removeClass('shown')
+          $('.connection-info-body').removeClass('shown')
 
       archiveObj: (event) ->
         removeId = parseInt $(event.currentTarget).attr("data-id")
@@ -72,8 +73,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           for node in neighbors
             newNode = new expandedNode.constructor node
             if @model.putNode newNode #this checks to see if the node has passed the filter
-              newNode.getConnections @model.nodes, (connections) =>
-                @model.putConnection new @model.connections.model conn for conn in connections
+              if (!@graphView.gridViewOn)
+                newNode.getConnections @model.nodes, (connections) =>
+                  @model.putConnection new @model.connections.model conn for conn in connections
 
       toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
