@@ -279,15 +279,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         node.select('.node-expand-count')
           .each (d) ->
-            $(this).text('_')
-            d.fetch
-              success: =>
-                total = d.get 'neighborCount'
-                view = that.model.connections.filter( (conn) =>
-                  return (conn.source.id == d.id || conn.target.id == d.id)
-                ).length
-                $(this).text(total-view)
-              
+            total = d.get 'neighborCount'
+            view = that.model.connections.filter( (conn) =>
+              return (conn.source.id == d.id || conn.target.id == d.id)
+            ).length
+            $(this).text(total-view)
 
         # move the popover info to align with the left of the text
         # construct the node boxes
