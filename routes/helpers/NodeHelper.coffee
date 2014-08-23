@@ -51,4 +51,15 @@ class NodeHelper
       setNode = utils.parseCypherResult(results[0], 'n')
       callback setNode
 
+  getNeighbors: (id, callback) ->
+    params = {id: id}
+    cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
+    @graphDb.query cypherQuery, params, (err, results) ->
+      parsedNodes = []
+      for node in results
+        nodeData = node.m._data.data
+        nodeData.tags = node['labels(m)']
+        parsedNodes.push utils.parseNodeToClient nodeData
+      callback parsedNodes
+
 module.exports = NodeHelper

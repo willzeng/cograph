@@ -6,6 +6,16 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
     noIoBind: false
     socket: io.connect('')
 
+    defaults:
+      name: ''
+      description: ''
+      url: ''
+      color: 'black'
+      tags: []
+      _id: -1
+      _docId: 0
+      neighborCount: 0
+
     schema:
       name:
         type: 'Text'
