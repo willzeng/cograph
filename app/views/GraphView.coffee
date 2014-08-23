@@ -1,5 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 
+  'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
   ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
@@ -22,6 +23,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @model.connections.on 'add remove', @updateForceGraph, this
         @model.nodes.on 'change', @updateDetails, this
         @model.connections.on 'change', @updateDetails, this
+
+        @model.on 'found:node', @centerOn, this
 
         @translateLock = false
 
@@ -65,7 +68,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 .call(@zoom)
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
-        (new svgDefs).addDefs def
+        (new svgDefs).addDefs def, @model.defaultColors
 
         @workspace = @svg.append("svg:g")
 
@@ -141,7 +144,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
-            @trigger "connection:mouseout", conn
+            if(!$(d3.event.toElement).closest('.connection').length)
+              @trigger "connection:mouseout", conn
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
@@ -150,11 +154,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .style("stroke", (d) => @getColor d)
         text-group = connectionEnter.append("g")
           .attr('class', 'connection-text')
-          .on "mouseover", (conn)  =>
-            @trigger "connection:mouseover", conn
-          .on "mouseout", (conn) =>
-            if(typeof d3.event.toElement.className == 'object' && d3.event.toElement.localName != 'text')
-              @trigger "connection:mouseout", conn
         text-group.append("text")
           .attr("text-anchor", "middle")
         text-group.append("foreignObject")
@@ -169,14 +168,22 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
-          .classed('selected', (d) -> d.get('selected'))
           .each (d,i) ->
             line = d3.select(this).select("line.visible-line")
-            line.style("stroke", (d) -> that.getColor d)
+            if !d.get('selected')
+              line.style("stroke", (d) -> that.getColor d)
+            else 
+              line.style("stroke", that.model.selectedColor)
+            
+            if d.get('color')
+              line.attr("marker-end", "url(#arrowhead-"+d.get('color')+")")
+            else 
+              line.attr("marker-end", "url(#arrowhead)")
             if d.get('selected')
               line.attr("marker-end", "url(#arrowhead-selected)")
-            else
-              line.attr("marker-end", "url(#arrowhead)")
+          .classed('selected', (d) -> d.get('selected'))
+          
+            
         connection.select("text")
           .text((d) =>
             if(d.get("name").length < @maxConnTextLength)
@@ -330,6 +337,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         node.x > element.offset().left &&
         node.y > element.offset().top &&
         node.y < element.offset().top + element.outerHeight()
+
+      centerOn: (node) =>
+        translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
+        #update translate values
+        @zoom.translate([translateParams[0], translateParams[1]])
+        #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
       getColor: (nc) ->
         @model.defaultColors[nc.get('color')]
