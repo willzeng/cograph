@@ -1,7 +1,11 @@
 <ul class="workspaces-list list-group">
   <% _.each(workspaces, function(id){ %>
     <a href=<%= docId %>#<%= id %> target="_blank" class="list-group-item">
-      <%= id %>
+      <%if(name.length>0){%>
+        <%= name %>
+      <% }else{ %>
+        <%= id %>
+      <% } %>
       <button type="button" class="btn btn-danger btn-sm pull-right center-block delete-workspace", data-id=<%= id %>>
         <i class="fa fa-trash-o"></i>
       </button>
