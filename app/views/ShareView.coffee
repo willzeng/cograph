@@ -5,6 +5,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
       events:
         'click #share-button': 'saveWorkspace'
+        'focusout #workspace-name': 'nameWorkspace'
 
       initialize: ->
         @toggleShown = false
@@ -19,13 +20,17 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
             <h3 class="popover-title"></h3>
             <form role="form">
               <div class="form-group">
-                <input type="text" placeholder="Untitled Doc"></input>
+                <input id="workspace-name" type="text" placeholder="Untitled Doc"></input>
               </div>
             </form>
           </div>'
         '''
         $('#share-button').popover
           template: popoverTemplate
+
+      nameWorkspace: ->
+        @model.set 'name', $('#workspace-name').val()
+        @model.sync "update", @model
 
       saveWorkspace: ->
         if !(@toggleShown)
