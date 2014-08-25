@@ -25,10 +25,8 @@ block content
             textarea.form-control(name='description', placeholder="Enter a description")
 
     .toolbar.bottom.right.controls
-      button#save-workspace-button.btn.btn-primary
-        div Save Workspace
-      button#sharing-button.btn.btn-primary
-        div Share GraphDoc
+      .share-holder
+        #share-button(data-toggle="popover" title="Name this snapshot to save it." data-placement="top")
     #zoom-controls.btn-group-vertical.controls
       button#zoom-in-button.btn.btn-primary(title="Zoom In")
         i.glyphicon.glyphicon-plus
