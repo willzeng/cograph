@@ -13,9 +13,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       # Parameters for display
       maxConnTextLength: 20
       maxNodeBoxHeight: 100 #4 lines
-      nodeBoxWidth: 120
-      maxInfoBoxHeight: 200
-      infoBoxWidth: 120
+      nodeBoxWidth: 200
+      maxInfoBoxHeight: 250
+      infoBoxWidth: 200
 
       initialize: ->
         that = this
@@ -77,7 +77,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @gridViewOn = false
         @updateForceFlag = false
         @grid = {}
-        @grid.spacing = [175,125] # Horizontal and Vertical node spacing
+        @grid.spacing = [225,225] # Horizontal and Vertical node spacing
         @grid.padding = [350,150] # Left and top padding respectively
 
         @workspace = @svg.append("svg:g")
@@ -237,13 +237,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr("y", "5")
           .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
           .attr("width", @nodeBoxWidth)
-          .attr("x", "-60")
+          .attr("x", -@nodeBoxWidth/2)
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
           .attr('class', 'node-title-body')
         nodeConnector = nodeEnter.append("circle")
           .attr('r', '5')
-          .attr('cx', '-70')
+          .attr('cx', -@nodeBoxWidth/2-10)
           .attr('cy', '0')
           .attr('class', 'node-connector')
           .attr('fill', '#222') 
