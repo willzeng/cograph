@@ -213,5 +213,5 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           success: callback
 
       deleteWorkspace: (id, callback) ->
-        @socket.emit "workspace:destroy", id
+        @socket.emit "workspace:destroy", {_id:id, _docId:@getDocument().get('_id')}
         callback id

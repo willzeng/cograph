@@ -36,4 +36,6 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         if !(@toggleShown)
           @model.sync "create", @model,
             success: (savedModel) => @trigger "save:workspace", savedModel._id
+        else
+          $('#workspace-name').val("")
         @toggleShown = !@toggleShown

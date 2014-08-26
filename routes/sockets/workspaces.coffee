@@ -36,8 +36,10 @@ exports.update = (data, callback, socket) ->
 
 # DELETE
 exports.destroy = (data, callback, socket) ->
-  id = parseInt data
+  id = parseInt data._id
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
       parsed = node._data.data
     , true
+    socket.emit 'workspace:delete', data
+    socket.broadcast.to(data._docId).emit 'workspace:delete', data
