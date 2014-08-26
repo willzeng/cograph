@@ -1,5 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 
+  'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
   ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
@@ -22,6 +23,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @model.connections.on 'add remove', @updateForceGraph, this
         @model.nodes.on 'change', @updateDetails, this
         @model.connections.on 'change', @updateDetails, this
+
+        @model.on 'found:node', @centerOn, this
 
         @translateLock = false
 
@@ -65,20 +68,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 .call(@zoom)
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
-        (new svgDefs).addDefs def
-        for color,hex of @model.defaultColors
-          def
-            .append('svg:marker')
-              .attr('id', 'arrowhead-'+color)
-              .attr('viewBox', '0 -5 10 10')
-              .attr('refX', '8')
-              .attr('refY', '0')
-              .attr('markerWidth', '5')
-              .attr('markerHeight', '5')
-              .attr('orient', 'auto')
-              .attr('fill', hex)
-              .append('svg:path')
-                .attr('d',"M0,-3L8,0L0,3")
+        (new svgDefs).addDefs def, @model.defaultColors
 
         @workspace = @svg.append("svg:g")
 
@@ -154,7 +144,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
-            @trigger "connection:mouseout", conn
+            if(!$(d3.event.toElement).closest('.connection').length)
+              @trigger "connection:mouseout", conn
         connectionEnter.append("line")
           .attr('class', 'select-zone')
         connectionEnter.append("line")
@@ -163,11 +154,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .style("stroke", (d) => @getColor d)
         text-group = connectionEnter.append("g")
           .attr('class', 'connection-text')
-          .on "mouseover", (conn)  =>
-            @trigger "connection:mouseover", conn
-          .on "mouseout", (conn) =>
-            if(typeof d3.event.toElement.className == 'object' && d3.event.toElement.localName != 'text')
-              @trigger "connection:mouseout", conn
         text-group.append("text")
           .attr("text-anchor", "middle")
         text-group.append("foreignObject")
@@ -353,6 +339,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         node.x > element.offset().left &&
         node.y > element.offset().top &&
         node.y < element.offset().top + element.outerHeight()
+
+      centerOn: (node) =>
+        translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
+        #update translate values
+        @zoom.translate([translateParams[0], translateParams[1]])
+        #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
       getColor: (nc) ->
         @model.defaultColors[nc.get('color')]

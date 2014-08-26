@@ -87,7 +87,8 @@
   });
 
   specs = [
-    'cs!tests/NodeModelSpec'
+    'cs!tests/NodeModelSpec',
+    'cs!tests/GraphViewSpec'
   ];
 
   require(['boot'], function(boot) {

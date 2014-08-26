@@ -1,14 +1,17 @@
 <div class="node-toolbar">
   <% if(constructor.name === "NodeModel"){ %>
-  <button type="button" class="node-fix" data-id=<%=attributes._id%>><i class="fa fa-thumb-tack"></i></button>
-  <button type="button" class="node-expand" data-id=<%=attributes._id%>><i class="fa fa-expand"></i></button>
-  <button type="button" class="node-connect" data-id=<%=attributes._id%>><i class="fa fa-link"></i></button>
+  <button type="button" title="Pin node position" class="node-fix" data-id=<%=attributes._id%>><i class="fa fa-thumb-tack"></i></button>
+  <button type="button" title="Show archived neighboring nodes" class="node-expand" data-id=<%=attributes._id%>><i class="fa fa-expand"></i></button>
+  <button type="button" title="Add connection from this node" class="node-connect" data-id=<%=attributes._id%>><i class="fa fa-link"></i></button>
   <% } %>
-  <button type="button" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-archive"></i></button>
+  <button type="button" title="Archive (Hide)" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-archive"></i></button>
 </div>
-<% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags)){ %>
+<% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags) || _.some(attributes.url)){ %>
   <div class="pad">
     <div>
+    <% if(_.some(attributes.url)){ %>
+      <a href=<%= attributes.url %> target="_blank" class="pull-right"><i class="fa fa-external-link"></i></a>
+    <% } %>
     <% linkified = attributes.description.replace(/#(\S*)/g,'<a class="tag-link" data-tag=$1 href="">#$1</a>'); %>
     <%= linkified %>
     </div>
