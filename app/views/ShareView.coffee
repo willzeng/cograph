@@ -10,7 +10,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
       initialize: ->
         @toggleShown = false
 
-        new shareButton "#share-button",
+        @share = new shareButton "#share-button",
           ui:
             flyout: 'middle left'
 

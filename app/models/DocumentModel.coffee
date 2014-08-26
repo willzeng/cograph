@@ -18,10 +18,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       @get(@idAttribute) < 0
 
     serialize: ->
-      if @get('workspaces')[0]?
-        {name:@get('name'), _id:@get('_id'), workspaces:@get('workspaces')}
-      else
-        {name:@get('name'), _id:@get('_id')}
+      {name:@get('name'), _id:@get('_id')}
 
     sync: (method, model, options) ->
       options = options || {}
