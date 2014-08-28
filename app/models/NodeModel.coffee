@@ -15,6 +15,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
         validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ]
       description:
         type: 'AtWhoEditor'
+      image: 
+        type: 'Text'
+        title: 'Image (url to an image)'
+        validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ]
 
     validate: ->
       if !@get('name')

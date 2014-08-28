@@ -36,7 +36,7 @@
     "share-button": "~0.4.1",
     "backbone.iobind": "~0.4.7",
     "caret.js": "~0.1.0",
-    "targeted-atwho": "~0.5.1",
+    "targeted-atwho": "~0.5.2",
     "twitter-text": "~1.9.4",
     "jQuery-linkify": "~1.1.7"
   },

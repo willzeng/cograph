@@ -239,6 +239,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'node-info')
           .append('xhtml:body')
             .attr('class', 'node-info-body')
+        nodeImage = nodeEnter.append("image")
+          .attr('height', '50')
+          .attr('width', '50')
+          .attr('xlink:href', '')
+          .attr('x', '-95')
+          .attr('y', '-25')
+          .attr('class', 'node-image')
+          .attr('clip-path', 'url(#clipCircle)')
         
         nodeRectangle
           .on "click", (d) =>
@@ -265,10 +273,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
         # update old and new elements
+
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
           .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
+          .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
         node.select('.node-title-body')
           .html((d) -> _.template(nodeTitle, d))
@@ -276,6 +286,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
+        node.select('.node-image')
+          .attr('xlink:href', (d) -> d.get('image'))
 
         # move the popover info to align with the left of the text
         # construct the node boxes

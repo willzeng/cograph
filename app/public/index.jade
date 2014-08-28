@@ -10,7 +10,7 @@ block content
         form#search-form.form-inline
           .input-group
             input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-          button#sidebar-toggle.btn.btn-default
+          button#sidebar-toggle.btn.btn-default(title="Toggle Sidebar")
             i.fa.fa-arrows-h
     .toolbar.right.controls
       .navbar-right.navbar-form
@@ -29,10 +29,10 @@ block content
       button#sharing-button.btn.btn-primary
         div Share GraphDoc
     #zoom-controls.btn-group-vertical.controls
-      button#zoom-in-button.btn.btn-primary
+      button#zoom-in-button.btn.btn-primary(title="Zoom In")
         i.glyphicon.glyphicon-plus
-      button#zoom-out-button.btn.btn-primary
+      button#zoom-out-button.btn.btn-primary(title="Zoom Out")
         i.glyphicon.glyphicon-minus
-    #trash-bin.controls
+    #trash-bin.controls(title="Drag a node here to Archive it")
       i.fa.fa-archive
   .data-tooltip-container

@@ -41,6 +41,14 @@ define [], () ->
           .attr('fill', '#3498db')
           .append('svg:path')
             .attr('d',"M0,-3L8,0L0,3")
+      # Image Circles
+      def
+        .append('svg:clipPath')
+          .attr('id', 'clipCircle')
+          .append('circle')
+            .attr('r', '18')
+            .attr('cx', '-70')
+            .attr('cy', '0')
       # Colored Connection Arrowheads
       for color,hex of defaultColors
           def
