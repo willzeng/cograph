@@ -12,6 +12,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
+        @model.on 'found:node', @highlight, this
 
         @graphView = @attributes.graphView
 
