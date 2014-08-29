@@ -20,7 +20,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
         @graphView.on 'node:mouseenter', (node) =>
           @showToolTip(d3.event)
-          if !(@ignoreMouse) then @highlight node
+          if !(@ignoreMouse) and (!@graphView.gridViewOn) then @highlight node
 
         @graphView.on 'connection:mouseout', (conn) =>
           if !(@ignoreMouse) then @emptyTooltip()
@@ -32,7 +32,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           @ignoreMouse = false
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
-          if !(@ignoreMouse)
+          if !(@ignoreMouse) and (!@graphView.gridViewOn)
             @model.dehighlight()
             @emptyTooltip()
 
@@ -47,16 +47,17 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         @model.highlight(nodesToHL, connectionsToHL)
 
       showToolTip: (event) =>
-        if !(@ignoreMouse)
+        if !(@ignoreMouse) and (!@graphView.gridViewOn)
           @emptyTooltip()
           $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
           $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown').linkify()
           $(event.currentTarget).find('.connection-info-body').addClass('shown').linkify()
 
       emptyTooltip: () ->
-        $('.node-title-body').removeClass('shown')
-        $('.node-info-body').removeClass('shown')
-        $('.connection-info-body').removeClass('shown')
+        if (!@graphView.gridViewOn)
+          $('.node-title-body').removeClass('shown')
+          $('.node-info-body').removeClass('shown')
+          $('.connection-info-body').removeClass('shown')
 
       archiveObj: (event) ->
         removeId = parseInt $(event.currentTarget).attr("data-id")
@@ -73,8 +74,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           for node in neighbors
             newNode = new expandedNode.constructor node
             if @model.putNode newNode #this checks to see if the node has passed the filter
-              newNode.getConnections @model.nodes, (connections) =>
-                @model.putConnection new @model.connections.model conn for conn in connections
+              if (!@graphView.gridViewOn)
+                newNode.getConnections @model.nodes, (connections) =>
+                  @model.putConnection new @model.connections.model conn for conn in connections
 
       toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
