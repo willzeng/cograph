@@ -111,7 +111,8 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
       radialPosition: (centerNode, i, steps) ->
         radius = 160
-        [centerNode.x + radius * Math.cos(2 * Math.PI * i / steps), centerNode.y + radius * Math.sin(2 * Math.PI * i / steps)]
+        offset = Math.PI/4
+        [centerNode.x + radius * Math.cos(2 * Math.PI * i / steps+offset), centerNode.y + radius * Math.sin(2 * Math.PI * i / steps+offset)]
 
       toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
