@@ -104,8 +104,8 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             _.each movedModels, (nm, i) =>
               [nm.x,nm.y] = @radialPosition expandedNode, i, neighbors.length
               [nm.px,nm.py] = [nm.x,nm.y]
-              nm.set 'fixed', true
-              nm.fixed = true
+              nm.set 'fixed', false
+              nm.fixed = false
             @graphView.updateForceGraph()
           , transitionDuration
 
