@@ -78,13 +78,11 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           expandedIds = _.map expandedModels, (nm) -> nm.get('_id')
 
           # add neighbor nodes to the graph at the pos of expandedNode
-          _.each expandedModels, (nm, i) =>
+          _.each expandedModels, (nm) =>
             nm.fixed = true
             nm.x = expandedNode.x
             nm.y = expandedNode.y
-            if @model.putNode nm #this checks to see if the node has passed the filter
-              nm.getConnections @model.nodes, (connections) =>
-                @model.putConnection new @model.connections.model conn for conn in connections
+            @model.putNode nm
 
           # transition neighbors into a circle around expandedNode
           transitionDuration = if options? and options.duration? then options.duration else 1000
@@ -98,18 +96,21 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
               d.targetPos = pos
               "translate(#{pos[0]},#{pos[1]})"
 
-          spokes = @model.connections.filter (c) =>
-            (circleFilter @model.getSourceOf(c)) or (circleFilter @model.getTargetOf(c))
-          _.each spokes, (spoke) =>
-            spokeSource = @model.getSourceOf(spoke)
-            spokeTarget = @model.getTargetOf(spoke)
-            if circleFilter spokeSource
-              dir = "source"
-              dest = spokeSource.targetPos
-            else if circleFilter spokeTarget
-              dir = "target"
-              dest = spokeTarget.targetPos
-            @transitionConnection spoke, dir, dest, transitionDuration
+          # find and transition connections for added neighbors
+          _.each expandedModels, (nm) =>
+            nm.getConnections @model.nodes, (connections) =>
+              for conn in connections
+                spoke = new @model.connections.model conn
+                @model.putConnection spoke
+                spokeSource = @model.getSourceOf(spoke)
+                spokeTarget = @model.getTargetOf(spoke)
+                if circleFilter spokeSource
+                  dir = "source"
+                  dest = spokeSource.targetPos
+                else if circleFilter spokeTarget
+                  dir = "target"
+                  dest = spokeTarget.targetPos
+                @transitionConnection spoke, dir, dest, transitionDuration
 
           # following the transition, update the force positions of the nodes
           # and update the forcegraph
