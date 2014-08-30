@@ -66,25 +66,45 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         else if nc.constructor.name is "ConnectionModel"
           @model.removeConnection nc
 
-      expandNode: (event) ->
+      expandNode: (event, options) ->
         expandId = parseInt $(event.currentTarget).attr("data-id")
         expandedNode = @model.nodes.findWhere {_id:expandId}
         expandedNode.set "fixed", true
         d3.select(event.currentTarget).classed('fixed', expandedNode.fixed = true)
         expandedNode.getNeighbors (neighbors) =>
-          _.each neighbors, (node, i) =>
-            node.fixed = true
-            newNode = new expandedNode.constructor node
-            newNode.fixed = true
-            radPos = @radialPosition expandedNode, i, neighbors.length
-            newNode.x = radPos.x
-            newNode.y = radPos.y
-            if @model.putNode newNode #this checks to see if the node has passed the filter
-              newNode.getConnections @model.nodes, (connections) =>
+          # create models
+          expandedModels = _.map neighbors, (n) ->
+            n.fixed = true
+            new expandedNode.constructor n
+
+          # add neighbor nodes to the graph at the pos of expandedNode
+          _.each expandedModels, (nm, i) =>
+            nm.fixed = true
+            nm.x = expandedNode.x
+            nm.y = expandedNode.y
+            if @model.putNode nm #this checks to see if the node has passed the filter
+              nm.getConnections @model.nodes, (connections) =>
                 @model.putConnection new @model.connections.model conn for conn in connections
 
+          # transition nodes into a circle around expandedNode
+          _.each expandedModels, (nm, i) =>
+            pos = @radialPosition expandedNode, i, neighbors.length
+            nm.x = pos.x
+            nm.y = pos.y
+
+          transitionDuration = if options? and options.duration? then options.duration else 1000
+          theNodes = d3.select(".node-container").selectAll(".node").filter (d,i) ->
+            _.contains _.map(expandedModels, (nm) -> nm.get('_id')), d.get('_id')
+          window.theNodes = theNodes
+          theNodes.transition()
+            .duration(transitionDuration)
+            .attr "transform", (d, i) =>
+              pos = @radialPosition expandedNode, i, neighbors.length
+              "translate(#{pos.x},#{pos.y})"
+          # @graphView.updateDetails()
+
       radialPosition: (centerNode, i, steps) ->
-        radius = 200
+        radius = 160
         p = {}
         p.x = (centerNode.x + radius * Math.cos(2 * Math.PI * i / steps))
         p.y = (centerNode.y + radius * Math.sin(2 * Math.PI * i / steps))
