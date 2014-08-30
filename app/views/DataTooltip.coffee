@@ -95,7 +95,21 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             .duration(transitionDuration)
             .attr "transform", (d, i) =>
               pos = @radialPosition expandedNode, i, neighbors.length
+              d.targetPos = pos
               "translate(#{pos[0]},#{pos[1]})"
+
+          spokes = @model.connections.filter (c) =>
+            (circleFilter @model.getSourceOf(c)) or (circleFilter @model.getTargetOf(c))
+          _.each spokes, (spoke) =>
+            spokeSource = @model.getSourceOf(spoke)
+            spokeTarget = @model.getTargetOf(spoke)
+            if circleFilter spokeSource
+              dir = "source"
+              dest = spokeSource.targetPos
+            else if circleFilter spokeTarget
+              dir = "target"
+              dest = spokeTarget.targetPos
+            @transitionConnection spoke, dir, dest, transitionDuration
 
           # following the transition, update the force positions of the nodes
           # and update the forcegraph
@@ -108,6 +122,22 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
               nm.fixed = false
             @graphView.updateForceGraph()
           , transitionDuration
+
+      transitionConnection: (conn, direction, dest, duration) ->
+        connection = d3.select(".connection-container").selectAll(".connection").filter (c) ->
+          c.get('_id') is conn.get('_id')
+        if direction is "source"
+          connection.selectAll("line").transition().duration(duration)
+            .attr("x1", (d) => dest[0]-(@graphView.nodeBoxWidth/2+10))
+            .attr("y1", (d) => dest[1])
+          connection.select(".connection-text").transition().duration(duration)
+            .attr("transform", (d) => "translate(#{((dest[0]-@model.getTargetOf(conn).x)/2+@model.getTargetOf(conn).x)-(@graphView.nodeBoxWidth/2+10)},#{(dest[1]-@model.getTargetOf(conn).y)/2+@model.getTargetOf(conn).y})")
+        else if direction is "target"
+          connection.selectAll("line").transition().duration(duration)
+            .attr("x2", (d) => dest[0]-(@graphView.nodeBoxWidth/2+10))
+            .attr("y2", (d) => dest[1])
+          connection.select(".connection-text").transition().duration(duration)
+            .attr("transform", (d) => "translate(#{((@model.getSourceOf(conn).x-dest[0])/2+dest[0])-(@graphView.nodeBoxWidth/2+10)},#{(@model.getSourceOf(conn).y-dest[1])/2+dest[1]})")
 
       radialPosition: (centerNode, i, steps) ->
         radius = 160
