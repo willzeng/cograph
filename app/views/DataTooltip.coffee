@@ -76,6 +76,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           expandedModels = _.map neighbors, (n) ->
             n.fixed = true
             new expandedNode.constructor n
+          expandedIds = _.map expandedModels, (nm) -> nm.get('_id')
 
           # add neighbor nodes to the graph at the pos of expandedNode
           _.each expandedModels, (nm, i) =>
@@ -86,29 +87,30 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
               nm.getConnections @model.nodes, (connections) =>
                 @model.putConnection new @model.connections.model conn for conn in connections
 
-          # transition nodes into a circle around expandedNode
-          _.each expandedModels, (nm, i) =>
-            pos = @radialPosition expandedNode, i, neighbors.length
-            nm.x = pos.x
-            nm.y = pos.y
-
+          # transition neighbors into a circle around expandedNode
           transitionDuration = if options? and options.duration? then options.duration else 1000
           theNodes = d3.select(".node-container").selectAll(".node").filter (d,i) ->
-            _.contains _.map(expandedModels, (nm) -> nm.get('_id')), d.get('_id')
-          window.theNodes = theNodes
+            _.contains expandedIds, d.get('_id')
           theNodes.transition()
             .duration(transitionDuration)
             .attr "transform", (d, i) =>
               pos = @radialPosition expandedNode, i, neighbors.length
-              "translate(#{pos.x},#{pos.y})"
-          # @graphView.updateDetails()
+              "translate(#{pos[0]},#{pos[1]})"
+
+          # following the transition, update the force positions of the nodes
+          # and update the forcegraph
+          setTimeout =>
+            movedModels = @model.nodes.filter (d,i) ->
+              _.contains expandedIds, d.get('_id')
+            _.each movedModels, (nm, i) =>
+              [nm.x,nm.y] = @radialPosition expandedNode, i, neighbors.length
+              [nm.px,nm.py] = [nm.x,nm.y]
+            @graphView.updateForceGraph()
+          , transitionDuration
 
       radialPosition: (centerNode, i, steps) ->
         radius = 160
-        p = {}
-        p.x = (centerNode.x + radius * Math.cos(2 * Math.PI * i / steps))
-        p.y = (centerNode.y + radius * Math.sin(2 * Math.PI * i / steps))
-        p
+        [centerNode.x + radius * Math.cos(2 * Math.PI * i / steps), centerNode.y + radius * Math.sin(2 * Math.PI * i / steps)]
 
       toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
