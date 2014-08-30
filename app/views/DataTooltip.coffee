@@ -69,12 +69,26 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
       expandNode: (event) ->
         expandId = parseInt $(event.currentTarget).attr("data-id")
         expandedNode = @model.nodes.findWhere {_id:expandId}
+        expandedNode.set "fixed", true
+        d3.select(event.currentTarget).classed('fixed', expandedNode.fixed = true)
         expandedNode.getNeighbors (neighbors) =>
-          for node in neighbors
+          _.each neighbors, (node, i) =>
+            node.fixed = true
             newNode = new expandedNode.constructor node
+            newNode.fixed = true
+            radPos = @radialPosition expandedNode, i, neighbors.length
+            newNode.x = radPos.x
+            newNode.y = radPos.y
             if @model.putNode newNode #this checks to see if the node has passed the filter
               newNode.getConnections @model.nodes, (connections) =>
                 @model.putConnection new @model.connections.model conn for conn in connections
+
+      radialPosition: (centerNode, i, steps) ->
+        radius = 200
+        p = {}
+        p.x = (centerNode.x + radius * Math.cos(2 * Math.PI * i / steps))
+        p.y = (centerNode.y + radius * Math.sin(2 * Math.PI * i / steps))
+        p
 
       toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
