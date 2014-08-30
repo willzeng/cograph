@@ -74,7 +74,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         expandedNode.getNeighbors (neighbors) =>
           # create models
           expandedModels = _.map neighbors, (n) ->
-            n.fixed = true
             new expandedNode.constructor n
           expandedIds = _.map expandedModels, (nm) -> nm.get('_id')
 
@@ -89,8 +88,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
           # transition neighbors into a circle around expandedNode
           transitionDuration = if options? and options.duration? then options.duration else 1000
-          theNodes = d3.select(".node-container").selectAll(".node").filter (d,i) ->
-            _.contains expandedIds, d.get('_id')
+          circleFilter = (d,i) -> #determines if a node should be moved
+            not d.get('fixed') and _.contains expandedIds, d.get('_id')
+          theNodes = d3.select(".node-container").selectAll(".node").filter circleFilter
           theNodes.transition()
             .duration(transitionDuration)
             .attr "transform", (d, i) =>
@@ -100,11 +100,12 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           # following the transition, update the force positions of the nodes
           # and update the forcegraph
           setTimeout =>
-            movedModels = @model.nodes.filter (d,i) ->
-              _.contains expandedIds, d.get('_id')
+            movedModels = @model.nodes.filter circleFilter
             _.each movedModels, (nm, i) =>
               [nm.x,nm.y] = @radialPosition expandedNode, i, neighbors.length
               [nm.px,nm.py] = [nm.x,nm.y]
+              nm.set 'fixed', true
+              nm.fixed = true
             @graphView.updateForceGraph()
           , transitionDuration
 
@@ -115,5 +116,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
       toggleFix: (event) =>
         unfixId = parseInt $(event.currentTarget).attr("data-id")
         unfixNode = @model.nodes.findWhere {_id:unfixId}
+        unfixNode.set 'fixed', !unfixNode.fixed
         d3.select(event.currentTarget).classed('fixed', unfixNode.fixed = !unfixNode.fixed)
         @graphView.updateForceGraph()
