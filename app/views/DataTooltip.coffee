@@ -128,7 +128,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           setTimeout =>
             movedModels = @model.nodes.filter circleFilter
             _.each movedModels, (nm, i) =>
-              [nm.x,nm.y] = @radialPosition expandedNode, i, neighbors.length
+              [nm.x,nm.y] = targets[i]
               [nm.px,nm.py] = [nm.x,nm.y]
               nm.set 'fixed', false
               nm.fixed = false
