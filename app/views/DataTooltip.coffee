@@ -31,10 +31,16 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         @graphView.on 'node:dragend', () =>
           @ignoreMouse = false
 
+        @expandArrayed = false
         @graphView.on 'node:mouseout node:right-click', (nc) =>
           if !(@ignoreMouse)
             @model.dehighlight()
             @emptyTooltip()
+          if @expandArrayed
+            @graphView.updateForceGraph()
+            @expandArrayed = false
+
+
 
       highlight: (node) ->
         connectionsToHL = @model.connections.filter (c) ->
@@ -86,7 +92,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
           window.dis = @distance
           # transition neighbors into a circle around expandedNode
-          transitionDuration = if options? and options.duration? then options.duration else 400
+          transitionDuration = if options? and options.duration? then options.duration else 200
           circleFilter = (d,i) -> #determines if a node should be moved
             not d.get('fixed') and _.contains expandedIds, d.get('_id')
           #   find the nearest position in the circle
@@ -132,7 +138,8 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
               [nm.px,nm.py] = [nm.x,nm.y]
               nm.set 'fixed', false
               nm.fixed = false
-            @graphView.updateForceGraph()
+            @graphView.updateDetails()
+            @expandArrayed = true
           , transitionDuration
 
       transitionConnection: (conn, direction, dest, duration) ->
