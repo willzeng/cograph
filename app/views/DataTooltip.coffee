@@ -40,8 +40,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             @graphView.updateForceGraph()
             @expandArrayed = false
 
-
-
       highlight: (node) ->
         connectionsToHL = @model.connections.filter (c) ->
           (c.get('source') is node.get('_id')) or (c.get('target') is node.get('_id'))
@@ -75,6 +73,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
       expandNode: (event, options) ->
         expandId = parseInt $(event.currentTarget).attr("data-id")
         expandedNode = @model.nodes.findWhere {_id:expandId}
+        # fix the expanded node in place
         expandedNode.set "fixed", true
         d3.select(event.currentTarget).classed('fixed', expandedNode.fixed = true)
         expandedNode.getNeighbors (neighbors) =>
@@ -90,7 +89,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             nm.y = expandedNode.y
             @model.putNode nm
 
-          window.dis = @distance
           # transition neighbors into a circle around expandedNode
           transitionDuration = if options? and options.duration? then options.duration else 200
           circleFilter = (d,i) -> #determines if a node should be moved
@@ -122,15 +120,12 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
                 spokeSource = @model.getSourceOf(spoke)
                 spokeTarget = @model.getTargetOf(spoke)
                 if circleFilter spokeSource
-                  dir = "source"
-                  dest = spokeSource.targetPos
+                  @transitionConnection spoke, "source", spokeSource.targetPos, transitionDuration
                 else if circleFilter spokeTarget
-                  dir = "target"
-                  dest = spokeTarget.targetPos
-                @transitionConnection spoke, dir, dest, transitionDuration
+                  @transitionConnection spoke, "target", spokeTarget.targetPos, transitionDuration
 
           # following the transition, update the force positions of the nodes
-          # and update the forcegraph
+          # and update details
           setTimeout =>
             movedModels = @model.nodes.filter circleFilter
             _.each movedModels, (nm, i) =>
@@ -142,6 +137,8 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             @expandArrayed = true
           , transitionDuration
 
+      # direction sets which end of the connection is being transitioned
+      # to dest
       transitionConnection: (conn, direction, dest, duration) ->
         connection = d3.select(".connection-container").selectAll(".connection").filter (c) ->
           c.get('_id') is conn.get('_id')
