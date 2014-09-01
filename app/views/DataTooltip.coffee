@@ -84,17 +84,28 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             nm.y = expandedNode.y
             @model.putNode nm
 
+          window.dis = @distance
           # transition neighbors into a circle around expandedNode
-          transitionDuration = if options? and options.duration? then options.duration else 1000
+          transitionDuration = if options? and options.duration? then options.duration else 400
           circleFilter = (d,i) -> #determines if a node should be moved
             not d.get('fixed') and _.contains expandedIds, d.get('_id')
+          #   find the nearest position in the circle
+          positions = (@radialPosition(expandedNode, i, neighbors.length) for i in [1..neighbors.length])
+          currPos = ([node.x, node.y] for node in @model.nodes.filter circleFilter)
+          targets = {}
+          _.each currPos, (d,i) =>
+            distances = ([@distance(p, d), p] for p in positions)
+            min = _.sortBy(distances, (d) -> d[0])[0][1]
+            positions = positions.filter (p) -> not (p[0] is min[0] and p[1] is min[1])
+            targets[i] = min
+
           theNodes = d3.select(".node-container").selectAll(".node").filter circleFilter
           theNodes.transition()
             .duration(transitionDuration)
             .attr "transform", (d, i) =>
-              pos = @radialPosition expandedNode, i, neighbors.length
-              d.targetPos = pos
-              "translate(#{pos[0]},#{pos[1]})"
+              min = targets[i]
+              d.targetPos = min
+              "translate(#{min[0]},#{min[1]})"
 
           # find and transition connections for added neighbors
           _.each expandedModels, (nm) =>
@@ -139,6 +150,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             .attr("y2", (d) => dest[1])
           connection.select(".connection-text").transition().duration(duration)
             .attr("transform", (d) => "translate(#{((@model.getSourceOf(conn).x-dest[0])/2+dest[0])-(@graphView.nodeBoxWidth/2+10)},#{(@model.getSourceOf(conn).y-dest[1])/2+dest[1]})")
+
+      distance: (p1, p2) ->
+        Math.sqrt (p1[0]-p2[0])*(p1[0]-p2[0]) + (p1[1]-p2[1])*(p1[1]-p2[1])
 
       radialPosition: (centerNode, i, steps) ->
         radius = 160
