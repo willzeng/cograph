@@ -37,8 +37,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                   .size([width, height])
                   .charge(-4000)
                   .gravity(0.2)
-                  .friction(0.6)
-                  .distance(200)
+                  .distance(50)
 
         zoomed = =>
           return if @translateLock
