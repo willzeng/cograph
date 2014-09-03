@@ -36,6 +36,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             target: node.get('_id')
             _docId: @model.documentModel.get('_id')
           $.when(connection.save()).then =>
+            # Fetch the source and target to update their new connection degrees
+            @model.getSourceOf(connection).fetch()
+            @model.getTargetOf(connection).fetch()
             newConn = @model.putConnection connection
             @model.select newConn
             @model.newConnectionCreated newConn

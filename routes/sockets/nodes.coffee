@@ -26,8 +26,10 @@ exports.read = (data, callback, socket) ->
     utils.getLabels graphDb, id, (labels) ->
       parsed.tags = labels
       parsed = utils.parseNodeToClient parsed
-      socket.emit('node:read', parsed)
-      callback(null, parsed)
+      serverNode.getNeighbors id, (neighbors) ->
+        parsed.neighborCount = neighbors.length
+        socket.emit('node:read', parsed)
+        callback(null, parsed)
 
 exports.readCollection = (data, callback, socket) ->
   console.log "readCollection of nodes in document #{data._docId}"
