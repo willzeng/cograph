@@ -49,6 +49,14 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           data: @model.filterModel.getTags('node')
           target: "#add-node-form"
 
+        # store inserted mentions
+        @mentions = []
+        @descriptionArea.on "inserted.atwho", (event, item) =>
+          insertedText = item.attr 'data-value'
+          if insertedText[0] is "@"
+            addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
+            @mentions.push addedMention
+
       lessInformation: (e) ->
         # Don't hide info if focusing on it
         if !@descriptionFocus
@@ -72,10 +80,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           $.when(node.save()).then =>
             # Create connections to mentioned nodes
-            names = twttr.txt.extractMentions attributes.description
+            @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
+            uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')
 
-            for name in _.uniq names
-              targetNode = @model.nodes.findWhere {name:name}
+            for targetNode in uniqMentions
               if targetNode?
                 connection = new @model.connections.model
                     source: node.get('_id')
