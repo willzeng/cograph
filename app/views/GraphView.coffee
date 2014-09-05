@@ -1,5 +1,5 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
-  'cs!views/ConnectionAdder', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 
+  'cs!views/ConnectionAdder', 'cs!views/DataTooltip', 'cs!views/ZoomButtons',
   'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
   ($, _, Backbone, d3, svgDefs, ConnectionAdder, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
