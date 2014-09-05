@@ -20,7 +20,7 @@ define ['jquery', 'underscore', 'backbone'],
       toggleSidebar: =>
         if @sidebarShown
           $('#sidebar'+@name).animate 'width': '0%'
-          $('#graph').animate 'width': '100%'
+          if @type is "right" then $('#graph').animate 'width': '100%'
         else
           $('#sidebar'+@name).animate 'width': @size+'px'
           if @type is "right" then $('#graph').animate 'width': ($('#graph').width()-@size)+"px"
