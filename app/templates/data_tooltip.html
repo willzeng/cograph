@@ -7,7 +7,7 @@
   </button>
   <button type="button" title="Add connection from this node" class="node-connect" data-id=<%=attributes._id%>><i class="fa fa-link"></i></button>
   <% } %>
-  <button type="button" title="Archive (Hide)" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-archive"></i></button>
+  <button type="button" title="Archive (Hide)" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-eye-slash"></i></button>
 </div>
 
 <% if((attributes.description != null && attributes.description != "") || _.some(attributes.tags) || _.some(attributes.url)){ %>
