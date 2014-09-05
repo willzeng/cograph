@@ -73,12 +73,13 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @nodeConnectionForm.commit()
         @nodeConnectionForm.model.save()
 
-        newConns = _.uniq @mentionedConns, (conn) ->
-          conn.get 'target'
+        if @nodeConnectionForm.model.constructor.name is "NodeModel"
+          newConns = _.uniq @mentionedConns, (conn) ->
+            conn.get 'target'
 
-        for c in newConns
-          c.save()
-          @model.putConnection c
+          for c in newConns
+            c.save()
+            @model.putConnection c
 
         @closeDetail()
         false
