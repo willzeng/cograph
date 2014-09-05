@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone'],
   ($, _, Backbone) ->
     class SideBarView extends Backbone.View
-      el: $ '#graph'
+      el: $ 'body'
 
       events:
         'click #sidebar-toggle': 'toggleSidebar'

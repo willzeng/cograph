@@ -2,16 +2,26 @@ extends layout
 
 block content
   #sidebar
+    ul.nav.nav-stacked
+      li
+        a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
+      li.dropdown
+        a.dropdown-toggle(data-toggle='dropdown', href='#')
+          | Open
+          span.caret
+        ul.dropdown-menu
+          li(role="presentation")
+            a#open-doc-button(href="") Open GraphDoc
+          li(role="presentation")
+            a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open Workspace
+      li
+        a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
+      li
+        a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
   #graph
     .loading-container
       i.fa.fa-circle-o-notch.fa-spin.fa-5x
-    .toolbar.controls
-      .navbar-left.navbar-form
-        form#search-form.form-inline
-          .input-group
-            input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-          button#sidebar-toggle.btn.btn-default(title="Toggle Sidebar")
-            i.fa.fa-arrows-h
+
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form.form-inline
@@ -24,15 +34,12 @@ block content
             textarea.form-control(name='description', placeholder="Enter a description")
 
     .toolbar.bottom.right.controls
-      button#save-workspace-button.btn.btn-primary
-        div Save Workspace
-      button#sharing-button.btn.btn-primary
-        div Share GraphDoc
+      form#search-form.form-inline
+        .input-group
+          input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
+
     #zoom-controls.btn-group-vertical.controls
       button#zoom-in-button.btn.btn-primary(title="Zoom In")
         i.glyphicon.glyphicon-plus
       button#zoom-out-button.btn.btn-primary(title="Zoom Out")
         i.glyphicon.glyphicon-minus
-    #trash-bin.controls(title="Drag a node here to Archive it")
-      i.fa.fa-archive
-  .data-tooltip-container

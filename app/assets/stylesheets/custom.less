@@ -1,5 +1,7 @@
 @import "colors";
 
+@body-background: @white; /*#efefef;*/
+
 @node-color: white;
 @connection-color: black;
 @stroke-color: black;
@@ -7,10 +9,9 @@
 @selected-nodetext-color: white;
 @fixed-color: @orange;
 @text-color: #333;
-@data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
-@bottom-margin:60px;
+@bottom-margin:70px;
 
 .node {
   /*transition: opacity .5s ease-in-out;*/
@@ -167,7 +168,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: #efefef;
+  background: @body-background;
   height: 100%;
 }
 
@@ -228,7 +229,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #sidebar-toggle {
-  margin: 10px 0 0 0;
+  margin-left: 10px;
 }
 
 #trash-bin {
@@ -270,20 +271,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .detail-controls{
   padding-bottom: 10px;
-}
-
-.data-tooltip-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.data-tooltip {
-  background: @data-tooltip-color;
-  color: white;
-  font-size: 12px;
-  border: 1px solid white;
-  max-width: 300px;
 }
 
 .toolbar {
@@ -336,7 +323,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 .main-nav {
-  padding: 0;
   border: 0;
 }
 
@@ -357,11 +343,11 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 #menu-title {
   position: relative;
   outline: none;
-  background: beige;
   color: black;
   border: 0;
   cursor: pointer;
   padding: 6px;
+  top: 8px;
 }
 
 #menu-title:focus {
