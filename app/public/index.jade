@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  #sidebar
+  .sidebar.left#sidebar
     ul.nav.nav-stacked
       li
         a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
@@ -43,3 +43,8 @@ block content
         i.glyphicon.glyphicon-plus
       button#zoom-out-button.btn.btn-primary(title="Zoom Out")
         i.glyphicon.glyphicon-minus
+
+  .sidebar.right#sidebar-right
+    .list-group
+      a.list-group-item#save-workspace-button Save Workspace
+      a.list-group-item#sharing-button Share GraphDoc
