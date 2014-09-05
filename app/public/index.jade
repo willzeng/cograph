@@ -22,16 +22,15 @@ block content
     .loading-container
       i.fa.fa-circle-o-notch.fa-spin.fa-5x
 
-    .toolbar.right.controls
-      .navbar-right.navbar-form
-        form#add-node-form.form-inline
-          .input-group
-            input.node-input.form-control(type="text", name='name', placeholder="Add something")
-            span.input-group-btn
-              button.btn.btn-primary(type="submit", value="+")  
-                i.fa.fa-plus  
-          .form-group.node-description.hide
-            textarea.form-control(name='description', placeholder="Enter a description")
+    .controls
+      form#add-node-form.form-inline.center-block
+        .input-group
+          input.node-input.form-control(type="text", name='name', placeholder="Add something")
+          span.input-group-btn
+            button.btn.btn-primary(type="submit", value="+")
+              i.fa.fa-plus
+        .form-group.node-description.hide
+          textarea.form-control(name='description', placeholder="Enter a description")
 
     .toolbar.bottom.right.controls
       form#search-form.form-inline
@@ -39,9 +38,9 @@ block content
           input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
 
     #zoom-controls.btn-group-vertical.controls
-      button#zoom-in-button.btn.btn-primary(title="Zoom In")
+      button#zoom-in-button.btn.btn-default(title="Zoom In")
         i.glyphicon.glyphicon-plus
-      button#zoom-out-button.btn.btn-primary(title="Zoom Out")
+      button#zoom-out-button.btn.btn-default(title="Zoom Out")
         i.glyphicon.glyphicon-minus
 
   .sidebar.right#sidebar-right
