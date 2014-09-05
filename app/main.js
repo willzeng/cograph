@@ -21,7 +21,8 @@ requirejs.config({
     'caret': '/assets/libs/caret.js/dist/jquery.caret.min',
     'atwho': '/assets/libs/targeted-atwho/dist/js/jquery.atwho.min',
     'twittertext': '/assets/libs/twitter-text/pkg/twitter-text-1.9.4.min',
-    'linkify': '/assets/libs/jQuery-linkify/dist/jquery.linkify.min'
+    'linkify': '/assets/libs/jQuery-linkify/dist/jquery.linkify.min',
+    'elastic': '/assets/libs/elastic/elastic'
   },
   shim: {
     'backbone': {

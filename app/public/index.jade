@@ -15,13 +15,18 @@ block content
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form.form-inline
-          .input-group
-            input.node-input.form-control(type="text", name='name', placeholder="Add something")
-            span.input-group-btn
-              button.btn.btn-primary(type="submit", value="+")  
-                i.fa.fa-plus  
-          .form-group.node-description.hide
-            textarea.form-control(name='description', placeholder="Enter a description")
+          #add.contracted
+            textarea#add-title(name="name", placeholder='Title', rows='1')
+            textarea#add-description(name="description", placeholder='Add Node', rows='1')
+            #add-toolbar.cf
+              #add-toolbar-left
+                button#add-color(data-placement='bottom', data-toggle='popover', data-content='<button type="button" class="btn-color" style="background-color:#aaa" data-value="#aaa" title="#aaa"></button>')
+                  i.fa.fa-paint-brush(title="Change color")
+                button#add-image(data-placement='bottom', data-toggle='popover', data-content="<input type='text' style='width:100%' placeholder='Image url'>")
+                  i.fa.fa-image(title='Add image')
+              #add-toolbar-right
+                button#add-submit(title='Create node')
+                  | Done
 
     .toolbar.bottom.right.controls
       button#save-workspace-button.btn.btn-primary
