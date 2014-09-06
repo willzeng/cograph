@@ -21,6 +21,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           keyCode = e.keyCode || e.which
           # code for ENTER
           if keyCode == 13 and !@showingAtWho
+            $('.node-input').focus()
             @addNode()
 
       moreInformation: ->
