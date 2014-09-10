@@ -12,20 +12,30 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @titleArea = $('#add-title')
         @colorArea = $('#add-color')
         @imageArea = $('#add-image')
+        @colorInput = $('#add-color-container')
+        @imageInput = $('#add-image-container')
 
         @descriptionArea.elastic()
         @titleArea.elastic()
-        @colorArea.popover({html: true, trigger: 'click'})
-        @imageArea.popover({html: true, trigger: 'click', template: ''})
-        # <div class="popover" role="tooltip"><div class="arrow"></div><div class="popover-content" style="box-sizing: border-box"></div></div>
         @addColorPopoverShown = false
         @addImagePopoverShown = false 
 
+        _.each(@model.defaultColors, (i, color) =>
+          @colorInput.append('<div class="add-color-item" style="background-color:'+i+'" data-color="'+color+'"></div>')
+        )
+
+        $('.add-color-item').on 'click', (e) =>
+          @colorArea.css('color', $(e.currentTarget).css('background-color'))
+          @colorArea.data('color', $(e.currentTarget).data('color'))
+          @colorInput.addClass('hidden')
+
         @colorArea.on 'click', (e) =>
-          @imageArea.popover('hide')
+          @imageInput.addClass('hidden')
+          @colorInput.toggleClass('hidden')
 
         @imageArea.on 'click', (e) =>
-          @colorArea.popover('hide')
+          @colorInput.addClass('hidden')
+          @imageInput.toggleClass('hidden')
 
         @titleArea.on 'keydown', (e) =>
           if(e.keyCode == 13)
@@ -61,14 +71,17 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           target: "#add-node-form"
         
       resetAdd: () ->
-        @imageArea.popover('hide')
-        @colorArea.popover('hide')
+        @imageInput.addClass('hidden')
+        @colorInput.addClass('hidden')
+        
         @descriptionArea.atwho 'destroy'
         $('div[id=atwho-container]').remove()
-        $('#add').addClass('contracted')  
         @titleArea.val('')
-        @descriptionArea.val('')
-
+        @descriptionArea.val('') 
+        @descriptionArea.trigger('change')
+        @titleArea.trigger('change')   
+        $('#add').addClass('contracted')  
+                
       addNode: (e) ->
         if e? then e.preventDefault()
 
@@ -77,6 +90,11 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           attributes[obj.name] = obj.value
 
         attributes.selected = true
+        console.log(@colorArea.css('color'))
+        attributes.color = @colorArea.data('color')
+        attributes.image = @imageInput.val()
+        if(attributes['name'] == "" && attributes['description'] != "")
+          attributes['name'] = attributes['description'].substring(0,25)+ "..."
 
         node = new NodeModel attributes
         if node.isValid()
@@ -100,67 +118,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           @$el[0].reset() # blanks out the form fields
           @descriptionFocus = false
+          @resetAdd()
         else
           $('input', @el).attr('placeholder', node.validate())
-        @resetAdd()
+       
 
-
-      # moreInformation: ->
-      #   @$el.find('.node-description').removeClass 'hide'
-      #   @descriptionFocus = false
-      #   $('.node-description').hover () =>
-      #     @descriptionFocus = true
-      #   , () => @descriptionFocus = false
-
-      #   # TAB focues on description
-      #   $('.node-input').on 'keydown', (e) =>
-      #     keyCode = e.keyCode || e.which
-      #     if keyCode == 9 # code for TAB
-      #       e.preventDefault()
-      #       @descriptionFocus = true
-      #       @descriptionArea.focus()
-      #       @descriptionFocus = false
-
-      #   # Add atwho dropdowns to the description box
-        
-
-      # lessInformation: (e) ->
-      #   # Don't hide info if focusing on it
-      #   if !@descriptionFocus
-      #     @$el.find('.node-description').addClass 'hide'
-      #     @descriptionArea.atwho 'destroy'
-      #     $('div[id=atwho-container]').remove() # removes all instances of the atwho-container
-
-      # addNode: (e) ->
-      #   if e? then e.preventDefault()
-
-      #   attributes = {_docId: @model.nodes._docId}
-      #   _.each $('#add-node-form').serializeArray(), (obj) ->
-      #     attributes[obj.name] = obj.value
-
-      #   attributes.selected = true
-
-      #   node = new NodeModel attributes
-      #   if node.isValid()
-      #     @model.putNode node
-      #     node.set "tags", twttr.txt.extractHashtags attributes.description
-
-      #     $.when(node.save()).then =>
-      #       # Create connections to mentioned nodes
-      #       names = twttr.txt.extractMentions attributes.description
-
-      #       for name in _.uniq names
-      #         targetNode = @model.nodes.findWhere {name:name}
-      #         if targetNode?
-      #           connection = new @model.connections.model
-      #               source: node.get('_id')
-      #               target: targetNode.get('_id')
-      #               _docId: @model.documentModel.get('_id')
-      #               description: node.get('description')
-      #           connection.save()
-      #           @model.putConnection connection
-
-      #     @$el[0].reset() # blanks out the form fields
-      #     @descriptionFocus = false
-      #   else
-      #     $('input', @el).attr('placeholder', node.validate())
