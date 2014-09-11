@@ -80,6 +80,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           node.set "tags", twttr.txt.extractHashtags attributes.description
 
           $.when(node.save()).then =>
+            @lessInformation()
             # Create connections to mentioned nodes
             @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
             uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')
