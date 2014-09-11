@@ -43,9 +43,17 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
             @descriptionArea.focus()          
 
         @descriptionArea.on 'focus', (e) =>
-          if($('#add').hasClass('contracted'))
+          if $('#add').hasClass('contracted')
             $('#add').removeClass('contracted')
             @descriptionArea.attr('rows', '1')
+            @descriptionArea.atwho
+              at: "@"
+              data: @model.nodes.pluck('name')
+              target: "#add-node-form"
+            .atwho
+              at: "#"
+              data: @model.filterModel.getTags('node')
+              target: "#add-node-form"
                   
         $('body').on 'click', (e) =>
           @resetAdd()
@@ -60,15 +68,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @showingAtWho = true
         @descriptionArea.on 'hidden.atwho', (e) =>
           @showingAtWho = false
-
-        @descriptionArea.atwho
-          at: "@"
-          data: @model.nodes.pluck('name')
-          target: "#add-node-form"
-        .atwho
-          at: "#"
-          data: @model.filterModel.getTags('node')
-          target: "#add-node-form"
         
       resetAdd: () ->
         @imageInput.addClass('hidden')
@@ -90,7 +89,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           attributes[obj.name] = obj.value
 
         attributes.selected = true
-        console.log(@colorArea.css('color'))
         attributes.color = @colorArea.data('color')
         attributes.image = @imageInput.val()
         if(attributes['name'] == "" && attributes['description'] != "")
