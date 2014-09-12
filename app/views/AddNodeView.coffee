@@ -16,10 +16,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @imageInput = $('#add-image-container')
 
         @descriptionArea.elastic()
-        @titleArea.elastic()
-        @addColorPopoverShown = false
-        @addImagePopoverShown = false 
+        @titleArea.elastic() 
 
+        # Create color picker
         _.each(@model.defaultColors, (i, color) =>
           @colorInput.append('<div class="add-color-item" style="background-color:'+i+'" data-color="'+color+'"></div>')
         )
@@ -35,17 +34,14 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
         @imageArea.on 'click', (e) =>
           @colorInput.addClass('hidden')
-          @imageInput.toggleClass('hidden')
-
-        @titleArea.on 'keydown', (e) =>
-          if(e.keyCode == 13)
-            e.preventDefault()
-            @descriptionArea.focus()          
+          @imageInput.toggleClass('hidden')       
 
         @descriptionArea.on 'focus', (e) =>
           if $('#add').hasClass('contracted')
             $('#add').removeClass('contracted')
             @descriptionArea.attr('rows', '1')
+
+            # add at-who autocompletion
             @descriptionArea.atwho
               at: "@"
               data: @model.nodes.pluck('name')
@@ -54,21 +50,45 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
               at: "#"
               data: @model.filterModel.getTags('node')
               target: "#add-node-form"
+
+            # setup inserted mentions store
+            @mentions = []
+            @descriptionArea.on "inserted.atwho", (event, item) =>
+              insertedText = item.attr 'data-value'
+              if insertedText[0] is "@"
+                addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
+                @mentions.push addedMention
                   
-        $('body').on 'click', (e) =>
-          @resetAdd()
+        $('body').on 'click', (e) => @resetAdd()
+        $('#add').on 'click', (e) => e.stopPropagation()
 
-        $('#add').on 'click', (e) =>
-          e.stopPropagation()
+        @colorArea.on 'hover', (e) => $('#add-color-popover').show()
 
-        @colorArea.on 'hover', (e) =>
-          $('#add-color-popover').show()
+        @descriptionArea.on 'shown.atwho', (e) => @showingAtWho = true
+        @descriptionArea.on 'hidden.atwho', (e) => @showingAtWho = false
 
-        @descriptionArea.on 'shown.atwho', (e) =>
-          @showingAtWho = true
-        @descriptionArea.on 'hidden.atwho', (e) =>
-          @showingAtWho = false
-        
+        # ENTER to create a node (w/o SHIFT)
+        @descriptionArea.on 'keydown', (e) =>
+          keyCode = e.keyCode || e.which
+          # code for ENTER
+          if keyCode == 13 and !@showingAtWho and !e.shiftKey
+            e.currentTarget.blur()
+            @addNode()
+
+        # TAB from description to title
+        @descriptionArea.on 'keydown', (e) =>
+          keyCode = e.keyCode || e.which
+          if keyCode == 9 # code for TAB
+            e.preventDefault()
+            @titleArea.focus()
+
+        # TAB or ENTER from title to description
+        @titleArea.on 'keydown', (e) =>
+          keyCode = e.keyCode || e.which
+          if keyCode == 9 or keyCode == 13 # code for TAB or ENTER
+            e.preventDefault()
+            @descriptionArea.focus()
+
       resetAdd: () ->
         @imageInput.addClass('hidden')
         @colorInput.addClass('hidden')
@@ -80,7 +100,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @descriptionArea.trigger('change')
         @titleArea.trigger('change')   
         $('#add').addClass('contracted')  
-                
+
       addNode: (e) ->
         if e? then e.preventDefault()
 
@@ -101,10 +121,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           $.when(node.save()).then =>
             # Create connections to mentioned nodes
-            names = twttr.txt.extractMentions attributes.description
+            @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
+            uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')
 
-            for name in _.uniq names
-              targetNode = @model.nodes.findWhere {name:name}
+            for targetNode in uniqMentions
               if targetNode?
                 connection = new @model.connections.model
                     source: node.get('_id')
@@ -119,5 +139,3 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @resetAdd()
         else
           $('input', @el).attr('placeholder', node.validate())
-       
-
