@@ -13,6 +13,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #archive-node-button': 'archiveObj'
         'click #archive-connection-button': 'archiveObj'
         'click #delete-button': 'deleteObj'
+        'click #archive-button': 'archiveObj'
         'click #expand-node-button': 'expandNode'
 
       initialize: ->

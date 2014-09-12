@@ -5,7 +5,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
       events:
         'mouseenter .node-title-body' : 'showToolTip'
-        'mouseenter .connection' : 'showToolTip'
         'click .node-archive': 'archiveObj'
         'click .node-expand': 'expandNode'
         'click .node-fix': 'toggleFix'
@@ -21,9 +20,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         @graphView.on 'node:mouseenter', (node) =>
           @showToolTip(d3.event)
           if !(@ignoreMouse) then @highlight node
-
-        @graphView.on 'connection:mouseout', (conn) =>
-          if !(@ignoreMouse) then @emptyTooltip()
 
         @graphView.on 'node:drag', () =>
           @ignoreMouse = true
@@ -55,12 +51,10 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           p.append(nodeContainer)
           nodeContainer.find('.node-title-body').addClass('shown')
           nodeContainer.find('.node-info-body').addClass('shown').linkify()
-          $(event.currentTarget).find('.connection-info-body').addClass('shown').linkify()
 
       emptyTooltip: () ->
         $('.node-title-body').removeClass('shown')
         $('.node-info-body').removeClass('shown')
-        $('.connection-info-body').removeClass('shown')
 
       archiveObj: (event) ->
         removeId = parseInt $(event.currentTarget).attr("data-id")
