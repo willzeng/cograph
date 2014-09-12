@@ -49,8 +49,12 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
       showToolTip: (event) =>
         if !(@ignoreMouse)
           @emptyTooltip()
-          $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
-          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown').linkify()
+          nodeContainer = $(event.currentTarget).closest('.node')
+          p = nodeContainer.parent()
+          nodeContainer.remove()
+          p.append(nodeContainer)
+          nodeContainer.find('.node-title-body').addClass('shown')
+          nodeContainer.find('.node-info-body').addClass('shown').linkify()
           $(event.currentTarget).find('.connection-info-body').addClass('shown').linkify()
 
       emptyTooltip: () ->
