@@ -21,7 +21,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @addImagePopoverShown = false 
 
         _.each(@model.defaultColors, (i, color) =>
-          @colorInput.append('<div class="add-color-item" style="background-color:'+i+'" data-color="'+color+'"></div>')
+          @colorInput.append('<div class="add-color-item color-circle" style="background-color:'+i+'" data-color="'+color+'"></div>')
         )
 
         $('.add-color-item').on 'click', (e) =>
@@ -36,6 +36,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @imageArea.on 'click', (e) =>
           @colorInput.addClass('hidden')
           @imageInput.toggleClass('hidden')
+          @imageInput.focus()
 
         @titleArea.on 'keydown', (e) =>
           if(e.keyCode == 13)
@@ -98,7 +99,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           attributes[obj.name] = obj.value
 
         attributes.selected = true
-        console.log(@colorArea.css('color'))
         attributes.color = @colorArea.data('color')
         attributes.image = @imageInput.val()
         if(attributes['name'] == "" && attributes['description'] != "")

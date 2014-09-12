@@ -20,12 +20,12 @@ block content
             textarea#add-description(name="description", placeholder='Add Node', rows='1')
             #add-toolbar.cf
               #add-toolbar-left
-                button#add-color(type="button")
+                button#add-color.color-circle(type="button")
                   i.fa.fa-circle(title="Change color")
                 div#add-color-container.hidden
                 button#add-image(type="button")
                   i.fa.fa-image(title='Add image')
-                input#add-image-container.hidden(type="text", placeholder="Enter image url")
+                input#add-image-container.hidden(type="text", placeholder="image url")
               #add-toolbar-right
                 button#add-submit(title='Create node')
                   | Done

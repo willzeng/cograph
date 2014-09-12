@@ -9,7 +9,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click .close' : 'closeDetail'
         'click #edit-node-button': 'editNodeConnection'
         'click #edit-connection-button': 'editNodeConnection'
-        'submit form': 'saveNodeConnection'
+        'submit #edit-node-form': 'saveNodeConnection'
         'click #archive-node-button': 'archiveObj'
         'click #archive-connection-button': 'archiveObj'
         'click #delete-button': 'deleteObj'
