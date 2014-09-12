@@ -46,6 +46,14 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           if($('#add').hasClass('contracted'))
             $('#add').removeClass('contracted')
             @descriptionArea.attr('rows', '1')
+
+        @descriptionArea.on 'keydown', (e) =>
+          if(!e.shiftKey && e.keyCode == 13)
+            e.preventDefault()
+            @addNode()
+            @descriptionArea.blur()
+            @descriptionArea.focus()
+
                   
         $('body').on 'click', (e) =>
           @resetAdd()
