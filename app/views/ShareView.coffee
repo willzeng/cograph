@@ -1,18 +1,18 @@
 define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', 'share-button'],
   ($, _, Backbone, shareTemplate, shareButton) ->
     class ShareView extends Backbone.View
-      el: $ '#graph'
+      el: $ 'body'
 
       events:
-        'click #share-button': 'saveWorkspace'
+        'click #save-workspace-button': 'saveWorkspace'
         'focusout #workspace-name': 'nameWorkspace'
 
       initialize: ->
         @toggleShown = false
 
-        @share = new shareButton "#share-button",
-          ui:
-            flyout: 'middle left'
+        # @share = new shareButton "#sharing-button",
+        #   ui:
+        #     flyout: 'middle left'
 
         popoverTemplate = '''
           <div class="popover" role="tooltip">
@@ -25,7 +25,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
             </form>
           </div>'
         '''
-        $('#share-button').popover
+        $('#save-workspace-button').popover
           template: popoverTemplate
 
       nameWorkspace: ->

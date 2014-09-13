@@ -1,5 +1,7 @@
 @import "colors";
 
+@body-background: @white; /*#efefef;*/
+
 @node-color: white;
 @connection-color: black;
 @stroke-color: black;
@@ -7,10 +9,14 @@
 @selected-nodetext-color: white;
 @fixed-color: @orange;
 @text-color: #333;
-@data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
+@left-sidebar-z-index: @controls-z-index+1;
 
-@bottom-margin:60px;
+@bottom-margin:70px;
+
+body, .node-title-body {
+  font-family: 'Varela Round';
+}
 
 .node {
   /*transition: opacity .5s ease-in-out;*/
@@ -21,12 +27,16 @@
 }
 
 .node.fixed .node-connector {
-  stroke-width: 1px;
+  stroke-width: 2px;
   stroke: orange;
 }
 
 .node.fixed .node-fix {
   color: @fixed-color;
+}
+
+.node.image .node-title-body .pad {
+  padding-left: 10px;
 }
 
 .node.selected .node-connector {
@@ -85,8 +95,7 @@
 
 .node-title-body {
   cursor: pointer;
-  font: 16px sans-serif;
-  font-weight:bold;
+  font-size: 16px;
   text-anchor: middle;
   fill: @text-color;
 }
@@ -120,6 +129,13 @@
   stroke-width: 5px;
   opacity: 1;
   visibility: visible;
+}
+
+.node-expand-count {
+  box-sizing: border-box;
+  margin-left: -5px;
+  font-size: 9px;
+  vertical-align: bottom;
 }
 
 .connection.selected line {
@@ -156,7 +172,7 @@ line.hidden {
 
 html, body {
   overflow: hidden;
-  background: #efefef;
+  background: @body-background;
   height: 100%;
 }
 
@@ -177,7 +193,6 @@ svg {
 #graph {
   width: 100%;
   height: 100%;
-  right:0;
   position: fixed;
 }
 
@@ -206,9 +221,8 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   left: 15px;
 }
 
-#sidebar {
+.sidebar {
   position: absolute;
-  left: 0;
   top: 0;
   height: 100%;
   width: 0;
@@ -216,8 +230,17 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   overflow-y: auto;
 }
 
+.sidebar.left {
+  left:0;
+  z-index: @left-sidebar-z-index;
+}
+
+.sidebar.right{
+  right:0;
+}
+
 #sidebar-toggle {
-  margin: 10px 0 0 0;
+  margin-left: 10px;
 }
 
 #trash-bin {
@@ -261,20 +284,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   padding-bottom: 10px;
 }
 
-.data-tooltip-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.data-tooltip {
-  background: @data-tooltip-color;
-  color: white;
-  font-size: 12px;
-  border: 1px solid white;
-  max-width: 300px;
-}
-
 .toolbar {
   position: absolute;
 }
@@ -296,12 +305,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
     margin-right:3px;
     margin-left: 3px;
   }
-
-  .share-holder {
-    bottom: 20px;
-    right: 15px;
-    position: absolute !important;
-  }
 }
 
 .controls {
@@ -310,6 +313,8 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #add-node-form {
   width: 255px;
+  position:relative;
+  top:-60px;
   textarea {
     width: 230px;
     margin-top: 8px;
@@ -331,7 +336,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 .main-nav {
-  padding: 0;
   border: 0;
 }
 
@@ -352,11 +356,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 #menu-title {
   position: relative;
   outline: none;
-  background: beige;
   color: black;
   border: 0;
   cursor: pointer;
   padding: 6px;
+  top: 8px;
+  width: 300px;
 }
 
 #menu-title:focus {
@@ -391,6 +396,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   }
 }
 
+#workspace-name {
+  margin-left: 5px;
+  margin-top: 6px;
+  padding-left: 6px;
+}
+
 // Overriding Bootstrap defaults
 
 .btn {
@@ -422,6 +433,14 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .form-control {
   border-radius: 0 !important;
+}
+
+.sidebar .list-group-item {
+  background-color: transparent;
+  border-radius: 0;
+  border: none;
+  color: #2C93FF;
+  cursor: pointer;
 }
 
 // Bootstrap-colorpalette

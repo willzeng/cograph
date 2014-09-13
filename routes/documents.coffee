@@ -1,5 +1,6 @@
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
+_ = require __dirname + '/../node_modules/underscore/underscore'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
@@ -87,6 +88,8 @@ exports.prefetch = (req, resp, callback) ->
       cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
       graphDb.query cypherQuery, {}, (err, results) ->
         connections = (utils.parseCypherResult(connection, 'r') for connection in results) || {}
+        for n in parsedNodes
+          n.neighborCount = _.filter(connections, (conn) => (conn.source == n._id || conn.target == n._id)).length
         callback {nodes:parsedNodes, connections:connections, theDocument: theDocument}
 
 # UPDATE

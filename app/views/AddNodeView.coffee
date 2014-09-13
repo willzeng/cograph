@@ -54,6 +54,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         if !@descriptionFocus
           @$el.find('.node-description').addClass 'hide'
           @descriptionArea.atwho 'destroy'
+          $('div[id=atwho-container]').remove() # removes all instances of the atwho-container
 
       addNode: (e) ->
         if e? then e.preventDefault()

@@ -77,6 +77,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
         @connections = new ConnectionCollection()
         @connections.on "create:req", (reqCreate) =>
+          # Fetch the source and target to update their new connection degrees
+          @getSourceOf(reqCreate).fetch()
+          @getTargetOf(reqCreate).fetch()
           @putConnection reqCreate
 
         @filterModel = new FilterModel()
