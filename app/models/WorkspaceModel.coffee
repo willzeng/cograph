@@ -38,6 +38,11 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket.on @url()+":create", (objData) =>
           @trigger "create:req", new @model objData, {parse:true}
 
+        @socket.on @url()+":block", (blocker) =>
+          editBlocked = confirm "A connection already exists here. Do you want to edit that connection?"
+          if editBlocked
+            @trigger "conn:block", new ConnectionModel blocker
+
     class NodeCollection extends ObjectCollection
       model: NodeModel
       url: -> "nodes"
@@ -76,6 +81,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           @getSourceOf(reqCreate).fetch()
           @getTargetOf(reqCreate).fetch()
           @putConnection reqCreate
+        @connections.on "conn:block", (c) =>
+          visibleBlock = @connections.findWhere {_id:c.get('_id')}
+          # if the blocking connection is not on the workspace then add it
+          if not(visibleBlock?)
+            visibleBlock = @connections.add c
+          @trigger 'edit:conn', visibleBlock
 
         @filterModel = new FilterModel()
         @nodes.on "change:tags", @updateFilter, this

@@ -2,6 +2,7 @@ url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require '../../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require '../utils'
+_ = require __dirname + '/../../node_modules/underscore/underscore'
 
 # CREATE
 exports.create = (data, callback, socket) ->
@@ -9,13 +10,21 @@ exports.create = (data, callback, socket) ->
   newConnection = data
   graphDb.getNodeById newConnection.source, (err, source) ->
     graphDb.getNodeById newConnection.target, (err, target) ->
-      source.createRelationshipTo target, 'connection', newConnection, (err, conn) ->
-        newConnection._id = conn.id
-        conn.data._id = conn.id
-        conn.save () -> console.log "saved connection with id", conn.id
-        socket.emit 'connections:create', newConnection
-        socket.broadcast.to(newConnection._docId).emit 'connections:create', newConnection
-        callback null, newConnection
+      source.getRelationships 'connection', (err, rels) ->
+        alreadyExists = false
+        for r in rels
+          sourceTargetIds = [r._data.data.source,r._data.data.target]
+          if _.contains(sourceTargetIds, newConnection.source) and _.contains(sourceTargetIds, newConnection.target)
+            alreadyExists = true
+            socket.emit 'connections:block', r._data.data
+        if not alreadyExists
+          source.createRelationshipTo target, 'connection', newConnection, (err, conn) ->
+            newConnection._id = conn.id
+            conn.data._id = conn.id
+            conn.save () -> console.log "saved connection with id", conn.id
+            socket.emit 'connections:create', newConnection
+            socket.broadcast.to(newConnection._docId).emit 'connections:create', newConnection
+            callback null, newConnection
 
 # READ
 exports.read = (data, callback, socket) ->
