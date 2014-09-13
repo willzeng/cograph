@@ -73,12 +73,13 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @nodeConnectionForm.commit()
         @nodeConnectionForm.model.save()
 
-        newConns = _.uniq @mentionedConns, (conn) ->
-          conn.get 'target'
+        if @nodeConnectionForm.model.constructor.name is "NodeModel"
+          newConns = _.uniq @mentionedConns, (conn) ->
+            conn.get 'target'
 
-        for c in newConns
-          c.save()
-          @model.putConnection c
+          for c in newConns
+            c.save()
+            @model.putConnection c
 
         @closeDetail()
         false
@@ -122,6 +123,14 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
               at: "#"
               data: that.model.filterModel.getTags('node')
               target: ".modal-content"
+
+            # store inserted mentions
+            @mentions = []
+            this.$el.on "inserted.atwho", (event, item) =>
+              insertedText = item.attr 'data-value'
+              if insertedText[0] is "@"
+                addedMention = that.model.nodes.findWhere({name:insertedText.slice(1)})
+                @mentions.push addedMention
             return this
 
           # This parses the text to pull out mentions
@@ -129,11 +138,12 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             str = this.$el.val()
             @model.set "tags", twttr.txt.extractHashtags(str)
 
-            # Create connections to mentioned nodes
-            names = twttr.txt.extractMentions str
+            # only include mentions that still remain in the
+            # description text
+            @mentions = _.filter @mentions, (m) -> str.indexOf(m.get('name')) > 0
 
-            for name in names when name isnt @model.get('name')
-              targetNode = that.model.nodes.findWhere({name:name})
+            # Create connections to mentioned nodes
+            for targetNode in @mentions when targetNode.get('_id') isnt @model.get('_id')
               # get existing connections
               spokes = that.model.connections.filter (c) =>
                 c.get('source') is @model.get('_id')
