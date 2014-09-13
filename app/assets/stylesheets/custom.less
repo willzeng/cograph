@@ -237,6 +237,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .sidebar.right{
   right:0;
+  z-index: @left-sidebar-z-index;
 }
 
 #sidebar-toggle {
@@ -371,6 +372,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 .network-share-button {
   margin-right:auto;
   margin-left:auto;
+}
+
+#phantom-share {
+  position: relative;
+  top: 80px;
+  left: 30px;
 }
 
 .loading-container {

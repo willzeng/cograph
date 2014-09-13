@@ -10,9 +10,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
       initialize: ->
         @toggleShown = false
 
-        # @share = new shareButton "#sharing-button",
-        #   ui:
-        #     flyout: 'middle left'
+        @share = new shareButton "#phantom-share",
+          ui:
+            flyout: 'middle left'
+        $('.entypo-export').hide()
+        $('#sharing-button').click -> $('.entypo-export').trigger 'click'
 
         popoverTemplate = '''
           <div class="popover" role="tooltip">
