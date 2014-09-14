@@ -7,15 +7,15 @@ module.exports = function(app, passport) {
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
-  app.get('/', function(req, res) {
-    res.render('user-index.jade'); // load the index.ejs file
+  app.get('/', isNotLoggedIn, function(req, res) {
+    res.render('user-index.jade');
   });
 
   // =====================================
   // LOGIN ===============================
   // =====================================
   // show the login form
-  app.get('/u/login', function(req, res) {
+  app.get('/login', function(req, res) {
 
     // render the page and pass in any flash data if it exists
     res.render('login.jade', { message: req.flash('loginMessage') }); 
@@ -23,8 +23,8 @@ module.exports = function(app, passport) {
 
   // process the login form
   app.post('/login', passport.authenticate('local-login', {
-    successRedirect : '/u/profile', // redirect to the secure profile section
-    failureRedirect : '/u/login', // redirect back to the signup page if there is an error
+    successRedirect : '/profile', // redirect to the secure profile section
+    failureRedirect : '/login', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
   }));
 
@@ -32,7 +32,7 @@ module.exports = function(app, passport) {
   // SIGNUP ==============================
   // =====================================
   // show the signup form
-  app.get('/u/signup', function(req, res) {
+  app.get('/signup', function(req, res) {
 
     // render the page and pass in any flash data if it exists
     res.render('signup.jade', { message: req.flash('signupMessage') });
@@ -40,8 +40,8 @@ module.exports = function(app, passport) {
 
   // process the signup form
   app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect : '/u/profile', // redirect to the secure profile section
-    failureRedirect : '/u/signup', // redirect back to the signup page if there is an error
+    successRedirect : '/profile', // redirect to the secure profile section
+    failureRedirect : '/signup', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
   }));
 
@@ -50,7 +50,7 @@ module.exports = function(app, passport) {
   // =====================================
   // we will want this protected so you have to be logged in to visit
   // we will use route middleware to verify this (the isLoggedIn function)
-  app.get('/u/profile', isLoggedIn, function(req, res) {
+  app.get('/profile', isLoggedIn, function(req, res) {
     documents.helper.getAll(function(docs){
       res.render('profile.jade', {
         user : req.user, // get the user out of session and pass to template
@@ -62,7 +62,7 @@ module.exports = function(app, passport) {
   // =====================================
   // LOGOUT ==============================
   // =====================================
-  app.get('/u/logout', function(req, res) {
+  app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
   });
@@ -71,10 +71,21 @@ module.exports = function(app, passport) {
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
-  // if user is authenticated in the session, carry on 
+  // if user is authenticated in the session, carry on
   if (req.isAuthenticated())
     return next();
 
   // if they aren't redirect them to the home page
   res.redirect('/');
+}
+
+// route middleware to see if a user is not logged in
+function isNotLoggedIn(req, res, next) {
+
+  // if user is authenticated in the session, carry on
+  if (!req.isAuthenticated())
+    return next();
+
+  // if they aren't redirect them to their profile
+  res.redirect('/profile');
 }
