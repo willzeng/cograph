@@ -1,13 +1,14 @@
 // routes/users.js
 
 var documents = require('./documents');
+var utils = require('./utils');
 
 module.exports = function(app, passport) {
 
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
-  app.get('/', isNotLoggedIn, function(req, res) {
+  app.get('/', utils.isNotLoggedIn, function(req, res) {
     res.render('user-index.jade');
   });
 
@@ -50,7 +51,7 @@ module.exports = function(app, passport) {
   // =====================================
   // we will want this protected so you have to be logged in to visit
   // we will use route middleware to verify this (the isLoggedIn function)
-  app.get('/profile', isLoggedIn, function(req, res) {
+  app.get('/profile', utils.isLoggedIn, function(req, res) {
     documents.helper.getAll(function(docs){
       res.render('profile.jade', {
         user : req.user, // get the user out of session and pass to template
@@ -67,25 +68,3 @@ module.exports = function(app, passport) {
     res.redirect('/');
   });
 };
-
-// route middleware to make sure a user is logged in
-function isLoggedIn(req, res, next) {
-
-  // if user is authenticated in the session, carry on
-  if (req.isAuthenticated())
-    return next();
-
-  // if they aren't redirect them to the home page
-  res.redirect('/');
-}
-
-// route middleware to see if a user is not logged in
-function isNotLoggedIn(req, res, next) {
-
-  // if user is authenticated in the session, carry on
-  if (!req.isAuthenticated())
-    return next();
-
-  // if they aren't redirect them to their profile
-  res.redirect('/profile');
-}

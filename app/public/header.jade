@@ -14,6 +14,9 @@ nav.navbar.navbar-default(role='navigation')
         // Collect the nav links, forms, and other content for toggling
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.pull-right
+            if isAuthenticated
+              li
+                a Logged in as: #{user.local.email.split('@')[0]}
             li
               button#sidebar-toggle-right.btn.btn-default
                 i.fa.fa-share-alt

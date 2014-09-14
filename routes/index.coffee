@@ -19,6 +19,11 @@ router.get '/new', (request, response) ->
 
 router.get '/:id', (request, response) ->
   documents.prefetch request, response, (prefetched) ->
+    if request.isAuthenticated()
+      prefetched.isAuthenticated = true
+      prefetched.user = request.user
+    else
+      prefetched.isAuthenticated = false
     response.render 'index.jade', prefetched
 
 router.get '/mobile', (request, response) ->
