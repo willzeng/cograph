@@ -38,7 +38,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @imageInput.focus()
 
         @titleArea.on 'keydown', (e) =>
-          if(e.keyCode == 13)
+          if e.keyCode == 13 # code for ENTER
             e.preventDefault()
             @descriptionArea.focus()          
 
@@ -58,14 +58,15 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
               target: "#add-node-form"
 
             # setup inserted mentions store
-            @mentions = []
+            if @descriptionArea.val() is ""
+              @mentions = []
             @descriptionArea.on "inserted.atwho", (event, item) =>
               insertedText = item.attr 'data-value'
               if insertedText[0] is "@"
                 addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
-                @mentions.push addedMention
+                if addedMention? then @mentions.push addedMention
                   
-        $('body').on 'click', (e) => @resetAdd()
+        $('body').on 'click', (e) => if not $('#add').hasClass('contracted') then @resetAdd()
         $('#add').on 'click', (e) => e.stopPropagation()
 
         @colorArea.on 'hover', (e) => $('#add-color-popover').show()
@@ -142,8 +143,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                 connection.save()
                 @model.putConnection connection
 
-          @$el[0].reset() # blanks out the form fields
-          @descriptionFocus = false
-          @resetAdd()
+            @resetAdd()
         else
           $('input', @el).attr('placeholder', node.validate())
