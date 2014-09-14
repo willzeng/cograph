@@ -3,9 +3,11 @@ extends layout
 block content
   .sidebar.left#sidebar
     ul.nav.nav-stacked
-      if isAuthenticated
-        li
+      li
+        if isAuthenticated
           a(href="/profile") Your Profile
+        else
+          a(href="/login") Login
       li
         a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
       li.dropdown
