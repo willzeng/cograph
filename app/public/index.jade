@@ -15,13 +15,20 @@ block content
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form.form-inline
-          .input-group
-            input.node-input.form-control(type="text", name='name', placeholder="Add something")
-            span.input-group-btn
-              button.btn.btn-primary(type="submit", value="+")  
-                i.fa.fa-plus  
-          .form-group.node-description.hide
-            textarea.form-control(name='description', placeholder="Enter a description")
+          #add.contracted
+            textarea#add-title(name="name", placeholder='Title', rows='1')
+            textarea#add-description(name="description", placeholder='Add Something', rows='1')
+            #add-toolbar.cf
+              #add-toolbar-left
+                button#add-color.color-circle(type="button")
+                  i.fa.fa-circle(title="Change color")
+                div#add-color-container.hidden
+                button#add-image(type="button")
+                  i.fa.fa-image(title='Add image')
+                input#add-image-container.hidden(type="text", placeholder="image url")
+              #add-toolbar-right
+                button#add-submit(title='Create something')
+                  | Done
 
     .toolbar.bottom.right.controls
       button#save-workspace-button.btn.btn-primary
@@ -34,5 +41,5 @@ block content
       button#zoom-out-button.btn.btn-primary(title="Zoom Out")
         i.glyphicon.glyphicon-minus
     #trash-bin.controls(title="Drag a node here to Archive it")
-      i.fa.fa-eye-slash
+      i.fa.fa-archive
   .data-tooltip-container

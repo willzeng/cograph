@@ -10,7 +10,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
       name: ''
       description: ''
       url: ''
-      color: 'black'
+      color: 'black' #hard coded default is kindof a problem
       tags: []
       _id: -1
       _docId: 0
