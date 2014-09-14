@@ -15,7 +15,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #open': 'openDocumentModal'
 
       newGraphDoc: ->
-        window.open '/'
+        window.open '/new'
 
       openDocumentModal: ->
         documents = new DocumentCollection window.prefetch

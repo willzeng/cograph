@@ -7,7 +7,7 @@ module.exports = function(app, passport) {
   // =====================================
   // HOME PAGE (with login links) ========
   // =====================================
-  app.get('/u', function(req, res) {
+  app.get('/', function(req, res) {
     res.render('user-index.jade'); // load the index.ejs file
   });
 
@@ -64,7 +64,7 @@ module.exports = function(app, passport) {
   // =====================================
   app.get('/u/logout', function(req, res) {
     req.logout();
-    res.redirect('/u');
+    res.redirect('/');
   });
 };
 
@@ -76,5 +76,5 @@ function isLoggedIn(req, res, next) {
     return next();
 
   // if they aren't redirect them to the home page
-  res.redirect('/u');
+  res.redirect('/');
 }

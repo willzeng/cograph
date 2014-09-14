@@ -13,7 +13,7 @@ integerRegex = /^\d+$/
 router.param 'id', integerRegex
 router.param 'docId', integerRegex
 
-router.get '/', (request, response) ->
+router.get '/new', (request, response) ->
   documents.addBlank (savedDocument) ->
     response.redirect "/#{savedDocument._id}"
 
