@@ -1,60 +1,113 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel',
-'atwho', 'twittertext'],
+'atwho', 'twittertext', 'elastic'],
   ($, _, Backbone, WorkspaceModel, NodeModel, atwho, twittertext) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
 
-      events:
-        'focusout textarea': 'lessInformation'
-        'focus .node-input': 'moreInformation'
-        'submit': 'addNode'
-        'focusout .node-input': 'lessInformation'
+      events: 
+        'submit' : 'addNode'
 
       initialize: ->
-        @descriptionArea = $('.node-description > textarea')
-        @descriptionArea.on 'shown.atwho', (e) =>
-          @showingAtWho = true
-        @descriptionArea.on 'hidden.atwho', (e) =>
-          @showingAtWho = false
+        @descriptionArea = $('#add-description')
+        @titleArea = $('#add-title')
+        @colorArea = $('#add-color')
+        @imageArea = $('#add-image')
+        @colorInput = $('#add-color-container')
+        @imageInput = $('#add-image-container')
 
+        @descriptionArea.elastic()
+        @titleArea.elastic() 
+
+        # Create color picker
+        _.each(@model.defaultColors, (i, color) =>
+          @colorInput.append('<div class="add-color-item color-circle" style="background-color:'+i+'" data-color="'+color+'"></div>')
+        )
+
+        $('.add-color-item').on 'click', (e) =>
+          @colorArea.css('color', $(e.currentTarget).css('background-color'))
+          @colorArea.data('color', $(e.currentTarget).data('color'))
+          @colorInput.addClass('hidden')
+
+        @colorArea.on 'click', (e) =>
+          @imageInput.addClass('hidden')
+          @colorInput.toggleClass('hidden')
+
+        @imageArea.on 'click', (e) =>
+          @colorInput.addClass('hidden')
+          @imageInput.toggleClass('hidden')
+          @imageInput.focus()
+
+        @titleArea.on 'keydown', (e) =>
+          if(e.keyCode == 13)
+            e.preventDefault()
+            @descriptionArea.focus()          
+
+        @descriptionArea.on 'focus', (e) =>
+          if $('#add').hasClass('contracted')
+            $('#add').removeClass('contracted')
+            @descriptionArea.attr('rows', '1')
+
+            # add at-who autocompletion
+            @descriptionArea.atwho
+              at: "@"
+              data: @model.nodes.pluck('name')
+              target: "#add-node-form"
+            .atwho
+              at: "#"
+              data: @model.filterModel.getTags('node')
+              target: "#add-node-form"
+
+            # setup inserted mentions store
+            @mentions = []
+            @descriptionArea.on "inserted.atwho", (event, item) =>
+              insertedText = item.attr 'data-value'
+              if insertedText[0] is "@"
+                addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
+                @mentions.push addedMention
+                  
+        $('body').on 'click', (e) => @resetAdd()
+        $('#add').on 'click', (e) => e.stopPropagation()
+
+        @colorArea.on 'hover', (e) => $('#add-color-popover').show()
+
+        @descriptionArea.on 'shown.atwho', (e) => @showingAtWho = true
+        @descriptionArea.on 'hidden.atwho', (e) => @showingAtWho = false
+
+        # ENTER to create a node (w/o SHIFT)
         @descriptionArea.on 'keydown', (e) =>
           keyCode = e.keyCode || e.which
           # code for ENTER
-          if keyCode == 13 and !@showingAtWho
+          if keyCode == 13 and !@showingAtWho and !e.shiftKey
+            e.currentTarget.blur()
             @addNode()
+            @descriptionArea.blur()
+            @descriptionArea.focus()
 
-      moreInformation: ->
-        @$el.find('.node-description').removeClass 'hide'
-        @descriptionFocus = false
-        $('.node-description').hover () =>
-          @descriptionFocus = true
-        , () => @descriptionFocus = false
-
-        # TAB focues on description
-        $('.node-input').on 'keydown', (e) =>
+        # TAB from description to title
+        @descriptionArea.on 'keydown', (e) =>
           keyCode = e.keyCode || e.which
           if keyCode == 9 # code for TAB
             e.preventDefault()
-            @descriptionFocus = true
+            @titleArea.focus()
+
+        # TAB or ENTER from title to description
+        @titleArea.on 'keydown', (e) =>
+          keyCode = e.keyCode || e.which
+          if keyCode == 9 or keyCode == 13 # code for TAB or ENTER
+            e.preventDefault()
             @descriptionArea.focus()
-            @descriptionFocus = false
 
-        # Add atwho dropdowns to the description box
-        @descriptionArea.atwho
-          at: "@"
-          data: @model.nodes.pluck('name')
-          target: "#add-node-form"
-        .atwho
-          at: "#"
-          data: @model.filterModel.getTags('node')
-          target: "#add-node-form"
-
-      lessInformation: (e) ->
-        # Don't hide info if focusing on it
-        if !@descriptionFocus
-          @$el.find('.node-description').addClass 'hide'
-          @descriptionArea.atwho 'destroy'
-          $('div[id=atwho-container]').remove() # removes all instances of the atwho-container
+      resetAdd: () ->
+        @imageInput.addClass('hidden')
+        @colorInput.addClass('hidden')
+        
+        @descriptionArea.atwho 'destroy'
+        $('div[id=atwho-container]').remove()
+        @titleArea.val('')
+        @descriptionArea.val('') 
+        @descriptionArea.trigger('change')
+        @titleArea.trigger('change')   
+        $('#add').addClass('contracted')  
 
       addNode: (e) ->
         if e? then e.preventDefault()
@@ -64,6 +117,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           attributes[obj.name] = obj.value
 
         attributes.selected = true
+        attributes.color = @colorArea.data('color')
+        attributes.image = @imageInput.val()
+        if(attributes['name'] == "" && attributes['description'] != "")
+          attributes['name'] = attributes['description'].substring(0,25)+ "..."
 
         node = new NodeModel attributes
         if node.isValid()
@@ -72,10 +129,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           $.when(node.save()).then =>
             # Create connections to mentioned nodes
-            names = twttr.txt.extractMentions attributes.description
+            @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
+            uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')
 
-            for name in _.uniq names
-              targetNode = @model.nodes.findWhere {name:name}
+            for targetNode in uniqMentions
               if targetNode?
                 connection = new @model.connections.model
                     source: node.get('_id')
@@ -87,5 +144,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           @$el[0].reset() # blanks out the form fields
           @descriptionFocus = false
+          @resetAdd()
         else
           $('input', @el).attr('placeholder', node.validate())
