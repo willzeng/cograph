@@ -1,4 +1,7 @@
 // routes/users.js
+
+var documents = require('./documents');
+
 module.exports = function(app, passport) {
 
   // =====================================
@@ -48,8 +51,11 @@ module.exports = function(app, passport) {
   // we will want this protected so you have to be logged in to visit
   // we will use route middleware to verify this (the isLoggedIn function)
   app.get('/u/profile', isLoggedIn, function(req, res) {
-    res.render('profile.jade', {
-      user : req.user // get the user out of session and pass to template
+    documents.helper.getAll(function(docs){
+      res.render('profile.jade', {
+        user : req.user, // get the user out of session and pass to template
+        docs : docs // prefetch the list of document names for opening
+      });
     });
   });
 

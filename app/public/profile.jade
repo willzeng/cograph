@@ -1,17 +1,26 @@
-html
-  head
-    title GraphDocs #{user.local.email}
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
-    style
-      body(style='padding-top:80px;word-wrap:break-word;')
-  body
+doctype html
+html(lang="en")
+head
+  title GraphDocs #{user.local.email}
+  meta(charset='utf-8')
+  link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+  link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+  base(href="/")
+  script(type='text/javascript', data-main="landing", src="/assets/libs/requirejs/require.js") //loads landing.js
+  script.
+    window.prefetch =!{JSON.stringify(docs)};
+
+  body(style='padding-top:80px')
     .container
       .page-header.text-center
         h1
           span.fa.fa-anchor
           |  Profile Page
         a.btn.btn-default.btn-sm(href='/u/logout') Logout
+      .row.text-center#button-container
+        input#create.btn.btn-primary(type='button', value='Create new GraphDoc')
+        input#open.btn.btn-default(type='button', value='Open existing GraphDoc')
+      br
       .row
         // LOCAL INFORMATION 
         .col-sm-6
@@ -25,7 +34,3 @@ html
               strong email:    #{user.local.email}
               br
               strong password: #{user.local.password}
-
-            //-               <strong>id</strong>: <%= user._id %><br>
-            //- <strong>email</strong>: <%= user.local.email %><br>
-            //- <strong>password</strong>: <%= user.local.password %>
