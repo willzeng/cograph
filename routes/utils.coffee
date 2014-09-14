@@ -88,6 +88,6 @@ utils =
   isNotLoggedIn: (req, res, next) ->
     # if user is authenticated in the session, carry on
     if not req.isAuthenticated() then next()
-    else res.redirect '/'
+    else res.redirect '/profile'
 
 module.exports = utils
