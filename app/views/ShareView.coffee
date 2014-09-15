@@ -6,6 +6,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
       events:
         'click #sharing-button': 'openShareModal'
         'click #save-workspace-button': 'saveWorkspace'
+        'click .public-button': 'togglePublic'
+
+      initialize: ->
+        @updatePublicButton()
+        @model.getDocument().on 'change:public', @updatePublicButton, this
 
       openShareModal: ->
         @newShareModal = new Backbone.BootstrapModal(
@@ -23,3 +28,14 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
       saveWorkspace: ->
         @model.sync "create", @model,
           success: (savedModel) => @trigger "save:workspace", savedModel._id
+
+      updatePublicButton: ->
+        if @model.getDocument().get 'public'
+          $('.public-button').text 'Make GraphDoc private'
+        else
+          $('.public-button').text 'Make GraphDoc public'
+
+      togglePublic: ->
+        doc = @model.getDocument()
+        doc.set "public", not doc.get "public"
+        doc.save()

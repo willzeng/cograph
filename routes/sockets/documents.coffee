@@ -27,9 +27,9 @@ exports.read = (data, callback, socket) ->
       callback null, parsed
 
 exports.readCollection = (data, callback, socket) ->
-    serverDocument.getAll (docs) ->
-      socket.emit 'documents:read', docs
-      callback null, docs
+  serverDocument.getAll (docs) ->
+    socket.emit 'documents:read', docs
+    callback null, docs
 
 # UPDATE
 exports.update = (data, callback, socket) ->

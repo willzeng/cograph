@@ -62,3 +62,5 @@ block content
     .list-group
       a.list-group-item#save-workspace-button Save Workspace
       a.list-group-item#sharing-button Share GraphDoc
+      if isAuthenticated
+        a.list-group-item.public-button Make GraphDoc public
