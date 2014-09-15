@@ -32,5 +32,16 @@ class DocumentHelper
       nodes = (utils.parseCypherResult(node, 'n') for node in results)
       callback nodes
 
+  getByIds: (ids, callback) ->
+    if ids.length is 0
+      callback []
+    else
+      params = {ids:ids}
+      cypherQuery = "start n=node({ids}) return n;"
+      @graphDb.query cypherQuery, params, (err, results) ->
+        if err then throw err
+        nodes = (utils.parseCypherResult(node, 'n') for node in results)
+        callback nodes
+
 
 module.exports = DocumentHelper

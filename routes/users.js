@@ -53,9 +53,12 @@ module.exports = function(app, passport) {
   // we will use route middleware to verify this (the isLoggedIn function)
   app.get('/profile', utils.isLoggedIn, function(req, res) {
     documents.helper.getAll(function(docs){
-      res.render('profile.jade', {
-        user : req.user, // get the user out of session and pass to template
-        docs : docs // prefetch the list of document names for opening
+      documents.helper.getByIds(req.user.documents, function(privateDocs){
+        res.render('profile.jade', {
+          user : req.user, // get the user out of session and pass to template
+          docs : docs, // prefetch the list of document names for opening
+          userDocs: privateDocs // prefetch the users private documents
+        });
       });
     });
   });

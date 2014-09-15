@@ -19,7 +19,7 @@ head
         a.btn.btn-default.btn-sm(href='/logout') Logout
       .row.text-center#button-container
         input#create.btn.btn-primary(type='button', value='Create new GraphDoc')
-        input#open.btn.btn-default(type='button', value='Open existing GraphDoc')
+        input#open.btn.btn-default(type='button', value='Browse public GraphDocs')
       br
       .row
         // LOCAL INFORMATION 
@@ -32,5 +32,12 @@ head
               strong id:       #{user._id}
               br
               strong email:    #{user.local.email}
-              br
-              strong password: #{user.local.password}
+        // DOCUMENTS
+        .col-sm-6
+          .well
+            h3
+              span.fa.fa-file
+              |  Your GraphDocs
+            ul.document-list.list-group
+              for doc in userDocs
+                a.list-group-item(href="#{doc.id}" target="_blank") #{doc.name}
