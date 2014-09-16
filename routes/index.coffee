@@ -30,6 +30,7 @@ router.get '/:id', (request, response) ->
       prefetched.user = request.user
     else
       prefetched.isAuthenticated = false
+      prefetched.user = {}
     response.render 'index.jade', prefetched
 
 router.get '/mobile', (request, response) ->
