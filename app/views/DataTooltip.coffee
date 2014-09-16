@@ -56,6 +56,12 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           nodeContainer.find('.node-title-body').addClass('shown')
           nodeContainer.find('.node-info-body').addClass('shown').linkify()
 
+          # set-up clickable tags
+          $('.tag-link').on "click", (e) =>
+            e.preventDefault()
+            tag = $(e.currentTarget).attr('data-tag')
+            @graphView.trigger 'tag:click', tag
+
       emptyTooltip: () ->
         $('.node-title-body').removeClass('shown')
         $('.node-info-body').removeClass('shown')
