@@ -1,0 +1,43 @@
+doctype html
+html(lang="en")
+head
+  title GraphDocs #{user.local.email}
+  meta(charset='utf-8')
+  link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+  link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+  base(href="/")
+  script(type='text/javascript', data-main="landing", src="/assets/libs/requirejs/require.js") //loads landing.js
+  script.
+    window.prefetch =!{JSON.stringify(docs)};
+
+  body(style='padding-top:80px')
+    .container
+      .page-header.text-center
+        h1
+          span.fa.fa-anchor
+          |  #{user.local.email.split('@')[0]}
+        a.btn.btn-default.btn-sm(href='/logout') Logout
+      .row.text-center#button-container
+        input#create.btn.btn-primary(type='button', value='Create new GraphDoc')
+        input#open.btn.btn-default(type='button', value='Browse public GraphDocs')
+      br
+      .row
+        // LOCAL INFORMATION 
+        .col-sm-6
+          .well
+            h3
+              span.fa.fa-user
+              |  Local 
+            p
+              strong id:       #{user._id}
+              br
+              strong email:    #{user.local.email}
+        // DOCUMENTS
+        .col-sm-6
+          .well
+            h3
+              span.fa.fa-file
+              |  Your GraphDocs
+            ul.document-list.list-group
+              for doc in userDocs
+                a.list-group-item(href="#{doc.id}" target="_blank") #{doc.name}

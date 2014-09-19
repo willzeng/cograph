@@ -3,6 +3,8 @@ require(__dirname + '/../node_modules/coffee-script/')
 var debug = require('debug')('my-application');
 var app = require('../app');
 
-app.listen(process.env.PORT || 3000, function() {
-   debug('Express server listening on port ' + process.env.PORT || 3000);
+var port = process.env.PORT || 3000
+
+app.listen(port, function() {
+   debug('GraphDocs server listening on port ' + port);
 });

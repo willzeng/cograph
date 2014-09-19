@@ -13,6 +13,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
         @rightSidebarView = new SideBarView {model: @workspaceModel, attributes: {name:'right', type:'right', size:100}}
+        @viewSidebarView = new SideBarView {model: @workspaceModel, attributes: {name:'view', type:'right', size:150}}
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView model: @workspaceModel
 

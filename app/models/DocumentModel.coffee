@@ -9,6 +9,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       name: 'Untitled'
       _id: -1
       workspaces: []
+      public: false
 
     initialize: ->
       @socket.on @urlRoot+":update", (objData) =>
@@ -19,9 +20,9 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
 
     serialize: ->
       if @get('workspaces')[0]?
-        {name:@get('name'), _id:@get('_id'), workspaces:@get('workspaces')}
+        {name:@get('name'), _id:@get('_id'), workspaces:@get('workspaces'), public: @get('public')}
       else
-        {name:@get('name'), _id:@get('_id')}
+        {name:@get('name'), _id:@get('_id'), public: @get('public')}
 
     sync: (method, model, options) ->
       options = options || {}

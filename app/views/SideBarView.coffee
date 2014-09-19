@@ -10,7 +10,7 @@ define ['jquery', 'underscore', 'backbone'],
         @name = if @attributes? then "-"+@attributes.name else ""
         @type = if @attributes? then @attributes.type else "left"
         @size = if @attributes? then @attributes.size else 150
-        $('#sidebar-toggle'+@name).on 'click', @toggleSidebar
+        $('.sidebar-toggle'+@name).on 'click', @toggleSidebar
         @sidebarShown = false
 
       openSidebar: (nc) =>
@@ -24,5 +24,5 @@ define ['jquery', 'underscore', 'backbone'],
         else
           $('#sidebar'+@name).animate 'width': @size+'px'
           if @type is "right" then $('#graph').animate 'width': ($('#graph').width()-@size)+"px"
-        $('#sidebar-toggle'+@name).toggleClass('active')
+        $('.sidebar-toggle'+@name).toggleClass('active')
         @sidebarShown = !@sidebarShown
