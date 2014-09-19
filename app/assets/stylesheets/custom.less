@@ -12,7 +12,7 @@
 @controls-z-index: 1;
 @left-sidebar-z-index: @controls-z-index+1;
 
-@bottom-margin:70px;
+@bottom-margin:80px;
 
 body, .node-title-body {
   font-family: 'Varela Round';
@@ -215,12 +215,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #999;
 }
 
-#zoom-controls {
-  position: absolute;
-  bottom: @bottom-margin;
-  left: 15px;
-}
-
 .sidebar {
   position: absolute;
   top: 0;
@@ -241,6 +235,11 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #sidebar-toggle {
   margin-left: 10px;
+}
+
+#search-form {
+  position: relative;
+  top: 42px;
 }
 
 #trash-bin {
