@@ -9,7 +9,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       socket: io.connect('')
 
     class MenuView extends Backbone.View
-      el: $ '#sidebar'
+      el: $ 'body'
 
       events:
         'click #new-doc-button': 'newDocumentModal'

@@ -10,19 +10,17 @@ block content
           a(href="/login") Login
       li
         a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
+      li
+        a(href="/") Explore
       li.dropdown
         a.dropdown-toggle(data-toggle='dropdown', href='#')
-          | Open
+          | My Cographs
           span.caret
         ul.dropdown-menu
           li(role="presentation")
             a#open-doc-button(href="") Open GraphDoc
           li(role="presentation")
             a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open Workspace
-      li
-        a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
-      li
-        a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
       if isAuthenticated
         li
           a(href="/logout") Logout
@@ -70,3 +68,10 @@ block content
       a.list-group-item#sharing-button Share GraphDoc
       if isAuthenticated
         a.list-group-item.public-button Make GraphDoc public
+
+  .sidebar.right#sidebar-view
+    .list-group
+      a.list-group-item#save-workspace-button Save View
+      a.list-group-item#sharing-button Open View
+      a.list-group-item#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
+      a.list-group-item#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
