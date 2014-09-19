@@ -30,6 +30,12 @@ block content
     .loading-container
       i.fa.fa-circle-o-notch.fa-spin.fa-5x
 
+    .toolbar.left.controls
+      if isAuthenticated
+        button.btn.sidebar-toggle User: #{user.local.email.split('@')[0]}
+      else
+        button.btn.sidebar-toggle Not logged in
+
     .controls
       form#add-node-form.form-inline.center-block
         #add.contracted

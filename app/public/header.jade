@@ -7,16 +7,13 @@ nav.navbar.navbar-default(role='navigation')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          button#sidebar-toggle.btn.btn-default.navbar-brand(title="Open Menu") S
+          button.sidebar-toggle.btn.btn-default.navbar-brand(title="Open Menu") S
           form.navbar-form.navbar-left.main-nav
             .form-group
               input#menu-title(type="text" placeholder="Untitled Doc" data-toggle="tooltip" data-placement="bottom" title="Rename Doc")
         // Collect the nav links, forms, and other content for toggling
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.pull-right
-            if isAuthenticated
-              li
-                a Logged in as: #{user.local.email.split('@')[0]}
             li
-              button#sidebar-toggle-right.btn
+              button.sidebar-toggle-right.btn
                 i.fa.fa-share-square-o.fa-2x
