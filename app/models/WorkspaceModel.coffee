@@ -50,7 +50,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
       urlRoot: -> "workspace"
-      _id: 0
+
+      defaults:
+        _id: 0
+        name: ""
 
       selectedColor: '#3498db'
 
@@ -65,6 +68,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       initialize: ->
         @socket = io.connect('')
+        @socket.on @url()+":create", (workspaceData) =>
+          @set workspaceData
 
         @nodes = new NodeCollection()
         @nodes.on "remove:req", (reqDelete) =>
@@ -204,12 +209,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         nodes = @nodes.pluck "_id"
         connIds = @connections.pluck "_id"
         docId = @getDocument().get "_id"
-        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id, _docId:docId}
+        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this.get('_id'), _docId:docId, name:this.get('name')}
 
       getWorkspace: (callback) ->
         @sync "read", this,
           success: callback
 
       deleteWorkspace: (id, callback) ->
-        @socket.emit "workspace:destroy", id
+        @socket.emit "workspace:destroy", {_id:id, _docId:@getDocument().get('_id')}
         callback id

@@ -93,6 +93,5 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             e.preventDefault()
             @model.deleteWorkspace $(e.currentTarget).attr('data-id'), (id) =>
               modal.close()
-              @model.getDocument().set "workspaces", _.filter(workspaces, (x) -> return parseInt(x) != parseInt(id))
 
         false # prevent navigation from appending '#'

@@ -40,7 +40,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         id = parseInt id
         @setDoc()
 
-        @workspaceModel._id = id
+        @workspaceModel.set '_id', id
         @workspaceModel.getWorkspace (w) =>
           nodeFilter = (node) -> _.contains w.nodes, node._id
           connFilter = (conn) -> _.contains w.connections, conn._id
