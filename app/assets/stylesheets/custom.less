@@ -231,6 +231,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .sidebar.right{
   right:0;
+  z-index: @left-sidebar-z-index;
 }
 
 #sidebar-toggle {
@@ -372,6 +373,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin-left:auto;
 }
 
+#phantom-share {
+  position: relative;
+  top: 80px;
+  left: 30px;
+}
+
 .loading-container {
   width: 100px;
   height: 100px;
@@ -393,6 +400,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
     position: relative;
     bottom: 5px;
   }
+}
+
+#workspace-name {
+  margin-left: 5px;
+  margin-top: 6px;
+  padding-left: 6px;
 }
 
 // Overriding Bootstrap defaults
