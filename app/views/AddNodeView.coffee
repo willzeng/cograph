@@ -30,7 +30,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
         @colorArea.on 'click', (e) =>
           @imageInput.addClass('hidden')
-          @colorInput.toggleClass('hidden')
+          @colorInput.removeClass('hidden')
 
         @imageArea.on 'click', (e) =>
           @colorInput.addClass('hidden')
@@ -66,7 +66,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                 addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
                 if addedMention? then @mentions.push addedMention
                   
-        $('body').on 'click', (e) => if not $('#add').hasClass('contracted') then @resetAdd()
+        $('body').on 'click', (e) => 
+          if not $('#add').hasClass('contracted') then @resetAdd()
         $('#add').on 'click', (e) => e.stopPropagation()
 
         @colorArea.on 'hover', (e) => $('#add-color-popover').show()
