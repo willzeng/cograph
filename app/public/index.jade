@@ -22,22 +22,22 @@ block content
     .loading-container
       i.fa.fa-circle-o-notch.fa-spin.fa-5x
 
-    .controls
-      form#add-node-form.form-inline.center-block
-        #add.contracted
-          textarea#add-title(name="name", placeholder='Title', rows='1')
-          textarea#add-description(name="description", placeholder='Add Something', rows='1')
-          #add-toolbar.cf
-            #add-toolbar-left
-              button#add-color.color-circle(type="button")
-                i.fa.fa-circle(title="Change color")
-              div#add-color-container.hidden
-              button#add-image(type="button")
-                i.fa.fa-image(title='Add image')
-              input#add-image-container.hidden(type="text", placeholder="image url")
-            #add-toolbar-right
-              button#add-submit(title='Create something')
-                | Done
+  .controls
+    form#add-node-form.form-inline.center-block
+      #add.contracted
+        textarea#add-title(name="name", placeholder='Title', rows='1')
+        textarea#add-description(name="description", placeholder='Add Something', rows='1')
+        #add-toolbar.cf
+          #add-toolbar-left
+            button#add-color.color-circle(type="button")
+              i.fa.fa-circle(title="Change color")
+            div#add-color-container.hidden
+            button#add-image(type="button")
+              i.fa.fa-image(title='Add image')
+            input#add-image-container.hidden(type="text", placeholder="image url")
+          #add-toolbar-right
+            button#add-submit(title='Create something')
+              | Done
 
     .toolbar.bottom.right.controls
       form#search-form.form-inline.pull-left
