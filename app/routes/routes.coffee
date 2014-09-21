@@ -12,6 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
+        @rightSidebarView = new SideBarView {model: @workspaceModel, attributes: {name:'right', type:'right', size:100}}
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView model: @workspaceModel
 
@@ -39,7 +40,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         id = parseInt id
         @setDoc()
 
-        @workspaceModel._id = id
+        @workspaceModel.set '_id', id
         @workspaceModel.getWorkspace (w) =>
           if w.err
             @navigate "/"

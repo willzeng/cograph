@@ -9,7 +9,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       socket: io.connect('')
 
     class MenuView extends Backbone.View
-      el: $ '#gdocs-nav'
+      el: $ '#sidebar'
 
       events:
         'click #new-doc-button': 'newDocumentModal'
@@ -93,6 +93,5 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             e.preventDefault()
             @model.deleteWorkspace $(e.currentTarget).attr('data-id'), (id) =>
               modal.close()
-              @model.getDocument().set "workspaces", _.filter(workspaces, (x) -> return parseInt(x) != parseInt(id))
 
         false # prevent navigation from appending '#'

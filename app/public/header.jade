@@ -7,26 +7,13 @@ nav.navbar.navbar-default(role='navigation')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href='http://graphdocs.com') GraphDocs
+          button#sidebar-toggle.btn.btn-default.navbar-brand(title="Open Menu") S
           form.navbar-form.navbar-left.main-nav
             .form-group
               input#menu-title(type="text" placeholder="Untitled Doc" data-toggle="tooltip" data-placement="bottom" title="Rename Doc")
         // Collect the nav links, forms, and other content for toggling
         #gdocs-nav.collapse.navbar-collapse
-          ul.nav.navbar-nav
+          ul.nav.navbar-nav.pull-right
             li
-              a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
-            li.dropdown
-              a.dropdown-toggle(data-toggle='dropdown', href='#')
-                | Open
-                span.caret
-              ul.dropdown-menu
-                li(role="presentation")
-                  a#open-doc-button(href="") Open GraphDoc
-                li(role="presentation")
-                  a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open Workspace
-            li
-              a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
-            li
-              a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
-
+              button#sidebar-toggle-right.btn
+                i.fa.fa-share-square-o.fa-2x

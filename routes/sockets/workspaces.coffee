@@ -28,10 +28,21 @@ exports.read = (data, callback, socket) ->
       socket.emit 'workspace:read', parsed
       callback null, parsed
 
+# UPDATE
+exports.update = (data, callback, socket) ->
+  id = data._id
+  props = data
+  serverWorkspace.update id, props, (savedWorkspace) ->
+    socket.emit 'workspace:update', savedWorkspace
+    socket.broadcast.to(savedWorkspace._docId).emit 'workspace:update', savedWorkspace
+    callback null, savedWorkspace
+
 # DELETE
 exports.destroy = (data, callback, socket) ->
-  id = parseInt data
+  id = parseInt data._id
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
       parsed = node._data.data
     , true
+    socket.emit 'workspace:delete', data
+    socket.broadcast.to(data._docId).emit 'workspace:delete', data
