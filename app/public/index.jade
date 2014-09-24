@@ -31,10 +31,11 @@ block content
                   | Done
 
     .toolbar.bottom.right.controls
-      button#save-workspace-button.btn.btn-primary
+      button#save-workspace-button.btn.btn-primary(data-toggle="popover" title="Name this View [Optional]." data-placement="top" data-container="#graph")
         div Save Workspace
       button#sharing-button.btn.btn-primary
         div Share GraphDoc
+      #phantom-share
     #zoom-controls.btn-group-vertical.controls
       button#zoom-in-button.btn.btn-primary(title="Zoom In")
         i.glyphicon.glyphicon-plus

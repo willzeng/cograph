@@ -12,7 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
         @share = new shareButton "#phantom-share",
           ui:
-            flyout: 'middle left'
+            flyout: 'middle top'
         $('.entypo-export').hide()
         $('#sharing-button').click -> $('.entypo-export').trigger 'click'
 
