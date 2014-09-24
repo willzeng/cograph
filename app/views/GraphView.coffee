@@ -60,17 +60,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @translateLock = false
           @force.stop()
 
-        $("body").on 'keydown', (e) =>
-          if(!$(document.activeElement).is('input') && !$(document.activeElement).is('textarea'))
-            if(e.which == 37) #left arrow
-              @translateTo [(@zoom.translate()[0]+(100 * @zoom.scale())),(@zoom.translate()[1])]
-            else if (e.which == 38) # up arrow
-              @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) + (100 * @zoom.scale())]
-            else if(e.which == 39) #right arrow
-              @translateTo [(@zoom.translate()[0]-(100 * @zoom.scale())),(@zoom.translate()[1])]
-            else if (e.which == 40) #down arrow
-              @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
-
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)
@@ -99,6 +88,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
+
+        # set up arrow key panning
+        $("body").on 'keydown', (e) =>
+          if !$(document.activeElement).is('input') && !$(document.activeElement).is('textarea')
+            switch e.which
+              when 37 #left arrow
+                @translateTo [(@zoom.translate()[0]+(100 * @zoom.scale())),(@zoom.translate()[1])]
+              when 38 # up arrow
+                @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) + (100 * @zoom.scale())]
+              when 39 #right arrow
+                @translateTo [(@zoom.translate()[0]-(100 * @zoom.scale())),(@zoom.translate()[1])]
+              when 40 #down arrow
+                @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
 
       loadForce: ->
         nodes = @model.nodes.models
