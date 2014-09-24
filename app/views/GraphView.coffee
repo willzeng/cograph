@@ -60,8 +60,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @translateLock = false
           @force.stop()
 
-        $("body").on 'keydown', (e) => #TODO
-          if(!$(e.currentTarget).is('input'))
+        $("body").on 'keydown', (e) =>
+          if(!$(document.activeElement).is('input') && !$(document.activeElement).is('textarea'))
             if(e.which == 37) #left arrow
               @translateTo [(@zoom.translate()[0]+(100 * @zoom.scale())),(@zoom.translate()[1])]
             else if (e.which == 38) # up arrow
