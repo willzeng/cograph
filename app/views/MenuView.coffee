@@ -72,7 +72,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @model.getDocument().getAnalytics (analyticsData) ->
           modal = new Backbone.BootstrapModal(
             content: _.template(analyticsTemplate, analyticsData)
-            title: "Analytics"
+            title: "Stats"
             animate: true
             showFooter: false
           ).open()

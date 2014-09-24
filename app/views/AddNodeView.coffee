@@ -122,8 +122,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         attributes.color = @colorArea.data('color')
         attributes.image = @imageInput.val()
         if(attributes['name'] == "" && attributes['description'] != "")
-          attributes['name'] = attributes['description'].substring(0,25)+ "..."
-
+          attributes['name'] = attributes['description'].substring(0,25)
+        if(attributes['description'].length > 25)
+          attributes['name'] += "...";
         node = new NodeModel attributes
         if node.isValid()
           @model.putNode node

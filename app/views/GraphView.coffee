@@ -60,6 +60,25 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @translateLock = false
           @force.stop()
 
+        $("body").on 'keydown', (e) => #TODO
+          if(!$(e.currentTarget).is('input'))
+            if(e.which == 37) #left arrow
+              # @force.drag()
+              # @translateLock = true
+              # @currentZoom = that.zoom.translate()   
+              # @currentZoom[0] += 100
+              # @zoom.translate @currentZoom
+              # @translateLock = false
+              # @force.stop()
+              console.log('left arrow')
+            else if (e.which == 38) # up arrow
+              console.log('up arrow')
+            else if(e.which == 39) #right arrow
+              console.log('right arrow')
+            else if (e.which == 40) #down arrow
+              console.log('down arrow')
+        
+
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)
@@ -73,6 +92,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @workspace.append("svg:g").classed("connection-container", true)
         @workspace.append("svg:g").classed("node-container", true)
+
 
         @connectionAdder = new ConnectionAdder
           model: @model

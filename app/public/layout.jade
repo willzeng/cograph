@@ -21,6 +21,8 @@ html(lang="en")
       window.prefetch.theDocument =!{JSON.stringify(theDocument)};
 
   body
-    include header
-    #main-container
-      block content
+    block sidebar
+    #page-container
+      include header
+      #main-container
+        block content

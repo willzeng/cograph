@@ -4,19 +4,21 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
       el: $ '#graph'
 
       events:
-        'mouseenter .node-title-body' : 'showToolTip'
+        # 'mouseenter .node-title-body' : 'showToolTip'
         'mouseenter .connection' : 'showToolTip'
         'click .node-archive': 'archiveObj'
         'click .node-expand': 'expandNode'
         'click .node-fix': 'toggleFix'
+        'mousemove svg' : 'emptyTooltip'
 
       initialize: ->
         @model.nodes.on 'remove', @emptyTooltip, this
         @model.on 'found:node', @highlight, this
 
         @graphView = @attributes.graphView
-
+        
         @ignoreMouse = false
+        @opening = false
 
         @graphView.on 'node:mouseenter', (node) =>
           @showToolTip(d3.event)
@@ -32,6 +34,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
           @ignoreMouse = false
 
         @graphView.on 'node:mouseout node:right-click', (nc) =>
+          console.log(nc);
+          console.log('mouse out');
+          console.log(d3.event);
           if !(@ignoreMouse)
             @model.dehighlight()
             @emptyTooltip()
@@ -47,15 +52,20 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         @model.highlight(nodesToHL, connectionsToHL)
 
       showToolTip: (event) =>
+        console.log('showingTooltip')
         if !(@ignoreMouse)
           @emptyTooltip()
+          @opening = true
           $(event.currentTarget).closest('.node').find('.node-title-body').addClass('shown')
-          $(event.currentTarget).closest('.node').find('.node-info-body').addClass('shown').linkify()
+          $(event.currentTarget).closest('.node').find('.node-info-body').slideDown().linkify()
           $(event.currentTarget).find('.connection-info-body').addClass('shown').linkify()
 
       emptyTooltip: () ->
+        if @opening
+          return
+        console.log('emptyingtooltip')
         $('.node-title-body').removeClass('shown')
-        $('.node-info-body').removeClass('shown')
+        $('.node-info-body').slideUp()
         $('.connection-info-body').removeClass('shown')
 
       archiveObj: (event) ->

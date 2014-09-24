@@ -19,10 +19,22 @@ define ['jquery', 'underscore', 'backbone'],
 
       toggleSidebar: =>
         if @sidebarShown
-          $('#sidebar'+@name).animate 'width': '0%'
-          if @type is "right" then $('#graph').animate 'width': '100%'
-        else
-          $('#sidebar'+@name).animate 'width': @size+'px'
-          if @type is "right" then $('#graph').animate 'width': ($('#graph').width()-@size)+"px"
+          if @type is "right"
+            $('#sidebar'+@name).animate 'width': '0%', 100, "linear"
+            $('#page-container').animate 'right': '0%', 100, "linear"
+            $('#page-container').animate 'width': $('#page-container').width() + @size, 100, "linear" 
+          else
+            $('#sidebar'+@name).animate 'width': '0%', 100, "linear"
+            $('#page-container').animate 'left': '0%', 100, "linear"
+            $('#page-container').animate 'width': $('#page-container').width() + @size, 100, "linear" 
+        else  
+          if @type is "right"
+            $('#sidebar'+@name).animate 'width': @size+'px', 100, "linear"
+            $('#page-container').animate 'right': @size+'px', 100, "linear"
+            $('#page-container').animate 'width': $('#page-container').width() - @size, 100, "linear"
+          else
+            $('#sidebar'+@name).animate 'width': @size+'px', 100, "linear"
+            $('#page-container').animate 'left': @size+'px', 100, "linear"
+            $('#page-container').animate 'width': $('#page-container').width() - @size, 100, "linear"
         $('#sidebar-toggle'+@name).toggleClass('active')
         @sidebarShown = !@sidebarShown
