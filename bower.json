@@ -39,7 +39,8 @@
     "targeted-atwho": "~0.5.2",
     "twitter-text": "~1.9.4",
     "jQuery-linkify": "~1.1.7",
-    "underscore": "1.6.0"
+    "underscore": "1.6.0",
+    "feedback-bot": "0.1.0"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

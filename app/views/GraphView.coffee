@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
   'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 
-  'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  'text!templates/data_tooltip.html', 'text!templates/node-title.html', 'feedback-bot'],
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle, feedback) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -105,6 +105,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 @translateTo [(@zoom.translate()[0]-(100 * @zoom.scale())),(@zoom.translate()[1])]
               when 40 #down arrow
                 @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
+
+        $.feedback({
+          html2canvasURL: '/assets/libs/feedback-bot/src/html2canvas.js',
+          githubpath: 'davidfurlong/cograph-feedback',
+          serverURL: 'http://feedbackbot.herokuapp.com'
+        })
 
       loadForce: ->
         nodes = @model.nodes.models

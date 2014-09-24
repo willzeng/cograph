@@ -22,7 +22,8 @@ requirejs.config({
     'atwho': '/assets/libs/targeted-atwho/dist/js/jquery.atwho.min',
     'twittertext': '/assets/libs/twitter-text/pkg/twitter-text-1.9.4.min',
     'linkify': '/assets/libs/jQuery-linkify/dist/jquery.linkify.min',
-    'elastic': '/assets/libs/elastic/elastic'
+    'elastic': '/assets/libs/elastic/elastic',
+    'feedback-bot': '/assets/libs/feedback-bot/src/'
   },
   shim: {
     'backbone': {
