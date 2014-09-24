@@ -22,7 +22,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
 
       @socket.on "workspace:delete", (data) =>
         currentWorkspaces = @get 'workspaces'
-        @.set "workspaces", _.filter(currentWorkspaces, (x) -> return parseInt(x._id) != parseInt(data._id))
+        this.set "workspaces", _.filter(currentWorkspaces, (x) -> return parseInt(x._id) != parseInt(data._id))
 
     isNew: ->
       @get(@idAttribute) < 0
