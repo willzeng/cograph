@@ -60,6 +60,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @translateLock = false
           @force.stop()
 
+        $('body').on 'mousemove', (e) =>
+          if($(e.target).is('svg'))
+            @trigger "node:mouseout", e, e
+
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)

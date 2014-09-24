@@ -5,7 +5,7 @@
 @stroke-color: black;
 @selected-color: #74DDFC;
 @selected-nodetext-color: white;
-@fixed-color: @orange;
+@fixed-color: #333;
 @text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
@@ -22,7 +22,8 @@
 
 .node.fixed .node-connector {
   stroke-width: 2px;
-  stroke: orange;
+  stroke-dasharray: 5,5;
+  stroke: @fixed-color;
 }
 
 .node.fixed .node-fix {
@@ -454,11 +455,11 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 .node-toolbar button:hover {
-  color: #3366BB;
+  color: #333;
 }
 
 .node-toolbar button:active {
-  color: #0645AD;
+  color: @selected-color;
 }
 
 .node-toolbar {
