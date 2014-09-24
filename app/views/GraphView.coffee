@@ -60,6 +60,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @translateLock = false
           @force.stop()
 
+        $("body").on 'keydown', (e) => #TODO
+          if(!$(e.currentTarget).is('input'))
+            if(e.which == 37) #left arrow
+              @translateTo [(@zoom.translate()[0]+(100 * @zoom.scale())),(@zoom.translate()[1])]
+            else if (e.which == 38) # up arrow
+              @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) + (100 * @zoom.scale())]
+            else if(e.which == 39) #right arrow
+              @translateTo [(@zoom.translate()[0]-(100 * @zoom.scale())),(@zoom.translate()[1])]
+            else if (e.which == 40) #down arrow
+              @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
+
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)
@@ -346,6 +357,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         #update translate values
         @zoom.translate([translateParams[0], translateParams[1]])
         #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
+
+      translateTo: (translateParams) =>
+        @zoom.translate([translateParams[0], translateParams[1]])
         @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
       getColor: (nc) ->
