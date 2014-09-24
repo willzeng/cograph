@@ -93,6 +93,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
 
+        # set up arrow key panning
+        $("body").on 'keydown', (e) =>
+          if !$(document.activeElement).is('input') && !$(document.activeElement).is('textarea')
+            switch e.which
+              when 37 #left arrow
+                @translateTo [(@zoom.translate()[0]+(100 * @zoom.scale())),(@zoom.translate()[1])]
+              when 38 # up arrow
+                @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) + (100 * @zoom.scale())]
+              when 39 #right arrow
+                @translateTo [(@zoom.translate()[0]-(100 * @zoom.scale())),(@zoom.translate()[1])]
+              when 40 #down arrow
+                @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
+
       loadForce: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
@@ -350,6 +363,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         #update translate values
         @zoom.translate([translateParams[0], translateParams[1]])
         #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
+
+      translateTo: (translateParams) =>
+        @zoom.translate([translateParams[0], translateParams[1]])
         @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
       getColor: (nc) ->
