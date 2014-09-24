@@ -61,7 +61,7 @@ exports.prefetch = (req, resp, callback) ->
   docLabel = "_doc_#{id || 0}"
   # Get the document
   params = {id:parseInt(id)}
-  cypherQuery = "START n=node({id}) MATCH (n:_document) OPTIONAL MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace;"
+  cypherQuery = "START n=node({id}) MATCH (n:_document) OPTIONAL MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace, m.name AS workspaceName;"
   graphDb.query cypherQuery, params, (err, results) ->
     if err or results.length is 0 then resp.redirect "/errors/missingDocument"
     else
@@ -70,7 +70,7 @@ exports.prefetch = (req, resp, callback) ->
       theDocument = utils.parseNodeToClient parsed
 
       # Get the document's workspaces
-      theDocument.workspaces = (space.workspace for space in results)
+      theDocument.workspaces = ({_id: space.workspace, name:space.workspaceName} for space in results)
 
     # Get all nodes
     # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
