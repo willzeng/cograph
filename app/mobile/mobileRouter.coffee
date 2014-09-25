@@ -4,13 +4,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!mobile/views/MobileView'],
       
       initialize: ->
         @mobileView = new MobileView()
-        Backbone.history.start()
+        Backbone.history.start {pushState: true, root: "/mobile/"}
 
       routes:
-        '': 'home'
-        '(:id)': 'docSpecified'
-
-      home: ->
+        ':id': 'docSpecified'
 
       docSpecified: (id) ->
         @mobileView.docId = id
