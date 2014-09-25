@@ -18,7 +18,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           findMatches = (q, cb) =>
             docId = @model.documentModel.get '_id'
             $.get "/document/#{docId}/connections", (connections) =>
-              matches = @findMatchingObjects q, connections
+              matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
               cb _.map matches, (match) -> {value: match.name, type: 'connection'}
 
         findTagMatches = (q, cb) =>
@@ -76,6 +76,17 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           if conn
             @model.select conn
             @model.trigger "found:node", conn.source
+
+          @model.getConnsByName sugg.value, (returnedConns) =>
+            for c in returnedConns
+              @model.putNodeFromData c.source
+              @model.putNodeFromData c.target
+              @model.putConnection new ConnectionModel c.connection
+            # Give the graph some time to settle before centering
+            setTimeout () =>
+              @model.trigger "found:node", @model.nodes.findWhere({_id:returnedConns[0].source._id})
+            , 500
+
         $('#search-input').val('')
 
       addNode: (nodeData) ->

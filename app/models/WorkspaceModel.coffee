@@ -198,6 +198,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       getNodesByTag: (tag, cb) ->
         @documentModel.getNodesByTag(tag, cb)
 
+      getConnsByName: (name, cb) ->
+        @documentModel.getConnsByName(name, cb)
+
       # Syncing Workspaces
       sync: (method, model, options) ->
         options = options || {}

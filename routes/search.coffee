@@ -43,3 +43,20 @@ exports.getNodesByTag = (req, resp) ->
       nodeData.tags = node['labels(n)']
       parsedNodes.push utils.parseNodeToClient nodeData
     resp.send parsedNodes
+
+exports.getConnsByName = (req, resp) ->
+  docId = req.params.docId
+  params = {name:req.query.name}
+  cypherQuery = "MATCH (n:_doc_#{docId})-[r]->(m:_doc_#{docId}) WHERE r.name={name} return n, labels(n), r, m, labels(m);"
+  graphDb.query cypherQuery, params, (err, results) ->
+    if err then throw err
+    parsed = []
+    for rel in results
+      source = rel.n._data.data
+      source.tags = utils.parseLabels(rel['labels(n)']).tags
+      target = rel.m._data.data
+      target.tags = utils.parseLabels(rel['labels(m)']).tags
+      rel = utils.parseCypherResult rel, 'r'
+      parsed.push {source:source, connection:rel, target:target}
+
+    resp.send parsed

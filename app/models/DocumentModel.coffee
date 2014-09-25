@@ -49,6 +49,10 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       $.get @url() + '/getNodeByName', {name: name}, (node) =>
         cb node
 
+    getConnsByName: (name, cb) ->
+      $.get @url() + '/getConnsByName', {name: name}, (conns) =>
+        cb conns
+
     getNodesByTag: (tag, cb) ->
       $.get @url() + '/getNodesByTag', {tag: tag}, (nodes) =>
         cb nodes
