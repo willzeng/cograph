@@ -44,4 +44,5 @@ exports.socketServer = (app, server) ->
     # Workspace
     socket.on 'workspace:create',  (data, callback) -> workspaces.create  data, callback, socket
     socket.on 'workspace:read',    (data, callback) -> workspaces.read    data, callback, socket
+    socket.on 'workspace:update',  (data, callback) -> workspaces.update  data, callback, socket
     socket.on 'workspace:destroy', (data, callback) -> workspaces.destroy data, callback, socket

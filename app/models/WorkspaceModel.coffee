@@ -38,11 +38,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket.on @url()+":create", (objData) =>
           @trigger "create:req", new @model objData, {parse:true}
 
-        @socket.on @url()+":block", (blocker) =>
-          editBlocked = confirm "A connection already exists here. Do you want to edit that connection?"
-          if editBlocked
-            @trigger "conn:block", new ConnectionModel blocker
-
     class NodeCollection extends ObjectCollection
       model: NodeModel
       url: -> "nodes"
@@ -55,7 +50,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
       urlRoot: -> "workspace"
-      _id: 0
+
+      defaults:
+        _id: 0
+        name: ""
 
       selectedColor: '#3498db'
 
@@ -67,10 +65,11 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           green: '#B3E2B1'
           blue: '#B1CDE2'
           purple: '#E0B4E6'
-          # cyan: '#77DDBB'
 
       initialize: ->
         @socket = io.connect('')
+        @socket.on @url()+":create", (workspaceData) =>
+          @set workspaceData
 
         @nodes = new NodeCollection()
         @nodes.on "remove:req", (reqDelete) =>
@@ -82,12 +81,6 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           @getSourceOf(reqCreate).fetch()
           @getTargetOf(reqCreate).fetch()
           @putConnection reqCreate
-        @connections.on "conn:block", (c) =>
-          visibleBlock = @connections.findWhere {_id:c.get('_id')}
-          # if the blocking connection is not on the workspace then add it
-          if not(visibleBlock?)
-            visibleBlock = @connections.add c
-          @trigger 'edit:conn', visibleBlock
 
         @filterModel = new FilterModel()
         @nodes.on "change:tags", @updateFilter, this
@@ -216,12 +209,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         nodes = @nodes.pluck "_id"
         connIds = @connections.pluck "_id"
         docId = @getDocument().get "_id"
-        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id, _docId:docId}
+        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this.get('_id'), _docId:docId, name:this.get('name')}
 
       getWorkspace: (callback) ->
         @sync "read", this,
           success: callback
 
       deleteWorkspace: (id, callback) ->
-        @socket.emit "workspace:destroy", id
+        @socket.emit "workspace:destroy", {_id:id, _docId:@getDocument().get('_id')}
         callback id

@@ -18,20 +18,28 @@ exports.create = (data, callback, socket) ->
 exports.read = (data, callback, socket) ->
   id = data._id
   graphDb.getNodeById id, (err, node) ->
-    # checks to make sure that the node is a workspace
-    # as only workspaces have the .nodeTags property
-    if err or not node._data.data.nodeTags?
-      socket.emit 'workspace:read', err
-      callback null, {err:true, errText:err}
+    if err
+      console.error 'Something broke!', err
     else
       parsed = utils.parseNodeToClient node._data.data
       socket.emit 'workspace:read', parsed
       callback null, parsed
 
+# UPDATE
+exports.update = (data, callback, socket) ->
+  id = data._id
+  props = data
+  serverWorkspace.update id, props, (savedWorkspace) ->
+    socket.emit 'workspace:update', savedWorkspace
+    socket.broadcast.to(savedWorkspace._docId).emit 'workspace:update', savedWorkspace
+    callback null, savedWorkspace
+
 # DELETE
 exports.destroy = (data, callback, socket) ->
-  id = parseInt data
+  id = parseInt data._id
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
       parsed = node._data.data
     , true
+    socket.emit 'workspace:delete', data
+    socket.broadcast.to(data._docId).emit 'workspace:delete', data
