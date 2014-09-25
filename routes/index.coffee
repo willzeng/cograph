@@ -8,7 +8,7 @@ documents = require './documents'
 search = require './search'
 
 # load up the user model
-User = require '../app/models/user'
+User = require '../models/user.coffee'
 
 #defines a function to extract parameters using regex's
 router.param utils.paramExtract
