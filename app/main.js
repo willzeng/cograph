@@ -23,7 +23,7 @@ requirejs.config({
     'twittertext': '/assets/libs/twitter-text/pkg/twitter-text-1.9.4.min',
     'linkify': '/assets/libs/jQuery-linkify/dist/jquery.linkify.min',
     'elastic': '/assets/libs/elastic/elastic',
-    'feedback-bot': '/assets/libs/feedback-bot/src/'
+    'feedback-bot': '/assets/libs/feedback-bot/dist/feedback.0.3.0'
   },
   shim: {
     'backbone': {
