@@ -72,9 +72,10 @@ router.put      '/document/:docId/connections/:id',   connections.update
 router.delete   '/document/:docId/connections/:id',   connections.destroy
 
 # Search
-router.get      '/document/:docId/nodes/names',       search.getNodeNames
-router.get      '/document/:docId/getNodeByName',     search.getNodeByName
-router.get      '/document/:docId/getNodesByTag',     search.getNodesByTag
-router.get      '/document/:docId/tags',              search.getTagNames
+router.get      '/document/:docId/nodes/names',        search.getNodeNames
+router.get      '/document/:docId/getNodeByName',      search.getNodeByName
+router.get      '/document/:docId/getNodesByTag',      search.getNodesByTag
+router.get      '/document/:docId/getConnsByName',     search.getConnsByName
+router.get      '/document/:docId/tags',               search.getTagNames
 
 module.exports = router
