@@ -44,7 +44,7 @@ app.use express.static(path.join(__dirname, '/app'))
 # routes =============================================================
 # user routes
 # load our routes and pass in our app and fully configured passport
-require('./routes/users.js')(app, passport)
+require('./routes/users.coffee')(app, passport)
 
 routes = require './routes/index'
 app.use '/', routes
