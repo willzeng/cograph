@@ -21,7 +21,7 @@ router.get '/:id', (request, response) ->
   documents.prefetch request, response, (prefetched) ->
     response.render 'index.jade', prefetched
 
-router.get '/mobile', (request, response) ->
+router.get /^\/mobile\/(\d*)$/, (request, response) ->
   response.render('mobile.jade')
 
 router.get '/landing', (request, response)->
