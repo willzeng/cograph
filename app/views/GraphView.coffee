@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
-  'cs!views/ConnectionAdder', 'cs!views/DataTooltip', 'cs!views/ZoomButtons',
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons',
   'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, svgDefs, ConnectionAdder, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
@@ -60,6 +60,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @translateLock = false
           @force.stop()
 
+        $('body').on 'mousemove', (e) =>
+          if($(e.target).is('svg'))
+            @trigger "node:mouseout", e, e
+
         @svg = d3.select(@el).append("svg:svg")
                 .attr("pointer-events", "all")
                 .attr('width', width)
@@ -78,12 +82,29 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           model: @model
           attributes: {force: @force, graphView: this}
 
+        @trashBin = new TrashBin
+          model: @model
+          attributes: {graphView: this}
+
         @dataTooltip = new DataTooltip
           model: @model
           attributes: {graphView: this}
 
         @zoomButtons = new ZoomButtons
           attributes: {zoom: @zoom, workspace: @workspace}
+
+        # set up arrow key panning
+        $("body").on 'keydown', (e) =>
+          if !$(document.activeElement).is('input') && !$(document.activeElement).is('textarea')
+            switch e.which
+              when 37 #left arrow
+                @translateTo [(@zoom.translate()[0]+(100 * @zoom.scale())),(@zoom.translate()[1])]
+              when 38 # up arrow
+                @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) + (100 * @zoom.scale())]
+              when 39 #right arrow
+                @translateTo [(@zoom.translate()[0]-(100 * @zoom.scale())),(@zoom.translate()[1])]
+              when 40 #down arrow
+                @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
 
       loadForce: ->
         nodes = @model.nodes.models
@@ -165,19 +186,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('dim', (d) -> d.get('dim'))
           .each (d,i) ->
             line = d3.select(this).select("line.visible-line")
-            if !d.get('selected')
-              line.style("stroke", (d) -> that.getColor d)
-            else 
-              line.style("stroke", that.model.selectedColor)
-            
+            line.style("stroke", (d) -> that.getColor d)
             if d.get('color')
               line.attr("marker-end", "url(#arrowhead-"+d.get('color')+")")
             else 
               line.attr("marker-end", "url(#arrowhead)")
-            if d.get('selected')
-              line.attr("marker-end", "url(#arrowhead-selected)")
-          .classed('selected', (d) -> d.get('selected'))
-          
             
         connection.select("text")
           .text((d) =>
@@ -259,19 +272,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
-          .on "mouseenter", (node) =>
-            @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             # perhaps setting the foreignobject height dynamically would be better.
             if(!$(d3.event.toElement).closest('.node').length)
               @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
+        $('.node-title-span').on "mouseenter", (e) =>
+            @trigger "node:mouseenter", d3.select(e.currentTarget)
+
         # update old and new elements
 
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
-          .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
@@ -312,12 +325,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # delete unmatching elements
         node.exit().remove()
 
-        # set-up clickable tags
-        $('.tag-link').on "click", (e) =>
-          e.preventDefault()
-          tag = $(e.currentTarget).attr('data-tag')
-          @trigger 'tag:click', tag
-
         tick = =>
           connection.selectAll("line")
             .attr("x1", (d) => @model.getSourceOf(d).x-(@nodeBoxWidth/2+10))
@@ -348,6 +355,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         #update translate values
         @zoom.translate([translateParams[0], translateParams[1]])
         #translate workspace
+        @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
+
+      translateTo: (translateParams) =>
+        @zoom.translate([translateParams[0], translateParams[1]])
         @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
       getColor: (nc) ->

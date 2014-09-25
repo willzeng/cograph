@@ -1,66 +1,52 @@
 extends layout
 
 block content
-  .sidebar.left#sidebar
-    ul.nav.nav-stacked
-      li
-        if isAuthenticated
-          a(href="/profile") Your Profile
-        else
-          a(href="/login") Login
-      li
-        a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
-      li.dropdown
-        a.dropdown-toggle(data-toggle='dropdown', href='#')
-          | Open
-          span.caret
-        ul.dropdown-menu
-          li(role="presentation")
-            a#open-doc-button(href="") Open GraphDoc
-          li(role="presentation")
-            a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open Workspace
-      li
-        a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
-      li
-        a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
-      if isAuthenticated
-        li
-          a(href="/logout") Logout
+  #sidebar
   #graph
     .loading-container
-      i.fa.fa-circle-o-notch.fa-spin.fa-5x
+      .spinner
+        .double-bounce1
+        .double-bounce2
 
-    .controls
-      form#add-node-form.form-inline.center-block
-        #add.contracted
-          textarea#add-title(name="name", placeholder='Title', rows='1')
-          textarea#add-description(name="description", placeholder='Add Something', rows='1')
-          #add-toolbar.cf
-            #add-toolbar-left
-              button#add-color.color-circle(type="button")
-                i.fa.fa-circle(title="Change color")
-              div#add-color-container.hidden
-              button#add-image(type="button")
-                i.fa.fa-image(title='Add image')
-              input#add-image-container.hidden(type="text", placeholder="image url")
-            #add-toolbar-right
-              button#add-submit(title='Create something')
-                | Done
+    .toolbar.controls
+      .navbar-left.navbar-form
+        form#search-form.form-inline
+          .input-group
+            input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
+          //- button#sidebar-toggle.btn.btn-default(title="Toggle Sidebar")
+          //-   i.fa.fa-arrows-h
+    .toolbar.right.controls
+      .navbar-right.navbar-form
+        form#add-node-form.form-inline
+          #add.contracted
+            textarea#add-title(name="name", placeholder='Title', rows='1')
+            textarea#add-description(name="description", placeholder='Add Something', rows='1')
+            #add-toolbar.cf
+              #add-toolbar-left
+                button#add-color.color-circle(type="button")
+                  i.fa.fa-circle(title="Change color")
+                div#add-color-container.hidden
+                button#add-image(type="button")
+                  i.fa.fa-image(title='Add image')
+                input#add-image-container.hidden(type="text", placeholder="image url")
+              #add-toolbar-right
+                button#add-submit(title='Create something')
+                  | Done
 
     .toolbar.bottom.right.controls
-      form#search-form.form-inline
-        .input-group
-          input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-
+      button#save-workspace-button.btn.btn-primary
+        div
+          i.fa.fa-save
+          span &nbsp;Save Version
+      button#sharing-button.btn.btn-primary
+        div
+          i.fa.fa-share
+          span &nbsp; Share
     #zoom-controls.btn-group-vertical.controls
       button#zoom-in-button.btn.btn-default(title="Zoom In")
         i.glyphicon.glyphicon-plus
       button#zoom-out-button.btn.btn-default(title="Zoom Out")
         i.glyphicon.glyphicon-minus
-
-  .sidebar.right#sidebar-right
-    .list-group
-      a.list-group-item#save-workspace-button Save Workspace
-      a.list-group-item#sharing-button Share GraphDoc
-      if isAuthenticated
-        a.list-group-item.public-button Make GraphDoc public
+    #trash-bin.controls(title="Drag a node here to Archive it")
+      i.fa.fa-eye-slash
+  .data-tooltip-container

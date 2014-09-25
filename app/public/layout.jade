@@ -5,21 +5,18 @@ html(lang="en")
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(href='http://fonts.googleapis.com/css?family=Varela+Round', rel='stylesheet', type='text/css')
     link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
     link(href='/assets/libs/targeted-atwho/dist/css/jquery.atwho.min.css', rel='stylesheet')
     link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
     link(href='/assets/stylesheets/gsdk-base.css', rel='stylesheet')
     link(href='/assets/stylesheets/custom.css', rel='stylesheet')    
-    
     script(type='text/javascript', data-main="main", src="/assets/libs/requirejs/require.js") //loads main.js
     script.
       window.prefetch = {};
       window.prefetch.nodes =!{JSON.stringify(nodes)};
       window.prefetch.connections =!{JSON.stringify(connections)};
       window.prefetch.theDocument =!{JSON.stringify(theDocument)};
-      window.user =!{JSON.stringify(user)};
 
   body
     include header

@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', 'share-button'],
   ($, _, Backbone, shareTemplate, shareButton) ->
     class ShareView extends Backbone.View
-      el: $ '#sidebar-right'
+      el: $ '#graph'
 
       events:
         'click #sharing-button': 'openShareModal'

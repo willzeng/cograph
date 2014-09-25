@@ -426,13 +426,16 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 .navbar-nav > li > a [class^="fa"]{
     font-size: 18px;
 }
+.navbar-brand{
+    padding-left: 10px;
+}
 
 .navbar .btn{
     margin-top: 8px;
     margin-bottom: 8px;
 }
 .navbar-default:not(.navbar-transparent) {
-    /*border-bottom: 1px solid rgba(0, 0, 0, 0.1);*/
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .navbar-transparent{
     padding-top: 15px;
@@ -495,6 +498,8 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 }
 .navbar .btn{
     font-size: 16px;
+    margin-top: 13px;
+    margin-bottom: 13px;
 }
 .navbar .btn-default{
     color: #777777;

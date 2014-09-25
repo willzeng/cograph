@@ -12,7 +12,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @filterView = new FilterView {model: @workspaceModel.getFilter(), attributes: {workspaceModel: @workspaceModel}}
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
-        @rightSidebarView = new SideBarView {model: @workspaceModel, attributes: {name:'right', type:'right', size:100}}
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView model: @workspaceModel
 
@@ -42,10 +41,14 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
 
         @workspaceModel._id = id
         @workspaceModel.getWorkspace (w) =>
-          nodeFilter = (node) -> _.contains w.nodes, node._id
-          connFilter = (conn) -> _.contains w.connections, conn._id
-          @loadGraph nodeFilter, connFilter
-          @workspaceModel.filterModel.set 'node_tags', w.nodeTags
+          if w.err
+            @navigate "/"
+            @loadGraph()
+          else
+            nodeFilter = (node) -> _.contains w.nodes, node._id
+            connFilter = (conn) -> _.contains w.connections, conn._id
+            @loadGraph nodeFilter, connFilter
+            @workspaceModel.filterModel.set 'node_tags', w.nodeTags
 
       # Load a graph based on preset filters
       # Defaults to loading the whole prefetch
