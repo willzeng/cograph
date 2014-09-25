@@ -186,19 +186,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('dim', (d) -> d.get('dim'))
           .each (d,i) ->
             line = d3.select(this).select("line.visible-line")
-            if !d.get('selected')
-              line.style("stroke", (d) -> that.getColor d)
-            else 
-              line.style("stroke", that.model.selectedColor)
-            
+            line.style("stroke", (d) -> that.getColor d)
             if d.get('color')
               line.attr("marker-end", "url(#arrowhead-"+d.get('color')+")")
             else 
               line.attr("marker-end", "url(#arrowhead)")
-            if d.get('selected')
-              line.attr("marker-end", "url(#arrowhead-selected)")
-          .classed('selected', (d) -> d.get('selected'))
-          
             
         connection.select("text")
           .text((d) =>
@@ -280,19 +272,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .on "contextmenu", (node) ->
             d3.event.preventDefault()
             that.trigger('node:right-click', node, d3.event)
-          .on "mouseenter", (node) =>
-            @trigger "node:mouseenter", node
           .on "mouseout", (node) =>
             # perhaps setting the foreignobject height dynamically would be better.
             if(!$(d3.event.toElement).closest('.node').length)
               @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
+        $('.node-title-span').on "mouseenter", (e) =>
+            @trigger "node:mouseenter", d3.select(e.currentTarget)
+
         # update old and new elements
 
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
-          .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
