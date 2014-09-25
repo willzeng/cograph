@@ -15,14 +15,21 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       @socket.on @urlRoot+":update", (objData) =>
         @set objData
 
+      @socket.on "workspace:update", (data) =>
+        currentWorkspaces = @get 'workspaces'
+        # only add to the list if it isn't already there
+        if not _.contains _.pluck(currentWorkspaces, '_.id'), data._id
+          currentWorkspaces.push {_id:data._id, name:data.name}
+
+      @socket.on "workspace:delete", (data) =>
+        currentWorkspaces = @get 'workspaces'
+        this.set "workspaces", _.filter(currentWorkspaces, (x) -> return parseInt(x._id) != parseInt(data._id))
+
     isNew: ->
       @get(@idAttribute) < 0
 
     serialize: ->
-      if @get('workspaces')[0]?
-        {name:@get('name'), _id:@get('_id'), workspaces:@get('workspaces'), public: @get('public')}
-      else
-        {name:@get('name'), _id:@get('_id'), public: @get('public')}
+      {name:@get('name'), _id:@get('_id'), public: @get('public')}
 
     sync: (method, model, options) ->
       options = options || {}

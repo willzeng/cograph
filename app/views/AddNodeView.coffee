@@ -30,7 +30,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
         @colorArea.on 'click', (e) =>
           @imageInput.addClass('hidden')
-          @colorInput.toggleClass('hidden')
+          @colorInput.removeClass('hidden')
 
         @imageArea.on 'click', (e) =>
           @colorInput.addClass('hidden')
@@ -42,31 +42,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
             e.preventDefault()
             @descriptionArea.focus()          
 
-        @descriptionArea.on 'focus', (e) =>
-          if $('#add').hasClass('contracted')
-            $('#add').removeClass('contracted')
-            @descriptionArea.attr('rows', '1')
-
-            # add at-who autocompletion
-            @descriptionArea.atwho
-              at: "@"
-              data: @model.nodes.pluck('name')
-              target: "#add-node-form"
-            .atwho
-              at: "#"
-              data: @model.filterModel.getTags('node')
-              target: "#add-node-form"
-
-            # setup inserted mentions store
-            if @descriptionArea.val() is ""
-              @mentions = []
-            @descriptionArea.on "inserted.atwho", (event, item) =>
-              insertedText = item.attr 'data-value'
-              if insertedText[0] is "@"
-                addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
-                if addedMention? then @mentions.push addedMention
+        @descriptionArea.on 'focus', => @expandAdder()
                   
-        $('body').on 'click', (e) => if not $('#add').hasClass('contracted') then @resetAdd()
+        $('body').on 'click', (e) => 
+          if not $('#add').hasClass('contracted') then @resetAdd()
         $('#add').on 'click', (e) => e.stopPropagation()
 
         @colorArea.on 'hover', (e) => $('#add-color-popover').show()
@@ -79,10 +58,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           keyCode = e.keyCode || e.which
           # code for ENTER
           if keyCode == 13 and !@showingAtWho and !e.shiftKey
-            e.currentTarget.blur()
-            @addNode()
-            @descriptionArea.blur()
-            @descriptionArea.focus()
+            $.when(@addNode()).then =>
+              @expandAdder()
 
         # TAB from description to title
         @descriptionArea.on 'keydown', (e) =>
@@ -97,6 +74,30 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           if keyCode == 9 or keyCode == 13 # code for TAB or ENTER
             e.preventDefault()
             @descriptionArea.focus()
+
+      expandAdder: ->
+        if $('#add').hasClass('contracted')
+          $('#add').removeClass('contracted')
+          @descriptionArea.attr('rows', '1')
+
+          # add at-who autocompletion
+          @descriptionArea.atwho
+            at: "@"
+            data: @model.nodes.pluck('name')
+            target: "#add-node-form"
+          .atwho
+            at: "#"
+            data: @model.filterModel.getTags('node')
+            target: "#add-node-form"
+
+          # setup inserted mentions store
+          if @descriptionArea.val() is ""
+            @mentions = []
+          @descriptionArea.on "inserted.atwho", (event, item) =>
+            insertedText = item.attr 'data-value'
+            if insertedText[0] is "@"
+              addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
+              if addedMention? then @mentions.push addedMention
 
       resetAdd: () ->
         @imageInput.addClass('hidden')
@@ -121,8 +122,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         attributes.color = @colorArea.data('color')
         attributes.image = @imageInput.val()
         if(attributes['name'] == "" && attributes['description'] != "")
-          attributes['name'] = attributes['description'].substring(0,25)+ "..."
-
+          attributes['name'] = attributes['description'].substring(0,25)
+        if(attributes['description'].length > 25)
+          attributes['name'] += "...";
         node = new NodeModel attributes
         if node.isValid()
           @model.putNode node

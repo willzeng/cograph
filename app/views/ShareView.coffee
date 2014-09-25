@@ -4,30 +4,47 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
       el: $ 'body'
 
       events:
-        'click #sharing-button': 'openShareModal'
         'click #save-workspace-button': 'saveWorkspace'
         'click .public-button': 'togglePublic'
+        'focusout #workspace-name': 'nameWorkspace'
 
       initialize: ->
         @updatePublicButton()
         @model.getDocument().on 'change:public', @updatePublicButton, this
 
-      openShareModal: ->
-        @newShareModal = new Backbone.BootstrapModal(
-          content: _.template(shareTemplate, {})
-          animate: true
-          showFooter: false
-        ).open()
+        @toggleShown = false
 
-        @newShareModal.on "shown", () ->
-          new shareButton ".network-share-button"
+        @share = new shareButton "#phantom-share",
+          ui:
+            flyout: 'middle top'
+        $('.entypo-export').hide()
+        $('#sharing-button').click -> $('.entypo-export').trigger 'click'
 
-        $('button', @newShareModal.$el).click () =>
-          @newShareModal.close()
+        popoverTemplate = '''
+          <div class="popover" role="tooltip">
+            <div class="arrow"></div>
+            <h3 class="popover-title"></h3>
+            <form role="form">
+              <div class="form-group">
+                <input id="workspace-name" type="text" placeholder="Untitled Doc"></input>
+              </div>
+            </form>
+          </div>'
+        '''
+        $('#save-workspace-button').popover
+          template: popoverTemplate
+
+      nameWorkspace: ->
+        @model.set 'name', $('#workspace-name').val()
+        @model.sync "update", @model
 
       saveWorkspace: ->
-        @model.sync "create", @model,
-          success: (savedModel) => @trigger "save:workspace", savedModel._id
+        if !(@toggleShown)
+          @model.sync "create", @model,
+            success: (savedModel) => @trigger "save:workspace", savedModel._id
+        else
+          $('#workspace-name').val("")
+        @toggleShown = !@toggleShown
 
       updatePublicButton: ->
         if @model.getDocument().get 'public'

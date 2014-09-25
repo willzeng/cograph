@@ -13,6 +13,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #archive-node-button': 'archiveObj'
         'click #archive-connection-button': 'archiveObj'
         'click #delete-button': 'deleteObj'
+        'click #archive-button': 'archiveObj'
         'click #expand-node-button': 'expandNode'
 
       initialize: ->
@@ -21,6 +22,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @model.on 'conn:clicked', @openDetails, this
         @model.on 'node:dblclicked', @openDetails, this
         @model.on 'create:connection', @openAndEditConnection, this
+        @model.on 'edit:conn', @openDetails, this
 
         @setupAtWho()
 

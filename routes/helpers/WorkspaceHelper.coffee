@@ -14,4 +14,13 @@ class WorkspaceHelper
       utils.setProperty @graphDb, doc.id, '_id', doc.id, (savedWorkspace) =>
         callback utils.parseNodeToClient savedWorkspace
 
+  # Update a Workspace with a name
+  update: (id, props, callback) ->
+    params = {props: props, id: parseInt(id)}
+    cypherQuery = "START n=node({ id }) SET n = { props } RETURN n;"
+    @graphDb.query cypherQuery, params, (err, results) =>
+      if err then throw err
+      node = utils.parseCypherResult(results[0], 'n')
+      callback utils.parseNodeToClient node
+
 module.exports = WorkspaceHelper
