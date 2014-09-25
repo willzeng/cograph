@@ -17,12 +17,15 @@ nav.navbar.navbar-default(role='navigation')
             li
               a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal") New
             li.dropdown
-              a.dropdown-toggle(data-toggle='dropdown', href='#')
-                | Open
+              a.dropdown-toggle(data-toggle='dropdown', href='')
+                if isAuthenticated
+                  | My Cographs
+                else
+                  | Explore Cographs
                 span.caret
               ul.dropdown-menu
                 li(role="presentation")
-                  a#open-doc-button(href="") Open GraphDoc
+                  a#open-doc-button(href="") Open Cograph
                 li(role="presentation")
                   a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open Workspace
             li
@@ -32,3 +35,10 @@ nav.navbar.navbar-default(role='navigation')
             if isAuthenticated
               li
                 a.public-button Make GraphDoc public
+              li
+                a(href="/profile") #{user.local.email.split('@')[0]}'s Profile
+              li
+                a(href="/logout") Logout
+            else
+              li
+                a(href="/login") Login
