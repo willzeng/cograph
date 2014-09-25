@@ -106,7 +106,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               when 40 #down arrow
                 @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
 
-
       loadForce: ->
         nodes = @model.nodes.models
         connections = @model.connections.models
