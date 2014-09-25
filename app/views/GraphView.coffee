@@ -268,12 +268,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         $('.node-title-span').on "mouseenter", (e) =>
             @trigger "node:mouseenter", d3.select(e.currentTarget)
 
-
         # update old and new elements
 
         node.attr('class', 'node')
           .classed('dim', (d) -> d.get('dim'))
-          # .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
