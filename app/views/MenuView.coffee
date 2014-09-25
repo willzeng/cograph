@@ -9,7 +9,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       socket: io.connect('')
 
     class MenuView extends Backbone.View
-      el: $ '#gdocs-nav'
+      el: $ 'body'
 
       events:
         'click #new-doc-button': 'newDocumentModal'
@@ -58,11 +58,16 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           window.open '/'+newDocument.get('_id')
 
       openDocumentModal: ->
+        user = window.user
         documents = new DocumentCollection
-        $.when(documents.fetch()).then =>
+        if user?
+          data = {documentIds: user.documents}
+        else
+          data = {}
+        $.when(documents.fetch({data: data})).then =>
           modal = new Backbone.BootstrapModal(
             content: _.template(openDocTemplate, {documents: documents})
-            title: "Open Document"
+            title: "Open Cograph"
             animate: true
             showFooter: false
           ).open()

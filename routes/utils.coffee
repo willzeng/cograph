@@ -78,4 +78,16 @@ utils =
         else
           next 'route'
 
+  #route middleware to make sure a user is logged in
+  isLoggedIn: (req, res, next) ->
+    # if user is authenticated in the session, carry on
+    if req.isAuthenticated() then next()
+    else res.redirect '/'
+
+  #route middleware to see if a user is not logged in
+  isNotLoggedIn: (req, res, next) ->
+    # if user is authenticated in the session, carry on
+    if not req.isAuthenticated() then next()
+    else res.redirect '/profile'
+
 module.exports = utils

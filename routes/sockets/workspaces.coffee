@@ -18,8 +18,11 @@ exports.create = (data, callback, socket) ->
 exports.read = (data, callback, socket) ->
   id = data._id
   graphDb.getNodeById id, (err, node) ->
-    if err
-      console.error 'Something broke!', err
+    # checks to make sure that the node is a workspace
+    # as only workspaces have the .nodeTags property
+    if err or not node._data.data.nodeTags?
+      socket.emit 'workspace:read', err
+      callback null, {err:true, errText:err}
     else
       parsed = utils.parseNodeToClient node._data.data
       socket.emit 'workspace:read', parsed

@@ -5,9 +5,13 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
       events:
         'click #save-workspace-button': 'saveWorkspace'
+        'click .public-button': 'togglePublic'
         'focusout #workspace-name': 'nameWorkspace'
 
       initialize: ->
+        @updatePublicButton()
+        @model.getDocument().on 'change:public', @updatePublicButton, this
+
         @toggleShown = false
 
         @share = new shareButton "#phantom-share",
@@ -41,3 +45,14 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         else
           $('#workspace-name').val("")
         @toggleShown = !@toggleShown
+
+      updatePublicButton: ->
+        if @model.getDocument().get 'public'
+          $('.public-button').text 'Make GraphDoc private'
+        else
+          $('.public-button').text 'Make GraphDoc public'
+
+      togglePublic: ->
+        doc = @model.getDocument()
+        doc.set "public", not doc.get "public"
+        doc.save()

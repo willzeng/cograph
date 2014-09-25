@@ -23,14 +23,27 @@ class DocumentHelper
       node = utils.parseCypherResult(results[0], 'n')
       callback utils.parseNodeToClient node
 
+  # Gets all the public documents
   getAll: (callback) ->
     docLabel = '_document'
-    cypherQuery = "match (n:#{docLabel}) return n;"
+    cypherQuery = "MATCH (n:#{docLabel}) WHERE n.public=true return n;"
     params = {}
     @graphDb.query cypherQuery, params, (err, results) ->
       if err then throw err
       nodes = (utils.parseCypherResult(node, 'n') for node in results)
       callback nodes
+
+  # Gets documents with ids in list 'ids'
+  getByIds: (ids, callback) ->
+    if ids.length is 0
+      callback []
+    else
+      params = {ids:ids}
+      cypherQuery = "start n=node({ids}) return n;"
+      @graphDb.query cypherQuery, params, (err, results) ->
+        if err then throw err
+        nodes = (utils.parseCypherResult(node, 'n') for node in results)
+        callback nodes
 
 
 module.exports = DocumentHelper

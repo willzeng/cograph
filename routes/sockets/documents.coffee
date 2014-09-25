@@ -27,6 +27,11 @@ exports.read = (data, callback, socket) ->
       callback null, parsed
 
 exports.readCollection = (data, callback, socket) ->
+  if data.documentIds?
+    serverDocument.getByIds data.documentIds, (docs) ->
+      socket.emit 'documents:read', docs
+      callback null, docs
+  else
     serverDocument.getAll (docs) ->
       socket.emit 'documents:read', docs
       callback null, docs

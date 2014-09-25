@@ -7,18 +7,30 @@ connections = require './connections'
 documents = require './documents'
 search = require './search'
 
+# load up the user model
+User = require '../models/user.coffee'
+
 #defines a function to extract parameters using regex's
 router.param utils.paramExtract
 integerRegex = /^\d+$/
 router.param 'id', integerRegex
 router.param 'docId', integerRegex
 
-router.get '/', (request, response) ->
+router.get '/new', utils.isLoggedIn, (request, response) ->
   documents.addBlank (savedDocument) ->
+    User.findById request.user._id, (err, user) ->
+      user.documents.push savedDocument._id
+      user.save (err) -> if err then throw err
     response.redirect "/#{savedDocument._id}"
 
 router.get '/:id', (request, response) ->
   documents.prefetch request, response, (prefetched) ->
+    if request.isAuthenticated()
+      prefetched.isAuthenticated = true
+      prefetched.user = request.user
+    else
+      prefetched.isAuthenticated = false
+      prefetched.user = {}
     response.render 'index.jade', prefetched
 
 router.get /^\/mobile\/(\d*)$/, (request, response) ->
