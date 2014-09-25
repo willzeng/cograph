@@ -29,3 +29,6 @@ nav.navbar.navbar-default(role='navigation')
               a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template") Filter
             li
               a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
+            if isAuthenticated
+              li
+                a.public-button Make GraphDoc public
