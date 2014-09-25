@@ -47,7 +47,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           $("#new-doc-form").submit (e) ->
             false
 
-        $('button', @newDocModal.$el).click () =>
+        $('#new-doc-form', @newDocModal.$el).submit () =>
           @newDocument()
           @newDocModal.close()
 
