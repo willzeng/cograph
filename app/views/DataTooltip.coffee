@@ -4,7 +4,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
       el: $ '#graph'
 
       events:
-        'mouseenter .node-title-body' : 'showToolTip'
+        'mouseenter .node-title-span' : 'showToolTip'
         'click .node-archive': 'archiveObj'
         'click .node-expand': 'expandNode'
         'click .node-fix': 'toggleFix'

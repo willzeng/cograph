@@ -60,9 +60,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       selectedColor: '#3498db'
 
       defaultColors:
-          white: '#aaa'
+          white:'#aaa'
           black:'#000'
-          grey:'#ccc'
           red:'#E3A390'
           yellow:'#F2DB9D'
           green: '#B3E2B1'

@@ -4,14 +4,17 @@ block content
   #sidebar
   #graph
     .loading-container
-      i.fa.fa-circle-o-notch.fa-spin.fa-5x
+      .spinner
+        .double-bounce1
+        .double-bounce2
+
     .toolbar.controls
       .navbar-left.navbar-form
         form#search-form.form-inline
           .input-group
             input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-          button#sidebar-toggle.btn.btn-default(title="Toggle Sidebar")
-            i.fa.fa-arrows-h
+          //- button#sidebar-toggle.btn.btn-default(title="Toggle Sidebar")
+          //-   i.fa.fa-arrows-h
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form.form-inline
@@ -32,13 +35,17 @@ block content
 
     .toolbar.bottom.right.controls
       button#save-workspace-button.btn.btn-primary
-        div Save Workspace
+        div 
+          i.fa.fa-save
+          span &nbsp;Save Version
       button#sharing-button.btn.btn-primary
-        div Share GraphDoc
+        div
+          i.fa.fa-share
+          span &nbsp; Share
     #zoom-controls.btn-group-vertical.controls
-      button#zoom-in-button.btn.btn-primary(title="Zoom In")
+      button#zoom-in-button.btn.btn-default(title="Zoom In")
         i.glyphicon.glyphicon-plus
-      button#zoom-out-button.btn.btn-primary(title="Zoom Out")
+      button#zoom-out-button.btn.btn-default(title="Zoom Out")
         i.glyphicon.glyphicon-minus
     #trash-bin.controls(title="Drag a node here to Archive it")
       i.fa.fa-eye-slash
