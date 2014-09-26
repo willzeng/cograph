@@ -17,10 +17,10 @@ router.param 'id', integerRegex
 router.param 'docId', integerRegex
 
 router.get '/new', utils.isLoggedIn, (request, response) ->
-  documents.addBlank request.user._id, (savedDocument) ->
+  documents.addBlank request.user.local.name, (savedDocument) ->
     User.findById request.user._id, (err, user) ->
       user.addDocument savedDocument._id
-    response.redirect "/#{savedDocument._id}"
+    response.redirect "/#{request.user.local.name}/document/#{savedDocument._id}"
 
 router.get /^(?:\/(\w*)\/document)?\/(\d+)(?:\/view\/(\d+))?$/, (request, response) ->
   request.params.id = [request.params[1]]

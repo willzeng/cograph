@@ -1,7 +1,13 @@
 <ul class="document-list list-group">
   <% documents.each(function(document){ %>
-    <a href="<%= document.id %>" target="_blank" class="list-group-item">
-      <%= document.get('name') %>
-    </a>
+    <% if (document.get('createdBy') != null) { %>
+      <a href="/<%= document.get('createdBy') %>/document/<%= document.id %>" target="_blank" class="list-group-item">
+        <%= document.get('name') %>
+      </a>
+    <% } else { %>
+      <a href="<%= document.id %>" target="_blank" class="list-group-item">
+        <%= document.get('name') %>
+      </a>
+    <% } %>
   <% }); %>
 <ul>

@@ -36,7 +36,7 @@ nav.navbar.navbar-default(role='navigation')
               li
                 a.public-button Make GraphDoc public
               li
-                a(href="/profile") #{user.local.name}'s Profile
+                a(href="/#{user.local.name}") #{user.local.name}'s Profile
               li
                 a(href="/logout") Logout
             else

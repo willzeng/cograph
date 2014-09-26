@@ -30,7 +30,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       @get(@idAttribute) < 0
 
     serialize: ->
-      {name:@get('name'), _id:@get('_id'), public: @get('public')}
+      {name:@get('name'), _id:@get('_id'), public: @get('public'), createdBy: @get('createdBy')}
 
     sync: (method, model, options) ->
       options = options || {}

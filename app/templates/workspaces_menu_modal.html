@@ -1,6 +1,10 @@
 <ul class="workspaces-list list-group">
   <% _.each(workspaces, function(workspace){ if(workspace._id > 0 && (typeof(workspace.name) !== 'undefined') && (workspace.name !== null) && workspace.name.length > 0){%>
-    <a href=<%= docId %>#<%= workspace._id %> target="_blank" class="list-group-item">
+    <% if (createdBy != null) { %>
+      <a href='<%= createdBy %>/document/<%= docId %>#<%= workspace._id %>' target="_blank" class="list-group-item">
+    <% } else { %>
+      <a href=<%= docId %>#<%= workspace._id %> target="_blank" class="list-group-item">
+    <% } %>
       <%= workspace.name %>
       <button type="button" class="btn btn-danger btn-sm pull-right center-block delete-workspace", data-id=<%= workspace._id %>>
         <i class="fa fa-trash-o"></i>

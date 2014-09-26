@@ -42,4 +42,4 @@ head
               |  Your GraphDocs
             ul.document-list.list-group
               for doc in userDocs
-                a.list-group-item(href="#{doc.id}" target="_blank") #{doc.name}
+                a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
