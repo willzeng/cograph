@@ -39,5 +39,11 @@ userSchema.methods.generateHash = (password) ->
 userSchema.methods.validPassword = (password) ->
   bcrypt.compareSync password, @local.password
 
+# add a document that is owned by that user
+userSchema.methods.addDocument = (docId, cb) ->
+  @documents.push docId
+  @save (err, saved) ->
+    if err? then throw err else if cb? then cb saved
+
 # create the model for users and expose it to our app
 module.exports = mongoose.model("User", userSchema)
