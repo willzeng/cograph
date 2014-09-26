@@ -38,7 +38,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       # if created by a logged in user, then include that information
       if method is 'create'
         currUser = window.user
-        options.data.createdBy = if currUser? then currUser._id else ''
+        options.data.createdBy = if currUser? then currUser.name else ''
 
       options.contentType = 'application/json'
       Backbone.sync.apply(this, [method, model, options])

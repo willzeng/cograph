@@ -77,4 +77,22 @@ router.get      '/document/:docId/getNodeByName',     search.getNodeByName
 router.get      '/document/:docId/getNodesByTag',     search.getNodesByTag
 router.get      '/document/:docId/tags',              search.getTagNames
 
+# User Page (needs to come last as the fallback route)
+router.get /^\/(\w+)$/, (req, res) ->
+  username = req.params[0].toLowerCase()
+  User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
+    if err or not(profiledUser?) then res.redirect "/"
+    else
+      documents.helper.getAll (publicDocs) ->
+        documents.helper.getByIds profiledUser.documents, (privateDocs) ->
+          if req.isAuthenticated() and username is req.user.local.nameLower
+            # show all the documents if this is the profile for the logged in user
+            shownDocs = privateDocs
+          else # otherwise show only their public documents
+            shownDocs = (d for d in privateDocs when d.public is true)
+          res.render "profile.jade",
+            user: profiledUser  # get the user out of session and pass to template
+            docs: publicDocs    # prefetch the list of document names for opening
+            userDocs: shownDocs # prefetch the users private documents
+
 module.exports = router

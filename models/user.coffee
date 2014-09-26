@@ -9,6 +9,7 @@ userSchema = mongoose.Schema(
     email: String
     password: String
     name: String
+    nameLower: String
 
   facebook:
     id: String
