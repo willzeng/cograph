@@ -10,9 +10,7 @@ block content
 
     .toolbar.controls
       .navbar-left.navbar-form
-        form#search-form.form-inline
-          .input-group
-            input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
+        
           //- button#sidebar-toggle.btn.btn-default(title="Toggle Sidebar")
           //-   i.fa.fa-arrows-h
     .toolbar.right.controls
@@ -34,20 +32,17 @@ block content
                   | Done
 
     .toolbar.bottom.right.controls
-      button#save-workspace-button.btn.btn-primary(data-toggle="popover" title="Name this View [Optional]." data-placement="top" data-container="#graph")
-        div 
-          i.fa.fa-save
-          span &nbsp;Save View
-      button#sharing-button.btn.btn-primary
-        div
-          i.fa.fa-share
-          span &nbsp; Share
-      #phantom-share
-    #zoom-controls.btn-group-vertical.controls
-      button#zoom-in-button.btn.btn-default(title="Zoom In")
-        i.glyphicon.glyphicon-plus
-      button#zoom-out-button.btn.btn-default(title="Zoom Out")
-        i.glyphicon.glyphicon-minus
+      ul.nav.navbar-nav
+        li
+          form#search-form.form-inline
+            .input-group
+              input#search-input.form-control(type="text", name='search-term' placeholder="Search")
+        li
+          .btn-group-vertical.controls
+            button#zoom-in-button.btn.btn-default(title="Zoom In")
+              i.glyphicon.glyphicon-plus
+            button#zoom-out-button.btn.btn-default(title="Zoom Out")
+              i.glyphicon.glyphicon-minus
     #trash-bin.controls(title="Drag a node here to Archive it")
       i.fa.fa-eye-slash
   .data-tooltip-container

@@ -43,7 +43,6 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         $('#details-container .panel-heading').css 'background', color
 
       closeDetail: () ->
-        @detailsModal.close()
         @graphView.trigger "node:mouseout"
 
       openAndEditConnection: (conn) ->

@@ -5,7 +5,7 @@
 @stroke-color: black;
 @selected-color: #74DDFC;
 @selected-nodetext-color: white;
-@fixed-color: #333;
+@fixed-color: orange;
 @text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
@@ -21,8 +21,8 @@
 }
 
 .node.fixed .node-connector {
-  stroke-width: 2px;
-  stroke-dasharray: 5,5;
+  stroke-width: 1px;
+  stroke-location: outside;
   stroke: @fixed-color;
 }
 
@@ -53,9 +53,6 @@
   hyphens: auto;
 
   height: auto;
-}
-
-.node, .connection {
 }
 
 .node-info-body, .connection-info-body {
@@ -210,12 +207,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
     color:    #999;
 }
 
-#zoom-controls {
-  position: absolute;
-  bottom: @bottom-margin;
-  left: 15px;
-}
-
 #sidebar {
   position: absolute;
   left: 0;
@@ -236,8 +227,8 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   font-size: 26pt;
   color: lightgray;
   position: absolute;
-  bottom:@bottom-margin;
-  left: 70px;
+  bottom: @bottom-margin;
+  left: 10px;
   padding-top:12px;
   text-align: center;
   border: 4px dashed lightgray;
@@ -251,7 +242,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .close {
   outline: none;
-  font-size: 40px;
+  font-size: 20px;
   opacity: 0.4;
 }
 
@@ -341,14 +332,25 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   overflow-y: scroll;
 }
 
+#brand-logo {
+  height: 30px;
+  margin-top: -7px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
 .panel {
   border: 0;
+}
+
+#zoom-in-button, #zoom-out-button {
+  padding: 5px;
 }
 
 #menu-title {
   position: relative;
   outline: none;
-  background: beige;
+  background: rgba(0,0,0,0.02);
   color: black;
   border: 0;
   cursor: pointer;
@@ -412,7 +414,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .navbar {
   margin-bottom: 0;
-  background: @white;
+  background: rgba(0,0,0,0.02);
   border: 0;
   border-radius: 0;
 }
@@ -491,11 +493,10 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 body {
-    background: #eee;
+    background: white;
 }
 
 #add {
-    font-family: 'Roboto Slab';
     font-size: 15pt;
     width: 420px;
     border: 1px solid #eee;
@@ -532,17 +533,17 @@ body {
 }
 
 #add.contracted #add-toolbar, #add.contracted #add-title {
-    display: none;
+  display: none;
 }
 
 #add-toolbar-left button {
-    border: 0;
-    background: 0;
-    font-size: 14pt;
-    color: #777;
-    cursor: pointer;
-    outline: none;
-    margin: 0 10px;
+  border: 0;
+  background: 0;
+  font-size: 14pt;
+  color: #777;
+  cursor: pointer;
+  outline: none;
+  margin: 0 10px;
 }
 
 .color-circle {
@@ -556,71 +557,76 @@ body {
 }
 
 #add-toolbar-left button:hover {
-    color: #333;
+  color: #333;
 }
 
 #add-toolbar-left button:first-child {
-    margin-left: 0;
+  margin-left: 0;
 }
 
 #add-toolbar-right button {
-    border: 0;
-    background: #eee;
-    padding: 8px 17px;
-    border-radius: 3px;
-    font-weight: 400;
-    color: #777;
-    margin: 0 10px;
-    cursor: pointer;
-    outline: none;
-    font-size: 10pt;
+  border: 0;
+  background: #eee;
+  padding: 8px 17px;
+  border-radius: 3px;
+  font-weight: 400;
+  color: #777;
+  margin: 0 10px;
+  cursor: pointer;
+  outline: none;
+  font-size: 10pt;
 }
 
 #add-toolbar-right button:hover {
-    color: #333;
+  color: #333;
 }
 
 #add-toolbar-left {
-    float: left;
+  float: left;
+}
+
+.panel-heading, .panel-body {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #add-toolbar-right {
-    float:right;
+  float:right;
 }
 
 #add-toolbar {
-    width: 400px;
-    border: 0;
-    outline: none;
+  width: 400px;
+  border: 0;
+  outline: none;
 }
 
 #add-title {
-    width: 600px;
-    font-weight: 400;
-    width: 100%;
-    border: 0;
-    font-size: 13pt;
-    outline: none;
-    box-sizing: border-box;
-    resize: none;
-    background: transparent;
-    max-height: 100px;
+  width: 600px;
+  font-weight: 400;
+  width: 100%;
+  border: 0;
+  font-size: 13pt;
+  outline: none;
+  box-sizing: border-box;
+  resize: none;
+  background: transparent;
+  max-height: 100px;
 }
 
 #add-image-url {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 #add-description {
-    width: 400px;
-    max-height: 200px;
-    font-weight: 300;
-    font-size: 10pt;
-    border: 0;
-    outline: none;
-    box-sizing: border-box;
-    resize: none;
-    background: transparent;
+  width: 400px;
+  max-height: 200px;
+  font-weight: 500;
+  font-size: 14px;
+  border: 0;
+  outline: none;
+  box-sizing: border-box;
+  resize: none;
+  background: transparent;
 }
 
 /* LOADER */
@@ -644,6 +650,10 @@ body {
   
   -webkit-animation: bounce 2.0s infinite ease-in-out;
   animation: bounce 2.0s infinite ease-in-out;
+}
+
+.caret {
+  margin-left: 5px;
 }
 
 .double-bounce2 {
