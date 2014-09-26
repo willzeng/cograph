@@ -22,7 +22,8 @@ router.get '/new', utils.isLoggedIn, (request, response) ->
       user.addDocument savedDocument._id
     response.redirect "/#{savedDocument._id}"
 
-router.get '/:id', (request, response) ->
+router.get /^(?:\/(\w*)\/document)?\/(\d+)(?:\/view\/(\d+))?$/, (request, response) ->
+  request.params.id = [request.params[1]]
   documents.prefetch request, response, (prefetched) ->
     if request.isAuthenticated()
       prefetched.isAuthenticated = true
