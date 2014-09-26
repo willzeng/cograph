@@ -17,7 +17,7 @@ router.param 'id', integerRegex
 router.param 'docId', integerRegex
 
 router.get '/new', utils.isLoggedIn, (request, response) ->
-  documents.addBlank (savedDocument) ->
+  documents.addBlank request.user._id, (savedDocument) ->
     User.findById request.user._id, (err, user) ->
       user.addDocument savedDocument._id
     response.redirect "/#{savedDocument._id}"
