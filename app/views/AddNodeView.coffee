@@ -82,7 +82,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           # add at-who autocompletion
           @descriptionArea.atwho
-            at: "@"
+            at: "+"
             data: @model.nodes.pluck('name')
             target: "#add-node-form"
           .atwho
@@ -95,7 +95,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
             @mentions = []
           @descriptionArea.on "inserted.atwho", (event, item) =>
             insertedText = item.attr 'data-value'
-            if insertedText[0] is "@"
+            if insertedText[0] is "+"
               addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
               if addedMention? then @mentions.push addedMention
 
