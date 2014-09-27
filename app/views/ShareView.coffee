@@ -48,9 +48,9 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
       updatePublicButton: ->
         if @model.getDocument().get 'public'
-          $('.public-button').text 'Make GraphDoc private'
+          $('.public-button').html '<i class="fa fa-globe"></i>'
         else
-          $('.public-button').text 'Make GraphDoc public'
+          $('.public-button').html '<i class="fa fa-lock"></i>'
 
       togglePublic: ->
         doc = @model.getDocument()
