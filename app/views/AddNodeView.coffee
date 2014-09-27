@@ -3,6 +3,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
   ($, _, Backbone, WorkspaceModel, NodeModel, atwho, twittertext) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
+      createdThisSession: 0
 
       events: 
         'submit' : 'addNode'
@@ -127,7 +128,13 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           attributes['name'] += "...";
         node = new NodeModel attributes
         if node.isValid()
+          # stage the new node in the staging area
+          # if it is not connected to anything
+          if @mentions.length is 0
+            node.fixed = true
+            [node.x, node.y] = @findUnoccupiedStage()
           @model.putNode node
+
           node.set "tags", twttr.txt.extractHashtags attributes.description
 
           $.when(node.save()).then =>
@@ -148,3 +155,21 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
             @resetAdd()
         else
           $('input', @el).attr('placeholder', node.validate())
+
+      findUnoccupiedStage: ->
+        @createdThisSession = @createdThisSession+1
+        x = $(window).width()-150
+        posts = ({x:x,y:180+70*n} for n in [0..@createdThisSession-1])
+
+        distance = (x,y,px,py) ->
+          Math.sqrt (x-px)*(x-px)+(y-py)*(y-py)
+
+        isClear = (px,py) =>
+          nodes = @model.nodes.models
+          distances = _.map nodes, (n) -> distance px, py, n.x, n.y
+          distances = distances.sort()
+          distances[0] > 60
+
+        availablePosts = _.filter posts, (p) -> isClear p.x, p.y
+        if availablePosts.length < 1 then availablePosts[0] = posts[posts.length-1]
+        [availablePosts[0].x,availablePosts[0].y]
