@@ -17,7 +17,7 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
       _docId: 0
 
     schema:
-      name: {type:'Text', title:"Connection Type e.g. 'relates to'"}
+      name: {type:'ConnDropdown', title:"Connection Type e.g. 'relates to'"}
       url: 'Text'
       description:
         type: 'AtWhoEditor'
