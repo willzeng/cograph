@@ -13,7 +13,7 @@ nav.navbar.navbar-default(role='navigation')
           ul.nav.navbar-nav.navbar-right
             li.dropdown
               a.dropdown-toggle(data-toggle='dropdown', href='')
-                | #{user.local.email.split('@')[0]}
+                | #{user.local.name}
                 i.caret
               ul.dropdown-menu
                 li(role="presentation")
@@ -23,7 +23,7 @@ nav.navbar.navbar-default(role='navigation')
                 li
                   a(href="/logout") Logout
             li
-              a(href="/profile") 
+              a(href="/#{user.local.name}")
 
           ul.nav.navbar-nav   
             li

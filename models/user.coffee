@@ -8,6 +8,8 @@ userSchema = mongoose.Schema(
   local:
     email: String
     password: String
+    name: String
+    nameLower: String
 
   facebook:
     id: String
@@ -38,6 +40,12 @@ userSchema.methods.generateHash = (password) ->
 # checking if password is valid
 userSchema.methods.validPassword = (password) ->
   bcrypt.compareSync password, @local.password
+
+# add a document that is owned by that user
+userSchema.methods.addDocument = (docId, cb) ->
+  @documents.push docId
+  @save (err, saved) ->
+    if err? then throw err else if cb? then cb saved
 
 # create the model for users and expose it to our app
 module.exports = mongoose.model("User", userSchema)

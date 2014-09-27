@@ -36,7 +36,7 @@ nav.navbar.navbar-default(role='navigation')
             if isAuthenticated
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')
-                  | #{user.local.email.split('@')[0]}
+                  | #{user.local.name}
                   i.caret
                 ul.dropdown-menu
                   li(role="presentation")
@@ -44,7 +44,7 @@ nav.navbar.navbar-default(role='navigation')
                   li(role="presentation")
                     a(href="/graphs") My Cographs
                   li(role="presentation")
-                    a(href="/#{user.local.username}") Profile
+                    a(href="/#{user.local.name}") Profile
                   li(role="presentation")
                     a(href="/account") Account
                   li
@@ -52,32 +52,3 @@ nav.navbar.navbar-default(role='navigation')
             else
               li
                 a(href="/login") Login
-          //- ul.nav.navbar-nav
-            
-          //-   li.dropdown
-          //-     a.dropdown-toggle(data-toggle='dropdown', href='')
-          //-       | View
-          //-       span.caret
-          //-     if isAuthenticated
-          //-       ul.dropdown-menu
-          //-         li(role="presentation")
-          //-           a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open View
-          //-         li(role="presentation")
-          //-           a#save-workspace-button Save View
-          //-         li(role="presentation")
-          //-           a#sharing-button Share View
-          //-     else
-          //-       ul.dropdown-menu
-          //-         li(role="presentation")
-          //-           a#open-doc-button(href="") Open Cograph
-          //-         li(role="presentation")
-          //-           a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open View
-              
-          //-   li
-          //-     a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template")
-          //-       i.fa.fa-filter(title="filter")
-            
-            //- Analytics can go on the profile somewhere
-            //- li
-            //-   a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
-            

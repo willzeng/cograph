@@ -16,7 +16,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView model: @workspaceModel
 
-        @shareView.on "save:workspace", (workspaceId) => @navigate ""+workspaceId
+        @shareView.on "save:workspace", (workspaceId) => @navigate "view/"+workspaceId
         @graphView.on "tag:click", (tag) =>
           @workspaceModel.filterModel.set "node_tags", [tag]
           @workspaceModel.filter()
@@ -24,11 +24,16 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           @navigate "search/"+tag
 
         window.gm = @workspaceModel
-        Backbone.history.start()
+        # regex to extract away a routing pathname
+        # this needs to operate for both /username/document/:docId
+        # and /:docId
+        pathRegex = /^((?:\/\w+\/document)?\/\d+\/?)(?:.+)?$/
+        path = pathRegex.exec window.location.pathname
+        Backbone.history.start {pushState: true, root: path[1]}
 
       routes:
         '': 'home'
-        '(:id)': 'workspace'
+        'view/:id': 'workspace'
         'search/:tag': 'loadByTag'
 
       home: () =>
