@@ -14,8 +14,8 @@ exports.create = (req, resp) ->
   serverDocument.create newDocument, (savedDocument) ->
     resp.send savedDocument
 
-exports.addBlank = (callback) ->
-  newDocument = {name:"Untitled Document"}
+exports.addBlank = (userName, callback) ->
+  newDocument = {name:"Untitled Document", createdBy: userName}
   serverDocument.create newDocument, (savedDocument) ->
     callback savedDocument
 

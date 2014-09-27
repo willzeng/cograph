@@ -17,10 +17,12 @@ head
     .container
       .page-header.text-center
         h1
-          | My Cographs
-          //- |  #{user.local.email.split('@')[0]}
+          if ownProfile
+            | Hi @#{user.local.name}
+          else
+            | @#{user.local.name}
       .row
         .col-sm-12
           .document-list
             for doc in userDocs
-              a.list-group-item(href="#{doc.id}" target="_blank") #{doc.name}
+              a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}

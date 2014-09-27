@@ -55,7 +55,11 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         docName = $('#newDocName', @newDocModal.el).val()
         newDocument = new DocumentModel(name: docName)
         $.when(newDocument.save()).then =>
-          window.open '/'+newDocument.get('_id')
+          if window.user?
+            name = window.user.local.name
+            window.open "/#{name}/document/"+newDocument.get('_id')
+          else
+            window.open '/'+newDocument.get('_id')
 
       openDocumentModal: ->
         user = window.user
@@ -86,8 +90,9 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       openWorkspacesModal: ->
         docId = @model.getDocument().get("_id")
         workspaces = @model.getDocument().get("workspaces")
+        createdBy = @model.getDocument().get("createdBy")
         modal = new Backbone.BootstrapModal(
-          content: _.template(workspacesMenuTemplate, {docId:docId, workspaces:workspaces})
+          content: _.template(workspacesMenuTemplate, {docId:docId, workspaces:workspaces, createdBy: createdBy})
           title: "Open View"
           animate: true
           showFooter: false

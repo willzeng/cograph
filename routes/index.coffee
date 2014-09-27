@@ -17,13 +17,13 @@ router.param 'id', integerRegex
 router.param 'docId', integerRegex
 
 router.get '/new', utils.isLoggedIn, (request, response) ->
-  documents.addBlank (savedDocument) ->
+  documents.addBlank request.user.local.name, (savedDocument) ->
     User.findById request.user._id, (err, user) ->
-      user.documents.push savedDocument._id
-      user.save (err) -> if err then throw err
-    response.redirect "/#{savedDocument._id}"
+      user.addDocument savedDocument._id
+    response.redirect "/#{request.user.local.name}/document/#{savedDocument._id}"
 
-router.get '/:id', (request, response) ->
+router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, response) ->
+  request.params.id = [request.params[1]]
   documents.prefetch request, response, (prefetched) ->
     if request.isAuthenticated()
       prefetched.isAuthenticated = true
@@ -77,5 +77,26 @@ router.get      '/document/:docId/getNodeByName',      search.getNodeByName
 router.get      '/document/:docId/getNodesByTag',      search.getNodesByTag
 router.get      '/document/:docId/getConnsByName',     search.getConnsByName
 router.get      '/document/:docId/tags',               search.getTagNames
+
+# User's Public  Page (needs to come last as the fallback route)
+router.get /^\/(\w+)$/, (req, res) ->
+  username = req.params[0].toLowerCase()
+  User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
+    if err or not(profiledUser?) then res.redirect "/"
+    else
+      documents.helper.getAll (publicDocs) ->
+        documents.helper.getByIds profiledUser.documents, (privateDocs) ->
+          if req.isAuthenticated() and username is req.user.local.nameLower
+            # show all the documents if this is the profile for the logged in user
+            shownDocs = privateDocs
+            ownProfile = req.user.local.name is profiledUser.local.name
+          else # otherwise show only their public documents
+            shownDocs = (d for d in privateDocs when d.public is true)
+            ownProfile = false
+          res.render "profile.jade",
+            ownProfile: ownProfile  # checks to see if you are looking at your own profile
+            user: profiledUser      # get the user out of session and pass to template
+            docs: publicDocs        # prefetch the list of document names for opening
+            userDocs: shownDocs     # prefetch the users private documents
 
 module.exports = router

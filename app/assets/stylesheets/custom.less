@@ -27,6 +27,10 @@
   stroke: @fixed-color;
 }
 
+.node.image.fixed image {
+  clip-path: url(#clipCircleFixed);
+} 
+
 .node.fixed .node-fix {
   color: @fixed-color;
 }
@@ -576,6 +580,16 @@ body {
   cursor: pointer;
   outline: none;
   margin: 0 10px;
+}
+
+#toolbar-bottom-right > .navbar-nav > li {
+  display: inline-block;
+  float: none;
+  vertical-align: bottom;
+}
+
+#toolbar-bottom-right > .navbar-nav {
+  vertical-align: bottom;
 }
 
 .color-circle {

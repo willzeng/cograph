@@ -12,20 +12,16 @@ nav.navbar.navbar-default(role='navigation')
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
             li
-              a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal")
+              a(href="/new")
                 i.fa.fa-edit
             li.dropdown
               a.dropdown-toggle(data-toggle='dropdown', href='')
-                | #{user.local.email.split('@')[0]}
+                | #{user.local.name}
                 i.caret
               ul.dropdown-menu
                 li
-                  a My Cographs
-                li(role="presentation")
-                  a(href="/#{user.local.username}") Profile
+                  a(href="/#{user.local.username}") My Cographs
                 li(role="presentation")
                   a(href="/account") Account
                 li
                   a(href="/logout") Logout
-            li
-              a(href="/profile") 

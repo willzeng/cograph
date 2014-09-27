@@ -6,11 +6,17 @@ utils = require '../utils'
 DocumentHelper = require '../helpers/DocumentHelper'
 serverDocument = new DocumentHelper graphDb
 
+# load up the user model
+User = require '../../models/user.coffee'
+
 # CREATE
 exports.create = (data, callback, socket) ->
   console.log 'create document query requested'
   newDocument = data
   serverDocument.create newDocument, (savedDocument) ->
+    if savedDocument.createdBy?
+      User.findById savedDocument.createdBy, (err, user) ->
+        user.addDocument savedDocument._id
     socket.emit('document:create', savedDocument)
     # socket.broadcast.emit('documents:create', json)
     callback(null, savedDocument)

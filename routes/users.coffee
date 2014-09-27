@@ -20,11 +20,15 @@ module.exports = (app, passport) ->
       message: req.flash("loginMessage")
   
   # process the login form
-  app.post "/login", passport.authenticate("local-login",
-    successRedirect: "/profile" # redirect to the secure profile section
-    failureRedirect: "/login" # redirect back to the signup page if there is an error
-    failureFlash: true # allow flash messages
-  )
+  app.post "/login", (req, res, next) ->
+    passport.authenticate("local-login", (err, user, info) ->
+      if err then next err
+      if not user then res.redirect '/signup'
+      else
+        req.logIn user, (err) ->
+          if err then next err
+          res.redirect '/'+user.local.nameLower
+    )(req, res, next)
   
   # =====================================
   # SIGNUP ==============================
@@ -35,12 +39,6 @@ module.exports = (app, passport) ->
     res.render "signup.jade",
       message: req.flash("signupMessage")
   
-  # process the signup form
-  app.post "/signup", passport.authenticate("local-signup",
-    successRedirect: "/profile" # redirect to the secure profile section
-    failureRedirect: "/signup" # redirect back to the signup page if there is an error
-    failureFlash: true # allow flash messages
-  )
 
   # // Redirect the user to Facebook for authentication.  When complete,
   # // Facebook will redirect the user back to the application at
@@ -79,18 +77,28 @@ module.exports = (app, passport) ->
     )
   )
   
-  # =====================================
-  # PROFILE SECTION =====================
-  # =====================================
-  # we will want this protected so you have to be logged in to visit
-  # we will use route middleware to verify this (the isLoggedIn function)
-  app.get "/profile", utils.isLoggedIn, (req, res) ->
-    documents.helper.getAll (docs) ->
-      documents.helper.getByIds req.user.documents, (privateDocs) ->
-        res.render "profile.jade",
-          user: req.user # get the user out of session and pass to template
-          docs: docs # prefetch the list of document names for opening
-          userDocs: privateDocs # prefetch the users private documents
+  app.post "/signup", (req, res, next) ->
+    passport.authenticate("local-signup", (err, user, info) ->
+      if err then next err
+      if not user then res.redirect '/signup'
+      else
+        req.logIn user, (err) ->
+          if err then next err
+          res.redirect '/'+user.local.nameLower
+    )(req, res, next)
+
+  # # =====================================
+  # # PROFILE SECTION =====================
+  # # =====================================
+  # # we will want this protected so you have to be logged in to visit
+  # # we will use route middleware to verify this (the isLoggedIn function)
+  # app.get "/profile", utils.isLoggedIn, (req, res) ->
+  #   documents.helper.getAll (docs) ->
+  #     documents.helper.getByIds req.user.documents, (privateDocs) ->
+  #       res.render "profile.jade",
+  #         user: req.user # get the user out of session and pass to template
+  #         docs: docs # prefetch the list of document names for opening
+  #         userDocs: privateDocs # prefetch the users private documents
   
   # =====================================
   # LOGOUT ==============================

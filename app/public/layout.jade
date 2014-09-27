@@ -6,12 +6,15 @@ html(lang="en")
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     meta(name="description" content="Build and Explore graphs collaboratively")
+    base(href='/')
     link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
     link(href='/assets/libs/targeted-atwho/dist/css/jquery.atwho.min.css', rel='stylesheet')
     link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
     link(href='/assets/stylesheets/gsdk-base.css', rel='stylesheet')
-    link(href='/assets/stylesheets/custom.css', rel='stylesheet')    
+    link(href='/assets/stylesheets/custom.css', rel='stylesheet')  
+    link(href="/assets/libs/feedback-bot/src/feedback.css" rel='stylesheet')
+  
     script(type='text/javascript', data-main="main", src="/assets/libs/requirejs/require.js") //loads main.js
     script.
       window.prefetch = {};

@@ -10,6 +10,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       _id: -1
       workspaces: []
       public: false
+      createdBy: ''
 
     initialize: ->
       @socket.on @urlRoot+":update", (objData) =>
@@ -29,11 +30,16 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       @get(@idAttribute) < 0
 
     serialize: ->
-      {name:@get('name'), _id:@get('_id'), public: @get('public')}
+      {name:@get('name'), _id:@get('_id'), public: @get('public'), createdBy: @get('createdBy')}
 
     sync: (method, model, options) ->
       options = options || {}
       options.data = @serialize()
+      # if created by a logged in user, then include that information
+      if method is 'create'
+        currUser = window.user
+        options.data.createdBy = if currUser? then currUser.name else ''
+
       options.contentType = 'application/json'
       Backbone.sync.apply(this, [method, model, options])
 
