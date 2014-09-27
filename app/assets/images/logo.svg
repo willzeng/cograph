@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="472px" height="500px" viewBox="0 0 472 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.0.1 (7597) - http://www.bohemiancoding.com/sketch -->
+    <title>logo</title>
+    <description>Created with Sketch.</description>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <rect id="Rectangle-1" fill="#000000" sketch:type="MSShapeGroup" x="11" y="132" width="44" height="248"></rect>
+        <path d="M243,14 L243,499 L287,473.545898 L287,39.3613281 L243,14 Z" id="Rectangle-6" fill="#000000" sketch:type="MSShapeGroup"></path>
+        <rect id="Rectangle-4" fill="#000000" sketch:type="MSShapeGroup" x="174" y="49" width="44" height="93"></rect>
+        <rect id="Rectangle-5" fill="#000000" sketch:type="MSShapeGroup" x="174" y="358" width="44" height="93"></rect>
+        <rect id="Rectangle-9" fill="#000000" sketch:type="MSShapeGroup" x="406" y="290" width="44" height="80"></rect>
+        <path d="M104,-29 L104,210 L146,210 L146,-4.60432405 L104,-29 Z" id="Rectangle-2" fill="#000000" sketch:type="MSShapeGroup" transform="translate(125.000000, 90.500000) rotate(-300.000000) translate(-125.000000, -90.500000) "></path>
+        <path d="M336,290 L336,528 L378,528 L378,314.293602 L336,290 Z" id="Rectangle-7" fill="#000000" sketch:type="MSShapeGroup" transform="translate(357.000000, 409.000000) rotate(-300.000000) translate(-357.000000, -409.000000) "></path>
+        <path d="M104,326.134605 L104,540 L146,540 L146,302 L104,326.134605 Z" id="Rectangle-3" fill="#000000" sketch:type="MSShapeGroup" transform="translate(125.000000, 421.000000) rotate(-240.000000) translate(-125.000000, -421.000000) "></path>
+        <path d="M336,9.13460541 L336,223 L378,223 L378,-15 L336,9.13460541 Z" id="Rectangle-8" fill="#000000" sketch:type="MSShapeGroup" transform="translate(357.000000, 104.000000) rotate(-240.000000) translate(-357.000000, -104.000000) "></path>
+    </g>
+</svg>

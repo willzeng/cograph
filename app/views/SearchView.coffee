@@ -48,6 +48,19 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
             header: '<span class="search-title">Connections</span>'
         )
 
+        initTop = $(".tt-dropdown-menu").position().top     
+        $('#search-input').on 'input', (event) ->     
+          # timeout allows the dropdown to render to the correct height     
+          setTimeout ->     
+            $input = $(event.target)    
+            $results = $(".tt-dropdown-menu")     
+            height = $results.height()    
+            inputHeight = $input.height()     
+            newTop = initTop - height - inputHeight     
+    
+            $results.css("top", newTop + "px")    
+          , 50
+           
         $('#search-input').on 'typeahead:selected',
           (e, sugg, dataset) => @search(sugg)
 

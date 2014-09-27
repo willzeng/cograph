@@ -3,7 +3,7 @@ html
     title GraphDocs Signup
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
-  body(style='padding-top:80px;')
+  body
     .container
       .col-sm-6.col-sm-offset-3
         h1
@@ -17,7 +17,10 @@ html
         form(action='/signup', method='post')
           .form-group
             label Email
-            input.form-control(type='text', name='email')
+            input.form-control(type='email', name='email')
+          .form-group
+            label Name
+            input.form-control(type='text', name='name')
           .form-group
             label Password
             input.form-control(type='password', name='password')
