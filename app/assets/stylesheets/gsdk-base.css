@@ -28,7 +28,7 @@ body{
 a{
     color: #2C93FF;
 }
-a:hover, a:focus {
+a:hover {
     color: #1084FF;
 }
 a:focus, a:active, 
@@ -472,7 +472,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
     background-color: rgba(255, 255, 255, 0);
     border-radius: 3px;
-    color: #2C93FF;
+    color: inherit;
     opacity: 1;
 }
 .navbar-default .navbar-nav > .dropdown > a:hover .caret, .navbar-default .navbar-nav > .dropdown > a:focus .caret {
@@ -530,9 +530,6 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 }
 .navbar-form{
     box-shadow: none;
-}
-.navbar-form .form-control{
-    
 }
 .navbar-transparent .navbar-form .form-control, [class*="navbar-ct"] .navbar-form .form-control{
     color: #FFFFFF;

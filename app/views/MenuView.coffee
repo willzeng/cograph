@@ -37,13 +37,13 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       newDocumentModal: ->
         @newDocModal = new Backbone.BootstrapModal(
           content: _.template(newDocTemplate, {})
-          title: "New Document"
+          title: "New Cograph"
           animate: true
           showFooter: false
         ).open()
 
         @newDocModal.on "shown", () ->
-          $(newDocName).focus()
+          $('#newDocName').focus()
           $("#new-doc-form").submit (e) ->
             false
 
@@ -88,7 +88,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         workspaces = @model.getDocument().get("workspaces")
         modal = new Backbone.BootstrapModal(
           content: _.template(workspacesMenuTemplate, {docId:docId, workspaces:workspaces})
-          title: "Workspaces"
+          title: "Open View"
           animate: true
           showFooter: false
         ).open()

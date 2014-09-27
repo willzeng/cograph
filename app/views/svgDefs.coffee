@@ -49,6 +49,15 @@ define [], () ->
             .attr('r', '18')
             .attr('cx', '-70')
             .attr('cy', '0')
+      def
+        .append('svg:clipPath')
+          .attr('id', 'clipCircleFixed')
+          .append('circle')
+            .attr('r', '18')
+            .attr('cx', '-70')
+            .attr('cy', '0')
+            .attr('stroke', 'orange')
+            .attr('stroke-width', '1px')
       # Colored Connection Arrowheads
       for color,hex of defaultColors
           def

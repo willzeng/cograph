@@ -1,4 +1,5 @@
 @import "colors";
+@import url(http://fonts.googleapis.com/css?family=Varela+Round);
 
 @node-color: white;
 @connection-color: black;
@@ -37,6 +38,10 @@
 .node.selected .node-connector {
   stroke-width: 2px;
   stroke: @selected-color;
+}
+
+.navbar a {
+  cursor: pointer;
 }
 
 .node-title-body {
@@ -165,6 +170,7 @@ html, body {
   overflow: hidden;
   background: #efefef;
   height: 100%;
+  font-family: 'Varela Round';
 }
 
 #main-container {
@@ -308,8 +314,9 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
  overflow-y: scroll;
 }
 
-.edit-details-form input[type="text"], .edit-details-form button[type="button"] {
-  padding: 2px 5px;
+.modal input[type="text"], .modal textarea {
+  padding: 6px 8px;
+  font-size: 16px;
   height: auto;
 }
 
@@ -337,6 +344,13 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin-top: -7px;
   margin-right: 10px;
   margin-left: 10px;
+}
+
+.navbar-brand {
+  z-index: 999;
+  display: block;
+  pointer-events: all;
+  cursor: pointer;
 }
 
 .panel {

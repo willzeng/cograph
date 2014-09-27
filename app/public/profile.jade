@@ -1,7 +1,7 @@
 doctype html
 html(lang="en")
 head
-  title Cograph | #{user.local.email}
+  title Cograph | #{user.local.username}
   meta(charset='utf-8')
   link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
   link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
@@ -20,17 +20,6 @@ head
           | My Cographs
           //- |  #{user.local.email.split('@')[0]}
       .row
-        //- // LOCAL INFORMATION 
-        //- .col-sm-6
-        //-   .well
-        //-     h3
-        //-       span.fa.fa-user
-        //-       |  Local 
-        //-     p
-        //-       strong id:       #{user._id}
-        //-       br
-        //-       strong email:    #{user.local.email}
-        // DOCUMENTS
         .col-sm-12
           .document-list
             for doc in userDocs

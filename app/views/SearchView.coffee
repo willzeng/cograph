@@ -59,7 +59,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
             newTop = initTop - height - inputHeight     
     
             $results.css("top", newTop + "px")    
-          , 30
+          , 50
            
         $('#search-input').on 'typeahead:selected',
           (e, sugg, dataset) => @search(sugg)
