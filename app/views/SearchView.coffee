@@ -35,7 +35,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           name: 'node-names',
           source: nodeNameMatcher(@model)
           templates:
-            header: '<span class="search-title">Node Names</span>'
+            header: '<span class="search-title">Nodes</span>'
         ,
           name: 'tags'
           source: findTagMatches
@@ -51,7 +51,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         initTop = $(".tt-dropdown-menu").position().top     
         $('#search-input').on 'input', (event) ->     
           # timeout allows the dropdown to render to the correct height     
-          setTimeout ->     
+          setTimeout ->
             $input = $(event.target)    
             $results = $(".tt-dropdown-menu")     
             height = $results.height()    
@@ -59,7 +59,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
             newTop = initTop - height - inputHeight     
     
             $results.css("top", newTop + "px")    
-          , 50
+          , 30
            
         $('#search-input').on 'typeahead:selected',
           (e, sugg, dataset) => @search(sugg)

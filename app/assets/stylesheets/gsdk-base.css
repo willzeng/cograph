@@ -17,6 +17,13 @@ body{
    color: #DDDDDD;
    opacity: 1; 
 }
+.panel {
+    margin: 0;
+}
+
+.modal-header h4 {
+    margin-bottom: 0;
+}
 /*     General overwrite     */
 a{
     color: #2C93FF;

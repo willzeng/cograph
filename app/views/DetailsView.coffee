@@ -36,6 +36,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
           animate: false
           showFooter: false
+          title: "Edit"
         ).open()
         @editNodeConnection()
 
@@ -43,6 +44,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         $('#details-container .panel-heading').css 'background', color
 
       closeDetail: () ->
+        @detailsModal.close()
         @graphView.trigger "node:mouseout"
 
       openAndEditConnection: (conn) ->

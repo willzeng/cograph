@@ -2,7 +2,8 @@
 
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
-
+var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 // load up the user model
 var User          = require('../models/user.coffee');
 
@@ -26,6 +27,36 @@ module.exports = function(passport) {
             done(err, user);
         });
     });
+
+    // Facebook signup
+
+    passport.use(new FacebookStrategy({
+        clientID: "315770905267996",
+        clientSecret: "c8dbadb98d4275b64a13198b8f7df7f6",
+        callbackURL: "http://thecograph.com/auth/facebook/callback"
+      },
+      function(accessToken, refreshToken, profile, done) {
+        User.findOrCreate({ facebookId: local.id }, function(err, user) {
+          if (err) { return done(err); }
+          done(null, user);
+        });
+      }
+    ));
+
+    // Twitter Signup
+
+    passport.use(new TwitterStrategy({
+        consumerKey: "zmzfdfHzoMrZ6nH8ktP7qptt7",
+        consumerSecret: "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx",
+        callbackURL: "http://thecograph.com/auth/twitter/callback"
+      },
+      function(token, tokenSecret, profile, done) {
+        User.findOrCreate({ twitterId: local.id }, function(err, user) {
+          if (err) { return done(err); }
+          done(null, user);
+        });
+      }
+    ));
 
     // =========================================================================
     // LOCAL SIGNUP ============================================================
