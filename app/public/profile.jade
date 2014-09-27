@@ -16,7 +16,11 @@ head
         h1
           span.fa.fa-anchor
           |  #{user.local.name}
-        a.btn.btn-default.btn-sm(href='/logout') Logout
+        if ownProfile
+          div This is your profile
+          a.btn.btn-default.btn-sm(href='/logout') Logout
+        else
+          div NOT your profile
       .row.text-center#button-container
         input#create.btn.btn-primary(type='button', value='Create new GraphDoc')
         input#open.btn.btn-default(type='button', value='Browse public GraphDocs')
