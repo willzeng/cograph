@@ -43,7 +43,6 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         $('#details-container .panel-heading').css 'background', color
 
       closeDetail: () ->
-        @detailsModal.close()
         @graphView.trigger "node:mouseout"
 
       openAndEditConnection: (conn) ->
@@ -118,7 +117,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             Backbone.Form.editors.TextArea.prototype.render.call this
             # Then make the editor's element have atwho.
             this.$el.atwho
-              at: "@"
+              at: "+"
               data: _.filter that.model.nodes.pluck('name'), (name) => name isnt @model.get('name')
               target: ".modal-content"
             .atwho
@@ -130,7 +129,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
             @mentions = []
             this.$el.on "inserted.atwho", (event, item) =>
               insertedText = item.attr 'data-value'
-              if insertedText[0] is "@"
+              if insertedText[0] is "+"
                 addedMention = that.model.nodes.findWhere({name:insertedText.slice(1)})
                 @mentions.push addedMention
             return this

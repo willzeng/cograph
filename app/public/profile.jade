@@ -1,49 +1,28 @@
 doctype html
 html(lang="en")
 head
-  title GraphDocs #{user.local.name}
+  title Cograph #{user.local.name}
   meta(charset='utf-8')
   link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
   link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+  link(href='/assets/stylesheets/gsdk-base.css', rel='stylesheet')
+  link(href='/assets/stylesheets/custom.css', rel='stylesheet')  
   base(href="/")
   script(type='text/javascript', data-main="landing", src="/assets/libs/requirejs/require.js") //loads landing.js
   script.
     window.prefetch =!{JSON.stringify(docs)};
 
-  body(style='padding-top:80px')
+  body
+    include profileheader
     .container
       .page-header.text-center
         h1
-          span.fa.fa-anchor
-          |  #{user.local.name}
-        if ownProfile
-          div This is your profile
-          a.btn.btn-default.btn-sm(href='/logout') Logout
-        else
-          div NOT your profile
-      .row.text-center#button-container
-        input#create.btn.btn-primary(type='button', value='Create new GraphDoc')
-        input#open.btn.btn-default(type='button', value='Browse public GraphDocs')
-      br
+          if ownProfile
+            | My Cographs
+          else
+            | #{user.local.name}'s Cographs
       .row
-        // LOCAL INFORMATION 
-        .col-sm-6
-          .well
-            h3
-              span.fa.fa-user
-              |  Local 
-            p
-              strong id:       #{user._id}
-              br
-              strong name:     #{user.local.name}
-              br
-              strong email:    #{user.local.email}
-        // DOCUMENTS
-        .col-sm-6
-          .well
-            h3
-              span.fa.fa-file
-              |  Your GraphDocs
-            ul.document-list.list-group
-              for doc in userDocs
-                a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+        .col-sm-12
+          .document-list
+            for doc in userDocs
+              a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}

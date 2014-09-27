@@ -141,7 +141,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 }
 .btn-round{
     border-width: 1px;
-    border-radius: 30px !important;
+    border-radius: 10px !important;
     opacity: 0.79;
     padding: 9px 18px;
 }
@@ -335,7 +335,6 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     padding: 15px 60px;
 }
 
-
 /*             Inputs               */
 .form-control {
     background-color: #FFFFFF;
@@ -344,7 +343,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     box-shadow: none;
     color: #000;
     height: 41px;
-    padding: 6px 16px;
+    padding: 6px 8px;
 }
 
 .form-control:focus {
@@ -560,7 +559,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     color: #333333;
 }
 .dropdown-menu > li:first-child > a{
-    border-radius: 10px 10px 0 0;
+    border-radius: 0;
 }
 .dropdown-menu > li:last-child > a{
     border-bottom: 0 none;
@@ -822,7 +821,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 }
 .modal-header {
     border: 0 none;
-    
+    padding: 20px;
 }
 .modal-content {
     border: 0 none;
