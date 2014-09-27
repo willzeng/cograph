@@ -1,11 +1,12 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/WorkspaceModel', 'cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView',
-  'cs!views/MenuView', 'cs!views/ShareView'],
-  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView) ->
+  'cs!views/MenuView', 'cs!views/ShareView', 'cs!views/FeedbackView'],
+  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView, FeedbackView) ->
     class Router extends Backbone.Router
       initialize: ->
         @workspaceModel = new WorkspaceModel()
 
+        @feedbackView = new FeedbackView
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
         @detailsView = new DetailsView {model: @workspaceModel, attributes: {graphView: @graphView}}

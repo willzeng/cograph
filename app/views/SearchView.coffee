@@ -14,6 +14,13 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
               matches = @findMatchingObjects q, matches
               cb _.map matches, (match) -> {value: match.name, type: 'node'}
 
+        connectionNameMatcher = (gm) =>
+          findMatches = (q, cb) =>
+            docId = @model.documentModel.get '_id'
+            $.get "/document/#{docId}/connections", (connections) =>
+              matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
+              cb _.map matches, (match) -> {value: match.name, type: 'connection'}
+
         findTagMatches = (q, cb) =>
           @model.getTagNames (tagNames) =>
             matches = @findMatchingNames q, tagNames
@@ -34,6 +41,11 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           source: findTagMatches
           templates:
             header: '<span class="search-title">Labels</span>'
+        ,
+          name: 'conn-names'
+          source: connectionNameMatcher(@model)
+          templates:
+            header: '<span class="search-title">Connections</span>'
         )
 
         $('#search-input').on 'typeahead:selected',
@@ -59,6 +71,22 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
                 @model.select localNode
               else
                 @addNode node
+        else if sugg.type == 'connection'
+          conn = @findLocalConn sugg.value
+          if conn
+            @model.select conn
+            @model.trigger "found:node", conn.source
+
+          @model.getConnsByName sugg.value, (returnedConns) =>
+            for c in returnedConns
+              @model.putNodeFromData c.source
+              @model.putNodeFromData c.target
+              @model.putConnection new ConnectionModel c.connection
+            # Give the graph some time to settle before centering
+            setTimeout () =>
+              @model.trigger "found:node", @model.nodes.findWhere({_id:returnedConns[0].source._id})
+            , 500
+
         $('#search-input').val('')
 
       addNode: (nodeData) ->
@@ -69,6 +97,10 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
       findLocalNode: (name) ->
         matchedNames = @findMatchingNames(name, @model.nodes.pluck('name'))
         @model.nodes.findWhere name: matchedNames[0]
+
+      findLocalConn: (name) ->
+        matchedNames = @findMatchingNames(name, @model.connections.pluck('name'))
+        @model.connections.findWhere name: matchedNames[0]
 
       getNodeByName: (name, cb) ->
         @model.getNodeByName name, (node) =>
