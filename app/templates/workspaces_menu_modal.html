@@ -1,7 +1,7 @@
 <ul class="workspaces-list list-group">
   <% _.each(workspaces, function(workspace){ if(workspace._id > 0 && (typeof(workspace.name) !== 'undefined') && (workspace.name !== null) && workspace.name.length > 0){%>
-    <% if (createdBy != null) { %>
-      <a href='<%= createdBy %>/document/<%= docId %>#<%= workspace._id %>' target="_blank" class="list-group-item">
+    <% if (createdBy != null && createdBy.length > 0) { %>
+      <a href='<%= createdBy %>/document/<%= docId %>/view/<%= workspace._id %>' target="_blank" class="list-group-item">
     <% } else { %>
       <a href=<%= docId %>#<%= workspace._id %> target="_blank" class="list-group-item">
     <% } %>
