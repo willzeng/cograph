@@ -34,6 +34,13 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         $('#save-workspace-button').popover
           template: popoverTemplate
 
+        str = "<iframe src=\"#{window.location}\" width=\"860\" height=\"700\" scrolling=\"no\" frameborder=\"0\" allowfullscreen></iframe>"
+        $('#embed-button').popover
+          content: str
+
+        @model.on 'navigate', (dest) =>
+          $('#embed-button').data('bs.popover').options.content = "<iframe src=\"#{@model.root+dest}\" width=\"860\" height=\"700\" scrolling=\"no\" frameborder=\"0\" allowfullscreen></iframe>"
+
       nameWorkspace: ->
         @model.set 'name', $('#workspace-name').val()
         @model.sync "update", @model
