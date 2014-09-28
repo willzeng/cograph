@@ -1,18 +1,154 @@
-<!-- app/views/users/user-index.jade -->
-html
-  head
-    title GraphDocs
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
-    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
-  body(style='padding-top:80px;')
-    .container
-      .jumbotron.text-center
-        h1
-          span.fa.fa-lock
-          |  GraphDocs
-        a.btn.btn-default(href='/login')
-          span.fa.fa-user
-          |  Login
-        a.btn.btn-default(href='/signup')
-          span.fa.fa-user
-          |  Signup
+doctype html
+html(lang='en')
+head
+    meta(charset='utf-8')
+    title Cograph
+    meta(name='viewport', content='width=device-width,initial-scale=1.0')
+    link(href='assets/images/educational-icons/flaticon.css', rel='stylesheet', type='text/css')
+    link(href='assets/stylesheets/bootstrap.min.css', rel='stylesheet')
+    link(href='assets/stylesheets/landing.css', rel='stylesheet')
+    link(rel='stylesheet', href='neural/css/app.css')
+  body
+    #canvas-container.jumbotron
+    script#vertexshader-axon(type='x-shader/x-vertex').
+      uniform float opacityMultiplier;
+      attribute float opacityAttr;
+      varying float opacityNew;
+      void main() {
+        opacityNew = opacityAttr * opacityMultiplier;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
+      }
+    script#fragmentshader-axon(type='x-shader/x-fragment').
+      uniform vec3 color;
+      varying float opacityNew;
+      void main() {
+        gl_FragColor = vec4(color, opacityNew);
+      }
+    script(src='neural/js/vendor/Detector.js')
+    script(src='neural/js/vendor/dat.gui.min.js')
+    script(src='neural/js/vendor/stats.min.js')
+    script(src='neural/js/vendor/three.min.js')
+    script(src='neural/js/vendor/OrbitControls.js')
+    script(src='neural/js/vendor/OBJLoader.js')
+    script(src='neural/js/three-app.js')
+    nav.navbar.navbar-default.navbar-inverse(role='navigation')
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-ex1-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand.nav-link
+            img.brand-logo(src='assets/images/logo.png', height='40px')
+            | Cograph
+
+        .collapse.navbar-collapse.navbar-ex1-collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='/login') Login
+            li
+              a(href='/signup') Sign Up
+
+    #top.jumbotron
+      .container
+        h1 Make new connections
+        h2 Graph documents for connected information
+        p
+          a.btn.btn-primary.btn-lg.call-to-action(href="/new") Make a Graph
+          a.btn.btn-default.btn-lg.call-to-action(href="/profile") Explore Graphs
+
+    .container.main-content
+      .row
+        .col-md-12
+          h3.full-size
+            | Cographs are  &nbsp;
+            strong webs of ideas
+            |  &nbsp; that you can create, explore and publish.
+          center
+            a.btn.btn-primary.btn-lg.call-to-demo Insert Embedded demo
+          h3.full-size
+            | These graphs are great for representing  &nbsp;
+            strong connected
+            |  &nbsp; information like  &nbsp;
+            strong networks
+            | ; people, ideas, communities.
+      hr
+      h1.header-titles What can I do with Cograph?
+      .row
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-idea13
+          h3 Add
+          p Create and connect information across the web
+
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-cell9
+          h3 Connect
+          p Create connections between things and label connections
+
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-teamwork
+          h3 Collaborate
+          p Edit graphs in real time with others.
+
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-earth180
+          h3 Explore
+          p Filter, search and tag your graphs or expand connections. 
+
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-rating
+          h3 Share
+          p Share graphs to your favorite social media and decide who can contribute to them
+
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-code26
+          h3 Embed
+          p Add graphs to your website or blog posts
+
+      h1.header-titles We're in Beta. Our Next Features are
+      .row
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-rocket60
+          h3 API
+          p Post and get data to cograph
+
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-cells1
+          h3 Intergraph
+          p Connect between nodes across different graphs.
+
+        .col-md-4.col-sm-6.benefit
+          .benefit-ball
+            i.flaticon-circular152
+          h3 Faster access
+          p Browser extensions to make it faster to connect content
+
+      hr
+      .row
+        .col-md-10.col-md-offset-1.text-center
+          h1 Inspired?
+          br
+          p.sizable
+            | We'd love to discuss ideas with you at &nbsp;
+            a(href='mailto:hello@thecograph.com')
+              u hello@thecograph.com
+    footer
+      .container.clearfix
+        p.pull-left
+          | Copyright 2014 © Graphdocs Inc.
+        p.pull-right
+          a(href='/login') Login
+          | &nbsp;&nbsp;&nbsp;&nbsp;
+          a(href='/signup') Sign up
+          | &nbsp;&nbsp;&nbsp;&nbsp;
+          a(href='mailto:hello@thecograph.com') Contact
+    script(src='assets/libs/jquery/dist/jquery.min.js')
+    script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')

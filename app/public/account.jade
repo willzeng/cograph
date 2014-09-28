@@ -14,22 +14,19 @@ head
 
   body
     include profileheader
-    .container
+    .container.pad-top
       .col-sm-6.col-sm-offset-3
         h1
-          span.fa.fa-sign-in
           |  Account
-        // show any messages that come back with authentication
-        if message.length > 0 
+        if message && message.length > 0 
           .alert.alert-danger #{message}
 
-        // SIGNUP FORM 
         form(action='/signup', method='post')
           .form-group
             label Email
             input.form-control(type='email', name='email' value='#{user.local.email}')
           .form-group
-            label Name
+            label Username
             input.form-control(type='text', name='name'  value='#{user.local.name}')
           .form-group
             label Old Password
@@ -37,12 +34,4 @@ head
           .form-group
             label New Password
             input.form-control(type='password', name='password')
-          button.btn.btn-warning.btn-lg(type='submit') Signup
-        hr
-        p
-          | Already have an account? 
-          a(href='/login') Login
-        p
-          | Or go 
-          a(href='/') home
-          | .
+          button.btn.btn-warning.btn-lg(type='submit') Save Changes

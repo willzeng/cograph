@@ -10,7 +10,7 @@ nav.navbar.navbar-default(role='navigation')
             img#brand-logo(src="assets/images/logo.svg")
           
         span.navbar-doc-title
-            .form-group
+            span.form-group
               a.public-button.clickable(title="who can see this graph")
               input#menu-title(type="text" placeholder="Untitled Doc")
               span.dropdown
@@ -27,12 +27,11 @@ nav.navbar.navbar-default(role='navigation')
                   li
                     a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
                   
-
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right 
             if isAuthenticated
               li
-                a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal")
+                a(href="/new" target="_blank")
                   i.fa.fa-edit
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')

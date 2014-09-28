@@ -40,13 +40,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @colorInput.addClass('hidden')
           @imageInput.toggleClass('hidden')
           @imageInput.focus()
+         
 
-        @titleArea.on 'keydown', (e) =>
-          if e.keyCode == 13 # code for ENTER
-            e.preventDefault()
-            @descriptionArea.focus()          
-
-        @descriptionArea.on 'focus', => @expandAdder()
+        @titleArea.on 'focus', => @expandAdder()
                   
         $('body').on 'click', (e) => 
           if not $('#add').hasClass('contracted') then @resetAdd()
@@ -64,10 +60,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           if keyCode == 13 and !@showingAtWho and !e.shiftKey
             $.when(@addNode()).then =>
               @expandAdder()
-
-        # TAB from description to title
-        @descriptionArea.on 'keydown', (e) =>
-          keyCode = e.keyCode || e.which
+              @titleArea.focus()
           if keyCode == 9 # code for TAB
             e.preventDefault()
             @titleArea.focus()

@@ -35,30 +35,60 @@ module.exports = function(passport) {
         });
     });
 
-    // Facebook signup
-    passport.use(new FacebookStrategy({
-        clientID: "315770905267996",
-        clientSecret: "c8dbadb98d4275b64a13198b8f7df7f6",
-        callbackURL: "http://thecograph.com/auth/facebook/callback"
-      },
-      function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ facebookId: local.id }, function(err, user) {
-          if (err) { return done(err); }
-          done(null, user);
-        });
-      }
-    ));
+    // // #TODO
+    // // Facebook signup
+    // passport.use(new FacebookStrategy({
+    //     clientID: "315770905267996",
+    //     clientSecret: "c8dbadb98d4275b64a13198b8f7df7f6",
+    //     callbackURL: "http://thecograph.com/auth/facebook/callback"
+    //   },
+    //   function(accessToken, refreshToken, profile, done) {
+    //     User.findOrCreate({ 'local.facebook.id': profile.id }, function(err, user) {
+    //       if (err) { return done(err); }
+    //       done(null, user);
+    //     });
+    //   }
+    // ));
 
     // Twitter Signup
     passport.use(new TwitterStrategy({
-        consumerKey: "zmzfdfHzoMrZ6nH8ktP7qptt7",
+        consumerKey: "iRnrLu6QrYHPlOF0wq2ns1MYl",
         consumerSecret: "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx",
-        callbackURL: "http://thecograph.com/auth/twitter/callback"
+        callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
       },
       function(token, tokenSecret, profile, done) {
-        User.findOrCreate({ twitterId: local.id }, function(err, user) {
-          if (err) { return done(err); }
-          done(null, user);
+        process.nextTick(function() {
+            User.findOne({ 'twitter.id': profile.id }, function(err, user) {
+                if (err)
+                    return done(err);
+                    // check to see if theres already a user with that name
+                User.findOne({ 'local.nameLower' : profile.username.toLowerCase() }, function(err, namedUser) {
+                    // if there are any errors, return the error
+                    if (err)
+                        return done(err);
+                    // check to see if theres already a user with that name
+                    if (namedUser || _.contains(usernameBlacklist, profile.username)) {
+                        return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+                    }
+                    else {
+                        // #TODO Check if username is free
+                        // create the user
+                        var newUser            = new User();
+                        // set the user's local credentials
+                        newUser.local.email     = profile.email;
+                        newUser.local.name      = profile.username;
+                        newUser.local.nameLower = profile.username.toLowerCase();
+                        newUser.local.facebook  = {}
+                        newUser.local.twitter   = profile._json
+                        // save the user
+                        newUser.save(function(err) {
+                          if (err)
+                              throw err;
+                          return done(null, newUser);
+                        });
+                    }
+                });
+            });
         });
       }
     ));
@@ -82,52 +112,53 @@ module.exports = function(passport) {
         // User.findOne wont fire unless data is sent back
         process.nextTick(function() {
 
-        // find a user whose email is the same as the forms email
-        // we are checking to see if the user trying to login already exists
-        User.findOne({ 'local.email' :  email }, function(err, user) {
-            // if there are any errors, return the error
-            if (err)
-                return done(err);
+            // find a user whose email is the same as the forms email
+            // we are checking to see if the user trying to login already exists
+            User.findOne({ 'local.email' :  email }, function(err, user) {
+                // if there are any errors, return the error
+                if (err)
+                    return done(err);
 
-            // check to see if theres already a user with that email
-            if (user) {
-                return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
-            }
-            if (!userNameRegEx.test(req.body.name)) {
-                return done(null, false, req.flash('signupMessage', 'You must choose a username (with only letters and numbers).'));
-            }
-            else {
-                // if there is no user with that email
-                // check to see if the username is available
-                User.findOne({ 'local.nameLower' :  req.body.name.toLowerCase() }, function(err, namedUser) {
-                    // if there are any errors, return the error
-                    if (err)
-                        return done(err);
-                    // check to see if theres already a user with that name
-                    if (namedUser || _.contains(usernameBlacklist, req.body.name)) {
-                        return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
-                    }
-                    else {
-                        // create the user
-                        var newUser            = new User();
+                // check to see if theres already a user with that email
+                if (user) {
+                    return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                }
+                if (!userNameRegEx.test(req.body.name)) {
+                    return done(null, false, req.flash('signupMessage', 'You must choose a username (with only letters and numbers).'));
+                }
+                else {
+                    // if there is no user with that email
+                    // check to see if the username is available
+                    User.findOne({ 'local.nameLower' :  req.body.name.toLowerCase() }, function(err, namedUser) {
+                        // if there are any errors, return the error
+                        if (err)
+                            return done(err);
+                        // check to see if theres already a user with that name
+                        if (namedUser || _.contains(usernameBlacklist, req.body.name)) {
+                            return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+                        }
+                        else {
+                            // create the user
+                            var newUser            = new User();
 
-                        // set the user's local credentials
-                        newUser.local.email     = email;
-                        newUser.local.name      = req.body.name;
-                        newUser.local.nameLower = newUser.local.name.toLowerCase();
-                        newUser.local.password  = newUser.generateHash(password);
+                            // set the user's local credentials
+                            newUser.local.email     = email;
+                            newUser.local.name      = req.body.name;
+                            newUser.local.nameLower = newUser.local.name.toLowerCase();
+                            newUser.local.password  = newUser.generateHash(password);
+                            newUser.local.facebook  = {}
+                            newUser.local.twitter   = {}
+                    // save the user
+                            newUser.save(function(err) {
+                                if (err)
+                                    throw err;
+                                return done(null, newUser);
+                            });
+                        }
+                    });
+                }
 
-                // save the user
-                        newUser.save(function(err) {
-                            if (err)
-                                throw err;
-                            return done(null, newUser);
-                        });
-                    }
-                });
-            }
-
-        });    
+            });  
 
         });
 

@@ -21,8 +21,21 @@ head
             | Hi @#{user.local.name}
           else
             | @#{user.local.name}
-      .row
-        .col-sm-12
-          .document-list
-            for doc in userDocs
-              a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+      if ownProfile
+        .row
+          .col-sm-6
+            h3 My Docs
+            .document-list
+              for doc in userDocs
+                a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+          .col-sm-6
+            h3 Public Docs
+            .document-list
+              for doc in docs
+                a.list-group-item(href="#{doc.name}/document/#{doc.id}" target="_blank") #{doc.name}
+
+      else
+        .row
+          .col-sm-12
+            .document-list
+              

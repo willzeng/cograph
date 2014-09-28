@@ -60,15 +60,15 @@ define [], () ->
             .attr('stroke-width', '1px')
       # Colored Connection Arrowheads
       for color,hex of defaultColors
-          def
-            .append('svg:marker')
-              .attr('id', 'arrowhead-'+color)
-              .attr('viewBox', '0 -5 10 10')
-              .attr('refX', '12')
-              .attr('refY', '0')
-              .attr('markerWidth', '2')
-              .attr('markerHeight', '2')
-              .attr('orient', 'auto')
-              .attr('fill', 'rgba(0,0,0,0.5)')
-              .append('svg:path')
-                .attr('d',"M0,-3L8,0L0,3")
+        def
+          .append('svg:marker')
+            .attr('id', 'arrowhead-'+color)
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', '12')
+            .attr('refY', '0')
+            .attr('markerWidth', '2')
+            .attr('markerHeight', '2')
+            .attr('orient', 'auto')
+            .attr('fill', 'rgba(0,0,0,0.5)')
+            .append('svg:path')
+              .attr('d',"M0,-3L8,0L0,3")

@@ -11,6 +11,8 @@
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 
+@font: 'Varela Round', Helvetica, sans-serif;
+
 @bottom-margin: 60px;
 
 .node {
@@ -94,8 +96,7 @@
 }
 
 .node-title-body {
-  font: 16px sans-serif;
-  font-weight:bold;
+  font-size: 16px;
   text-anchor: middle;
   fill: @text-color;
 }
@@ -174,7 +175,11 @@ html, body {
   overflow: hidden;
   background: #efefef;
   height: 100%;
-  font-family: 'Varela Round';
+  font-family: @font;
+}
+
+.node-title-body, .node-info-body, .connection-info-body, .connection-text text {
+  font-family: @font;
 }
 
 #main-container {
@@ -272,6 +277,10 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   padding-bottom: 10px;
 }
 
+.pad-top {
+  margin-top: 40px;
+}
+
 .data-tooltip-container {
   position: absolute;
   top: 0;
@@ -311,6 +320,10 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .controls {
   z-index: @controls-z-index;
+}
+
+#filter-modal-toggle {
+  padding: 10px 20px;
 }
 
 #filter-panel {
@@ -362,12 +375,9 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 .navbar-doc-title {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 8px;
-    text-align: center;
-    margin: auto;
+  position: absolute;
+  top: 10px;
+  left: ~"calc(50% - 120px)";
 }
 
 .clickable {
@@ -568,7 +578,7 @@ body {
   left: -5px;
 }
 
-#add.contracted #add-toolbar, #add.contracted #add-title {
+#add.contracted #add-toolbar, #add.contracted #add-description {
   display: none;
 }
 

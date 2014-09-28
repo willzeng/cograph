@@ -20,15 +20,19 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       initialize: ->
         @model.on "document:change", @render, this
         @model.getDocument().on 'change', @render, this
+        @menuTitle = $('#menu-title')
 
-        $('#menu-title').tooltip({animation:true})
-        $('#menu-title').click( ()->
+        @menuTitle.tooltip({animation:true})
+        @menuTitle.click( ()->
            $(this).select()
         )
-        $('#menu-title').bind 'blur', () =>
-          @model.getDocument().set 'name', $('#menu-title').val()
+        @menuTitle.bind 'blur', () =>
+          @model.getDocument().set 'name', @menuTitle.val()
           @model.getDocument().save()
-
+        @menuTitle.keydown( (e) =>
+          if(e.which == 13)
+            @menuTitle.trigger 'blur'
+        )
         @render()
 
       render: ->
@@ -47,7 +51,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           $("#new-doc-form").submit (e) ->
             false
 
-        $('#new-doc-form', @newDocModal.$el).submit () =>
+        $('#new-doc-form', @newDocModal.$el).click () =>
           @newDocument()
           @newDocModal.close()
 
@@ -57,9 +61,9 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         $.when(newDocument.save()).then =>
           if window.user?
             name = window.user.local.name
-            window.open "/#{name}/document/"+newDocument.get('_id')
+            window.open "/#{name}/document/"+newDocument.get('_id'), "_blank"
           else
-            window.open '/'+newDocument.get('_id')
+            window.open '/'+newDocument.get('_id'), "_blank"
 
       openDocumentModal: ->
         user = window.user

@@ -51,7 +51,7 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         # David's Typeahead rage.
         x = $('.tt-dropdown-menu').remove()
         $('.twitter-typeahead').prepend(x)
-        $('.tt-dropdown-menu').css('position', 'relative').css('top', 'auto').css('bottom', '20px')
+        $('.tt-dropdown-menu').css('position', 'relative').css('top', 'auto').css('bottom', '5px')
 
         $('#search-input').on 'typeahead:selected',
           (e, sugg, dataset) => @search(sugg)
