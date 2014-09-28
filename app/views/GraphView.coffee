@@ -61,7 +61,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @force.stop()
 
         $('body').on 'mousemove', (e) =>
-          if($(e.target).is('svg'))
+          if($(e.target).is('svg') || $(e.target).is('foreignObject'))
             @trigger "node:mouseout", e, e
 
         @svg = d3.select(@el).append("svg:svg")
@@ -198,7 +198,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               return d.get("name")
             else 
               return d.get("name").substring(0,@maxConnTextLength-3)+"..."
-        )
+          )
         connection.select('.connection-info-body')
           .html((d) -> _.template(popover, d))
 
@@ -274,13 +274,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             that.trigger('node:right-click', node, d3.event)
           .on "mouseout", (node) =>
             # perhaps setting the foreignobject height dynamically would be better.
-            if(!$(d3.event.toElement).closest('.node').length)
+            if(!$(d3.event.toElement || d3.event.target).closest('.node').length)
               @trigger "node:mouseout", node
-            node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
+              node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
-        $('.node-title-span').on "mouseenter", (e) =>
-            @trigger "node:mouseenter", d3.select(e.currentTarget)
-
+        
+        # node.select('.node-title-body').on 'mouseout', (e) =>
+        #   console.log(d3.event)
+        #   console.log(e)
         # update old and new elements
 
         node.attr('class', 'node')
