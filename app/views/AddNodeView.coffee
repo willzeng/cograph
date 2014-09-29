@@ -23,6 +23,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         _.each(@model.defaultColors, (i, color) =>
           @colorInput.append('<div class="add-color-item color-circle" style="background-color:'+i+'" data-color="'+color+'"></div>')
         )
+        @colorArea.css('color', @model.defaultColors["default"])
+        @colorArea.data('color', @model.defaultColors["default"])
+
 
         $('.add-color-item').on 'click', (e) =>
           @colorArea.css('color', $(e.currentTarget).css('background-color'))
@@ -37,13 +40,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @colorInput.addClass('hidden')
           @imageInput.toggleClass('hidden')
           @imageInput.focus()
+         
 
-        @titleArea.on 'keydown', (e) =>
-          if e.keyCode == 13 # code for ENTER
-            e.preventDefault()
-            @descriptionArea.focus()          
-
-        @descriptionArea.on 'focus', => @expandAdder()
+        @titleArea.on 'focus', => @expandAdder()
                   
         $('body').on 'click', (e) => 
           if not $('#add').hasClass('contracted') then @resetAdd()
@@ -61,10 +60,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           if keyCode == 13 and !@showingAtWho and !e.shiftKey
             $.when(@addNode()).then =>
               @expandAdder()
-
-        # TAB from description to title
-        @descriptionArea.on 'keydown', (e) =>
-          keyCode = e.keyCode || e.which
+              @titleArea.focus()
           if keyCode == 9 # code for TAB
             e.preventDefault()
             @titleArea.focus()

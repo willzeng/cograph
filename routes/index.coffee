@@ -36,12 +36,22 @@ router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, re
 router.get /^\/mobile\/(\d*)$/, (request, response) ->
   response.render('mobile.jade')
 
-router.get '/landing', (request, response)->
-  documents.helper.getAll (docs) ->
-    response.render 'landing.jade', {docs:docs}
-
 router.get '/errors/missingDocument', (request, response)->
   response.render('errors/missingDocument.jade')
+
+router.get '/account', (req, res) ->
+  username = req.user.local.nameLower
+  User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
+    if err or not(profiledUser?) then res.redirect "/"
+    else
+      if req.isAuthenticated()
+        # show all the documents if this is the profile for the logged in user
+        ownProfile = req.user.local.name is profiledUser.local.name
+      else # otherwise show only their public documents
+        ownProfile = false
+      res.render "account.jade",
+        ownProfile: ownProfile  # checks to see if you are looking at your own profile
+        user: profiledUser      # get the user out of session and pass to template
 
 # Documents
 router.post     '/document',           documents.create
@@ -98,5 +108,6 @@ router.get /^\/(\w+)$/, (req, res) ->
             user: profiledUser      # get the user out of session and pass to template
             docs: publicDocs        # prefetch the list of document names for opening
             userDocs: shownDocs     # prefetch the users private documents
+            isAuthenticated: req.isAuthenticated() #TODO THIS IS ALWAYS FALSE
 
 module.exports = router

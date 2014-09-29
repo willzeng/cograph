@@ -1,7 +1,7 @@
 doctype html
 html(lang="en")
 head
-  title Cograph #{user.local.name}
+  title Cograph | #{user.local.username}
   meta(charset='utf-8')
   link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
   link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
@@ -18,11 +18,24 @@ head
       .page-header.text-center
         h1
           if ownProfile
-            | My Cographs
+            | Hi @#{user.local.name}
           else
-            | #{user.local.name}'s Cographs
-      .row
-        .col-sm-12
-          .document-list
-            for doc in userDocs
-              a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+            | @#{user.local.name}
+      if ownProfile
+        .row
+          .col-sm-6
+            h3 My Docs
+            .document-list
+              for doc in userDocs
+                a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+          .col-sm-6
+            h3 Public Docs
+            .document-list
+              for doc in docs
+                a.list-group-item(href="#{doc.name}/document/#{doc.id}" target="_blank") #{doc.name}
+
+      else
+        .row
+          .col-sm-12
+            .document-list
+              

@@ -84,7 +84,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @trashBin = new TrashBin
           model: @model
-          attributes: {graphView: this}
+          attributes: {graphView: this, workspace: @model.nodes}
+
+        @trashBin.calcNumNodesHidden()
 
         @dataTooltip = new DataTooltip
           model: @model
@@ -251,7 +253,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('height', '50')
           .attr('width', '50')
           .attr('xlink:href', '')
-          .attr('x', '-95')
+          .attr('x', '-105')
           .attr('y', '-25')
           .attr('class', 'node-image')
           .attr('clip-path', 'url(#clipCircle)')
@@ -288,6 +290,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
+
         node.select('.node-title-body')
           .html((d) -> _.template(nodeTitle, d))
         node.select('.node-connector')

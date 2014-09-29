@@ -1,38 +1,27 @@
 nav.navbar.navbar-default(role='navigation')
-    .container-fluid
-        .navbar-header
-          button.navbar-toggle(type='button' data-toggle='collapse' data-target='#gdocs-nav')
-            span.sr-only Toggle navigation
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand(href='http://thecograph.com')
-            img#brand-logo(src="assets/images/logo.svg")
-          
+  .container-fluid
+      .navbar-header
+        button.navbar-toggle(type='button' data-toggle='collapse' data-target='#gdocs-nav')
+          span.sr-only Toggle navigation
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.navbar-brand(href='/')
+          img#brand-logo(src="assets/images/logo.svg")
+      if isAuthenticated 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
+            li
+              a(href="/new")
+                i.fa.fa-edit
             li.dropdown
               a.dropdown-toggle(data-toggle='dropdown', href='')
                 | #{user.local.name}
                 i.caret
               ul.dropdown-menu
+                li
+                  a(href="/#{user.local.username}") My Cographs
                 li(role="presentation")
-                  a(href="") Profile
-                li(role="presentation")
-                  a(href="") Account
+                  a(href="/account") Account
                 li
                   a(href="/logout") Logout
-            li
-              a(href="/#{user.local.name}")
-
-          ul.nav.navbar-nav   
-            li
-              a Discover
-            li
-              a My Cographs
-            li
-              a(href="/new") New Cograph
-            //- Analytics can go on the profile somewhere
-            //- li
-            //-   a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Analytics
-            

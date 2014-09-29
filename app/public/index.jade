@@ -17,8 +17,8 @@ block content
       .navbar-right.navbar-form
         form#add-node-form.form-inline
           #add.contracted
-            textarea#add-title(name="name", placeholder='Title', rows='1')
-            textarea#add-description(name="description", placeholder='Add Something', rows='1')
+            textarea#add-title(name="name", placeholder='New node', rows='1')
+            textarea#add-description(name="description", placeholder='Description - Use #tags @people +connect', rows='1')
             #add-toolbar.cf
               #add-toolbar-left
                 button#add-color.color-circle(type="button")
@@ -48,4 +48,5 @@ block content
               i.glyphicon.glyphicon-minus
     #trash-bin.controls(title="Drag a node here to Archive it")
       i.fa.fa-eye-slash
+      span#number-hidden 0
   .data-tooltip-container
