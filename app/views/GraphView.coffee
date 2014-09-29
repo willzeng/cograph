@@ -345,10 +345,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @connectionAdder.clearDragLine()
 
       isContainedIn: (node, element) =>
-        node.x < element.offset().left + element.outerWidth() &&
-        node.x > element.offset().left &&
-        node.y > element.offset().top &&
-        node.y < element.offset().top + element.outerHeight()
+        (node.x || node.clientX) < element.offset().left + element.outerWidth() &&
+        (node.x || node.clientX) > element.offset().left &&
+        (node.y || node.clientY) > element.offset().top &&
+        (node.y || node.clientY) < element.offset().top + element.outerHeight()
 
       centerOn: (node) =>
         translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
