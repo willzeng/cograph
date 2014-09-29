@@ -3,6 +3,9 @@ define ['jquery', 'underscore', 'backbone'],
     class TrashBin extends Backbone.View
       el: $ '#graph'
       that = this
+      events:
+        'click #bring-all-nodes-to-view', 'bringBackAll'
+
       initialize: ->
 
         @graphView = @attributes.graphView
@@ -29,3 +32,6 @@ define ['jquery', 'underscore', 'backbone'],
           console.log(names.length - @attributes.workspace.length)
           $('#number-hidden').text(names.length - @attributes.workspace.length)
         )
+
+      bringBackAll: () =>
+        console.log('bring back all nodes and connections')
