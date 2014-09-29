@@ -84,7 +84,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         @trashBin = new TrashBin
           model: @model
-          attributes: {graphView: this}
+          attributes: {graphView: this, workspace: @model.nodes}
+
+        @trashBin.calcNumNodesHidden()
 
         @dataTooltip = new DataTooltip
           model: @model
