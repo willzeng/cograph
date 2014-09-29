@@ -2,9 +2,9 @@ define ['jquery', 'underscore', 'backbone'],
   ($, _, Backbone) ->
     class TrashBin extends Backbone.View
       el: $ '#graph'
-      that = this
+
       events:
-        'click #bring-all-nodes-to-view', 'bringBackAll'
+        'click #bring-all-nodes-to-view': 'bringBackAll'
 
       initialize: ->
 
@@ -25,13 +25,23 @@ define ['jquery', 'underscore', 'backbone'],
             @model.removeNode node
             $("#trash-bin").removeClass('selected')
 
-        @model.nodes.on 'remove', @calcNumNodesHidden, this
+        @model.nodes.on 'add remove', @calcNumNodesHidden, this
+        @model.on 'init', @calcNumNodesHidden, this
 
-      calcNumNodesHidden: () =>
-        @model.getNodeNames((names) =>
-          console.log(names.length - @attributes.workspace.length)
-          $('#number-hidden').text(names.length - @attributes.workspace.length)
-        )
+      calcNumNodesHidden: ->
+        @model.getNodeNames (names) =>
+          $('#number-hidden').text(names.length - @model.nodes.length)
 
-      bringBackAll: () =>
-        console.log('bring back all nodes and connections')
+      # This works quickly by loading the clientside prefetched nodes
+      # right away and then updating them
+      bringBackAll: ->
+        if window.prefetch.nodes
+          workspaceNodes = window.prefetch.nodes
+          @model.nodes.set workspaceNodes, {silent:true}
+          @model.nodes.fetch()
+        if window.prefetch.connections
+          workspaceConns = window.prefetch.connections
+          @model.connections.set workspaceConns, {silent:true}
+          @model.connections.fetch()
+
+        @model.trigger "init"
