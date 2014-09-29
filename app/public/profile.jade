@@ -32,7 +32,7 @@ head
             h3 Public Docs
             .document-list
               for doc in docs
-                a.list-group-item(href="#{doc.name}/document/#{doc.id}" target="_blank") #{doc.name}
+                a.list-group-item(href="#{doc.createdBy}/document/#{doc.id}" target="_blank") #{doc.name}
 
       else
         .row
