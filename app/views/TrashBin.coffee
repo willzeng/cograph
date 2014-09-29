@@ -26,11 +26,11 @@ define ['jquery', 'underscore', 'backbone'],
             $("#trash-bin").removeClass('selected')
 
         @model.nodes.on 'add remove', @calcNumNodesHidden, this
-        @model.on 'init', @calcNumNodesHidden, this
+        @model.on 'init saved:node', @calcNumNodesHidden, this
 
       calcNumNodesHidden: ->
         @model.getNodeNames (names) =>
-          $('#number-hidden').text(names.length - @model.nodes.length)
+          $('#number-hidden').text names.length-@model.nodes.length
 
       # This works quickly by loading the clientside prefetched nodes
       # right away and then updating them
