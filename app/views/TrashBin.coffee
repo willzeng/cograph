@@ -35,13 +35,9 @@ define ['jquery', 'underscore', 'backbone'],
       # This works quickly by loading the clientside prefetched nodes
       # right away and then updating them
       bringBackAll: ->
-        if window.prefetch.nodes
-          workspaceNodes = window.prefetch.nodes
-          @model.nodes.set workspaceNodes, {silent:true}
-          @model.nodes.fetch()
-        if window.prefetch.connections
-          workspaceConns = window.prefetch.connections
-          @model.connections.set workspaceConns, {silent:true}
-          @model.connections.fetch()
+        if window.prefetch.nodes then @model.nodes.set window.prefetch.nodes, {silent:true}
+        @model.nodes.fetch()
+        if window.prefetch.connections then @model.connections.set window.prefetch.connections, {silent:true}
+        @model.connections.fetch()
 
         @model.trigger "init"
