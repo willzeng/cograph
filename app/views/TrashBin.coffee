@@ -21,3 +21,11 @@ define ['jquery', 'underscore', 'backbone'],
             @model.deSelect spoke for spoke in spokes
             @model.removeNode node
             $("#trash-bin").removeClass('selected')
+
+        @model.nodes.on 'remove', @calcNumNodesHidden, this
+
+      calcNumNodesHidden: () =>
+        @model.getNodeNames((names) =>
+          console.log(names.length - @attributes.workspace.length)
+          $('#number-hidden').text(names.length - @attributes.workspace.length)
+        )
