@@ -22,7 +22,7 @@ router.get '/new', utils.isLoggedIn, (request, response) ->
       user.addDocument savedDocument._id
     response.redirect "/#{request.user.local.name}/document/#{savedDocument._id}"
 
-router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, response) ->
+sendGraphDoc = (request, response) ->
   request.params.id = [request.params[1]]
   documents.prefetch request, response, (prefetched) ->
     if request.isAuthenticated()
@@ -32,6 +32,12 @@ router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, re
       prefetched.isAuthenticated = false
       prefetched.user = {}
     response.render 'index.jade', prefetched
+
+router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:search\/(\w+))?\/?$/, (request, response) ->
+  sendGraphDoc request, response
+
+router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, response) ->
+  sendGraphDoc request, response
 
 router.get /^\/mobile\/(\d*)$/, (request, response) ->
   response.render('mobile.jade')
