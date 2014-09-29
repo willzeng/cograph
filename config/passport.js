@@ -68,7 +68,7 @@ module.exports = function(passport) {
                         return done(err);
                     // check to see if theres already a user with that name
                     if (namedUser || _.contains(usernameBlacklist, profile.username)) {
-                        return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+
                     }
                     else {
                         // #TODO Check if username is free
@@ -78,7 +78,6 @@ module.exports = function(passport) {
                         newUser.local.email     = profile.email;
                         newUser.local.name      = profile.username;
                         newUser.local.nameLower = profile.username.toLowerCase();
-                        newUser.local.facebook  = {}
                         newUser.local.twitter   = profile._json
                         // save the user
                         newUser.save(function(err) {
@@ -146,7 +145,6 @@ module.exports = function(passport) {
                             newUser.local.name      = req.body.name;
                             newUser.local.nameLower = newUser.local.name.toLowerCase();
                             newUser.local.password  = newUser.generateHash(password);
-                            newUser.local.facebook  = {}
                             newUser.local.twitter   = {}
                     // save the user
                             newUser.save(function(err) {

@@ -53,9 +53,9 @@ head
       .container
         h1 Make new connections
         h2 Graph documents for connected information
-        p
-          a.btn.btn-primary.btn-lg.call-to-action(href="/new") Make a Graph
-          a.btn.btn-default.btn-lg.call-to-action(href="/profile") Explore Graphs
+        p#button-container
+          a#create.btn.btn-primary.btn-lg.call-to-action(href="/new") Make a Graph
+          a#open.btn.btn-default.btn-lg.call-to-action(href="/profile") Explore Graphs
 
     .container.main-content
       .row
@@ -139,7 +139,7 @@ head
           p.sizable
             | We'd love to discuss ideas with you at &nbsp;
             a(href='mailto:hello@thecograph.com')
-              u hello@thecograph.com
+              | hello@thecograph.com
     footer
       .container.clearfix
         p.pull-left

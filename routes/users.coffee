@@ -8,7 +8,8 @@ module.exports = (app, passport) ->
   # HOME PAGE (with login links) ========
   # =====================================
   app.get "/", utils.isNotLoggedIn, (req, res) ->
-    res.render "user-index.jade"
+    documents.helper.getAll (docs) ->
+      res.render "user-index.jade", {docs:docs}
   
   # =====================================
   # LOGIN ===============================

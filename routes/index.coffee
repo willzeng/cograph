@@ -36,10 +36,6 @@ router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, re
 router.get /^\/mobile\/(\d*)$/, (request, response) ->
   response.render('mobile.jade')
 
-router.get '/landing', (request, response)->
-  documents.helper.getAll (docs) ->
-    response.render 'landing.jade', {docs:docs}
-
 router.get '/errors/missingDocument', (request, response)->
   response.render('errors/missingDocument.jade')
 
