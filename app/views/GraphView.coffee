@@ -47,17 +47,29 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         # store the current zoom to undo changes from dragging a node
         @currentZoom = undefined
+        @cancelledDrag = false
         @force.drag()
         .on "dragstart", (d) ->
+          if(d3.event.sourceEvent.target.className.baseVal == "node-info")
+            that.cancelledDrag = true
+            that.force.stop()
+            return
+          else
+            that.cancelledDrag = false
           that.translateLock = true
           that.currentZoom = that.zoom.translate()
         .on "drag", (d) ->
-          d3.select(this).classed("fixed", d.fixed = true)
-          that.trigger "node:drag", d, d3.event
+          if !that.cancelledDrag
+            d3.select(this).classed("fixed", d.fixed = true)
+            that.trigger "node:drag", d, d3.event
+          else
+            that.force.stop()
+
         .on "dragend", (node) =>
-          @trigger "node:dragend", node, d3.event
-          @zoom.translate @currentZoom
-          @translateLock = false
+          if !that.cancelledDrag
+            @trigger "node:dragend", node, d3.event
+            @zoom.translate @currentZoom
+            @translateLock = false
           @force.stop()
 
         $('body').on 'mousemove', (e) =>
@@ -277,6 +289,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             if(!$(d3.event.toElement).closest('.node').length)
               @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
+          .call(@force.drag())
 
         $('.node-title-span').on "mouseenter", (e) =>
             @trigger "node:mouseenter", d3.select(e.currentTarget)
@@ -287,9 +300,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('dim', (d) -> d.get('dim'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
-          .call(@force.drag)
-        node.select('.node-title-body')
+          
+        nodeInnerText
           .html((d) -> _.template(nodeTitle, d))
+          
         node.select('.node-connector')
           .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
@@ -338,7 +352,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         tick()
         @force.on "tick", () =>
-          if @drawing then tick()
+          if @drawing && !@cancelledDrag then tick()
 
       rightClicked: (e) ->
         e.preventDefault()
