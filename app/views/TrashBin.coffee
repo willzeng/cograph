@@ -2,7 +2,10 @@ define ['jquery', 'underscore', 'backbone'],
   ($, _, Backbone) ->
     class TrashBin extends Backbone.View
       el: $ '#graph'
-      that = this
+
+      events:
+        'click #bring-all-nodes-to-view': 'bringBackAll'
+
       initialize: ->
 
         @graphView = @attributes.graphView
@@ -21,3 +24,20 @@ define ['jquery', 'underscore', 'backbone'],
             @model.deSelect spoke for spoke in spokes
             @model.removeNode node
             $("#trash-bin").removeClass('selected')
+
+        @model.nodes.on 'add remove', @calcNumNodesHidden, this
+        @model.on 'init saved:node', @calcNumNodesHidden, this
+
+      calcNumNodesHidden: ->
+        @model.getNodeNames (names) =>
+          $('#number-hidden').text names.length-@model.nodes.length
+
+      # This works quickly by loading the clientside prefetched nodes
+      # right away and then updating them
+      bringBackAll: ->
+        if window.prefetch.nodes then @model.nodes.set window.prefetch.nodes, {silent:true}
+        @model.nodes.fetch()
+        if window.prefetch.connections then @model.connections.set window.prefetch.connections, {silent:true}
+        @model.connections.fetch()
+
+        @model.trigger "init"
