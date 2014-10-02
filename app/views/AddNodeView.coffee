@@ -22,7 +22,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         # Create color picker
         _.each @model.defaultColors, (i, color) =>
           @colorInput.append('<div class="add-color-item color-circle" style="background-color:'+i+'" data-color="'+color+'"></div>')
-        )
         @colorArea.css('color', @model.defaultColors["default"])
         @colorArea.data('color', @model.defaultColors["default"])
 
