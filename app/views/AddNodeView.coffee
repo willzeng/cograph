@@ -20,7 +20,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @titleArea.elastic() 
 
         # Create color picker
-        _.each(@model.defaultColors, (i, color) =>
+        _.each @model.defaultColors, (i, color) =>
           @colorInput.append('<div class="add-color-item color-circle" style="background-color:'+i+'" data-color="'+color+'"></div>')
         )
         @colorArea.css('color', @model.defaultColors["default"])
@@ -134,6 +134,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           node.set "tags", twttr.txt.extractHashtags attributes.description
 
           $.when(node.save()).then =>
+            @model.trigger 'saved:node'
             # Create connections to mentioned nodes
             @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
             uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')

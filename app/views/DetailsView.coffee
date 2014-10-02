@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap', 'bb-modal',
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
- 'bootstrap-color', 'atwho', 'twittertext', 'linkify'],
-  ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho, linkify) ->
+ 'bootstrap-color', 'atwho', 'twittertext', 'linkify', 'typeahead'],
+  ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho, linkify, typeahead) ->
     class DetailsView extends Backbone.View
       el: $ 'body'
 
@@ -62,9 +62,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         ).render()
 
         $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
-        $('#details-container input[name=name]', @el).focus()
 
         isNode = nodeConnection.constructor.name is 'NodeModel'
+
+        if isNode then $('#details-container input[name=name]', @el).focus()
+
         colorOptions = colors:[(val for color, val of @model.defaultColors when !((color is 'grey') and isNode))]
         $('.colorpalette').colorPalette(colorOptions).on 'selectColor', (e) =>
           colorValue = e.color
@@ -112,6 +114,32 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       setupAtWho: ->
         that = this
         @mentionedConns = [] # this stores newly mentioned conns
+
+        connectionNameMatcher = () =>
+          findMatches = (q, cb) =>
+            $.get "/document/#{@model.documentModel.get('_id')}/connections", (connections) =>
+              matches = _.uniq @findMatchingObjects(q, connections), (match) -> match.name
+              cb _.map matches, (match) -> {value: match.name, type: 'connection'}
+
+        typeaheadConfig =
+              hint: false,
+              highlight: true,
+              minLength: 0,
+              autoselect: true
+
+        Backbone.Form.editors.ConnDropdown = Backbone.Form.editors.Text.extend
+          render: () ->
+            # Call the parent's render method
+            Backbone.Form.editors.Text.prototype.render.call this
+            # Then make the editor's element have a typeahead dropdown
+            # for the document's connection names
+            setTimeout () =>
+              this.$el.typeahead typeaheadConfig,
+                name: 'connection-names',
+                source: connectionNameMatcher()
+              this.$el.focus()
+            , 10 # needs to wait for render before applying typeahead
+            return this
 
         Backbone.Form.editors.AtWhoEditor = Backbone.Form.editors.TextArea.extend
           render: () ->
@@ -163,3 +191,8 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
                 that.mentionedConns.push connection
 
             this.$el.val()
+
+      # Helper Methods
+      findMatchingObjects: (query, allObjects) ->
+        regex = new RegExp(query,'i')
+        _.filter(allObjects, (object) -> regex.test(object.name))
