@@ -29,22 +29,25 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         $('#search-input').typeahead(
           hint: true,
           highlight: true,
-          minLength: 1,
+          minLength: 0,
           autoselect: true
         ,
           name: 'node-names',
           source: nodeNameMatcher(@model)
           templates:
+            empty: ' '
             header: '<span class="search-title">Nodes</span>'
         ,
           name: 'tags'
           source: findTagMatches
           templates:
-            header: '<span class="search-title">Labels</span>'
+            empty: ' '
+            header: '<span class="search-title">Tags</span>'
         ,
           name: 'conn-names'
           source: connectionNameMatcher(@model)
           templates:
+            empty: ' '
             header: '<span class="search-title">Connections</span>'
         )
 
