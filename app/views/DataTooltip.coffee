@@ -67,12 +67,18 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         $('.node-info-body').removeClass('shown')
 
       archiveObj: (event) ->
+        $('#trash-bin').addClass('selected')
         removeId = parseInt $(event.currentTarget).attr("data-id")
         nc = @model.nodes.findWhere {_id:removeId}
         if nc.constructor.name is "NodeModel"
           @model.removeNode nc
         else if nc.constructor.name is "ConnectionModel"
           @model.removeConnection nc
+        setTimeout(()->
+          $('#trash-bin').removeClass('selected')
+        , 300)
+        
+
 
       expandNode: (event, options) ->
         expandId = parseInt $(event.currentTarget).attr("data-id")
