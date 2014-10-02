@@ -318,7 +318,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             view = that.model.connections.filter( (conn) =>
               return (conn.source.id == d.id || conn.target.id == d.id)
             ).length
-            $(this).text(total-view)
+            diff = total-view
+            if(diff < 0) 
+              diff = 0
+            $(this).text(diff)
 
         # move the popover info to align with the left of the text
         # construct the node boxes
