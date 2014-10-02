@@ -237,6 +237,21 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin: 10px 0 0 0;
 }
 
+#dragging-message {
+  display: none;
+  font-size: 16px;
+  position: relative;
+  top: -5px;
+}
+
+#trash-bin.dragging #dragging-message {
+  display: inline;
+}
+
+#trash-bin.dragging #bring-all-nodes-to-view {
+  display: none;
+}
+
 #trash-bin {
   height: 81px;
   width: 200px;

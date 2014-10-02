@@ -15,8 +15,10 @@ define ['jquery', 'underscore', 'backbone'],
             $("#trash-bin").addClass('selected')
           else
             $("#trash-bin").removeClass('selected')
+          $('#trash-bin').addClass('dragging')
 
         @graphView.on "node:dragend", (node, e) =>
+          $('#trash-bin').removeClass('dragging')
           if @graphView.isContainedIn e.sourceEvent, $('#trash-bin')
             @model.deSelect node
             spokes = @model.connections.filter (c) ->
