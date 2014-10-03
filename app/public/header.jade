@@ -26,10 +26,12 @@ nav.navbar.navbar-default(role='navigation')
                     a#sharing-button Share View
                   li
                     a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
-                  
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
+            li
+              a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
+                | Embed Code
             li
               a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal")
                 i.fa.fa-edit

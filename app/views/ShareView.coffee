@@ -34,6 +34,12 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         $('#save-workspace-button').popover
           template: popoverTemplate
 
+        $('#embed-button').popover
+          content: @getEmbed window.location
+
+        @model.on 'navigate', (dest) =>
+          $('#embed-button').data('bs.popover').options.content = @getEmbed dest
+
       nameWorkspace: ->
         @model.set 'name', $('#workspace-name').val()
         @model.sync "update", @model
@@ -56,3 +62,12 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         doc = @model.getDocument()
         doc.set "public", not doc.get "public"
         doc.save()
+
+      getEmbed: (url) ->
+        """
+        <div style = 'min-width:420;max-width:700'>
+          <iframe src='#{url}' width='100%' height='100%'
+          scrolling='no' frameborder='0' allowfullscreen>
+          </iframe>
+        </div>
+        """
