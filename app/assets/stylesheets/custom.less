@@ -449,11 +449,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 .loading-container {
-  width: 100px;
-  height: 100px;
-  background-color: none;
+  width: 100%;
+  height: 100%;
+  z-index: 99999999;
+  background-color: rgba(0,0,0,0.4);
   position: absolute;
-  top: 20%;
+  top: 0;
   left: 0;
   right: 0;
   margin: auto;

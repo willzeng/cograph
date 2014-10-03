@@ -32,7 +32,12 @@ define ['jquery', 'underscore', 'backbone'],
 
       calcNumNodesHidden: ->
         @model.getNodeNames (names) =>
-          $('#number-hidden').text names.length-@model.nodes.length
+          if(names.length == 0)
+            $('#add-title').focus()
+          if(names.length-@model.nodes.length >= 0)
+            $('#number-hidden').text names.length-@model.nodes.length
+          else
+            $('#number-hidden').text 0
 
       # This works quickly by loading the clientside prefetched nodes
       # right away and then updating them

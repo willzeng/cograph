@@ -166,6 +166,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # new elements
         connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
+          .on "dragend", (e) =>
+            d3.event.preventDefault
           .on "click", (d) =>
             @model.select d
             @model.trigger "conn:clicked", d
@@ -236,6 +238,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('y', '-15')
           .attr('width', '20')
           .attr('height', '30')
+          .attr('class', 'node-rectangle clickable')
           .attr('fill', 'transparent')
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
@@ -249,7 +252,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('r', '5')
           .attr('cx', '-70')
           .attr('cy', '0')
-          .attr('class', 'node-connector')
+          .attr('class', 'node-connector clickable')
           .attr('fill', '#222') 
         nodeInfoText = nodeEnter.append("foreignObject")
           .attr('y', '12')
@@ -267,14 +270,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('y', '-25')
           .attr('class', 'node-image')
           .attr('clip-path', 'url(#clipCircle)')
-        
-        nodeRectangle
-          .on "click", (d) =>
-            @model.trigger "node:clicked", d
-        nodeConnector
-          .on "click", (d) =>
-            @model.trigger "node:clicked", d
-        nodeInnerText 
+        node
           .on "click", (d) =>
             @model.trigger "node:clicked", d
         node
@@ -292,7 +288,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .call(@force.drag())
 
         $('.node-title-span').on "mouseenter", (e) =>
-            @trigger "node:mouseenter", d3.select(e.currentTarget)
+          @trigger "node:mouseenter", e
 
         # update old and new elements
 
@@ -301,7 +297,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
-          
+
         nodeInnerText
           .html((d) -> _.template(nodeTitle, d))
           

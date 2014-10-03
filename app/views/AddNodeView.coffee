@@ -40,7 +40,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @imageInput.toggleClass('hidden')
           @imageInput.focus()
          
-
         @titleArea.on 'focus', => @expandAdder()
                   
         $('body').on 'click', (e) => 
