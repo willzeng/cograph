@@ -4,28 +4,43 @@ define ['jquery', 'underscore', 'backbone'],
       el: $ '#graph'
 
       events:
-        'click #bring-all-nodes-to-view': 'bringBackAll'
+        # 'click #bring-all-nodes-to-view': 'bringBackAll'
+        'click #show-all': 'bringBackAll'
+        'click #hide-all': 'hideAll'
 
       initialize: ->
-
+        @trashBin = $('#trash-bin')
         @graphView = @attributes.graphView
+        @enteredWhileDragging = false
+
+        @trashBin.on "mouseover", (e) =>
+          if(!@trashBin.hasClass('dragging') && !@enteredWhileDragging)
+            @trashBin.addClass('hover')
+
+        @trashBin.on "mouseenter", (e) => 
+          if(@trashBin.hasClass('dragging'))
+            @enteredWhileDragging = true
+
+        @trashBin.on "mouseleave", (e) =>
+          @trashBin.removeClass('hover')
+          @enteredWhileDragging = false
 
         @graphView.on "node:drag", (node, e) =>
-          if @graphView.isContainedIn e.sourceEvent, $('#trash-bin')
-            $("#trash-bin").addClass('selected')
+          if @graphView.isContainedIn e.sourceEvent, @trashBin
+            @trashBin.addClass('selected')
           else
-            $("#trash-bin").removeClass('selected')
-          $('#trash-bin').addClass('dragging')
+            @trashBin.removeClass('selected')
+          @trashBin.addClass('dragging')
 
         @graphView.on "node:dragend", (node, e) =>
-          $('#trash-bin').removeClass('dragging')
-          if @graphView.isContainedIn e.sourceEvent, $('#trash-bin')
+          @trashBin.removeClass('dragging')
+          if @graphView.isContainedIn e.sourceEvent, @trashBin
             @model.deSelect node
             spokes = @model.connections.filter (c) ->
               (c.get('source') is node.get('_id')) or (c.get('target') is node.get('_id'))
             @model.deSelect spoke for spoke in spokes
             @model.removeNode node
-            $("#trash-bin").removeClass('selected')
+            @trashBin.removeClass('selected')
 
         @model.nodes.on 'add remove', @calcNumNodesHidden, this
         @model.on 'init saved:node', @calcNumNodesHidden, this
@@ -48,3 +63,15 @@ define ['jquery', 'underscore', 'backbone'],
         @model.connections.fetch()
 
         @model.trigger "init"
+
+        @trashBin.removeClass('hover')
+        @enteredWhileDragging = true
+
+      hideAll: ->
+        @model.connections.reset()
+        @model.nodes.reset()
+        @graphView.updateDetails()
+        @calcNumNodesHidden()
+
+        @trashBin.removeClass('hover')
+        @enteredWhileDragging = true

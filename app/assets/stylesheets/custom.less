@@ -30,7 +30,7 @@
 }
 
 .node.image.fixed image {
-  clip-path: url(#clipCircleFixed);
+  clip-path: url('#clipCircleFixed');
 } 
 
 .node.fixed .node-fix {
@@ -44,11 +44,6 @@
 .node.selected .node-connector {
   stroke-width: 2px;
   stroke: @selected-color;
-}
-
-
-#bring-all-nodes-to-view {
-  cursor: pointer;
 }
 
 .node-title-body {
@@ -237,11 +232,27 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin: 10px 0 0 0;
 }
 
-#dragging-message {
+#dragging-message, #hide-all, #show-all {
   display: none;
   font-size: 16px;
   position: relative;
   top: -5px;
+}
+
+#hide-all {
+  margin-left: 10px;
+}
+#hide-all:hover, #show-all:hover {
+  cursor: pointer;
+  color: @selected-color;
+}
+
+#trash-bin.hover #bring-all-nodes-to-view {
+  display: none;
+}
+
+#trash-bin.hover #show-all, #trash-bin.hover #hide-all {
+  display: inline;
 }
 
 #trash-bin.dragging #dragging-message {
