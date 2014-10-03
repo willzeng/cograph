@@ -12,7 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       maxConnTextLength: 20
       maxNodeBoxHeight: 100 #4 lines
       nodeBoxWidth: 120
-      maxInfoBoxHeight: 200
+      maxInfoBoxHeight: 207
       infoBoxWidth: 120
 
       initialize: ->

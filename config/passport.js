@@ -68,10 +68,13 @@ module.exports = function(passport) {
                         return done(err);
                     // check to see if theres already a user with that name
                     if (namedUser || _.contains(usernameBlacklist, profile.username)) {
-
+                        if(namedUser.local.twitter.id == profile.id)
+                            // LOGIN
+                            console.log('login')
+                        else // username taken
+                            return done(err);
                     }
                     else {
-                        // #TODO Check if username is free
                         // create the user
                         var newUser            = new User();
                         // set the user's local credentials
