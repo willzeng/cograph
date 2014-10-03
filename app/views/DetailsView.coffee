@@ -31,18 +31,17 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         workspaceSpokes = @model.getSpokes nodeConnection
         @updateColor @model.defaultColors[nodeConnection.get('color')]
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
-
         @detailsModal = new Backbone.BootstrapModal(
           content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
           animate: false
           showFooter: false
         ).open()
-        @editNodeConnection()
 
       updateColor: (color) ->
         $('#details-container .panel-heading').css 'background', color
 
       closeDetail: () ->
+        @detailsModal.close()
         @graphView.trigger "node:mouseout"
 
       openAndEditConnection: (conn) ->
@@ -52,6 +51,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       editNodeConnection: ->
         nodeConnection = @currentNC
+
         @nodeConnectionForm = new Backbone.Form(
           model: nodeConnection
           template: _.template(editFormTemplate)
