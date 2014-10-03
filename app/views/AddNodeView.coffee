@@ -97,10 +97,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
       resetAdd: () ->
         @imageInput.addClass('hidden')
         @colorInput.addClass('hidden')
-        
         @descriptionArea.atwho 'destroy'
         $('div[id=atwho-container]').remove()
         @titleArea.val('')
+        @imageInput.val('')
         @descriptionArea.val('') 
         @descriptionArea.trigger('change')
         @titleArea.trigger('change')   
