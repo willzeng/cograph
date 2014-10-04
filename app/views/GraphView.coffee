@@ -248,6 +248,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
           .attr('class', 'node-title-body')
+        nodeInnerTextPad = nodeInnerText.append('div')
+          .attr('class', 'pad')
+        nodeInnerTextSpan = nodeInnerTextPad.append('span')
+          .attr('class', 'node-title-span')
         nodeConnector = nodeEnter.append("circle")
           .attr('r', '5')
           .attr('cx', '-70')
@@ -287,8 +291,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
           .call(@force.drag())
 
-        $('.node-title-span').on "mouseenter", (e) =>
-          @trigger "node:mouseenter", e
+        nodeInnerTextSpan.on "mouseenter", (node) =>
+          @trigger "node:mouseenter", d3.event, node
 
         # update old and new elements
 
@@ -298,7 +302,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
 
-        nodeInnerText
+        nodeInnerTextSpan
           .html((d) -> _.template(nodeTitle, d))
           
         node.select('.node-connector')

@@ -17,11 +17,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
         @ignoreMouse = false
 
-        @graphView.on 'node:mouseenter', (e) =>
+        @graphView.on 'node:mouseenter', (e, node) =>
           @showToolTip(e)
-          window.x = (e.currentTarget)
-          # d3.select($(e.currentTarget).closest('.node')[0])[0][0].__data__
-          if !(@ignoreMouse) then @highlight e
+          if !(@ignoreMouse) then @highlight node
 
         @graphView.on 'node:drag', () =>
           @ignoreMouse = true
