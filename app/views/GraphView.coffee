@@ -168,9 +168,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr("class", "connection")
           .on "dragend", (e) =>
             d3.event.preventDefault
-          .on "click", (d) =>
+          .on "dblclick", (d) =>
             @model.select d
-            @model.trigger "conn:clicked", d
+            @model.trigger "conn:dblclicked", d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
