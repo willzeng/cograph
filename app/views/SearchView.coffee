@@ -70,11 +70,12 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
           if node
             @model.select node
             @model.trigger "found:node", node
-          @getNodeByName sugg.value, (node) =>
-            # Give the graph some time to settle before centering
-            setTimeout () =>
-              @model.trigger "found:node", @model.nodes.findWhere {_id:node._id}
-            , 1500
+          else
+            @getNodeByName sugg.value, (node) =>
+              # Give the graph some time to settle before centering
+              setTimeout () =>
+                @model.trigger "found:node", @model.nodes.findWhere {_id:node._id}
+              , 1500
         else if sugg.type == 'tag'
           @model.getNodesByTag sugg.value, (nodes) =>
             for node in nodes
