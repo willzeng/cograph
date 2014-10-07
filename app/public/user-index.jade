@@ -32,19 +32,19 @@ html(lang='en')
   body
     #canvas-container.jumbotron
     script#vertexshader-axon(type='x-shader/x-vertex').
-        uniform float opacityMultiplier;
-        attribute float opacityAttr;
-        varying float opacityNew;
-        void main() {
-          opacityNew = opacityAttr * opacityMultiplier;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
-        }
+      uniform float opacityMultiplier;
+      attribute float opacityAttr;
+      varying float opacityNew;
+      void main() {
+        opacityNew = opacityAttr * opacityMultiplier;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
+      }
     script#fragmentshader-axon(type='x-shader/x-fragment').
-        uniform vec3 color;
-        varying float opacityNew;
-        void main() {
-          gl_FragColor = vec4(color, opacityNew);
-        }
+      uniform vec3 color;
+      varying float opacityNew;
+      void main() {
+        gl_FragColor = vec4(color, opacityNew);
+      }
     script.
       if(!isMobile){
         loadjscssfile("neural/js/vendor/Detector.js", "js")

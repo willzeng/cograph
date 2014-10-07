@@ -343,6 +343,10 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   right: 15px;
 }
 
+.float-right {
+  float: right;
+}
+
 .toolbar.bottom {
   position: absolute;
   bottom: @bottom-margin;
@@ -775,5 +779,23 @@ body {
   } 50% { 
     transform: scale(1.0);
     -webkit-transform: scale(1.0);
+  }
+}
+
+@media (max-width: 700px) {
+  .feedback-btn {
+    display: none;
+  }
+  #add {
+    width: 100%;
+  }
+  #menu-title {
+    width: 90px;
+  }
+  .navbar-form {
+    padding: 0;
+  }
+  .toolbar.right {
+    right: 0px;
   }
 }
