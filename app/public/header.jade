@@ -30,9 +30,9 @@ nav.navbar.navbar-default(role='navigation')
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right 
             if isAuthenticated
-              li(style="height:22px")
+              li#newgraph-icon
                 a(href="/new" target="_blank" title="new graph")
-                  img(src="assets/images/newgraph.png" height="32px" style="margin-top:-9px;")
+                  img(src="assets/images/newgraph.png")
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')
                   | #{user.local.name}

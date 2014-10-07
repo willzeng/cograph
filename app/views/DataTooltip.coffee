@@ -174,7 +174,6 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         [centerNode.x + radius * Math.cos(2 * Math.PI * i / steps+offset), centerNode.y + radius * Math.sin(2 * Math.PI * i / steps+offset)]
 
       toggleFix: (event) =>
-        console.log('Unfixing node')
         unfixId = parseInt $(event.currentTarget).attr("data-id")
         unfixNode = @model.nodes.findWhere {_id:unfixId}
         unfixNode.set 'fixed', !unfixNode.fixed
