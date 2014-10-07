@@ -4,7 +4,6 @@ define ['jquery', 'underscore', 'backbone'],
       el: $ '#graph'
 
       events:
-        # 'click #bring-all-nodes-to-view': 'bringBackAll'
         'click #show-all': 'bringBackAll'
         'click #hide-all': 'hideAll'
 
