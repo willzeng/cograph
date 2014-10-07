@@ -10,6 +10,7 @@
 @text-color: #333;
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
+@max-z: 99999999;
 
 @font: 'Varela Round', Helvetica, sans-serif;
 
@@ -343,10 +344,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   right: 15px;
 }
 
-.float-right {
-  float: right;
-}
-
 .toolbar.bottom {
   position: absolute;
   bottom: @bottom-margin;
@@ -393,7 +390,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   border-bottom: 1px solid #eee;
   border-top: 1px solid #eee;
   color: #666;
-  // font-size: 16pt;
 }
 
 .modal-body {
@@ -466,7 +462,7 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 .loading-container {
   width: 100%;
   height: 100%;
-  z-index: 99999999;
+  z-index: @max-z;
   background-color: rgba(0,0,0,0.4);
   position: absolute;
   top: 0;
@@ -756,10 +752,6 @@ body {
 .caret {
   margin-left: 5px;
   border-width: 8px;
-}
-
-.go-right {
-  float: right;
 }
 
 .double-bounce2 {
