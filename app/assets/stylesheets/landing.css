@@ -80,7 +80,7 @@ body, h1, h2, h3, h4, h5, h6 {
 .jumbotron {
   background: url(../images/noisy_net.png);
   color: #fff;
-  padding: 2em 0 9em;
+  padding: 2em 0 12em;
   text-align: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
