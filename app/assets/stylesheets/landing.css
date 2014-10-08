@@ -20,6 +20,7 @@
 }
 .main-content {
   font-family: 'Gotham Light';
+  padding-top: 20px;
 }
 hr {
   border-top: 1px solid #ddd;
@@ -144,13 +145,12 @@ body, h1, h2, h3, h4, h5, h6 {
   display: inline-block;
   line-height: 1em;
   padding: 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .benefit .benefit-ball i {
   font-size: 30pt;
   text-align: center;
-  text-shadow: 0px 0px 50px #ffa73a;
-  color: white;
+  color: #f2e244;
   vertical-align: bottom;
 }
 .benefit h3 {
@@ -222,6 +222,8 @@ body, h1, h2, h3, h4, h5, h6 {
 */  top: 0;
   position: relative;
   z-index: 1;
+  height: 550px !important;
+  width: 100% !important;
 }
 
 .call-to-action, .jumbotron .btn {
