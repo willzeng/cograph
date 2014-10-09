@@ -1,27 +1,27 @@
 nav.navbar.navbar-default(role='navigation')
   .container-fluid
-      .navbar-header
-        button.navbar-toggle(type='button' data-toggle='collapse' data-target='#gdocs-nav')
-          span.sr-only Toggle navigation
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a.navbar-brand(href='/')
-          img#brand-logo(src="assets/images/logo-black.png")
-      if isAuthenticated 
-        #gdocs-nav.collapse.navbar-collapse
-          ul.nav.navbar-nav.navbar-right
-            li(style="height:22px")
-              a(href="/new" target="_blank" title="new graph")
-                img(src="assets/images/newgraph.png" height="32px" style="margin-top:-9px;")
-            li.dropdown
-              a.dropdown-toggle(data-toggle='dropdown', href='')
-                | #{user.local.name}
-                i.caret
-              ul.dropdown-menu
-                li
-                  a(href="/#{user.local.username}") My Cographs
-                li(role="presentation")
-                  a(href="/account") Account
-                li
-                  a(href="/logout") Logout
+    .navbar-header
+      button.navbar-toggle(type='button' data-toggle='collapse' data-target='#gdocs-nav')
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/')
+        img#brand-logo(src="assets/images/logo-black.png")
+    if isAuthenticated 
+      #gdocs-nav.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          li(style="height:22px")
+            a(href="/new" target="_blank" title="new graph")
+              img(src="assets/images/newgraph.png" height="32px" style="margin-top:-9px;")
+          li.dropdown
+            a.dropdown-toggle(data-toggle='dropdown', href='')
+              | #{user.local.name}
+              i.caret
+            ul.dropdown-menu
+              li
+                a(href="/#{user.local.username}") My Cographs
+              li(role="presentation")
+                a(href="/account") Account
+              li
+                a(href="/logout") Logout
