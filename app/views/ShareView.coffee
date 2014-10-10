@@ -27,7 +27,10 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
         $('#save-doc-form', @saveDocModal.$el).submit () =>
           @model.sync "create", @model,
-            success: (savedModel) => @trigger "save:workspace", savedModel._id
+            success: (savedModel) => 
+              @trigger "save:workspace", savedModel._id
+              @model.set 'name', $('#saveDocName').val()
+              @model.sync "update", @model
           @saveDocModal.close()
 
       shareWorkspace: ->
