@@ -6,7 +6,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
       initialize: ->
         @workspaceModel = new WorkspaceModel()
 
-        @feedbackView = new FeedbackView
+        
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
         @detailsView = new DetailsView {model: @workspaceModel, attributes: {graphView: @graphView}}
@@ -15,7 +15,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
         @shareView = new ShareView model: @workspaceModel
-
+        @feedbackView = new FeedbackView
+        
         @shareView.on "save:workspace", (workspaceId) => @navigate "view/"+workspaceId
         @graphView.on "tag:click", (tag) =>
           @workspaceModel.filterModel.set "node_tags", [tag]
