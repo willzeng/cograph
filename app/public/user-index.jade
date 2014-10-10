@@ -24,13 +24,7 @@ html(lang='en')
       void main() {
         gl_FragColor = vec4(color, opacityNew);
       }
-    script(src="neural/js/vendor/Detector.js")
-    script(src="neural/js/vendor/dat.gui.min.js")
-    script(src="neural/js/vendor/stats.min.js")
-    script(src="neural/js/vendor/three.min.js")
-    script(src="neural/js/vendor/OrbitControls.js")
-    script(src="neural/js/vendor/OBJLoader.js")
-    script(src="neural/js/three-app.js")
+    
     nav.navbar.navbar-default.navbar-inverse(role='navigation')
       .container
         .navbar-header
@@ -139,16 +133,6 @@ html(lang='en')
           h3 
             strong Faster access
           p Browser extensions to make it faster to connect content
-
-      hr
-      .row
-        .col-md-10.col-md-offset-1.text-center
-          h3 Inspired?
-          br
-          p.sizable
-            | We'd love to discuss ideas with you at &nbsp;
-            a(href='mailto:hello@thecograph.com')
-              | hello@thecograph.com
     footer
       .container.clearfix
         p.pull-left
@@ -159,5 +143,13 @@ html(lang='en')
           a(href='/signup') Sign up
           | &nbsp;&nbsp;&nbsp;&nbsp;
           a(href='mailto:hello@thecograph.com') Contact
+    script(src="neural/js/vendor/Detector.js")
+    script(src="neural/js/vendor/dat.gui.min.js")
+    script(src="neural/js/vendor/stats.min.js")
+    script(src="neural/js/vendor/three.min.js")
+    script(src="neural/js/vendor/OrbitControls.js")
+    script(src="neural/js/vendor/OBJLoader.js")
+    script(src="neural/js/three-app.js")
     script(src='assets/libs/jquery/dist/jquery.min.js')
     script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
+
