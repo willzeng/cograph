@@ -89,7 +89,7 @@ router.get      '/document/:docId/getConnsByName',     search.getConnsByName
 router.get      '/document/:docId/tags',               search.getTagNames
 
 # User's Public  Page (needs to come last as the fallback route)
-router.get /^\/(\w+)$/, (req, res) ->
+router.get /^\/(\w+)\/?$/, (req, res) ->
   username = req.params[0].toLowerCase()
   User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
     if err or not(profiledUser?) then res.redirect "/"
