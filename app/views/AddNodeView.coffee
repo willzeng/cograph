@@ -17,7 +17,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @imageInput = $('#add-image-container')
 
         @descriptionArea.elastic()
-        @titleArea.elastic() 
 
         # Create color picker
         _.each @model.defaultColors, (i, color) =>
