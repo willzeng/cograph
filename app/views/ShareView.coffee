@@ -22,8 +22,6 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
         @saveDocModal.on "shown", () ->
           $('#saveDocName').focus()
-          $("#save-doc-form").submit (e) ->
-            false
 
         $('#save-doc-form', @saveDocModal.$el).submit () =>
           @model.sync "create", @model,
@@ -32,6 +30,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
               @model.set 'name', $('#saveDocName').val()
               @model.sync "update", @model
           @saveDocModal.close()
+          false
 
       shareWorkspace: ->
         @shareDocModal = new Backbone.BootstrapModal(
