@@ -131,6 +131,7 @@ select[multiple].input-group.input-group-lg .twitter-typeahead .tt-hint {
 }
 .twitter-typeahead {
   width: 100%;
+  bottom: 0px;
 }
 .input-group .twitter-typeahead {
   display: table-cell !important;
@@ -149,9 +150,10 @@ fieldset[disabled] .twitter-typeahead .tt-input {
   background-color: #eeeeee !important;
 }
 .tt-dropdown-menu {
-  position: absolute;
-  top: 100%;
+  position: relative;
   left: 0;
+  top: auto;
+  bottom: 5px;
   z-index: 1000;
   min-width: 160px;
   width: 100%;

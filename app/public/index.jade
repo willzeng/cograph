@@ -7,18 +7,14 @@ block content
       .spinner
         .double-bounce1
         .double-bounce2
-
-    .toolbar.controls
-      .navbar-left.navbar-form
-        
           //- button#sidebar-toggle.btn.btn-default(title="Toggle Sidebar")
           //-   i.fa.fa-arrows-h
     .toolbar.right.controls
       .navbar-right.navbar-form
         form#add-node-form.form-inline
           #add.contracted
-            textarea#add-title(name="name", placeholder='Title', rows='1')
-            textarea#add-description(name="description", placeholder='Add Something', rows='1')
+            textarea#add-title(name="name", placeholder='New node', rows='1')
+            textarea#add-description(name="description", placeholder='Description - Use #tags @people +connect', rows='1')
             #add-toolbar.cf
               #add-toolbar-left
                 button#add-color.color-circle(type="button")
@@ -46,8 +42,13 @@ block content
               i.glyphicon.glyphicon-plus
             button#zoom-out-button.btn.btn-default(title="Zoom Out")
               i.glyphicon.glyphicon-minus
-    #trash-bin.controls(title="Drag a node here to Archive it")
+    #trash-bin.controls(title="Drag a node here to Hide it")
       span#bring-all-nodes-to-view
         i.fa.fa-eye-slash
         span#number-hidden 0
+      span#dragging-message
+        | Drag here to Hide
+      span#hover-message
+        span#show-all Show all
+        span#hide-all Hide all
   .data-tooltip-container

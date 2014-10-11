@@ -1,38 +1,16 @@
-define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', 'share-button'],
-  ($, _, Backbone, shareTemplate, shareButton) ->
+define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', 'share-button', 'text!templates/save_view_modal.html'],
+  ($, _, Backbone, shareTemplate, shareButton, saveDocTemplate) ->
     class ShareView extends Backbone.View
       el: $ 'body'
 
       events:
         'click #save-workspace-button': 'saveWorkspace'
         'click .public-button': 'togglePublic'
-        'focusout #workspace-name': 'nameWorkspace'
+        'click #share-workspace-button': 'shareWorkspace'
 
       initialize: ->
         @updatePublicButton()
         @model.getDocument().on 'change:public', @updatePublicButton, this
-
-        @toggleShown = false
-
-        @share = new shareButton "#phantom-share",
-          ui:
-            flyout: 'middle top'
-        $('.entypo-export').hide()
-        $('#sharing-button').click -> $('.entypo-export').trigger 'click'
-
-        popoverTemplate = '''
-          <div class="popover" role="tooltip">
-            <div class="arrow"></div>
-            <h3 class="popover-title"></h3>
-            <form role="form">
-              <div class="form-group">
-                <input id="workspace-name" type="text" placeholder="Untitled Doc"></input>
-              </div>
-            </form>
-          </div>'
-        '''
-        $('#save-workspace-button').popover
-          template: popoverTemplate
 
         $('#embed-button').popover
           content: @getEmbed window.location
@@ -40,23 +18,39 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         @model.on 'navigate', (dest) =>
           $('#embed-button').data('bs.popover').options.content = @getEmbed dest
 
-      nameWorkspace: ->
-        @model.set 'name', $('#workspace-name').val()
-        @model.sync "update", @model
-
       saveWorkspace: ->
-        if !(@toggleShown)
+        @saveDocModal = new Backbone.BootstrapModal(
+          content: _.template(saveDocTemplate, {})
+          title: "Save View"
+          animate: true
+          showFooter: false
+        ).open()
+
+        @saveDocModal.on "shown", () ->
+          $('#saveDocName').focus()
+
+        $('#save-doc-form', @saveDocModal.$el).submit () =>
           @model.sync "create", @model,
-            success: (savedModel) => @trigger "save:workspace", savedModel._id
-        else
-          $('#workspace-name').val("")
-        @toggleShown = !@toggleShown
+            success: (savedModel) => 
+              @trigger "save:workspace", savedModel._id
+              @model.set 'name', $('#saveDocName').val()
+              @model.sync "update", @model
+          @saveDocModal.close()
+          false
+
+      shareWorkspace: ->
+        @shareDocModal = new Backbone.BootstrapModal(
+          content: _.template(shareTemplate, {})
+          title: "Share View"
+          animate: true
+          showFooter: false
+        ).open()
 
       updatePublicButton: ->
         if @model.getDocument().get 'public'
-          $('.public-button').html '<i class="fa fa-globe"></i>'
+          $('.public-button').html '<i class="fa fa-globe" title="public"></i>'
         else
-          $('.public-button').html '<i class="fa fa-lock"></i>'
+          $('.public-button').html '<i class="fa fa-lock" title="private"></i>'
 
       togglePublic: ->
         doc = @model.getDocument()
