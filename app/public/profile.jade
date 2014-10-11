@@ -26,3 +26,7 @@ head
           .document-list
             for doc in userDocs
               a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+            if userDocs.length == 0
+              span 
+                | You have no cographs. 
+                a(href="/new") Create a new cograph
