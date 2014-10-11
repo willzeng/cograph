@@ -1,0 +1,47 @@
+// ALL PAGES styles except for navigation
+
+@import "colors";
+@import url(http://fonts.googleapis.com/css?family=Varela+Round);
+@font: 'Varela Round', Helvetica, sans-serif;
+
+body {
+	font-family: @font;
+}
+
+.cf:before,
+.cf:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.cf:after {
+    clear: both;
+}
+
+.cf {
+    *zoom: 1;
+}
+
+.btn {
+  outline: none !important;
+  border-radius: 0 !important;
+}
+
+.btn-primary {
+  background: lighten(#284552,10%);
+  border: 1px solid lighten(#284552,10%);
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+  border: 1px solid lighten(#284552,12%);
+  background: lighten(#284552,12%);;
+  color: white;
+}
+
+.panel-body {
+  padding: 10px 15px;
+}
+
+.form-control {
+  border-radius: 0 !important;
+}

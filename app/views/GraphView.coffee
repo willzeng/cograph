@@ -12,7 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       maxConnTextLength: 20
       maxNodeBoxHeight: 100 #4 lines
       nodeBoxWidth: 120
-      maxInfoBoxHeight: 200
+      maxInfoBoxHeight: 207
       infoBoxWidth: 120
 
       initialize: ->
@@ -166,9 +166,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # new elements
         connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
-          .on "click", (d) =>
+          .on "dragend", (e) =>
+            d3.event.preventDefault
+          .on "dblclick", (d) =>
             @model.select d
-            @model.trigger "conn:clicked", d
+            @model.trigger "conn:dblclicked", d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
@@ -236,6 +238,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('y', '-15')
           .attr('width', '20')
           .attr('height', '30')
+          .attr('class', 'node-rectangle clickable')
           .attr('fill', 'transparent')
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
@@ -245,11 +248,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
           .attr('class', 'node-title-body')
+        nodeInnerTextPad = nodeInnerText.append('div')
+          .attr('class', 'pad')
+        nodeInnerTextSpan = nodeInnerTextPad.append('span')
+          .attr('class', 'node-title-span')
         nodeConnector = nodeEnter.append("circle")
           .attr('r', '5')
           .attr('cx', '-70')
           .attr('cy', '0')
-          .attr('class', 'node-connector')
+          .attr('class', 'node-connector clickable')
           .attr('fill', '#222') 
         nodeInfoText = nodeEnter.append("foreignObject")
           .attr('y', '12')
@@ -263,18 +270,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('height', '50')
           .attr('width', '50')
           .attr('xlink:href', '')
-          .attr('x', '-95')
+          .attr('x', '-105')
           .attr('y', '-25')
           .attr('class', 'node-image')
           .attr('clip-path', 'url(#clipCircle)')
-        
-        nodeRectangle
-          .on "click", (d) =>
-            @model.trigger "node:clicked", d
-        nodeConnector
-          .on "click", (d) =>
-            @model.trigger "node:clicked", d
-        nodeInnerText 
+        node
           .on "click", (d) =>
             @model.trigger "node:clicked", d
         node
@@ -291,8 +291,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
           .call(@force.drag())
 
-        $('.node-title-span').on "mouseenter", (e) =>
-            @trigger "node:mouseenter", d3.select(e.currentTarget)
+        nodeInnerTextSpan.on "mouseenter", (node) =>
+          @trigger "node:mouseenter", d3.event, node
 
         # update old and new elements
 
@@ -300,14 +300,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('dim', (d) -> d.get('dim'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
-          
-        nodeInnerText
+          .call(@force.drag)
+
+        nodeInnerTextSpan
           .html((d) -> _.template(nodeTitle, d))
           
         node.select('.node-connector')
           .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
+        node.select('.node-title-body')
+          .style("color", (d) => @getColor d)
         node.select('.node-image')
           .attr('xlink:href', (d) -> d.get('image'))
 
@@ -317,7 +320,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             view = that.model.connections.filter( (conn) =>
               return (conn.source.id == d.id || conn.target.id == d.id)
             ).length
-            $(this).text(total-view)
+            diff = total-view
+            $(this).text(diff)
 
         # move the popover info to align with the left of the text
         # construct the node boxes

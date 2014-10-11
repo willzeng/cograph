@@ -19,7 +19,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       initialize: ->
         @graphView = @attributes.graphView
 
-        @model.on 'conn:clicked', @openDetails, this
+        @model.on 'conn:dblclicked', @openDetails, this
         @model.on 'node:dblclicked', @openDetails, this
         @model.on 'create:connection', @openAndEditConnection, this
         @model.on 'edit:conn', @openDetails, this
@@ -35,6 +35,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
           animate: false
           showFooter: false
+          title: nodeConnection.get("name")
         ).open()
 
       updateColor: (color) ->
