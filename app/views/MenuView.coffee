@@ -1,8 +1,8 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
  'text!templates/analytics_modal.html', 'text!templates/workspaces_menu_modal.html',
- 'cs!models/DocumentModel', 'socket-io'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io) ->
+ 'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
@@ -16,6 +16,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #open-doc-button': 'openDocumentModal'
         'click #analytics-button': 'openAnalyticsModal'
         'click #workspaces-button': 'openWorkspacesModal'
+        'click #settings-button': 'openSettingsModal'
 
       initialize: ->
         @model.on "document:change", @render, this
@@ -64,6 +65,14 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             window.open "/#{name}/document/"+newDocument.get('_id'), "_blank"
           else
             window.open '/'+newDocument.get('_id'), "_blank"
+
+      openSettingsModal: ->
+        modal = new Backbone.BootstrapModal(
+          content: _.template(openSettingsTemplate, {})
+          title: "Graph Settings"
+          animate: true
+          showFooter: false
+        ).open()
 
       openDocumentModal: ->
         user = window.user
