@@ -67,8 +67,10 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             window.open '/'+newDocument.get('_id'), "_blank"
 
       openSettingsModal: ->
+        name = @model.getDocument().get("name")
+        isPublic = @model.getDocument().get("public")
         modal = new Backbone.BootstrapModal(
-          content: _.template(openSettingsTemplate, {})
+          content: _.template(openSettingsTemplate, {name:name, isPublic:isPublic})
           title: "Graph Settings"
           animate: true
           showFooter: false
