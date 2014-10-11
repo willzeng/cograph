@@ -95,19 +95,19 @@ router.get /^\/(\w+)\/?$/, (req, res) ->
     if err or not(profiledUser?) then res.redirect "/"
     else
       documents.helper.getAll (publicDocs) ->
-        documents.helper.getByIds profiledUser.documents, (privateDocs) ->
+        documents.helper.getByIds profiledUser.documents, (usersDocs) ->
           if req.isAuthenticated() and username is req.user.local.nameLower
             # show all the documents if this is the profile for the logged in user
-            shownDocs = privateDocs
+            shownDocs = usersDocs
             ownProfile = req.user.local.name is profiledUser.local.name
           else # otherwise show only their public documents
-            shownDocs = (d for d in privateDocs when d.public is true)
+            shownDocs = (d for d in usersDocs when d.public is true)
             ownProfile = false
           res.render "profile.jade",
             ownProfile: ownProfile  # checks to see if you are looking at your own profile
             user: profiledUser      # get the user out of session and pass to template
             docs: publicDocs        # prefetch the list of document names for opening
-            userDocs: shownDocs     # prefetch the users private documents
+            userDocs: shownDocs     # prefetch the users documents that should be displayed
             isAuthenticated: req.isAuthenticated() #TODO THIS IS ALWAYS FALSE
 
 module.exports = router
