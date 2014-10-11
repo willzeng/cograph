@@ -32,7 +32,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class ConnectionCollection extends ObjectCollection
       model: ConnectionModel
-      url: -> "connections"
+      url: -> "/connections"
 
       initBroadcastCreate: ->
         @socket.on @url()+":create", (objData) =>
@@ -40,7 +40,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class NodeCollection extends ObjectCollection
       model: NodeModel
-      url: -> "nodes"
+      url: -> "/nodes"
 
       initBroadcastDelete: ->
         @socket.on @url()+":delete", (objData) =>
@@ -49,7 +49,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
-      urlRoot: -> "workspace"
+      urlRoot: -> "/workspace"
 
       defaults:
         _id: 0
