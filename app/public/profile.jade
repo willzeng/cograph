@@ -38,4 +38,5 @@ head
         .row
           .col-sm-12
             .document-list
-              
+              for doc in userDocs
+                a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
