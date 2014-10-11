@@ -13,7 +13,7 @@ html(lang="en")
     link(href='/assets/stylesheets/custom.css', rel='stylesheet')  
     link(href="/assets/libs/feedback-bot/src/feedback.css" rel='stylesheet')
   
-    script(type='text/javascript', data-main="main", src="/assets/libs/requirejs/require.js") //loads main.js
+    script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
     script.
       window.prefetch = {};
       window.prefetch.nodes =!{JSON.stringify(nodes)};
