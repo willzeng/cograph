@@ -56,6 +56,11 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         $('.twitter-typeahead').prepend(x)
         $('.tt-dropdown-menu').css('position', 'relative').css('top', 'auto').css('bottom', '5px')
 
+        $('#search-input').on 'keyup', 
+          (e) ->
+            if(e.which != 40 && e.which != 38)
+              $('.tt-suggestion').first().addClass('tt-cursor')
+
         $('#search-input').on 'typeahead:selected',
           (e, sugg, dataset) => @search(sugg)
 
