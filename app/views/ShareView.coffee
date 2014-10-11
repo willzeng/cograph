@@ -12,6 +12,12 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         @updatePublicButton()
         @model.getDocument().on 'change:public', @updatePublicButton, this
 
+        $('#embed-button').popover
+          content: @getEmbed window.location
+
+        @model.on 'navigate', (dest) =>
+          $('#embed-button').data('bs.popover').options.content = @getEmbed dest
+
       saveWorkspace: ->
         @saveDocModal = new Backbone.BootstrapModal(
           content: _.template(saveDocTemplate, {})
@@ -50,3 +56,12 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         doc = @model.getDocument()
         doc.set "public", not doc.get "public"
         doc.save()
+
+      getEmbed: (url) ->
+        """
+        <div style = 'min-width:420;max-width:700'>
+          <iframe src='#{url}' width='100%' height='100%'
+          scrolling='no' frameborder='0' allowfullscreen>
+          </iframe>
+        </div>
+        """

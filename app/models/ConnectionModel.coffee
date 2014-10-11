@@ -1,7 +1,7 @@
 define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'],
 (Backbone, ObjectModel, iobind, iosync, io) ->
   class ConnectionModel extends ObjectModel
-    urlRoot: -> "connection"
+    urlRoot: -> "/connection"
     noIoBind: false
     socket: io.connect('')
 

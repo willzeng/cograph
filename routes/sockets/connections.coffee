@@ -16,21 +16,21 @@ exports.create = (data, callback, socket) ->
           sourceTargetIds = [r._data.data.source,r._data.data.target]
           if _.contains(sourceTargetIds, newConnection.source) and _.contains(sourceTargetIds, newConnection.target)
             alreadyExists = true
-            socket.emit 'connections:block', r._data.data
+            socket.emit '/connections:block', r._data.data
         if not alreadyExists
           source.createRelationshipTo target, 'connection', newConnection, (err, conn) ->
             newConnection._id = conn.id
             conn.data._id = conn.id
             conn.save () -> console.log "saved connection with id", conn.id
-            socket.emit 'connections:create', newConnection
-            socket.broadcast.to(newConnection._docId).emit 'connections:create', newConnection
+            socket.emit '/connections:create', newConnection
+            socket.broadcast.to(newConnection._docId).emit '/connections:create', newConnection
             callback null, newConnection
 
 # READ
 exports.read = (data, callback, socket) ->
   id = data._id
   graphDb.getRelationshipById id, (err, conn) ->
-    socket.emit 'connection:read', conn
+    socket.emit '/connection:read', conn
     callback null, conn
 
 exports.readCollection = (data, callback, socket) ->
@@ -39,7 +39,7 @@ exports.readCollection = (data, callback, socket) ->
   cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
   graphDb.query cypherQuery, {}, (err, results) ->
     connections = (utils.parseCypherResult(connection, 'r') for connection in results)
-    socket.emit 'connections:read', connections
+    socket.emit '/connections:read', connections
     callback null, connections
 
 # UPDATE
@@ -52,8 +52,8 @@ exports.update = (data, callback, socket) ->
     conn.save (err, savedConn) ->
       if err then throw err
       parsed = savedConn._data.data
-      socket.emit 'connection:update', parsed
-      socket.broadcast.to(parsed._docId).emit 'connections:update', parsed
+      socket.emit '/connection:update', parsed
+      socket.broadcast.to(parsed._docId).emit '/connections:update', parsed
       callback null, parsed
 
 # DELETE
@@ -63,6 +63,6 @@ exports.destroy = (data, callback, socket) ->
   graphDb.getRelationshipById id, (err, conn) ->
     conn.delete () ->
       parsed = conn._data.data
-      socket.emit 'connections:delete', true
-      socket.broadcast.to(parsed._docId).emit 'connections:delete', parsed
+      socket.emit '/connections:delete', true
+      socket.broadcast.to(parsed._docId).emit '/connections:delete', parsed
       callback null, parsed

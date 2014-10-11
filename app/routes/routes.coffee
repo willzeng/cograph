@@ -30,6 +30,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         # and /:docId
         pathRegex = /^((?:\/\w+\/document)?\/\d+\/?)(?:.+)?$/
         path = pathRegex.exec window.location.pathname
+        @workspaceModel.root = window.location.origin+path[1]
         Backbone.history.start {pushState: true, root: path[1]}
 
       routes:
@@ -88,6 +89,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @setDoc()
         @searchView.search {value:tag, type:"tag"}
         $('.loading-container').remove()
+
+      navigate: (dest) ->
+        @workspaceModel.trigger 'navigate', dest
+        Backbone.Router.prototype.navigate dest
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

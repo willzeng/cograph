@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: "",
+  baseUrl: "/",
   paths: {
     'jquery': '/assets/libs/jquery/dist/jquery.min',
     'underscore': '/assets/libs/underscore/underscore',
