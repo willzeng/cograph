@@ -11,23 +11,23 @@ nav.navbar.navbar-default(role='navigation')
           
         span.navbar-doc-title
             span.form-group
-              a.public-button.clickable(title="who can see this graph")
-              input#menu-title(type="text" placeholder="Untitled Doc")
-              span.dropdown
-                a.dropdown-toggle(data-toggle='dropdown', href='')
+              a.public-button-display.clickable(title="who can see this graph") 
+              a.dropdown-toggle(data-toggle='dropdown', href='')
+                span#menu-title-display.clickable
+                span.dropdown
                   i.caret
-                  //- if owns else other stuff
-                ul.dropdown-menu
-                  li(role="presentation")
-                    a#workspaces-button(href="" data-toggle="modal") Open View
-                  li(role="presentation")
-                    a#save-workspace-button(href="" data-toggle="modal") Save View
-                  li(role="presentation")
-                    a#share-workspace-button(href="" data-toggle="modal") Share View
-                  li
-                    a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
-                  li 
-                    a#settings-button(href="" data-toggle="modal") Settings
+                    //- if owns else other stuff
+                  ul.dropdown-menu
+                    li(role="presentation")
+                      a#workspaces-button(href="" data-toggle="modal") Open View
+                    li(role="presentation")
+                      a#save-workspace-button(href="" data-toggle="modal") Save View
+                    li(role="presentation")
+                      a#share-workspace-button(href="" data-toggle="modal") Share View
+                    li
+                      a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
+                    li 
+                      a#settings-button(href="" data-toggle="modal") Settings
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right 

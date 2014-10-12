@@ -17,6 +17,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #analytics-button': 'openAnalyticsModal'
         'click #workspaces-button': 'openWorkspacesModal'
         'click #settings-button': 'openSettingsModal'
+        'click .public-button-display': 'openSettingsModal'
 
       initialize: ->
         @model.on "document:change", @render, this
@@ -37,7 +38,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @render()
 
       render: ->
-        $('#menu-title').val @model.getDocument().get('name')
+        $('#menu-title-display').text @model.getDocument().get('name')
 
       newDocumentModal: ->
         @newDocModal = new Backbone.BootstrapModal(

@@ -5,7 +5,8 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
       events:
         'click #save-workspace-button': 'saveWorkspace'
-        'click .public-button': 'togglePublic'
+        'click #public-button-edit': 'toggleEditPublic'
+        'click #public-button-view': 'toggleViewPublic'
         'click #share-workspace-button': 'shareWorkspace'
 
       initialize: ->
@@ -43,11 +44,14 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
       updatePublicButton: ->
         if @model.getDocument().get 'public'
-          $('.public-button').html '<i class="fa fa-globe" title="public"></i>'
+          $('.public-button-display').html '<i class="fa fa-globe" title="public"></i>'
         else
-          $('.public-button').html '<i class="fa fa-lock" title="private"></i>'
+          $('.public-button-display').html '<i class="fa fa-lock" title="private"></i>'
 
-      togglePublic: ->
+      toggleEditPublic: ->
         doc = @model.getDocument()
         doc.set "public", not doc.get "public"
         doc.save()
+
+      toggleViewPublic: ->
+
