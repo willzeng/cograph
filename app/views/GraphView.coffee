@@ -278,10 +278,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               @trigger "node:mouseout", node
               node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
 
-        
-        # node.select('.node-title-body').on 'mouseout', (e) =>
-        #   console.log(d3.event)
-        #   console.log(e)
         # update old and new elements
 
         node.attr('class', 'node')
