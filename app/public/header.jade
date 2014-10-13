@@ -6,45 +6,43 @@ nav.navbar.navbar-default(role='navigation')
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href='http://thecograph.com')
-            img#brand-logo(src="assets/images/logo.svg")
+          a.navbar-brand(href='/')
+            img#brand-logo(src="/assets/images/logo-black.png")
           
         span.navbar-doc-title
-            .form-group
+            span.form-group
               a.public-button.clickable(title="who can see this graph")
-              input#menu-title(type="text" placeholder="Untitled Doc" data-toggle="tooltip" data-placement="bottom" title="Rename Doc")
+              input#menu-title(type="text" placeholder="Untitled Doc")
               span.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')
                   i.caret
                   //- if owns else other stuff
                 ul.dropdown-menu
                   li(role="presentation")
-                    a#workspaces-button(href="", data-toggle="modal", data-target="#workspaces-modal") Open View
+                    a#workspaces-button(href="" data-toggle="modal") Open View
                   li(role="presentation")
-                    a#save-workspace-button Save View
+                    a#save-workspace-button(href="" data-toggle="modal") Save View
                   li(role="presentation")
-                    a#sharing-button Share View
+                    a#share-workspace-button(href="" data-toggle="modal") Share View
                   li
                     a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
-                  
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
             li
-              a#new-doc-button(href="" data-toggle="modal" data-target="#new-doc-modal")
-                i.fa.fa-edit
+              a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
+                | Embed Code
             if isAuthenticated
+              li#newgraph-icon
+                a(href="/new" target="_blank" title="new graph")
+                  img(src="/assets/images/newgraph.png")
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')
                   | #{user.local.name}
                   i.caret
                 ul.dropdown-menu
                   li(role="presentation")
-                    a(href="/") Discover
-                  li(role="presentation")
-                    a(href="/graphs") My Cographs
-                  li(role="presentation")
-                    a(href="/#{user.local.name}") Profile
+                    a(href="/#{user.local.name}") My Cographs
                   li(role="presentation")
                     a(href="/account") Account
                   li

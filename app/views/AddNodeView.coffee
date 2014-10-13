@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel',
-'atwho', 'twittertext', 'elastic'],
-  ($, _, Backbone, WorkspaceModel, NodeModel, atwho, twittertext) ->
+'atwho', 'twittertext', 'jquery-autosize'],
+  ($, _, Backbone, WorkspaceModel, NodeModel, atwho, twittertext, autosize) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
       createdThisSession: 0
@@ -16,13 +16,14 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @colorInput = $('#add-color-container')
         @imageInput = $('#add-image-container')
 
-        @descriptionArea.elastic()
-        @titleArea.elastic() 
+        @descriptionArea.autosize()
 
         # Create color picker
-        _.each(@model.defaultColors, (i, color) =>
+        _.each @model.defaultColors, (i, color) =>
           @colorInput.append('<div class="add-color-item color-circle" style="background-color:'+i+'" data-color="'+color+'"></div>')
-        )
+        @colorArea.css('color', @model.defaultColors["defaultHex"])
+        @colorArea.data('color', @model.defaultColors["defaultHex"])
+
 
         $('.add-color-item').on 'click', (e) =>
           @colorArea.css('color', $(e.currentTarget).css('background-color'))
@@ -37,13 +38,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @colorInput.addClass('hidden')
           @imageInput.toggleClass('hidden')
           @imageInput.focus()
-
-        @titleArea.on 'keydown', (e) =>
-          if e.keyCode == 13 # code for ENTER
-            e.preventDefault()
-            @descriptionArea.focus()          
-
-        @descriptionArea.on 'focus', => @expandAdder()
+         
+        @titleArea.on 'focus', => @expandAdder()
                   
         $('body').on 'click', (e) => 
           if not $('#add').hasClass('contracted') then @resetAdd()
@@ -61,10 +57,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           if keyCode == 13 and !@showingAtWho and !e.shiftKey
             $.when(@addNode()).then =>
               @expandAdder()
-
-        # TAB from description to title
-        @descriptionArea.on 'keydown', (e) =>
-          keyCode = e.keyCode || e.which
+              @titleArea.focus()
           if keyCode == 9 # code for TAB
             e.preventDefault()
             @titleArea.focus()
@@ -103,14 +96,15 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
       resetAdd: () ->
         @imageInput.addClass('hidden')
         @colorInput.addClass('hidden')
-        
         @descriptionArea.atwho 'destroy'
         $('div[id=atwho-container]').remove()
         @titleArea.val('')
+        @imageInput.val('')
         @descriptionArea.val('') 
+        @descriptionArea.trigger('autosize.resize')
         @descriptionArea.trigger('change')
         @titleArea.trigger('change')   
-        $('#add').addClass('contracted')  
+        $('#add').addClass('contracted')
 
       addNode: (e) ->
         if e? then e.preventDefault()
@@ -138,6 +132,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           node.set "tags", twttr.txt.extractHashtags attributes.description
 
           $.when(node.save()).then =>
+            @model.trigger 'saved:node'
             # Create connections to mentioned nodes
             @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
             uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')

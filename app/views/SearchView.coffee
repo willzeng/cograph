@@ -29,38 +29,38 @@ define ['jquery', 'backbone', 'bloodhound', 'typeahead', 'cs!models/WorkspaceMod
         $('#search-input').typeahead(
           hint: true,
           highlight: true,
-          minLength: 1,
+          minLength: 0,
           autoselect: true
         ,
           name: 'node-names',
           source: nodeNameMatcher(@model)
           templates:
-            header: '<span class="search-title">Node Names</span>'
+            empty: ' '
+            header: '<span class="search-title">Nodes</span>'
         ,
           name: 'tags'
           source: findTagMatches
           templates:
-            header: '<span class="search-title">Labels</span>'
+            empty: ' '
+            header: '<span class="search-title">Tags</span>'
         ,
           name: 'conn-names'
           source: connectionNameMatcher(@model)
           templates:
+            empty: ' '
             header: '<span class="search-title">Connections</span>'
         )
 
-        initTop = $(".tt-dropdown-menu").position().top     
-        $('#search-input').on 'input', (event) ->     
-          # timeout allows the dropdown to render to the correct height     
-          setTimeout ->     
-            $input = $(event.target)    
-            $results = $(".tt-dropdown-menu")     
-            height = $results.height()    
-            inputHeight = $input.height()     
-            newTop = initTop - height - inputHeight     
-    
-            $results.css("top", newTop + "px")    
-          , 50
-           
+        # David's Typeahead rage.
+        x = $('.tt-dropdown-menu').remove()
+        $('.twitter-typeahead').prepend(x)
+        $('.tt-dropdown-menu').css('position', 'relative').css('top', 'auto').css('bottom', '5px')
+
+        $('#search-input').on 'keyup', 
+          (e) ->
+            if(e.which != 40 && e.which != 38)
+              $('.tt-suggestion').first().addClass('tt-cursor')
+
         $('#search-input').on 'typeahead:selected',
           (e, sugg, dataset) => @search(sugg)
 

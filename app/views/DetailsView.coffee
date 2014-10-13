@@ -19,7 +19,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       initialize: ->
         @graphView = @attributes.graphView
 
-        @model.on 'conn:clicked', @openDetails, this
+        @model.on 'conn:dblclicked', @openDetails, this
         @model.on 'node:dblclicked', @openDetails, this
         @model.on 'create:connection', @openAndEditConnection, this
         @model.on 'edit:conn', @openDetails, this
@@ -31,18 +31,18 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         workspaceSpokes = @model.getSpokes nodeConnection
         @updateColor @model.defaultColors[nodeConnection.get('color')]
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
-
         @detailsModal = new Backbone.BootstrapModal(
           content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
           animate: false
           showFooter: false
+          title: nodeConnection.get("name")
         ).open()
-        @editNodeConnection()
 
       updateColor: (color) ->
         $('#details-container .panel-heading').css 'background', color
 
       closeDetail: () ->
+        @detailsModal.close()
         @graphView.trigger "node:mouseout"
 
       openAndEditConnection: (conn) ->
@@ -52,6 +52,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       editNodeConnection: ->
         nodeConnection = @currentNC
+
         @nodeConnectionForm = new Backbone.Form(
           model: nodeConnection
           template: _.template(editFormTemplate)

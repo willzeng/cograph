@@ -32,7 +32,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class ConnectionCollection extends ObjectCollection
       model: ConnectionModel
-      url: -> "connections"
+      url: -> "/connections"
 
       initBroadcastCreate: ->
         @socket.on @url()+":create", (objData) =>
@@ -40,7 +40,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class NodeCollection extends ObjectCollection
       model: NodeModel
-      url: -> "nodes"
+      url: -> "/nodes"
 
       initBroadcastDelete: ->
         @socket.on @url()+":delete", (objData) =>
@@ -49,7 +49,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
-      urlRoot: -> "workspace"
+      urlRoot: -> "/workspace"
 
       defaults:
         _id: 0
@@ -58,10 +58,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       selectedColor: '#3498db'
 
       defaultColors:
-          white:'#aaa'
-          black:'#000'
-          red:'#E3A390'
-          yellow:'#F2DB9D'
+          defaultHex: '#000' # not currently functional
+          white: '#aaa'
+          red: '#E3A390'
+          yellow: '#F2DB9D'
           green: '#B3E2B1'
           blue: '#B1CDE2'
           purple: '#E0B4E6'

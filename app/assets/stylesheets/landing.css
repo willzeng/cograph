@@ -1,0 +1,303 @@
+@font-face {
+  font-family: 'Gotham Light';
+  src: url('../fonts/GothamSSm-Light.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/GothamSSm-Light.eot?#iefix') format('embedded-opentype'), 
+       url('../fonts/GothamSSm-Light.woff') format('woff'),
+       url('../fonts/GothamSSm-Light.ttf')  format('truetype');
+}
+@font-face {
+  font-family: 'Gotham';
+  src: url('../fonts/GothamSSm-Medium.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/GothamSSm-Medium.eot?#iefix') format('embedded-opentype'), 
+       url('../fonts/GothamSSm-Medium.woff') format('woff'),
+       url('../fonts/GothamSSm-Medium.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Gotham Thin';
+  src: url('../fonts/Gotham-Thin.otf') format('opentype'),
+       url('../fonts/Gotham-Thin.ttf')  format('truetype');
+}
+.main-content {
+  font-family: 'Gotham Light';
+  padding-top: 20px;
+}
+hr {
+  border-top: 1px solid #ddd;
+}
+body {
+  font-size: 14px;
+}
+body, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Gotham', 'Varela Round', helvetica, sans-serif;
+  font-weight: normal;
+}
+#top h1 {
+  font-family: 'Gotham Light';
+}
+.btn {
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 2px;
+}
+.brand-logo {
+  height: 50px;
+}
+.container {
+  max-width: 1100px;
+}
+.navbar {
+  background: transparent;
+  padding: 0.3em 0;
+  margin: 20px 0;
+  border: 0;
+  font-family: 'Gotham','Varela Round', helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.navbar .navbar-brand {
+  color: #fff;
+  font-weight: bold;
+  font-family: 'Gotham Light';
+  font-size: 30px;
+  text-shadow: 0px 0px 2px #000;
+  letter-spacing: -3px;
+}
+
+.full-size {
+  font-family: 'Gotham Thin', 'Gotham Light';
+}
+
+.navbar-right {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.navbar ul.nav li a {
+  color: #fff;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 1.5em;
+}
+.navbar ul.nav li button {
+  margin: 0.7em 0 0 1em;
+}
+.jumbotron {
+  background: url(../images/noisy_net.png);
+  color: #fff;
+  padding: 2em 0 12em;
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.jumbotron h1 {
+  font-size: 3em;
+  font-weight: normal;
+}
+.jumbotron h2 {
+  font-size: 1.2em;
+  font-weight: normal;
+  line-height: 1.4em;
+  margin-bottom: 1.4em;
+}
+.jumbotron .btn {
+  box-shadow: 1px 1px 3px #000;
+  font-size: 1.2em;
+  font-weight: bold;
+  padding: 0.3em 2.5em 0.5em;
+}
+.jumbotron .btn .glyphicon {
+  margin-left: 0.2em;
+  position: relative;
+  top: 3px;
+}
+.sect-border {
+  border-top: 1px dashed #d6d6d6;
+  border-bottom: 1px dashed #f6f6f6;
+  margin: 2em 8% 2.4em;
+}
+.subhead {
+  color: #000;
+  font-size: 3em;
+  font-weight: bold;
+  text-align: center;
+  margin: 0.3em 0;
+}
+.benefit {
+  margin: 60px 0;
+  text-align: center;
+}
+
+.benefit h3 {
+  text-transform: uppercase;
+  font-size: 20px;
+  color: #333;
+  font-family: 'Gotham Light', sans-serif;
+}
+
+.benefit p, .sizable {
+  font-size: 18px;
+  font-family: 'Gotham Light', sans-serif;
+}
+
+.sizable a {
+  color: inherit;
+}
+
+.benefit .benefit-ball {
+  color: #fff;
+  display: inline-block;
+  line-height: 1em;
+  padding: 0;
+  margin-bottom: 10px;
+}
+.benefit .benefit-ball i {
+  font-size: 30pt;
+  text-align: center;
+  color: #f2e244;
+  vertical-align: bottom;
+}
+.benefit h3 {
+  color: #000;
+  font-size: 2em;
+  font-weight: bold;
+}
+#slideshow {
+  margin: 0.5em 0 1.5em;
+}
+#slideshow .carousel-inner img {
+  background: #000;
+  height: 500px;
+  width: 100%;
+}
+@media screen and (max-width: 768px) {
+  .navbar ul.nav li {
+    text-align: center;
+  }
+  .navbar ul.nav li button {
+    margin: 1em 0;
+  }
+  .jumbotron {
+    font-size: 14px;
+  }
+  .benefit {
+    margin-bottom: 2em;
+  }
+}
+@media screen and (max-width: 480px) {
+  body {
+    font-size: 12px;
+  }
+  .jumbotron {
+    font-size: 12px;
+  }
+  footer .pull-right {
+    display: none;
+  }
+}
+
+.btn {
+  outline: none;
+}
+
+/* neural stuff */
+.dg.ac, #stats {
+  display: none;
+}
+
+#top {
+  background: transparent;
+  color: white;
+}
+
+#canvas-container {
+  overflow: hidden;
+  height: 550px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  padding: 0;
+  margin: 0;
+  z-index: -1;
+}
+
+#canvas-container canvas {
+/*  pointer-events: none;
+*/  top: 0;
+  position: relative;
+  z-index: 1;
+  height: 550px !important;
+  width: 100% !important;
+}
+
+.call-to-action, .jumbotron .btn {
+  margin: 0 10px;
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 200;
+  background: rgba(0,0,0,0.4);
+  border: 2px solid #f2e244;
+  border-radius: 0px;
+  padding: 20px 60px;
+}
+
+#number-hidden {
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+.call-to-action.btn-default {
+  color: white;
+  border: 2px solid #ffa73a;
+
+}
+
+.call-to-demo:hover {
+  background: inherit;
+  color: inherit;
+  border: 1px solid #333;
+}
+
+footer {
+  background: #f2e244;
+  font-size: 20px;
+  margin: 3.5em 0 0;
+  padding: 1.5em 0 0.8em;
+  color: inherit;
+}
+
+footer a {
+  color: inherit;
+}
+
+footer a:hover {
+  color: #222;
+  text-decoration: none;
+  border-bottom: 2px solid white;
+}
+
+.header-titles {
+  text-align: center;
+  margin: 80px 0 40px 0;
+}
+
+.header-secondary {
+  text-align: center;
+}
+
+.call-to-demo {
+  margin: 80px auto;
+  font-size: 24px;
+  background: transparent;
+  border: 1px solid black;
+  color: black;
+  padding: 30px 80px;
+  text-transform: uppercase;
+  font-family: 'Gotham Thin', sans-serif;
+}
+
+
+.brand-logo {
+  position: relative;
+  top: -4px;
+  margin-right: 10px;
+}

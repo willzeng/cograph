@@ -12,7 +12,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       maxConnTextLength: 20
       maxNodeBoxHeight: 100 #4 lines
       nodeBoxWidth: 120
-      maxInfoBoxHeight: 200
+      maxInfoBoxHeight: 207
       infoBoxWidth: 120
 
       initialize: ->
@@ -47,17 +47,29 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         # store the current zoom to undo changes from dragging a node
         @currentZoom = undefined
+        @cancelledDrag = false
         @force.drag()
         .on "dragstart", (d) ->
+          if(d3.event.sourceEvent.target.className.baseVal == "node-info")
+            that.cancelledDrag = true
+            that.force.stop()
+            return
+          else
+            that.cancelledDrag = false
           that.translateLock = true
           that.currentZoom = that.zoom.translate()
         .on "drag", (d) ->
-          d3.select(this).classed("fixed", d.fixed = true)
-          that.trigger "node:drag", d, d3.event
+          if !that.cancelledDrag
+            d3.select(this).classed("fixed", d.fixed = true)
+            that.trigger "node:drag", d, d3.event
+          else
+            that.force.stop()
+
         .on "dragend", (node) =>
-          @trigger "node:dragend", node, d3.event
-          @zoom.translate @currentZoom
-          @translateLock = false
+          if !that.cancelledDrag
+            @trigger "node:dragend", node, d3.event
+            @zoom.translate @currentZoom
+            @translateLock = false
           @force.stop()
 
         $('body').on 'mousemove', (e) =>
@@ -154,9 +166,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # new elements
         connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
-          .on "click", (d) =>
+          .on "dragend", (e) =>
+            d3.event.preventDefault
+          .on "dblclick", (d) =>
             @model.select d
-            @model.trigger "conn:clicked", d
+            @model.trigger "conn:dblclicked", d
           .on "mouseover", (conn)  =>
             @trigger "connection:mouseover", conn
           .on "mouseout", (conn) =>
@@ -172,15 +186,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'connection-text')
         text-group.append("text")
           .attr("text-anchor", "middle")
-        text-group.append("foreignObject")
-          .attr('y', '1')
-          .attr('height', @maxInfoBoxHeight)
-          .attr('width', @infoBoxWidth)
-          .attr('x', '-12')
-          .attr('class', 'connection-info')
-          .append('xhtml:body')
-            .attr('class', 'connection-info-body')
-
+    
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
@@ -224,6 +230,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('y', '-15')
           .attr('width', '20')
           .attr('height', '30')
+          .attr('class', 'node-rectangle clickable')
           .attr('fill', 'transparent')
         nodeText = nodeEnter.append("foreignObject")
           .attr("y", "5")
@@ -233,11 +240,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
           .attr('class', 'node-title-body')
+        nodeInnerTextPad = nodeInnerText.append('div')
+          .attr('class', 'pad')
+        nodeInnerTextSpan = nodeInnerTextPad.append('span')
+          .attr('class', 'node-title-span')
         nodeConnector = nodeEnter.append("circle")
           .attr('r', '5')
           .attr('cx', '-70')
           .attr('cy', '0')
-          .attr('class', 'node-connector')
+          .attr('class', 'node-connector clickable')
           .attr('fill', '#222') 
         nodeInfoText = nodeEnter.append("foreignObject")
           .attr('y', '12')
@@ -251,18 +262,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('height', '50')
           .attr('width', '50')
           .attr('xlink:href', '')
-          .attr('x', '-95')
+          .attr('x', '-105')
           .attr('y', '-25')
           .attr('class', 'node-image')
           .attr('clip-path', 'url(#clipCircle)')
-        
-        nodeRectangle
-          .on "click", (d) =>
-            @model.trigger "node:clicked", d
-        nodeConnector
-          .on "click", (d) =>
-            @model.trigger "node:clicked", d
-        nodeInnerText 
+        node
           .on "click", (d) =>
             @model.trigger "node:clicked", d
         node
@@ -276,7 +280,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             # perhaps setting the foreignobject height dynamically would be better.
             if(!$(d3.event.toElement || d3.event.target).closest('.node').length)
               @trigger "node:mouseout", node
-              node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
+            node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
+          .call(@force.drag())
+
+        nodeInnerTextSpan.on "mouseenter", (node) =>
+          @trigger "node:mouseenter", d3.event, node
 
         # update old and new elements
 
@@ -285,12 +293,16 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
-        node.select('.node-title-body')
+
+        nodeInnerTextSpan
           .html((d) -> _.template(nodeTitle, d))
+          
         node.select('.node-connector')
           .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
+        node.select('.node-title-body')
+          .style("color", (d) => @getColor d)
         node.select('.node-image')
           .attr('xlink:href', (d) -> d.get('image'))
 
@@ -300,7 +312,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             view = that.model.connections.filter( (conn) =>
               return (conn.source.id == d.id || conn.target.id == d.id)
             ).length
-            $(this).text(total-view)
+            diff = total-view
+            $(this).text(diff)
 
         # move the popover info to align with the left of the text
         # construct the node boxes
@@ -335,7 +348,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         tick()
         @force.on "tick", () =>
-          if @drawing then tick()
+          if @drawing && !@cancelledDrag then tick()
 
       rightClicked: (e) ->
         e.preventDefault()
