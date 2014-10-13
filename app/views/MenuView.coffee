@@ -65,6 +65,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           else
             window.open '/'+newDocument.get('_id'), "_blank"
 
+      # NOTE: THIS IS CURRENTLY UNUSED
       openDocumentModal: ->
         user = window.user
         documents = new DocumentCollection
