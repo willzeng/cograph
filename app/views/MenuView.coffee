@@ -24,17 +24,6 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @model.getDocument().on 'change', @render, this
         @menuTitle = $('#menu-title')
 
-        @menuTitle.tooltip({animation:true})
-        @menuTitle.click( ()->
-           $(this).select()
-        )
-        @menuTitle.bind 'blur', () =>
-          @model.getDocument().set 'name', @menuTitle.val()
-          @model.getDocument().save()
-        @menuTitle.keydown( (e) =>
-          if(e.which == 13)
-            @menuTitle.trigger 'blur'
-        )
         @render()
 
       render: ->
@@ -76,6 +65,16 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           animate: true
           showFooter: false
         ).open()
+        @menuTitle.click( ()->
+           $(this).select()
+        )
+        @menuTitle.bind 'blur', () =>
+          @model.getDocument().set 'name', @menuTitle.val()
+          @model.getDocument().save()
+        @menuTitle.keydown( (e) =>
+          if(e.which == 13)
+            @menuTitle.trigger 'blur'
+        )
 
       openDocumentModal: ->
         user = window.user

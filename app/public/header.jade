@@ -14,15 +14,14 @@ nav.navbar.navbar-default(role='navigation')
               a.public-button-display.clickable(title="who can see this graph") 
               a.dropdown-toggle(data-toggle='dropdown', href='')
                 span#menu-title-display.clickable
+                i.caret
                 span.dropdown
-                  i.caret
-                    //- if owns else other stuff
                   ul.dropdown-menu
-                    li(role="presentation")
+                    li
                       a#workspaces-button(href="" data-toggle="modal") Open View
-                    li(role="presentation")
+                    li
                       a#save-workspace-button(href="" data-toggle="modal") Save View
-                    li(role="presentation")
+                    li
                       a#share-workspace-button(href="" data-toggle="modal") Share View
                     li
                       a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
