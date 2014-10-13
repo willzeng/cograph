@@ -28,6 +28,7 @@ router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, re
     if request.isAuthenticated()
       prefetched.isAuthenticated = true
       prefetched.user = request.user
+      prefetched.isOwner = 
     else
       prefetched.isAuthenticated = false
       prefetched.user = {}

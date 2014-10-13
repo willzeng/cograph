@@ -22,7 +22,7 @@ nav.navbar.navbar-default(role='navigation')
                     li
                       a#save-workspace-button(href="" data-toggle="modal") Save View
                     li
-                      a#share-workspace-button(href="" data-toggle="modal") Share View
+                      a#share-workspace-button(href="" data-toggle="modal") Share
                     li
                       a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
                     li 
@@ -36,7 +36,7 @@ nav.navbar.navbar-default(role='navigation')
                   img(src="assets/images/newgraph.png")
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')
-                  | #{user.local.name}
+                  | @#{user.local.name}
                   i.caret
                 ul.dropdown-menu
                   li(role="presentation")
