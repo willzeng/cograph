@@ -101,9 +101,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @titleArea.val('')
         @imageInput.val('')
         @descriptionArea.val('') 
+        @descriptionArea.trigger('autosize.resize')
         @descriptionArea.trigger('change')
         @titleArea.trigger('change')   
-        $('#add').addClass('contracted')  
+        $('#add').addClass('contracted')
 
       addNode: (e) ->
         if e? then e.preventDefault()
