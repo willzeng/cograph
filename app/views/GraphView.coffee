@@ -77,7 +77,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @gridViewOn = false
         @updateForceFlag = false
         @grid = {}
-        @grid.spacing = [225,0] # Horizontal and Vertical node spacing
+        @grid.spacing = [225,20] # Horizontal and Vertical node spacing
         @grid.padding = [350,0] # Left and top padding respectively
         @grid.colYs = [] #top margin
 
@@ -227,6 +227,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .data(nodes, (node) -> node.cid)
         # new elements
         nodeEnter = node.enter().append("g")
+          .attr('data-nodeid', (d) -> d.get('_id'))
         nodeRectangle = nodeEnter.append('rect')
           .attr('x', '-80')
           .attr('y', '-15')
@@ -286,7 +287,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('selected', (d) -> d.get('selected'))
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .call(@force.drag)
-          .attr('data-id', (d) -> d.get('id'))
+          
         node.select('.node-title-body')
           .html((d) -> _.template(nodeTitle, d))
         node.select('.node-connector')
@@ -294,7 +295,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
 
-        console.log(node)
 
         # move the popover info to align with the left of the text
         # construct the node boxes
@@ -388,14 +388,18 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
       placeInGrid: (d, i) ->
         columnTotal = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
         columnNum = (i%columnTotal)
+
+        domEl = $('[data-nodeid="'+d.get('_id')+'"]').eq(0)
+        domElHeight = Math.min(@maxInfoBoxHeight, domEl.find('.node-info-body').height()) + Math.min(@maxNodeBoxHeight, domEl.find('.node-title-body').height())
+
         gridX = columnNum*@grid.spacing[0]+@grid.padding[0]-@zoom.translate()[0]
-        tempY =  @grid.colYs[columnNum] || 100
-        gridY = tempY+@grid.spacing[1]
+        tempY =  @grid.colYs[columnNum] || 100 + @grid.spacing[1]
+        gridY = tempY+@grid.spacing[1]+domElHeight
         @grid.colYs[columnNum] = gridY
         # if the node has no force graph pos then give it a grid pos
         if !(d.x) then d.x = gridX
-        if !(d.y) then d.y = gridY-@zoom.translate()[1]
-        {x:gridX, y:gridY}
+        if !(d.y) then d.y = tempY-@zoom.translate()[1]
+        {x:gridX, y:tempY}
 
       rightClicked: (e) ->
         e.preventDefault()
