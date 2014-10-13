@@ -25,12 +25,16 @@ head
       if ownProfile
         .row
           .col-sm-6
-            h3 My Docs
+            h3 My Cographs
             .document-list
               for doc in userDocs
                 a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+              if userDocs.length == 0
+                span
+                  | You have no cographs. 
+                  a(href="/new") Create a new cograph
           .col-sm-6
-            h3 Public Docs
+            h3 Public Cographs
             .document-list
               for doc in docs
                 a.list-group-item(href="#{doc.createdBy}/document/#{doc.id}" target="_blank") #{doc.name}
