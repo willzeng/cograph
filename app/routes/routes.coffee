@@ -55,12 +55,12 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           else
             nodeFilter = (node) -> _.contains w.nodes, node._id
             connFilter = (conn) -> _.contains w.connections, conn._id
-            @loadGraph nodeFilter, connFilter
+            @loadGraph nodeFilter, connFilter, JSON.parse(w.nodePositions)
             @workspaceModel.filterModel.set 'node_tags', w.nodeTags
 
       # Load a graph based on preset filters
       # Defaults to loading the whole prefetch
-      loadGraph: (nodeFilter, connFilter) ->
+      loadGraph: (nodeFilter, connFilter, nodePositions) ->
         if !(nodeFilter?) then nodeFilter = (x) -> true
         if !(connFilter?) then connFilter = (x) -> true
 
@@ -71,7 +71,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           workspaceConns = _.filter window.prefetch.connections, connFilter
           @workspaceModel.connections.set workspaceConns, {silent:true}
 
-        @workspaceModel.trigger "init"
+        if nodePositions?
+          @workspaceModel.trigger "init:fixed", nodePositions
+        else
+          @workspaceModel.trigger "init"
         $('.loading-container').remove()
 
       setDoc: ->

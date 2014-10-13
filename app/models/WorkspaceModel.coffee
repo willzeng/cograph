@@ -212,7 +212,15 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         nodes = @nodes.pluck "_id"
         connIds = @connections.pluck "_id"
         docId = @getDocument().get "_id"
-        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this.get('_id'), _docId:docId, name:this.get('name')}
+        nodePositions = ({x:n.x,y:n.y,_id:n.get('_id')} for n in @nodes.models)
+        serializedWorkspace =
+          nodes: nodes
+          connections: connIds
+          nodeTags: @filterModel.get('node_tags')
+          _id: this.get('_id')
+          _docId: docId
+          name: this.get('name')
+          nodePositions: JSON.stringify(nodePositions)
 
       getWorkspace: (callback) ->
         @sync "read", this,
