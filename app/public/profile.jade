@@ -37,10 +37,14 @@ head
             h3 Public Cographs
             .document-list
               for doc in docs
-                a.list-group-item(href="#{doc.createdBy}/document/#{doc.id}" target="_blank") #{doc.name}
+                a.list-group-item(href="#{doc.createdBy}/document/#{doc.id}" target="_blank")
+                  | #{doc.name}
+                  small.pull-right.text-muted by @#{doc.createdBy}
       else
         .row
           .col-sm-12
             .document-list
               for doc in userDocs
-                a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+                a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank")
+                  | #{doc.name}
+                  small.pull-right.text-muted by @#{doc.createdBy}
