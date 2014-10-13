@@ -11,6 +11,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
       initialize: ->
         @updatePublicButton()
         @model.getDocument().on 'change:public', @updatePublicButton, this
+        @showingShareButtons = false
 
         $('#embed-button').popover
           content: @getEmbed window.location
@@ -19,7 +20,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
           ui:
             flyout: 'bottom right'
         $('.entypo-export').hide()
-        $('#sharing-toggle').click -> $('.entypo-export').trigger 'click'
+        $('#sharing-toggle').click =>
+          $('.entypo-export').trigger 'click'
+          @showingShareButtons = !@showingShareButtons
+
+        $('#graph').click => if @showingShareButtons then $('#sharing-toggle').trigger 'click'
 
         @model.on 'navigate', (dest) =>
           $('#embed-button').data('bs.popover').options.content = @getEmbed dest
