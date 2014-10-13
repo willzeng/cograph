@@ -15,6 +15,12 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         $('#embed-button').popover
           content: @getEmbed window.location
 
+        @share = new shareButton "#phantom-share",
+          ui:
+            flyout: 'bottom right'
+        $('.entypo-export').hide()
+        $('#sharing-toggle').click -> $('.entypo-export').trigger 'click'
+
         @model.on 'navigate', (dest) =>
           $('#embed-button').data('bs.popover').options.content = @getEmbed dest
 
