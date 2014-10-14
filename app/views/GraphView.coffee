@@ -73,7 +73,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @force.stop()
 
         $('body').on 'mousemove', (e) =>
-          if($(e.target).is('svg'))
+          if($(e.target).is('svg') || $(e.target).is('foreignObject'))
             @trigger "node:mouseout", e, e
 
         @svg = d3.select(@el).append("svg:svg")
@@ -186,15 +186,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'connection-text')
         text-group.append("text")
           .attr("text-anchor", "middle")
-        text-group.append("foreignObject")
-          .attr('y', '1')
-          .attr('height', @maxInfoBoxHeight)
-          .attr('width', @infoBoxWidth)
-          .attr('x', '-12')
-          .attr('class', 'connection-info')
-          .append('xhtml:body')
-            .attr('class', 'connection-info-body')
-
+    
         # old and new elements
         connection.attr("class", "connection")
           .classed('dim', (d) -> d.get('dim'))
@@ -207,12 +199,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               line.attr("marker-end", "url(#arrowhead)")
             
         connection.select("text")
-          .text((d) =>
-            if(d.get("name").length < @maxConnTextLength)
-              return d.get("name")
+          .text (d) =>
+            if d.get("name").length < @maxConnTextLength
+              d.get("name")
             else 
-              return d.get("name").substring(0,@maxConnTextLength-3)+"..."
-        )
+              d.get("name").substring(0,@maxConnTextLength-3)+"..."
         connection.select('.connection-info-body')
           .html((d) -> _.template(popover, d))
 
@@ -286,7 +277,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             that.trigger('node:right-click', node, d3.event)
           .on "mouseout", (node) =>
             # perhaps setting the foreignobject height dynamically would be better.
-            if(!$(d3.event.toElement).closest('.node').length)
+            if(!$(d3.event.toElement || d3.event.target).closest('.node').length)
               @trigger "node:mouseout", node
             node.fixed &= ~4 # unset the extra d3 fixed variable in the third bit of fixed
           .call(@force.drag())
