@@ -19,6 +19,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         that = this
         @drawing = true
         @model.on 'init', @backgroundRender, this
+        @model.on 'init:fixed', @loadForce, this
         @model.nodes.on 'add remove', @updateForceGraph, this
         @model.connections.on 'add remove', @updateForceGraph, this
         @model.nodes.on 'change', @updateDetails, this
@@ -118,13 +119,26 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               when 40 #down arrow
                 @translateTo [(@zoom.translate()[0]),(@zoom.translate()[1]) - (100 * @zoom.scale())]
 
-      loadForce: ->
+      loadForce: (options) ->
         nodes = @model.nodes.models
         connections = @model.connections.models
         _.each connections, (c) =>
           c.source = @model.getSourceOf c
           c.target = @model.getTargetOf c
-        @force.nodes(nodes).links(connections).start()
+        if options? and options.zoom?
+          @zoom.scale options.zoom
+          @zoom.translate options.translate
+          @workspace.transition().attr "transform", "translate(#{options.translate}) scale(#{options.zoom})"
+        if options? and options.nodePositions?
+          for n in nodes
+            position = tn for tn in options.nodePositions when tn._id is n.get('_id')
+            n.x = position.x
+            n.y = position.y
+            n.fixed = true
+          @force.nodes(nodes).links(connections).start()
+          @updateDetails()
+        else
+          @force.nodes(nodes).links(connections).start()
 
       backgroundRender: ->
         @loadForce()
