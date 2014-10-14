@@ -4,26 +4,26 @@
 <a class="public-button-view clickable" title="who can see this graph"></a>
 <div class="btn-group btn-group-justified">
   <div class="btn-group">
-    <button type="button" class="btn btn-default">Anyone</button>
+    <button type="button" data-type="2" class="btn <%=canPublicView == 2 ? 'selected' : ''%> btn-default public-button-view">Anyone</button>
   </div>
   <div class="btn-group">
-    <button type="button" class="btn btn-default">Anyone with the link</button>
+    <button type="button" data-type="1" class="btn <%=canPublicView == 1 ? 'selected' : ''%> btn-default public-button-view">Anyone with the link</button>
   </div>
   <div class="btn-group">
-    <button type="button" class="btn btn-default">Only me</button>
+    <button type="button" data-type="0" class="btn <%=canPublicView == 0 ? 'selected' : ''%> btn-default public-button-view">Only me</button>
   </div>
 </div>
 <h6>Who can edit it</h6>
 <a class="public-button-edit clickable" title="who can see this graph"></a>
 <div class="btn-group btn-group-justified">
   <div class="btn-group">
-    <button type="button" class="btn btn-default">Anyone</button>
+    <button type="button" data-type="2" class="btn btn-default public-button-edit">Anyone</button>
   </div>
   <div class="btn-group">
-    <button type="button" class="btn btn-default">Anyone with the link</button>
+    <button type="button" data-type="1" class="btn btn-default public-button-edit">Anyone with the link</button>
   </div>
   <div class="btn-group">
-    <button type="button" class="btn btn-default">Only me</button>
+    <button type="button" data-type="0" class="btn btn-default public-button-edit">Only me</button>
   </div>
 </div>
 <br/>

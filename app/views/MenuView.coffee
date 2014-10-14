@@ -58,14 +58,16 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             window.open '/'+newDocument.get('_id'), "_blank"
 
       openSettingsModal: ->
-        name = @model.getDocument().get("name")
-        isPublic = @model.getDocument().get("public")
-        @openSettingsModal = new Backbone.BootstrapModal(
-          content: _.template(openSettingsTemplate, {name:name, isPublic:isPublic})
-          title: "Graph Settings"
-          animate: true
-          showFooter: false
-        ).open()
+        if($('.public-button-display').hasClass('clickable'))
+          name = @model.getDocument().get("name")
+          canPublicView = @model.getDocument().get("publicView")
+          canPublicEdit = @model.getDocument().get("publicEdit")
+          @openSettingsModal = new Backbone.BootstrapModal(
+            content: _.template(openSettingsTemplate, {name:name, canPublicView:canPublicView, canPublicEdit:canPublicEdit})
+            title: "Graph Settings"
+            animate: true
+            showFooter: false
+          ).open()
 
       saveSettings: ->
         @model.getDocument().set 'name', $('#menu-title').val()

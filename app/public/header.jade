@@ -11,7 +11,10 @@ nav.navbar.navbar-default(role='navigation')
           
         span.navbar-doc-title
           span.dropdown
-            a.public-button-display.clickable(title="who can see this graph") 
+            if isOwner
+              a.public-button-display.clickable(title="who can see this graph") 
+            else 
+              span.public-button-display(title="who can see this graph") 
             a.dropdown-toggle.clickable(data-toggle='dropdown' id="graph-title")
               span#menu-title-display
               i.caret
@@ -32,10 +35,11 @@ nav.navbar.navbar-default(role='navigation')
                 a#analytics-button(href="" data-toggle="modal")
                   span Stats
                   i.fa.fa-signal.pull-right
-              li 
-                a#settings-button(href="" data-toggle="modal")
-                  span Settings
-                  i.fa.fa-cog.pull-right
+              if isOwner
+                li 
+                  a#settings-button(href="" data-toggle="modal")
+                    span Settings
+                    i.fa.fa-cog.pull-right
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right 

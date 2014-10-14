@@ -9,8 +9,8 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       name: 'Untitled'
       _id: -1
       workspaces: []
-      public: false #anyone can view
-      publicEdit: false #anyone can edit
+      publicView: 0 # 0: noone, 1: link only, 2: anyone
+      publicEdit: 0 # 0: noone, 1: link only, 2: anyone
       createdBy: ''
 
     initialize: ->
@@ -31,7 +31,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       @get(@idAttribute) < 0
 
     serialize: ->
-      {name:@get('name'), _id:@get('_id'), public: @get('public'), publicEdit: @get('publicEdit'), createdBy: @get('createdBy')}
+      {name:@get('name'), _id:@get('_id'), publicView: @get('publicView'), publicEdit: @get('publicEdit'), createdBy: @get('createdBy')}
 
     sync: (method, model, options) ->
       options = options || {}

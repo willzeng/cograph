@@ -25,14 +25,23 @@ router.get '/new', utils.isLoggedIn, (request, response) ->
 router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, response) ->
   request.params.id = [request.params[1]]
   documents.prefetch request, response, (prefetched) ->
+    console.log(request)
+    console.log(prefetched)
     if request.isAuthenticated()
       prefetched.isAuthenticated = true
       prefetched.user = request.user
-      prefetched.isOwner = 
+      if prefetched.theDocument.createdBy
+        prefetched.isOwner = request.user.local.nameLower is (prefetched.theDocument.createdBy).toLowerCase()
+      else
+        prefetched.isOwner = false
     else
       prefetched.isAuthenticated = false
       prefetched.user = {}
-    response.render 'index.jade', prefetched
+      prefetched.isOwner = false
+    if(prefetched.public || prefetched.isOwner)
+      response.render 'index.jade', prefetched
+    else
+      
 
 router.get /^\/mobile\/(\d*)$/, (request, response) ->
   response.render('mobile.jade')
