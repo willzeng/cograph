@@ -10,23 +10,32 @@ nav.navbar.navbar-default(role='navigation')
             img#brand-logo(src="assets/images/logo-black.png")
           
         span.navbar-doc-title
-            span.form-group
-              a.public-button-display.clickable(title="who can see this graph") 
-              a.dropdown-toggle(data-toggle='dropdown', href='')
-                span#menu-title-display.clickable
-                i.caret
-                span.dropdown
-                  ul.dropdown-menu
-                    li
-                      a#workspaces-button(href="" data-toggle="modal") Open View
-                    li
-                      a#save-workspace-button(href="" data-toggle="modal") Save View
-                    li
-                      a#share-workspace-button(href="" data-toggle="modal") Share
-                    li
-                      a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
-                    li 
-                      a#settings-button(href="" data-toggle="modal") Settings
+          span.dropdown
+            a.public-button-display.clickable(title="who can see this graph") 
+            a.dropdown-toggle.clickable(data-toggle='dropdown' id="graph-title")
+              span#menu-title-display
+              i.caret
+            ul.dropdown-menu#menu-title-dropdown(aria-labelledby="graph-title")
+              li
+                a#workspaces-button(href="" data-toggle="modal")
+                  span Open View
+                  i.fa.fa-folder-open-o.pull-right
+              li
+                a#save-workspace-button(href="" data-toggle="modal")
+                  span Save View
+                  i.fa.fa-save.pull-right
+              li
+                a#share-workspace-button(href="" data-toggle="modal")
+                  span Share
+                  i.fa.fa-share-alt.pull-right
+              li
+                a#analytics-button(href="" data-toggle="modal")
+                  span Stats
+                  i.fa.fa-signal.pull-right
+              li 
+                a#settings-button(href="" data-toggle="modal")
+                  span Settings
+                  i.fa.fa-cog.pull-right
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right 

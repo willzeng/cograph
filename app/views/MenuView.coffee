@@ -18,16 +18,17 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #workspaces-button': 'openWorkspacesModal'
         'click #settings-button': 'openSettingsModal'
         'click .public-button-display': 'openSettingsModal'
+        'click #save-graph-settings': 'saveSettings'
 
       initialize: ->
         @model.on "document:change", @render, this
         @model.getDocument().on 'change', @render, this
-        @menuTitle = $('#menu-title')
+        
 
         @render()
 
       render: ->
-        $('#menu-title-display').text @model.getDocument().get('name')
+        @updateTitle()
 
       newDocumentModal: ->
         @newDocModal = new Backbone.BootstrapModal(
@@ -59,22 +60,21 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       openSettingsModal: ->
         name = @model.getDocument().get("name")
         isPublic = @model.getDocument().get("public")
-        modal = new Backbone.BootstrapModal(
+        @openSettingsModal = new Backbone.BootstrapModal(
           content: _.template(openSettingsTemplate, {name:name, isPublic:isPublic})
           title: "Graph Settings"
           animate: true
           showFooter: false
         ).open()
-        @menuTitle.click( ()->
-           $(this).select()
-        )
-        @menuTitle.bind 'blur', () =>
-          @model.getDocument().set 'name', @menuTitle.val()
-          @model.getDocument().save()
-        @menuTitle.keydown( (e) =>
-          if(e.which == 13)
-            @menuTitle.trigger 'blur'
-        )
+
+      saveSettings: ->
+        @model.getDocument().set 'name', $('#menu-title').val()
+        @model.getDocument().save()
+        @openSettingsModal.close()
+        @updateTitle()
+
+      updateTitle: ->
+        $('#menu-title-display').text @model.getDocument().get('name')
 
       openDocumentModal: ->
         user = window.user
