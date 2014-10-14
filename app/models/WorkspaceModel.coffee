@@ -221,6 +221,8 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
           _docId: docId
           name: this.get('name')
           nodePositions: JSON.stringify(nodePositions)
+          zoom: this.get('zoom')
+          translate: this.get('translate')
 
       getWorkspace: (callback) ->
         @sync "read", this,

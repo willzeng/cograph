@@ -9,6 +9,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         'click #share-workspace-button': 'shareWorkspace'
 
       initialize: ->
+        @graphView = @attributes.graphView
         @updatePublicButton()
         @model.getDocument().on 'change:public', @updatePublicButton, this
 
@@ -28,6 +29,9 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
         @saveDocModal.on "shown", () ->
           $('#saveDocName').focus()
+
+        @model.set 'zoom', @graphView.zoom.scale()
+        @model.set 'translate', @graphView.zoom.translate()
 
         $('#save-doc-form', @saveDocModal.$el).submit () =>
           @model.sync "create", @model,

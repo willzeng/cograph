@@ -14,9 +14,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
-        @shareView = new ShareView model: @workspaceModel
+        @shareView = new ShareView {model: @workspaceModel, attributes: {graphView: @graphView}}
         @feedbackView = new FeedbackView
-        
+
         @shareView.on "save:workspace", (workspaceId) => @navigate "view/"+workspaceId
         @graphView.on "tag:click", (tag) =>
           @workspaceModel.filterModel.set "node_tags", [tag]
@@ -55,12 +55,12 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           else
             nodeFilter = (node) -> _.contains w.nodes, node._id
             connFilter = (conn) -> _.contains w.connections, conn._id
-            @loadGraph nodeFilter, connFilter, JSON.parse(w.nodePositions)
+            @loadGraph nodeFilter, connFilter, JSON.parse(w.nodePositions), w.zoom, w.translate
             @workspaceModel.filterModel.set 'node_tags', w.nodeTags
 
       # Load a graph based on preset filters
       # Defaults to loading the whole prefetch
-      loadGraph: (nodeFilter, connFilter, nodePositions) ->
+      loadGraph: (nodeFilter, connFilter, nodePositions, zoom, translate) ->
         if !(nodeFilter?) then nodeFilter = (x) -> true
         if !(connFilter?) then connFilter = (x) -> true
 
@@ -72,7 +72,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           @workspaceModel.connections.set workspaceConns, {silent:true}
 
         if nodePositions?
-          @workspaceModel.trigger "init:fixed", nodePositions
+          @workspaceModel.trigger "init:fixed", {nodePositions:nodePositions, zoom:zoom, translate:translate}
         else
           @workspaceModel.trigger "init"
         $('.loading-container').remove()
