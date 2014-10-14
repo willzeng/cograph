@@ -199,12 +199,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               line.attr("marker-end", "url(#arrowhead)")
             
         connection.select("text")
-          .text((d) =>
-            if(d.get("name").length < @maxConnTextLength)
-              return d.get("name")
+          .text (d) =>
+            if d.get("name").length < @maxConnTextLength
+              d.get("name")
             else 
-              return d.get("name").substring(0,@maxConnTextLength-3)+"..."
-          )
+              d.get("name").substring(0,@maxConnTextLength-3)+"..."
         connection.select('.connection-info-body')
           .html((d) -> _.template(popover, d))
 
