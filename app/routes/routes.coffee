@@ -55,7 +55,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           else
             nodeFilter = (node) -> _.contains w.nodes, node._id
             connFilter = (conn) -> _.contains w.connections, conn._id
-            @loadGraph nodeFilter, connFilter, JSON.parse(w.nodePositions), w.zoom, w.translate
+            if w.zoom?
+              @loadGraph nodeFilter, connFilter, JSON.parse(w.nodePositions), w.zoom, w.translate
+            else
+              @loadGraph nodeFilter, connFilter
             @workspaceModel.filterModel.set 'node_tags', w.nodeTags
 
       # Load a graph based on preset filters

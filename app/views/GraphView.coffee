@@ -125,11 +125,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         _.each connections, (c) =>
           c.source = @model.getSourceOf c
           c.target = @model.getTargetOf c
-        if options.zoom?
+        if options? and options.zoom?
           @zoom.scale options.zoom
           @zoom.translate options.translate
           @workspace.transition().attr "transform", "translate(#{options.translate}) scale(#{options.zoom})"
-        if options.nodePositions?
+        if options? and options.nodePositions?
           for n in nodes
             position = tn for tn in options.nodePositions when tn._id is n.get('_id')
             n.x = position.x
