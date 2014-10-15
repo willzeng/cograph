@@ -111,7 +111,7 @@ router.get /^\/(\w+)$/, (req, res) ->
             shownDocs = privateDocs
             ownProfile = req.user.local.name is profiledUser.local.name
           else # otherwise show only their public documents
-            shownDocs = (d for d in privateDocs when d.public is true)
+            shownDocs = (d for d in privateDocs when d.publicView is 2)
             ownProfile = false
           res.render "profile.jade",
             ownProfile: ownProfile  # checks to see if you are looking at your own profile

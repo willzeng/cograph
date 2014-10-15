@@ -21,6 +21,8 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #save-graph-settings': 'saveSettings'
         'click .public-button-view': 'publicViewChange'
         'click .public-button-edit': 'publicEditChange'
+        'click #save-workspace-button': 'saveWorkspace'
+
 
       initialize: ->
         @model.on "document:change", @render, this
@@ -90,8 +92,29 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
 
       updateTitle: ->
         $('#menu-title-display').text @model.getDocument().get('name')
-        $('#navbar-doc-title').css('left', '50%').css('left', '-='+$("#navbar-doc-title").width()/2+'px')
+        $('.navbar-doc-title').css('left', 'calc(50% - '+$(".navbar-doc-title").width()/2+'px')
         #TODO
+
+      saveWorkspace: ->
+        @saveDocModal = new Backbone.BootstrapModal(
+          content: _.template(saveDocTemplate, {})
+          title: "Save View"
+          animate: true
+          showFooter: false
+        ).open()
+
+        @saveDocModal.on "shown", () ->
+          $('#saveDocName').focus()
+          $("#save-doc-form").submit (e) ->
+            false
+
+        $('#save-doc-form', @saveDocModal.$el).submit () =>
+          @model.sync "create", @model,
+            success: (savedModel) => 
+              @trigger "save:workspace", savedModel._id
+              @model.set 'name', $('#saveDocName').val()
+              @model.sync "update", @model
+          @saveDocModal.close()
 
       openDocumentModal: ->
         user = window.user
