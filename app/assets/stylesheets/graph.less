@@ -4,7 +4,7 @@
 @node-color: white;
 @connection-color: black;
 @stroke-color: black;
-@selected-color: #74DDFC;
+@selected-color: rgb(44, 147, 255);
 @selected-nodetext-color: white;
 @fixed-color: orange;
 @text-color: #333;
@@ -407,10 +407,18 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   overflow-y: scroll;
 }
 
+// NAV
+
 .navbar-doc-title {
   position: absolute;
   top: 13px;
   left: ~"calc(50% - 50px)";
+}
+
+.public-button-view.selected, .public-button-edit.selected {
+  background: @selected-color;
+  color: white;
+  font-weight: bold;
 }
 
 .clickable {

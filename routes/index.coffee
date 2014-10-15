@@ -25,8 +25,6 @@ router.get '/new', utils.isLoggedIn, (request, response) ->
 router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, response) ->
   request.params.id = [request.params[1]]
   documents.prefetch request, response, (prefetched) ->
-    console.log(request)
-    console.log(prefetched)
     if request.isAuthenticated()
       prefetched.isAuthenticated = true
       prefetched.user = request.user
@@ -38,10 +36,12 @@ router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, re
       prefetched.isAuthenticated = false
       prefetched.user = {}
       prefetched.isOwner = false
-    if(prefetched.public || prefetched.isOwner)
+    if(prefetched.theDocument.publicEdit != 0 || prefetched.isOwner)
       response.render 'index.jade', prefetched
+    else if(prefetched.theDocument.publicView != 0)
+      response.render 'index-view-only.jade', prefetched
     else
-      
+      response.render 'errors/missingDocument.jade'
 
 router.get /^\/mobile\/(\d*)$/, (request, response) ->
   response.render('mobile.jade')

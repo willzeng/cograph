@@ -19,12 +19,12 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #settings-button': 'openSettingsModal'
         'click .public-button-display': 'openSettingsModal'
         'click #save-graph-settings': 'saveSettings'
+        'click .public-button-view': 'publicViewChange'
+        'click .public-button-edit': 'publicEditChange'
 
       initialize: ->
         @model.on "document:change", @render, this
         @model.getDocument().on 'change', @render, this
-        
-
         @render()
 
       render: ->
@@ -58,7 +58,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             window.open '/'+newDocument.get('_id'), "_blank"
 
       openSettingsModal: ->
-        if($('.public-button-display').hasClass('clickable'))
+        if($('.public-button-display').hasClass('clickable')) #isOwner
           name = @model.getDocument().get("name")
           canPublicView = @model.getDocument().get("publicView")
           canPublicEdit = @model.getDocument().get("publicEdit")
@@ -69,14 +69,29 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             showFooter: false
           ).open()
 
+      publicViewChange: (e) ->
+        $('.public-button-view').removeClass('selected')
+        $(e.currentTarget).addClass('selected')
+
+      publicEditChange: (e) ->
+        $('.public-button-edit').removeClass('selected')
+        $(e.currentTarget).addClass('selected')
+
       saveSettings: ->
-        @model.getDocument().set 'name', $('#menu-title').val()
-        @model.getDocument().save()
+        doc = @model.getDocument()
+        doc.set 'name', $('#menu-title').val()
+        newViewState = $('.public-button-view.selected').data('type')
+        newEditState = $('.public-button-edit.selected').data('type')
+        doc.set "publicView", newViewState
+        doc.set "publicEdit", newEditState
+        doc.save()
         @openSettingsModal.close()
         @updateTitle()
 
       updateTitle: ->
         $('#menu-title-display').text @model.getDocument().get('name')
+        $('#navbar-doc-title').css('left', '50%').css('left', '-='+$("#navbar-doc-title").width()/2+'px')
+        #TODO
 
       openDocumentModal: ->
         user = window.user
