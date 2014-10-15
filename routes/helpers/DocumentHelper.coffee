@@ -26,7 +26,7 @@ class DocumentHelper
   # Gets all the public documents
   getAll: (callback) ->
     docLabel = '_document'
-    cypherQuery = "MATCH (n:#{docLabel}) WHERE n.public=true return n;"
+    cypherQuery = "MATCH (n:#{docLabel}) WHERE n.publicView=2 return n;"
     params = {}
     @graphDb.query cypherQuery, params, (err, results) ->
       if err then throw err

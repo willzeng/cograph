@@ -116,7 +116,7 @@ router.get /^\/(\w+)$/, (req, res) ->
           res.render "profile.jade",
             ownProfile: ownProfile  # checks to see if you are looking at your own profile
             user: profiledUser      # get the user out of session and pass to template
-            docs: publicDocs        # prefetch the list of document names for opening
+            docs: publicDocs        # prefetch the list of document names for opening (with public = 2)
             userDocs: shownDocs     # prefetch the users private documents
             isAuthenticated: req.isAuthenticated() #TODO THIS IS ALWAYS FALSE
 

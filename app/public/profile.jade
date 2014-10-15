@@ -7,7 +7,8 @@ head
   link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
   link(href='/assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
   link(href='/assets/stylesheets/general.css', rel='stylesheet')  
-  link(href='/assets/stylesheets/nav.css', rel='stylesheet')  
+  link(href='/assets/stylesheets/nav.css', rel='stylesheet')
+  link(href='/assets/stylesheets/profile.css', rel='stylesheet')   
   base(href="/")
   script(type='text/javascript', data-main="landing", src="/assets/libs/requirejs/require.js") //loads landing.js
   script.
@@ -17,7 +18,7 @@ head
     include profileheader
     .container#profile-container
       .page-header.text-center
-        h1
+        h2
           if ownProfile
             | Hi @#{user.local.name}
           else
@@ -25,12 +26,12 @@ head
       if ownProfile
         .row
           .col-sm-6
-            h3 My Docs
+            h3 Your Docs
             .document-list
               for doc in userDocs
                 a.list-group-item(href="#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
           .col-sm-6
-            h3 Public Docs
+            h3 All Docs
             .document-list
               for doc in docs
                 a.list-group-item(href="#{doc.createdBy}/document/#{doc.id}" target="_blank") #{doc.name}
@@ -38,4 +39,5 @@ head
         .row
           .col-sm-12
             .document-list
+    include footer
               
