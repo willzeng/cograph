@@ -93,7 +93,6 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       updateTitle: ->
         $('#menu-title-display').text @model.getDocument().get('name')
         $('.navbar-doc-title').css('left', 'calc(50% - '+$(".navbar-doc-title").width()/2+'px')
-        #TODO
 
       saveWorkspace: ->
         @saveDocModal = new Backbone.BootstrapModal(

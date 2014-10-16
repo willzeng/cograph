@@ -23,7 +23,6 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @model.on 'node:dblclicked', @openDetails, this
         @model.on 'create:connection', @openAndEditConnection, this
         @model.on 'edit:conn', @openDetails, this
-        console.log @model
         @setupAtWho()
 
       openDetails: (nodeConnection) ->
