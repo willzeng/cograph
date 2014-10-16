@@ -18,6 +18,10 @@
 // MIXINS
 //
 
+* {
+  -webkit-font-smoothing: antialiased;
+}
+
 .wordBreak { // sensible word/line breaking
   -ms-word-break: break-all;
   word-break: break-all;
@@ -348,7 +352,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .toolbar.left {
   left: 15px;
-  /*z-index: @controls-z-index + 1;*/
 }
 
 .toolbar.right {
@@ -406,6 +409,14 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   color: #666;
 }
 
+.controls {
+  margin-bottom: 0px;
+}
+
+#search-form {
+  margin-right: 10px;
+}
+
 .modal-body {
   max-height: 600px; // #TODO make this relative to the window height.
   overflow-y: scroll;
@@ -430,7 +441,14 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #zoom-in-button, #zoom-out-button {
-  padding: 5px;
+  padding: 0px 5px;
+  height: 21px;
+
+  i {
+    font-size: 8px;
+    position: relative;
+    top: -1px;
+  }
 }
 
 .navbar-doc-title .public-button i {

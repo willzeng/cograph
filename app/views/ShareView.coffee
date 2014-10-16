@@ -38,7 +38,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
 
       getEmbed: (url) ->
         """
-        <div style = 'min-width:420;max-width:700'>
+        <div style='min-width:420;max-width:700'>
           <iframe src='#{url}' width='100%' height='100%'
           scrolling='no' frameborder='0' allowfullscreen>
           </iframe>
