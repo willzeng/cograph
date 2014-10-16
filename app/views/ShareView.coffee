@@ -16,18 +16,24 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         $('#embed-button').popover
           content: @getEmbed window.location
 
-        @share = new shareButton "#phantom-share",
-          ui:
-            flyout: 'bottom right'
-          title: "Check out "+@model.documentModel.get('name')+"on cograph"
-          email:
-            description: "Check out "+@model.documentModel.get('name')+"on cograph at"+window.location.href
-          facebook:
-            app_id: 315770905267996
-          twitter:
-            description: "Check out "+@model.documentModel.get('name')+"on cograph"
+        @model.documentModel.on "change", =>
+          @share = new shareButton "#phantom-share",
+            ui:
+              flyout: 'bottom right'
+            title: "Check out "+@model.documentModel.get('name')+" on cograph."
+            networks:
+              pinterest:
+                enabled: false
+              email:
+                description: "Check out "+@model.documentModel.get('name')+" on cograph at"+window.location.href+"."
+              facebook:
+                title: @model.documentModel.get('name')+" on cograph"
+                description: "Check out "+@model.documentModel.get('name')+" on cograph."
+                app_id: 315770905267996
+              twitter:
+                description: "Check out "+@model.documentModel.get('name')+" on cograph: "
 
-        $('.entypo-export').hide()
+          $('.entypo-export').hide()
         $('#sharing-toggle').click =>
           $('.entypo-export').trigger 'click'
           @showingShareButtons = !@showingShareButtons
