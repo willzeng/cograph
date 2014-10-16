@@ -17,8 +17,11 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
           content: @getEmbed window.location
 
         $('#sharing-toggle').click =>
-          @saveWorkspace "", ->
-            $('.entypo-export').trigger 'click'
+          if(@showingShareButtons) 
+            @share.close()
+          else
+            @saveWorkspace "", ->
+              $('.entypo-export').trigger 'click'
           @showingShareButtons = !@showingShareButtons
 
         $('#graph').click => if @showingShareButtons then $('#sharing-toggle').trigger 'click'
