@@ -22,13 +22,15 @@ nav.navbar.navbar-default(role='navigation')
                     a#workspaces-button(href="" data-toggle="modal") Open View
                   li(role="presentation")
                     a#save-workspace-button(href="" data-toggle="modal") Save View
-                  li(role="presentation")
-                    a#share-workspace-button(href="" data-toggle="modal") Share View
                   li
                     a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
+            li#phantom-share
+            li
+              a.clickable#sharing-toggle(type="button")
+                | Share
             li
               a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
                 | Embed Code

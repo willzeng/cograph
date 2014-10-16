@@ -4,7 +4,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
       el: $ 'body'
 
       events:
-        'click #save-workspace-button': 'saveWorkspace'
+        'click #save-workspace-button': 'saveWorkspaceModal'
         'click .public-button': 'togglePublic'
         'click #share-workspace-button': 'shareWorkspace'
 
@@ -12,14 +12,53 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         @graphView = @attributes.graphView
         @updatePublicButton()
         @model.getDocument().on 'change:public', @updatePublicButton, this
+        @showingShareButtons = false
 
         $('#embed-button').popover
           content: @getEmbed window.location
 
+        $('#sharing-toggle').click =>
+          if(@showingShareButtons) 
+            @share.close()
+          else
+            @saveWorkspace "", ->
+              $('.entypo-export').trigger 'click'
+          @showingShareButtons = !@showingShareButtons
+
+        $('#graph').click => if @showingShareButtons then $('#sharing-toggle').trigger 'click'
+
         @model.on 'navigate', (dest) =>
           $('#embed-button').data('bs.popover').options.content = @getEmbed dest
 
-      saveWorkspace: ->
+      updateSharing: ->
+        @share = new shareButton "#phantom-share",
+          ui:
+            flyout: 'bottom right'
+          title: "Check out "+@model.documentModel.get('name')+" on cograph."
+          networks:
+            pinterest:
+              enabled: false
+            email:
+              description: "Check out "+@model.documentModel.get('name')+" on cograph at "+window.location.href+"."
+            facebook:
+              title: @model.documentModel.get('name')+" on cograph"
+              description: "Check out "+@model.documentModel.get('name')+" on cograph."
+              app_id: 315770905267996
+            twitter:
+              description: "Check out "+@model.documentModel.get('name')+" on cograph: "
+
+        $('.entypo-export').hide()
+
+      saveWorkspace: (name, cb) ->
+        @model.sync "create", @model,
+          success: (savedModel) =>
+            @trigger "save:workspace", savedModel._id
+            @model.set 'name', name || ""
+            @model.sync "update", @model
+            @updateSharing()
+            if cb then cb()
+
+      saveWorkspaceModal: ->
         @saveDocModal = new Backbone.BootstrapModal(
           content: _.template(saveDocTemplate, {})
           title: "Save View"
@@ -34,11 +73,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
         @model.set 'translate', @graphView.zoom.translate()
 
         $('#save-doc-form', @saveDocModal.$el).submit () =>
-          @model.sync "create", @model,
-            success: (savedModel) => 
-              @trigger "save:workspace", savedModel._id
-              @model.set 'name', $('#saveDocName').val()
-              @model.sync "update", @model
+          @saveWorkspace $('#saveDocName').val()
           @saveDocModal.close()
           false
 
