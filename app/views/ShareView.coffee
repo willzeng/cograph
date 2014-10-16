@@ -35,7 +35,7 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
             pinterest:
               enabled: false
             email:
-              description: "Check out "+@model.documentModel.get('name')+" on cograph at"+window.location.href+"."
+              description: "Check out "+@model.documentModel.get('name')+" on cograph at "+window.location.href+"."
             facebook:
               title: @model.documentModel.get('name')+" on cograph"
               description: "Check out "+@model.documentModel.get('name')+" on cograph."
