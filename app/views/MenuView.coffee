@@ -105,8 +105,9 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
 
         @saveDocModal.on "shown", () ->
           $('#saveDocName').focus()
-          $("#save-doc-form").submit (e) ->
-            false
+
+        @model.set 'zoom', @graphView.zoom.scale()
+        @model.set 'translate', @graphView.zoom.translate()
 
         $('#save-doc-form', @saveDocModal.$el).submit () =>
           @model.sync "create", @model,
@@ -115,7 +116,9 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
               @model.set 'name', $('#saveDocName').val()
               @model.sync "update", @model
           @saveDocModal.close()
+          false
 
+      # NOTE: THIS IS CURRENTLY UNUSED
       openDocumentModal: ->
         user = window.user
         documents = new DocumentCollection

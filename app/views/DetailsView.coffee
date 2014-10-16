@@ -31,12 +31,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         workspaceSpokes = @model.getSpokes nodeConnection
         @updateColor @model.defaultColors[nodeConnection.get('color')]
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
-
         @detailsModal = new Backbone.BootstrapModal(
           content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
           animate: false
           showFooter: false
-          title: "Edit"
+          title: nodeConnection.get("name")
         ).open()
 
       updateColor: (color) ->

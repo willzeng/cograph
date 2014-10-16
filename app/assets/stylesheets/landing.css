@@ -22,6 +22,9 @@
   font-family: 'Gotham Light';
   padding-top: 20px;
 }
+#button-container {
+ margin-top: 60px; 
+}
 hr {
   border-top: 1px solid #ddd;
 }
@@ -38,6 +41,9 @@ body, h1, h2, h3, h4, h5, h6 {
 .btn {
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 2px;
+}
+.brand-logo {
+  height: 50px;
 }
 .container {
   max-width: 1100px;

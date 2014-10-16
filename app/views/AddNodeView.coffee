@@ -1,6 +1,6 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!models/NodeModel',
-'atwho', 'twittertext', 'elastic'],
-  ($, _, Backbone, WorkspaceModel, NodeModel, atwho, twittertext) ->
+'atwho', 'twittertext', 'jquery-autosize'],
+  ($, _, Backbone, WorkspaceModel, NodeModel, atwho, twittertext, autosize) ->
     class AddNodeView extends Backbone.View
       el: $ '#add-node-form'
       createdThisSession: 0
@@ -16,7 +16,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @colorInput = $('#add-color-container')
         @imageInput = $('#add-image-container')
 
-        @descriptionArea.elastic()
+        @descriptionArea.autosize()
 
         # Create color picker
         _.each @model.defaultColors, (i, color) =>
@@ -101,9 +101,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @titleArea.val('')
         @imageInput.val('')
         @descriptionArea.val('') 
+        @descriptionArea.trigger('autosize.resize')
         @descriptionArea.trigger('change')
         @titleArea.trigger('change')   
-        $('#add').addClass('contracted')  
+        $('#add').addClass('contracted')
 
       addNode: (e) ->
         if e? then e.preventDefault()

@@ -7,7 +7,6 @@ html(lang="en")
     meta(name='viewport', content='width=device-width, initial-scale=1')
     meta(name="description" content="Cograph lets you build and explore graphs together")
     meta(property="fb:app_id" content="315770905267996")
-    base(href='/')
     link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
     link(href='/assets/libs/targeted-atwho/dist/css/jquery.atwho.min.css', rel='stylesheet')
@@ -18,7 +17,7 @@ html(lang="en")
     link(href='/assets/stylesheets/graph.css', rel='stylesheet')  
     link(href="/assets/libs/feedback-bot/src/feedback.css" rel='stylesheet')
   
-    script(type='text/javascript', data-main="main", src="/assets/libs/requirejs/require.js") //loads main.js
+    script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
     script.
       window.prefetch = {};
       window.prefetch.nodes =!{JSON.stringify(nodes)};

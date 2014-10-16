@@ -2,7 +2,7 @@
   <% _.each(workspaces, function(workspace){ 
     if(workspace._id > 0 && (typeof(workspace.name) !== 'undefined') && (workspace.name !== null) && workspace.name.length > 0){%>
     <% if (createdBy != null && createdBy.length > 0) { %>
-      <a href='<%= createdBy %>/document/<%= docId %>/view/<%= workspace._id %>' target="_blank" class="list-group-item">
+      <a href='/<%= createdBy %>/document/<%= docId %>/view/<%= workspace._id %>' target="_blank" class="list-group-item">
     <% } else { %>
       <a href=<%= docId %>#<%= workspace._id %> target="_blank" class="list-group-item">
     <% } %>
@@ -12,7 +12,7 @@
       </button>
     </a>
   <% }}); %>
-  <% if(workspaces.length == 0 || _.some(workspaces, function(workspace){
+  <% if(workspaces.length == 0 ||  _.every(workspaces, function(workspace){
       return !(workspace._id > 0 && (typeof(workspace.name) !== 'undefined') && (workspace.name !== null) && workspace.name.length > 0)
     })) { %>
   <i>There are no named views for this cograph. Use the save view button to create one</i>

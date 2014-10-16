@@ -22,7 +22,7 @@ router.get '/new', utils.isLoggedIn, (request, response) ->
       user.addDocument savedDocument._id
     response.redirect "/#{request.user.local.name}/document/#{savedDocument._id}"
 
-router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, response) ->
+sendGraphDoc = (request, response) ->
   request.params.id = [request.params[1]]
   documents.prefetch request, response, (prefetched) ->
     if request.isAuthenticated()
@@ -42,6 +42,12 @@ router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, re
       response.render 'index-view-only.jade', prefetched
     else
       response.render 'errors/missingDocument.jade'
+
+router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:search\/(\w+))?\/?$/, (request, response) ->
+  sendGraphDoc request, response
+
+router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:view\/(\d+))?\/?$/, (request, response) ->
+  sendGraphDoc request, response
 
 router.get /^\/mobile\/(\d*)$/, (request, response) ->
   response.render('mobile.jade')
@@ -99,19 +105,19 @@ router.get      '/document/:docId/getConnsByName',     search.getConnsByName
 router.get      '/document/:docId/tags',               search.getTagNames
 
 # User's Public  Page (needs to come last as the fallback route)
-router.get /^\/(\w+)$/, (req, res) ->
+router.get /^\/(\w+)\/?$/, (req, res) ->
   username = req.params[0].toLowerCase()
   User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
     if err or not(profiledUser?) then res.redirect "/"
     else
       documents.helper.getAll (publicDocs) ->
-        documents.helper.getByIds profiledUser.documents, (privateDocs) ->
+        documents.helper.getByIds profiledUser.documents, (usersDocs) ->
           if req.isAuthenticated() and username is req.user.local.nameLower
             # show all the documents if this is the profile for the logged in user
-            shownDocs = privateDocs
+            shownDocs = usersDocs
             ownProfile = req.user.local.name is profiledUser.local.name
           else # otherwise show only their public documents
-            shownDocs = (d for d in privateDocs when d.publicView is 2)
+            shownDocs = (d for d in usersDocs when d.publicView is 2)
             ownProfile = false
           res.render "profile.jade",
             ownProfile: ownProfile  # checks to see if you are looking at your own profile

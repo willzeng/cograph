@@ -32,7 +32,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class ConnectionCollection extends ObjectCollection
       model: ConnectionModel
-      url: -> "connections"
+      url: -> "/connections"
 
       initBroadcastCreate: ->
         @socket.on @url()+":create", (objData) =>
@@ -40,7 +40,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class NodeCollection extends ObjectCollection
       model: NodeModel
-      url: -> "nodes"
+      url: -> "/nodes"
 
       initBroadcastDelete: ->
         @socket.on @url()+":delete", (objData) =>
@@ -49,7 +49,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
-      urlRoot: -> "workspace"
+      urlRoot: -> "/workspace"
 
       defaults:
         _id: 0
@@ -212,7 +212,17 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         nodes = @nodes.pluck "_id"
         connIds = @connections.pluck "_id"
         docId = @getDocument().get "_id"
-        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this.get('_id'), _docId:docId, name:this.get('name')}
+        nodePositions = ({x:n.x,y:n.y,_id:n.get('_id')} for n in @nodes.models)
+        serializedWorkspace =
+          nodes: nodes
+          connections: connIds
+          nodeTags: @filterModel.get('node_tags')
+          _id: this.get('_id')
+          _docId: docId
+          name: this.get('name')
+          nodePositions: JSON.stringify(nodePositions)
+          zoom: this.get('zoom')
+          translate: this.get('translate')
 
       getWorkspace: (callback) ->
         @sync "read", this,

@@ -7,7 +7,7 @@ nav.navbar.navbar-default(role='navigation')
             span.icon-bar
             span.icon-bar
           a.navbar-brand(href='/')
-            img#brand-logo(src="assets/images/logo-black.png")
+            img#brand-logo(src="/assets/images/logo-black.png")
           
         span.navbar-doc-title
           span.dropdown
@@ -42,11 +42,14 @@ nav.navbar.navbar-default(role='navigation')
                     i.fa.fa-cog.pull-right
 
         #gdocs-nav.collapse.navbar-collapse
-          ul.nav.navbar-nav.navbar-right 
+          ul.nav.navbar-nav.navbar-right
+            li
+              a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
+                | Embed Code
             if isAuthenticated
               li#newgraph-icon
                 a(href="/new" target="_blank" title="new graph")
-                  img(src="assets/images/newgraph.png")
+                  img(src="/assets/images/newgraph.png")
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')
                   | @#{user.local.name}
