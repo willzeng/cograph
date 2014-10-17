@@ -32,12 +32,20 @@ module.exports = (app, passport) ->
     )(req, res, next)
 
   # =====================================
+  # REQUEST BETA KEY ====================
+  # =====================================
+
+  app.get "/request-key", (req, res) ->
+    res.render "request-key.jade"
+      message: req.flash("")
+
+  # =====================================
   # FORGOT PASSWORD =====================
   # =====================================
   
   app.get "/forgotten-password", (req, res) ->
     res.render "forgotten-password.jade"
-      message: req.flash("forgotMessage")
+      message: req.flash("forgotMessage") # TODO?
 
   # =====================================
   # SIGNUP ==============================
