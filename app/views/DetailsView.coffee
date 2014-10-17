@@ -30,8 +30,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         workspaceSpokes = @model.getSpokes nodeConnection
         @updateColor @model.defaultColors[nodeConnection.get('color')]
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
+        isEditable = $('#add').length isnt 0
         @detailsModal = new Backbone.BootstrapModal(
-          content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
+          content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes, isEditable:isEditable})
           animate: false
           showFooter: false
           title: nodeConnection.get("name")

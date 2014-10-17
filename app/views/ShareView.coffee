@@ -1,11 +1,10 @@
-define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', 'share-button', 'text!templates/save_view_modal.html'],
-  ($, _, Backbone, shareTemplate, shareButton, saveDocTemplate) ->
+define ['jquery', 'underscore', 'backbone', 'share-button', 'text!templates/save_view_modal.html'],
+  ($, _, Backbone, shareButton, saveDocTemplate) ->
     class ShareView extends Backbone.View
       el: $ 'body'
 
       events:
         'click #save-workspace-button': 'saveWorkspaceModal'
-        'click #share-workspace-button': 'shareWorkspace'
 
       initialize: ->
         @graphView = @attributes.graphView
@@ -67,12 +66,3 @@ define ['jquery', 'underscore', 'backbone', 'text!templates/share_modal.html', '
           @saveWorkspace $('#saveDocName').val()
           @saveDocModal.close()
           false
-
-      shareWorkspace: ->
-        @shareDocModal = new Backbone.BootstrapModal(
-          content: _.template(shareTemplate, {})
-          title: "Share View"
-          animate: true
-          showFooter: false
-        ).open()
-

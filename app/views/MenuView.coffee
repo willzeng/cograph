@@ -35,7 +35,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @updatePublishButton()
 
       updatePublishButton: ->
-        if(@model.getDocument().get("publicView") == 0)
+        if @model.getDocument().get("publicView") is 0 or @model.getDocument().get("publicView") is 1
           $('#maybe-publish-button').html "<a class='clickable'>Publish</a>"
         else
           $('#maybe-publish-button').html ""
