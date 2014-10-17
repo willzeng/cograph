@@ -286,9 +286,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .on "dblclick", (d) ->
             that.model.select d
             that.model.trigger "node:dblclicked", d
-          .on "contextmenu", (node) ->
-            d3.event.preventDefault()
-            that.trigger('node:right-click', node, d3.event)
           .on "mouseout", (node) =>
             # perhaps setting the foreignobject height dynamically would be better.
             if(!$(d3.event.toElement || d3.event.target).closest('.node').length)
@@ -364,8 +361,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           if @drawing && !@cancelledDrag then tick()
 
       rightClicked: (e) ->
-        e.preventDefault()
         @connectionAdder.clearDragLine()
+        true
 
       isContainedIn: (node, element) =>
         (node.x || node.clientX) < element.offset().left + element.outerWidth() &&
