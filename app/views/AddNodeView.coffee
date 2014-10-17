@@ -147,7 +147,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                     target: targetNode.get('_id')
                     _docId: @model.documentModel.get('_id')
                     description: node.get('description')
-                connection.save()
+                $.when(connection.save()).then ->
+                  # update neighbor counts
+                  node.fetch()
+                  targetNode.fetch()
                 @model.putConnection connection
 
             @resetAdd()
