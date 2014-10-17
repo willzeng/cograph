@@ -1,7 +1,7 @@
 define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'],
 (Backbone, ObjectModel, iobind, iosync, io) ->
   class ConnectionModel extends ObjectModel
-    urlRoot: -> "connection"
+    urlRoot: -> "/connection"
     noIoBind: false
     socket: io.connect('')
 
@@ -17,10 +17,14 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
       _docId: 0
 
     schema:
-      name: {type:'Text', title:"Connection Type e.g. 'relates to'"}
+      name: {type:'ConnDropdown', title:"Connection Type e.g. 'relates to'"}
       url: 'Text'
       description:
         type: 'AtWhoEditor'
+      image: 
+        type: 'Text'
+        title: 'Image (url to an image)'
+        validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ]
 
     ignoredAttributes: ['selected', 'dim']
 

@@ -1,5 +1,6 @@
 url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
+_ = require __dirname + '/../node_modules/underscore/underscore'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
 
@@ -13,8 +14,8 @@ exports.create = (req, resp) ->
   serverDocument.create newDocument, (savedDocument) ->
     resp.send savedDocument
 
-exports.addBlank = (callback) ->
-  newDocument = {name:"Untitled Document"}
+exports.addBlank = (userName, callback) ->
+  newDocument = {name:"Untitled Document", createdBy: userName}
   serverDocument.create newDocument, (savedDocument) ->
     callback savedDocument
 
@@ -60,7 +61,7 @@ exports.prefetch = (req, resp, callback) ->
   docLabel = "_doc_#{id || 0}"
   # Get the document
   params = {id:parseInt(id)}
-  cypherQuery = "START n=node({id}) MATCH (n:_document) OPTIONAL MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace;"
+  cypherQuery = "START n=node({id}) MATCH (n:_document) OPTIONAL MATCH (n)-[r:HAS]->(m) RETURN n AS node, m._id AS workspace, m.name AS workspaceName;"
   graphDb.query cypherQuery, params, (err, results) ->
     if err or results.length is 0 then resp.redirect "/errors/missingDocument"
     else
@@ -69,7 +70,7 @@ exports.prefetch = (req, resp, callback) ->
       theDocument = utils.parseNodeToClient parsed
 
       # Get the document's workspaces
-      theDocument.workspaces = (space.workspace for space in results)
+      theDocument.workspaces = ({_id: space.workspace, name:space.workspaceName} for space in results)
 
     # Get all nodes
     # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
@@ -87,6 +88,8 @@ exports.prefetch = (req, resp, callback) ->
       cypherQuery = "match (n:#{docLabel}), (n)-[r]->() return r;"
       graphDb.query cypherQuery, {}, (err, results) ->
         connections = (utils.parseCypherResult(connection, 'r') for connection in results) || {}
+        for n in parsedNodes
+          n.neighborCount = _.filter(connections, (conn) => (conn.source == n._id || conn.target == n._id)).length
         callback {nodes:parsedNodes, connections:connections, theDocument: theDocument}
 
 # UPDATE

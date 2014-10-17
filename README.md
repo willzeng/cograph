@@ -24,10 +24,13 @@ To run the tests you need to do two steps:
 2. Open [http://localhost:3000/tests/SpecRunner.html](http://localhost:3000/tests/SpecRunner.html) in your browser. The output should appear there. 
 
 
-Copyright GraphDocs, William Zeng, David Furlong, Victor Pontis 2014
+Copyright GraphDocs Inc., William Zeng, David Furlong, Victor Pontis 2014
 
 
 Related Projects:
 -------
 https://www.moh.io/mohiomap/welcome.php
+
 http://www.graphcommons.com
+
+http://quid.com/

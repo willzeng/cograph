@@ -14,8 +14,8 @@ exports.create = (data, callback, socket) ->
   props = data
   serverNode.create tags, props, docLabel, (savedNode) ->
     savedNode.tags = tags
-    socket.emit 'node:create', savedNode
-    socket.broadcast.to(savedNode._docId).emit 'nodes:create', savedNode
+    socket.emit '/node:create', savedNode
+    socket.broadcast.to(savedNode._docId).emit '/nodes:create', savedNode
     callback null, savedNode
 
 # READ
@@ -26,8 +26,10 @@ exports.read = (data, callback, socket) ->
     utils.getLabels graphDb, id, (labels) ->
       parsed.tags = labels
       parsed = utils.parseNodeToClient parsed
-      socket.emit('node:read', parsed)
-      callback(null, parsed)
+      serverNode.getNeighbors id, (neighbors) ->
+        parsed.neighborCount = neighbors.length
+        socket.emit '/node:read', parsed
+        callback(null, parsed)
 
 exports.readCollection = (data, callback, socket) ->
   console.log "readCollection of nodes in document #{data._docId}"
@@ -42,7 +44,7 @@ exports.readCollection = (data, callback, socket) ->
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
       parsedNodes.push utils.parseNodeToClient nodeData
-    socket.emit 'nodes:read', parsedNodes
+    socket.emit '/nodes:read', parsedNodes
     callback null, parsedNodes
 
 # UPDATE
@@ -52,8 +54,8 @@ exports.update = (data, callback, socket) ->
   delete data.tags
   props = data
   serverNode.update id, tags, props, (newNode) ->
-    socket.emit 'node:update', newNode
-    socket.broadcast.to(newNode._docId).emit 'nodes:update', newNode
+    socket.emit '/node:update', newNode
+    socket.broadcast.to(newNode._docId).emit '/nodes:update', newNode
     callback null, newNode
 
 # DELETE
@@ -62,8 +64,8 @@ exports.destroy = (data, callback, socket) ->
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
       parsed = node._data.data
-      socket.emit 'nodes:delete', true
-      socket.broadcast.to(parsed._docId).emit 'nodes:delete', parsed
+      socket.emit '/nodes:delete', true
+      socket.broadcast.to(parsed._docId).emit '/nodes:delete', parsed
       callback null, parsed
     , true
 

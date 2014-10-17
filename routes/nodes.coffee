@@ -22,7 +22,9 @@ exports.read = (req, resp) ->
     parsed = node._data.data
     utils.getLabels graphDb, id, (labels) ->
       parsed.tags = labels
-      resp.send utils.parseNodeToClient parsed
+      serverNode.getNeighbors id, (neighbors) ->
+        parsed.neighborCount = neighbors.length
+        resp.send utils.parseNodeToClient parsed
 
 exports.getAll = (req, resp) ->
   console.log "get_all_nodes Query Requested"
@@ -41,12 +43,13 @@ exports.getAll = (req, resp) ->
 
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
-  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) RETURN m, labels(m);"
+  cypherQuery = "START n=node({id}) MATCH (n)<-->(m) OPTIONAL MATCH (m)<-->(k) RETURN m, labels(m), count(k) AS neighborCount;"
   graphDb.query cypherQuery, params, (err, results) ->
     parsedNodes = []
     for node in results
       nodeData = node.m._data.data
       nodeData.tags = node['labels(m)']
+      nodeData.neighborCount = node.neighborCount
       parsedNodes.push utils.parseNodeToClient nodeData
     resp.send parsedNodes
 

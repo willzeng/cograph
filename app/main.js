@@ -1,5 +1,5 @@
 requirejs.config({
-  baseUrl: "",
+  baseUrl: "/",
   paths: {
     'jquery': '/assets/libs/jquery/dist/jquery.min',
     'underscore': '/assets/libs/underscore/underscore',
@@ -21,7 +21,9 @@ requirejs.config({
     'caret': '/assets/libs/caret.js/dist/jquery.caret.min',
     'atwho': '/assets/libs/targeted-atwho/dist/js/jquery.atwho.min',
     'twittertext': '/assets/libs/twitter-text/pkg/twitter-text-1.9.4.min',
-    'linkify': '/assets/libs/jQuery-linkify/dist/jquery.linkify.min'
+    'linkify': '/assets/libs/jQuery-linkify/dist/jquery.linkify.min',
+    'jquery-autosize': '/assets/libs/jquery-autosize/jquery.autosize',
+    'feedback-bot': '/assets/libs/feedback-bot/dist/feedback.0.3.1'
   },
   shim: {
     'backbone': {
@@ -56,6 +58,12 @@ requirejs.config({
       deps: ['jquery']
     },
     'linkify': {
+      deps: ['jquery']
+    },
+    'feedback-bot': {
+      deps: ['jquery']
+    },
+    'jquery-autosize': {
       deps: ['jquery']
     }
   },

@@ -1,11 +1,12 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/ConnectionModel', 'cs!models/WorkspaceModel', 'cs!models/FilterModel'
   'cs!views/GraphView', 'cs!views/AddNodeView', 'cs!views/DetailsView', 'cs!views/FilterView', 'cs!views/SearchView', 'cs!views/SideBarView',
-  'cs!views/MenuView', 'cs!views/ShareView'],
-  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView) ->
+  'cs!views/MenuView', 'cs!views/ShareView', 'cs!views/FeedbackView'],
+  ($, _, Backbone, NodeModel, ConnectionModel, WorkspaceModel, FilterModel, GraphView, AddNodeView, DetailsView, FilterView, SearchView, SideBarView, MenuView, ShareView, FeedbackView) ->
     class Router extends Backbone.Router
       initialize: ->
         @workspaceModel = new WorkspaceModel()
 
+        
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
         @detailsView = new DetailsView {model: @workspaceModel, attributes: {graphView: @graphView}}
@@ -13,9 +14,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @searchView = new SearchView model: @workspaceModel
         @sidebarView = new SideBarView model: @workspaceModel
         @menuView = new MenuView model: @workspaceModel
-        @shareView = new ShareView model: @workspaceModel
+        @shareView = new ShareView {model: @workspaceModel, attributes: {graphView: @graphView}}
+        @feedbackView = new FeedbackView
 
-        @shareView.on "save:workspace", (workspaceId) => @navigate ""+workspaceId
+        @shareView.on "save:workspace", (workspaceId) => @navigate "view/"+workspaceId
         @graphView.on "tag:click", (tag) =>
           @workspaceModel.filterModel.set "node_tags", [tag]
           @workspaceModel.filter()
@@ -23,11 +25,17 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           @navigate "search/"+tag
 
         window.gm = @workspaceModel
-        Backbone.history.start()
+        # regex to extract away a routing pathname
+        # this needs to operate for both /username/document/:docId
+        # and /:docId
+        pathRegex = /^((?:\/\w+\/document)?\/\d+\/?)(?:.+)?$/
+        path = pathRegex.exec window.location.pathname
+        @workspaceModel.root = window.location.origin+path[1]
+        Backbone.history.start {pushState: true, root: path[1]}
 
       routes:
         '': 'home'
-        '(:id)': 'workspace'
+        'view/:id': 'workspace'
         'search/:tag': 'loadByTag'
 
       home: () =>
@@ -39,16 +47,23 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         id = parseInt id
         @setDoc()
 
-        @workspaceModel._id = id
+        @workspaceModel.set '_id', id
         @workspaceModel.getWorkspace (w) =>
-          nodeFilter = (node) -> _.contains w.nodes, node._id
-          connFilter = (conn) -> _.contains w.connections, conn._id
-          @loadGraph nodeFilter, connFilter
-          @workspaceModel.filterModel.set 'node_tags', w.nodeTags
+          if w.err
+            @navigate "/"
+            @loadGraph()
+          else
+            nodeFilter = (node) -> _.contains w.nodes, node._id
+            connFilter = (conn) -> _.contains w.connections, conn._id
+            if w.zoom?
+              @loadGraph nodeFilter, connFilter, JSON.parse(w.nodePositions), w.zoom, w.translate
+            else
+              @loadGraph nodeFilter, connFilter
+            @workspaceModel.filterModel.set 'node_tags', w.nodeTags
 
       # Load a graph based on preset filters
       # Defaults to loading the whole prefetch
-      loadGraph: (nodeFilter, connFilter) ->
+      loadGraph: (nodeFilter, connFilter, nodePositions, zoom, translate) ->
         if !(nodeFilter?) then nodeFilter = (x) -> true
         if !(connFilter?) then connFilter = (x) -> true
 
@@ -59,7 +74,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
           workspaceConns = _.filter window.prefetch.connections, connFilter
           @workspaceModel.connections.set workspaceConns, {silent:true}
 
-        @workspaceModel.trigger "init"
+        if nodePositions?
+          @workspaceModel.trigger "init:fixed", {nodePositions:nodePositions, zoom:zoom, translate:translate}
+        else
+          @workspaceModel.trigger "init"
         $('.loading-container').remove()
 
       setDoc: ->
@@ -77,6 +95,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
         @setDoc()
         @searchView.search {value:tag, type:"tag"}
         $('.loading-container').remove()
+
+      navigate: (dest) ->
+        @workspaceModel.trigger 'navigate', dest
+        Backbone.Router.prototype.navigate dest
 
       randomPopulate: ->
         num = Math.round(3+Math.random()*15)

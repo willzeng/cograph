@@ -1,0 +1,43 @@
+html
+  head
+    title Cograph | Signup
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
+    link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+    link(href='/assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
+    link(href='/assets/stylesheets/general.css', rel='stylesheet')
+    link(href='/assets/stylesheets/nav.css', rel='stylesheet')    
+    base(href="/")
+  body
+    include profileheader
+    .container-fluid.pad-top
+      .row
+        .col-md-6.col-md-offset-3.col-xs-12
+          h1 Start connecting
+          p  
+            a(href="/auth/twitter")
+              img(src="assets/images/sign-in-with-twitter.png")
+          hr
+            
+          // show any messages that come back with authentication
+          if message.length > 0 
+            .alert.alert-danger #{message}
+
+          // SIGNUP FORM 
+          form(action='/signup', method='post')
+            .form-group
+              label Username
+              input.form-control(type='text', name='name')
+            .form-group
+              label Email
+              input.form-control(type='email', name='email') 
+            .form-group
+              label Password
+              input.form-control(type='password', name='password')
+            button.btn.btn-warning.btn-lg(type='submit') Signup
+          hr
+          
+          p
+            | Already have an account? 
+            a(href='/login') Start Connecting

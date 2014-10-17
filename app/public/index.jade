@@ -4,40 +4,53 @@ block content
   #sidebar
   #graph
     .loading-container
-      i.fa.fa-circle-o-notch.fa-spin.fa-5x
-    .toolbar.controls
-      .navbar-left.navbar-form
-        form#search-form
-          .form-group
-            input#search-input.form-control(type="text", name='search-term' placeholder="Search...")
-          button.btn.btn-primary(type="button")
-            i.fa.fa-search
-        button#sidebar-toggle.btn.btn-default(title="toggle sidebar")
-            i.fa.fa-arrows-h
+      .spinner
+        .double-bounce1
+        .double-bounce2
     .toolbar.right.controls
       .navbar-right.navbar-form
-        form#add-node-form
-          .form-group
-            input.node-input.form-control(type="text", name='name', placeholder="Add something")
-          button.btn.btn-primary(type="submit")
-            i.fa.fa-plus
-          .form-group.node-description.hide
-            textarea.form-control(name='description', placeholder="Enter a description")
+        form#add-node-form.form-inline
+          #add.contracted
+            textarea#add-title(name="name", placeholder='New node', rows='1')
+            textarea#add-description(name="description", placeholder='Description - Use #tags @people +connect', rows='1')
+            #add-toolbar.cf
+              #add-toolbar-left
+                button#add-color.color-circle(type="button")
+                  i.fa.fa-circle(title="Change color")
+                div#add-color-container.hidden
+                button#add-image(type="button")
+                  i.fa.fa-image(title='Add image')
+                input#add-image-container.hidden(type="text", placeholder="image url")
+              #add-toolbar-right
+                button#add-submit(title='Create something')
+                  | Done
 
-    .toolbar.bottom.right.controls
-      button#grid-view-button.btn.btn-primary
-        div Grid
-      button#graph-view-button.btn.btn-primary
-        div Graph
-      button#save-workspace-button.btn.btn-primary
-        div Save Workspace
-      button#sharing-button.btn.btn-primary
-        div Share GraphDoc
-    #zoom-controls.btn-group-vertical.controls
-      button#zoom-in-button.btn.btn-primary(title="Zoom In")
-        i.glyphicon.glyphicon-plus
-      button#zoom-out-button.btn.btn-primary(title="Zoom Out")
-        i.glyphicon.glyphicon-minus
-    #trash-bin.controls(title="Drag a node here to Archive it")
-      i.fa.fa-archive
+    .toolbar.bottom.right.controls#toolbar-bottom-right
+      ul.nav.navbar-nav
+        li
+          button#grid-view-button.btn.btn-primary Grid
+        li  
+          button#graph-view-button.btn.btn-primary Graph
+        li
+          a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template")
+            i.fa.fa-filter(title="filter")
+        li
+          form#search-form.form-inline
+            .input-group
+              input#search-input.form-control(type="text", name='search-term' placeholder="Search")
+        li
+          .btn-group-vertical.controls
+            button#zoom-in-button.btn.btn-default(title="Zoom In")
+              i.glyphicon.glyphicon-plus
+            button#zoom-out-button.btn.btn-default(title="Zoom Out")
+              i.glyphicon.glyphicon-minus
+    #trash-bin.controls(title="Drag a node here to Hide it")
+      span#bring-all-nodes-to-view
+        i.fa.fa-eye-slash
+        span#number-hidden 0
+      span#dragging-message
+        | Drag here to Hide
+      span#hover-message
+        span#show-all Show all
+        span#hide-all Hide all
   .data-tooltip-container

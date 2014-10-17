@@ -1,0 +1,44 @@
+html
+  head
+    title Cograph | Login
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+    link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
+    link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
+    link(href='/assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
+    link(href='/assets/stylesheets/general.css', rel='stylesheet')
+    link(href='/assets/stylesheets/nav.css', rel='stylesheet')
+    link(href='/assets/stylesheets/login.css', rel='stylesheet')        
+    base(href="/")
+  body
+    include profileheader
+    .container-fluid.pad-top
+      .row
+        .col-md-6.col-md-offset-3.col-xs-12(style="background: white")
+          h3
+            strong Welcome Back!
+          br
+          p  
+            a(href="/auth/twitter")
+              img(src="assets/images/sign-in-with-twitter.png")
+          strong OR
+          hr
+          // show any messages that come back with authentication
+          if message.length > 0 
+            .alert.alert-danger #{message}
+
+          // LOGIN FORM 
+          form(action='/login', method='post')
+            .form-group
+              label Email
+              input.form-control(type='text', name='email')
+            .form-group
+              label Password
+              input.form-control(type='password', name='password')
+            button.btn.btn-default.btn-lg.pull-right(type='submit') Login
+          p
+            | Need an account? 
+            a(href='/signup') Signup
+          p
+            | Or go 
+            a(href='/') home

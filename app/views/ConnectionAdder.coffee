@@ -36,12 +36,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             target: node.get('_id')
             _docId: @model.documentModel.get('_id')
           $.when(connection.save()).then =>
+            # Fetch the source and target to update their new connection degrees
+            @model.getSourceOf(connection).fetch()
+            @model.getTargetOf(connection).fetch()
             newConn = @model.putConnection connection
             @model.select newConn
             @model.newConnectionCreated newConn
 
       createDragLine: (e) ->
-        if !(@graphView.gridViewOn)
+        if($('#add-node-form').length > 0 and !(@graphView.gridViewOn)) #isEditable HACK
           connectId = parseInt $(e.currentTarget).attr("data-id")
           node = @model.nodes.findWhere {_id:connectId}
           @drag_line.classed('hidden', false)

@@ -1,10 +1,20 @@
 define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'],
 ($, _, Backbone, ObjectModel, iobind, iosync, io) ->
   class NodeModel extends ObjectModel
-    urlRoot: -> "node"
+    urlRoot: -> "/node"
     ajaxURL: -> "/document/#{@get('_docId')}/nodes/"+@get('_id')
     noIoBind: false
     socket: io.connect('')
+
+    defaults:
+      name: ''
+      description: ''
+      url: ''
+      color: 'black' #hard coded default is kindof a problem
+      tags: []
+      _id: -1
+      _docId: 0
+      neighborCount: 0
 
     schema:
       name:
@@ -15,6 +25,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
         validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ]
       description:
         type: 'AtWhoEditor'
+      image: 
+        type: 'Text'
+        title: 'Image (url to an image)'
+        validators: [type: 'regexp', regexp: /((www|http|https)([^\s]+))|([a-z0-9!#$%&'+\/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+\/=?^_`{|}~-]+)*@(?:a-z0-9?.)+a-z0-9?)/ ]
 
     validate: ->
       if !@get('name')

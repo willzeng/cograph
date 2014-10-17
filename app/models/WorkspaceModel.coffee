@@ -32,7 +32,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class ConnectionCollection extends ObjectCollection
       model: ConnectionModel
-      url: -> "connections"
+      url: -> "/connections"
 
       initBroadcastCreate: ->
         @socket.on @url()+":create", (objData) =>
@@ -40,7 +40,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class NodeCollection extends ObjectCollection
       model: NodeModel
-      url: -> "nodes"
+      url: -> "/nodes"
 
       initBroadcastDelete: ->
         @socket.on @url()+":delete", (objData) =>
@@ -49,22 +49,27 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
-      urlRoot: -> "workspace"
-      _id: 0
+      urlRoot: -> "/workspace"
+
+      defaults:
+        _id: 0
+        name: ""
 
       selectedColor: '#3498db'
 
       defaultColors:
+          defaultHex: '#000' # not currently functional
           white: '#aaa'
-          black:'#000'
-          grey:'#ccc'
-          red:'#F56545'
-          yellow:'#FFBB22'
-          green: '#BBE535'
-          # cyan: '#77DDBB'
+          red: '#E3A390'
+          yellow: '#F2DB9D'
+          green: '#B3E2B1'
+          blue: '#B1CDE2'
+          purple: '#E0B4E6'
 
       initialize: ->
         @socket = io.connect('')
+        @socket.on @url()+":create", (workspaceData) =>
+          @set workspaceData
 
         @nodes = new NodeCollection()
         @nodes.on "remove:req", (reqDelete) =>
@@ -72,6 +77,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
         @connections = new ConnectionCollection()
         @connections.on "create:req", (reqCreate) =>
+          # Fetch the source and target to update their new connection degrees
+          @getSourceOf(reqCreate).fetch()
+          @getTargetOf(reqCreate).fetch()
           @putConnection reqCreate
 
         @filterModel = new FilterModel()
@@ -190,6 +198,9 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       getNodesByTag: (tag, cb) ->
         @documentModel.getNodesByTag(tag, cb)
 
+      getConnsByName: (name, cb) ->
+        @documentModel.getConnsByName(name, cb)
+
       # Syncing Workspaces
       sync: (method, model, options) ->
         options = options || {}
@@ -201,12 +212,22 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         nodes = @nodes.pluck "_id"
         connIds = @connections.pluck "_id"
         docId = @getDocument().get "_id"
-        {nodes:nodes, connections:connIds, nodeTags:@filterModel.get('node_tags'), _id: this._id, _docId:docId}
+        nodePositions = ({x:n.x,y:n.y,_id:n.get('_id')} for n in @nodes.models)
+        serializedWorkspace =
+          nodes: nodes
+          connections: connIds
+          nodeTags: @filterModel.get('node_tags')
+          _id: this.get('_id')
+          _docId: docId
+          name: this.get('name')
+          nodePositions: JSON.stringify(nodePositions)
+          zoom: this.get('zoom')
+          translate: this.get('translate')
 
       getWorkspace: (callback) ->
         @sync "read", this,
           success: callback
 
       deleteWorkspace: (id, callback) ->
-        @socket.emit "workspace:destroy", id
+        @socket.emit "workspace:destroy", {_id:id, _docId:@getDocument().get('_id')}
         callback id

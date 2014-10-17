@@ -53,6 +53,6 @@ requirejs.config({
   }]
 });
 
-require(['cs!mobile/views/MobileView'], function(MobileView){
-  mobileView = new MobileView()
+require(['cs!mobile/mobileRouter'], function(MobileRouter){
+  router = new MobileRouter()
 });

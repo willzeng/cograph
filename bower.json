@@ -7,9 +7,10 @@
     "Will Zeng <zeng.will@gmail.com>",
     "David Furlong <dvfurlong@gmail.com>"
   ],
-  "description": "Graph Docs allows you to explore graphs.",
+  "description": "Cograph allows you to explore graphs.",
   "keywords": [
-    "graphdocs"
+    "graphdocs",
+    "cograph"
   ],
   "license": "GPL",
   "private": true,
@@ -36,9 +37,13 @@
     "share-button": "~0.4.1",
     "backbone.iobind": "~0.4.7",
     "caret.js": "~0.1.0",
-    "targeted-atwho": "~0.5.1",
+    "targeted-atwho": "~0.5.2",
     "twitter-text": "~1.9.4",
-    "jQuery-linkify": "~1.1.7"
+    "jQuery-linkify": "~1.1.7",
+    "underscore": "1.6.0",
+    "feedback-bot": "0.3.1",
+    "iconset": "https://github.com/davidfurlong/iconset.git",
+    "jquery-autosize": "~1.18.13"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"

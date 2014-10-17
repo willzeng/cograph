@@ -1,10 +1,20 @@
 <ul class="workspaces-list list-group">
-  <% _.each(workspaces, function(id){ %>
-    <a href=<%= docId %>#<%= id %> target="_blank" class="list-group-item">
-      <%= id %>
-      <button type="button" class="btn btn-danger btn-sm pull-right center-block delete-workspace", data-id=<%= id %>>
+  <% _.each(workspaces, function(workspace){ 
+    if(workspace._id > 0 && (typeof(workspace.name) !== 'undefined') && (workspace.name !== null) && workspace.name.length > 0){%>
+    <% if (createdBy != null && createdBy.length > 0) { %>
+      <a href='/<%= createdBy %>/document/<%= docId %>/view/<%= workspace._id %>' target="_blank" class="list-group-item">
+    <% } else { %>
+      <a href=<%= docId %>#<%= workspace._id %> target="_blank" class="list-group-item">
+    <% } %>
+      <%= workspace.name %>
+      <button type="button" class="btn btn-danger btn-sm pull-right center-block delete-workspace", data-id=<%= workspace._id %>>
         <i class="fa fa-trash-o"></i>
       </button>
     </a>
-  <% }); %>
+  <% }}); %>
+  <% if(workspaces.length == 0 ||  _.every(workspaces, function(workspace){
+      return !(workspace._id > 0 && (typeof(workspace.name) !== 'undefined') && (workspace.name !== null) && workspace.name.length > 0)
+    })) { %>
+  <i>There are no named views for this cograph. Use the save view button to create one</i>
+  <% } %>
 <ul>

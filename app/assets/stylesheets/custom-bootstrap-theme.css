@@ -17,11 +17,18 @@ body{
    color: #DDDDDD;
    opacity: 1; 
 }
+.panel {
+    margin: 0;
+}
+
+.modal-header h4 {
+    margin-bottom: 0;
+}
 /*     General overwrite     */
 a{
     color: #2C93FF;
 }
-a:hover, a:focus {
+a:hover {
     color: #1084FF;
 }
 a:focus, a:active, 
@@ -141,7 +148,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 }
 .btn-round{
     border-width: 1px;
-    border-radius: 30px !important;
+    border-radius: 10px !important;
     opacity: 0.79;
     padding: 9px 18px;
 }
@@ -335,7 +342,6 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     padding: 15px 60px;
 }
 
-
 /*             Inputs               */
 .form-control {
     background-color: #FFFFFF;
@@ -344,7 +350,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     box-shadow: none;
     color: #000;
     height: 41px;
-    padding: 6px 16px;
+    padding: 6px 8px;
 }
 
 .form-control:focus {
@@ -466,7 +472,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
     background-color: rgba(255, 255, 255, 0);
     border-radius: 3px;
-    color: #2C93FF;
+    color: inherit;
     opacity: 1;
 }
 .navbar-default .navbar-nav > .dropdown > a:hover .caret, .navbar-default .navbar-nav > .dropdown > a:focus .caret {
@@ -525,9 +531,6 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 .navbar-form{
     box-shadow: none;
 }
-.navbar-form .form-control{
-    
-}
 .navbar-transparent .navbar-form .form-control, [class*="navbar-ct"] .navbar-form .form-control{
     color: #FFFFFF;
     border: 0;
@@ -560,7 +563,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
     color: #333333;
 }
 .dropdown-menu > li:first-child > a{
-    border-radius: 10px 10px 0 0;
+    border-radius: 0;
 }
 .dropdown-menu > li:last-child > a{
     border-bottom: 0 none;
@@ -822,7 +825,7 @@ input.ct-red + span.switch-left, input.ct-red + span + label + span.switch-right
 }
 .modal-header {
     border: 0 none;
-    
+    padding: 20px;
 }
 .modal-content {
     border: 0 none;
