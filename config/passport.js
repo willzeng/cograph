@@ -11,7 +11,7 @@ var User = require('../models/user.coffee');
 
 // reserved usernames
 // these cannot be used as usernames since they will interfere with other routes
-var usernameBlacklist = ['login', 'logout', 'document', 'signup', 'profile', 'landing', 'new', 'mobile', 'errors'];
+var usernameBlacklist = ['login', 'logout', 'document', 'signup', 'profile', 'landing', 'new', 'mobile', 'errors', 'forgot-password'];
 var userNameRegEx = /^(\w+)$/;
 
 // expose this function to our app using module.exports

@@ -30,7 +30,15 @@ module.exports = (app, passport) ->
           if err then next err
           res.redirect '/'+user.local.nameLower
     )(req, res, next)
+
+  # =====================================
+  # FORGOT PASSWORD =====================
+  # =====================================
   
+  app.get "/forgotten-password", (req, res) ->
+    res.render "forgotten-password.jade"
+      message: req.flash("forgotMessage")
+
   # =====================================
   # SIGNUP ==============================
   # =====================================
