@@ -77,8 +77,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @gridViewOn = false
         @updateForceFlag = false
         @grid = {}
-        @grid.spacing = [225,20] # Horizontal and Vertical node spacing
-        @grid.padding = [350,0] # Left and top padding respectively
+        @grid.spacing = [20,20] # Horizontal and Vertical node spacing
+        @grid.padding = [200,70] # Left and top padding of the grid as a whole respectively
         @grid.colYs = [] #top margin
 
         @workspace = @svg.append("svg:g")
@@ -335,70 +335,78 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
         if @gridViewOn
           $('.node-title-body').addClass('shown')
+          $('.node-info-body').addClass('hide-toolbar')
           $('.node-info-body').addClass('shown').linkify()
         else
+          $('.node-info-body').removeClass('hide-toolbar')
           tick()
         @force.on "tick", () =>
           if @drawing and !(@gridViewOn) then tick()
 
-      gridView: (options) ->
-        @gridViewOn = true
-        @force.stop()
-        @model.dehighlight()
+      gridView: (options) -> #trigger grid view
+        if(!@gridViewOn)
+          @gridViewOn = true  
+          @model.dehighlight()
+          @force.stop()
 
-        # ignore connection events
-        @model.connections.off 'add remove', @updateForceGraph
-        @model.connections.off 'change', @updateDetails
+          # ignore connection events
+          @model.connections.off 'add remove', @updateForceGraph
+          @model.connections.off 'change', @updateDetails
 
-        # Place nodes in a grid
-        transitionDuration = if options.duration? then options.duration else 1200
-        columnNum = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
-        theNodes = d3.select(".node-container").selectAll(".node")
-        theNodes.transition()
-          .duration(transitionDuration)
-          .attr "transform", (d, i) =>
-            pos = @placeInGrid d, i
-            "translate(#{pos.x},#{pos.y})"
-        @updateDetails()
+          # Place nodes in a grid
+          transitionDuration = if options.duration? then options.duration else 900
+          columnNum = 1+Math.floor($(window).width()-@grid.padding[0])/(@nodeBoxWidth + @grid.spacing[0])
+          theNodes = d3.select(".node-container").selectAll(".node")
+          @zoom.scale(1).translate([@grid.padding[0],@grid.padding[1]])
+          @workspace.transition().ease("linear").attr "transform", "translate(#{[@grid.padding[0],@grid.padding[1]]}) scale(1)"
 
-      resetPositions: ->
-        @gridViewOn = false
-
-        # reinitialize listening to connections
-        @model.connections.on 'add remove', @updateForceGraph, this
-        @model.connections.on 'change', @updateDetails, this
-
-        theNodes = d3.select(".node-container").selectAll(".node")
-        resetDuration = 1200
-        theNodes.transition()
-          .duration(resetDuration)
-          .attr "transform", (d, i) =>
-            @placeInGrid d, i
-            "translate(#{d.x},#{d.y})"
-        @dataTooltip.emptyTooltip()
-
-        # if we need to update the force graph then start the force
-        if @updateForceFlag then @force.start()
-        @updateForceFlag = false
-
-        setTimeout =>
+          theNodes.transition()
+            .duration(transitionDuration)
+            .attr "transform", (d, i) =>
+              pos = @placeInGrid d, i
+              "translate(#{pos.x},#{pos.y})"
           @updateDetails()
-        , resetDuration
+      resetPositions: -> #reset back to graphView
+        if @gridViewOn
+          @grid.colYs.splice(0)
+          @gridViewOn = false
+
+          # reinitialize listening to connections
+          @model.connections.on 'add remove', @updateForceGraph, this
+          @model.connections.on 'change', @updateDetails, this
+
+          theNodes = d3.select(".node-container").selectAll(".node")
+          resetDuration = 1200
+          theNodes.transition()
+            .duration(resetDuration)
+            .attr "transform", (d, i) =>
+              @placeInGrid d, i
+              "translate(#{d.x},#{d.y})"
+          @grid.colYs.splice(0)
+          @dataTooltip.emptyTooltip()
+
+          # if we need to update the force graph then start the force
+          if @updateForceFlag then @force.start()
+          @updateForceFlag = false
+
+          setTimeout =>
+            @updateDetails()
+          , resetDuration
 
       placeInGrid: (d, i) ->
-        columnTotal = 1+Math.floor ($(window).width()-@grid.padding[0])/@grid.spacing[0]
+        columnTotal = 1 + Math.floor(($(window).width() - @grid.padding[0]) / (@nodeBoxWidth + @grid.spacing[0]))
         columnNum = (i%columnTotal)
 
+        # calculate height of opened current node being positioned
         domEl = $('[data-nodeid="'+d.get('_id')+'"]').eq(0)
         domElHeight = Math.min(@maxInfoBoxHeight, domEl.find('.node-info-body').height()) + Math.min(@maxNodeBoxHeight, domEl.find('.node-title-body').height())
-
-        gridX = columnNum*@grid.spacing[0]+@grid.padding[0]-@zoom.translate()[0]
-        tempY =  @grid.colYs[columnNum] || 100 + @grid.spacing[1]
-        gridY = tempY+@grid.spacing[1]+domElHeight
-        @grid.colYs[columnNum] = gridY
+        begin = @grid.colYs[columnNum] || 0
+        gridX = columnNum*(@nodeBoxWidth+@grid.spacing[0])+@grid.spacing[0]
+        tempY = begin + @grid.spacing[1]
+        @grid.colYs[columnNum] = tempY+domElHeight
         # if the node has no force graph pos then give it a grid pos
         if !(d.x) then d.x = gridX
-        if !(d.y) then d.y = tempY-@zoom.translate()[1]
+        if !(d.y) then d.y = tempY
         {x:gridX, y:tempY}
 
       rightClicked: (e) ->
