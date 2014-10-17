@@ -10,24 +10,13 @@ userSchema = mongoose.Schema(
     password: String
     name: String
     nameLower: String
-
-  facebook:
-    id: String
-    token: String
-    email: String
-    name: String
+    twitter: Boolean
 
   twitter:
     id: String
     token: String
     displayName: String
     username: String
-
-  google:
-    id: String
-    token: String
-    email: String
-    name: String
 
   documents: Array
 )

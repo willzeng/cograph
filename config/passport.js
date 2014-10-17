@@ -2,7 +2,6 @@
 
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
-var FacebookStrategy = require('passport-facebook').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var _ = require(__dirname + '/../node_modules/underscore/underscore');
 
@@ -34,21 +33,6 @@ module.exports = function(passport) {
             done(err, user);
         });
     });
-
-    // // #TODO
-    // // Facebook signup
-    // passport.use(new FacebookStrategy({
-    //     clientID: "315770905267996",
-    //     clientSecret: "c8dbadb98d4275b64a13198b8f7df7f6",
-    //     callbackURL: "http://thecograph.com/auth/facebook/callback"
-    //   },
-    //   function(accessToken, refreshToken, profile, done) {
-    //     User.findOrCreate({ 'local.facebook.id': profile.id }, function(err, user) {
-    //       if (err) { return done(err); }
-    //       done(null, user);
-    //     });
-    //   }
-    // ));
 
     // Twitter Signup
     passport.use(new TwitterStrategy({

@@ -5,7 +5,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/NodeModel', 'cs!models/Co
     class Router extends Backbone.Router
       initialize: ->
         @workspaceModel = new WorkspaceModel()
-
         
         @graphView = new GraphView model: @workspaceModel
         @addNodeView = new AddNodeView model: @workspaceModel
