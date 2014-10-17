@@ -23,7 +23,6 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @model.on 'node:dblclicked', @openDetails, this
         @model.on 'create:connection', @openAndEditConnection, this
         @model.on 'edit:conn', @openDetails, this
-
         @setupAtWho()
 
       openDetails: (nodeConnection) ->
@@ -31,8 +30,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         workspaceSpokes = @model.getSpokes nodeConnection
         @updateColor @model.defaultColors[nodeConnection.get('color')]
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
+        isEditable = $('#add').length isnt 0
         @detailsModal = new Backbone.BootstrapModal(
-          content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes})
+          content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes, isEditable:isEditable})
           animate: false
           showFooter: false
           title: nodeConnection.get("name")
@@ -51,26 +51,26 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @editNodeConnection()
 
       editNodeConnection: ->
-        nodeConnection = @currentNC
+        if($('#add-node-form').length > 0) #isEditable HACK
+          nodeConnection = @currentNC
+          @nodeConnectionForm = new Backbone.Form(
+            model: nodeConnection
+            template: _.template(editFormTemplate)
+          ).on('name:blur url:blur tags:blur', (form, editor) ->
+            form.fields[editor.key].validate()
+          ).render()
 
-        @nodeConnectionForm = new Backbone.Form(
-          model: nodeConnection
-          template: _.template(editFormTemplate)
-        ).on('name:blur url:blur tags:blur', (form, editor) ->
-          form.fields[editor.key].validate()
-        ).render()
+          $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
 
-        $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
+          isNode = nodeConnection.constructor.name is 'NodeModel'
 
-        isNode = nodeConnection.constructor.name is 'NodeModel'
+          if isNode then $('#details-container input[name=name]', @el).focus()
 
-        if isNode then $('#details-container input[name=name]', @el).focus()
-
-        colorOptions = colors:[(val for color, val of @model.defaultColors when !((color is 'grey') and isNode))]
-        $('.colorpalette').colorPalette(colorOptions).on 'selectColor', (e) =>
-          colorValue = e.color
-          nodeConnection.set 'color', _.invert(@model.defaultColors)[colorValue]
-          nodeConnection.save()
+          colorOptions = colors:[(val for color, val of @model.defaultColors when !((color is 'grey') and isNode))]
+          $('.colorpalette').colorPalette(colorOptions).on 'selectColor', (e) =>
+            colorValue = e.color
+            nodeConnection.set 'color', _.invert(@model.defaultColors)[colorValue]
+            nodeConnection.save()
 
       saveNodeConnection: (e) ->
         e.preventDefault()

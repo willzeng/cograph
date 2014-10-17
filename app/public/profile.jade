@@ -1,13 +1,14 @@
 doctype html
 html(lang="en")
 head
-  title Cograph | #{user.local.username}
+  title Cograph | @#{user.local.name}
   meta(charset='utf-8')
   link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
   link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
   link(href='/assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
   link(href='/assets/stylesheets/general.css', rel='stylesheet')  
-  link(href='/assets/stylesheets/nav.css', rel='stylesheet')  
+  link(href='/assets/stylesheets/nav.css', rel='stylesheet')
+  link(href='/assets/stylesheets/profile.css', rel='stylesheet')   
   base(href="/")
   script(type='text/javascript', data-main="landing", src="/assets/libs/requirejs/require.js") //loads landing.js
   script.
@@ -17,7 +18,7 @@ head
     include profileheader
     .container#profile-container
       .page-header.text-center
-        h1
+        h2
           if ownProfile
             | Hi @#{user.local.name}
           else
@@ -25,7 +26,7 @@ head
       if ownProfile
         .row
           .col-sm-6
-            h3 My Cographs
+            h3 Your Cographs
             .document-list
               for doc in userDocs
                 a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
@@ -34,7 +35,7 @@ head
                   | You have no cographs. 
                   a(href="/new") Create a new cograph
           .col-sm-6
-            h3 Public Cographs
+            h3 All Cographs
             .document-list
               for doc in docs
                 a.list-group-item(href="/#{doc.createdBy}/document/#{doc.id}" target="_blank")
@@ -48,3 +49,4 @@ head
                 a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank")
                   | #{doc.name}
                   a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
+    include footer
