@@ -28,8 +28,15 @@
           <% if (node.constructor.name === "NodeModel") {%>
             <ul class="list-group">
               <% _.each(spokes, function(conn) { %>
-                <li class="list-group-item"></i><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
+                <li class="list-group-item"><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
               <% }); %>
+            </ul>
+          <% } else { %>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <%= source.get('name') %> &nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=node.get('name') %>
+                &nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp; <%= target.get('name') %>   
+              </li>
             </ul>
           <% } %>
         </p>
