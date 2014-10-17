@@ -24,7 +24,7 @@ module.exports = (app, passport) ->
   app.post "/login", (req, res, next) ->
     passport.authenticate("local-login", (err, user, info) ->
       if err then next err
-      if not user then res.redirect '/signup'
+      if not user then res.redirect '/login'
       else
         req.logIn user, (err) ->
           if err then next err

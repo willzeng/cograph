@@ -46,17 +46,16 @@ html
           form(action='/login', method='post')
             .form-group
               label Email
-              input.form-control(type='text', name='email')
+              input.form-control.input-lg(type='text', name='email')
             .form-group
               label Password
-              input.form-control(type='password', name='password')
+              input.form-control.input-lg(type='password', name='password')
             button.btn.btn-default.btn-lg.pull-right(type='submit') Login
+          p
+            a(href='/forgot-password') Forgot your Password?
           p
             | Need an account? 
             a(href='/signup') Signup
-          p
-            | Or go 
-            a(href='/') home
     script(src="neural/js/vendor/Detector.js")
     script(src="neural/js/vendor/dat.gui.min.js")
     script(src="neural/js/vendor/stats.min.js")
