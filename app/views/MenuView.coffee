@@ -22,6 +22,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click .public-button-view': 'publicViewChange'
         'click .public-button-edit': 'publicEditChange'
         'click #save-workspace-button': 'saveWorkspace'
+        'click #publish-button': 'openSettingsModal'
 
 
       initialize: ->
