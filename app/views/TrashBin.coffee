@@ -1,7 +1,8 @@
-define ['jquery', 'underscore', 'backbone'],
-  ($, _, Backbone) ->
+define ['jquery', 'underscore', 'backbone', 'socket-io'],
+  ($, _, Backbone, io) ->
     class TrashBin extends Backbone.View
       el: $ '#graph'
+      socket: io.connect("")
 
       events:
         'click #show-all': 'bringBackAll'
@@ -43,6 +44,8 @@ define ['jquery', 'underscore', 'backbone'],
 
         @model.nodes.on 'add remove', @calcNumNodesHidden, this
         @model.on 'init saved:node', @calcNumNodesHidden, this
+        @socket.on "/nodes:delete", => @calcNumNodesHidden()
+        @socket.on "/nodes:create", => @calcNumNodesHidden()
 
       calcNumNodesHidden: ->
         @model.getNodeNames (names) =>

@@ -43,9 +43,16 @@ nav.navbar.navbar-default(role='navigation')
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
+            li#phantom-share
             li
-              a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
-                | Embed
+              a.clickable#sharing-toggle(type="button")
+                | Share
+            if isOwner
+              li#maybe-publish-button
+            else
+              li
+                a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
+                  | Embed
             if isAuthenticated
               li#newgraph-icon
                 a(href="/new" target="_blank" title="new graph")
