@@ -376,7 +376,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           @model.connections.on 'change', @updateDetails, this
 
           theNodes = d3.select(".node-container").selectAll(".node")
-          resetDuration = 1200
+          resetDuration = 900
           theNodes.transition()
             .duration(resetDuration)
             .attr "transform", (d, i) =>
