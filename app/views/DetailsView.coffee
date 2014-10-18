@@ -31,16 +31,23 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @updateColor @model.defaultColors[nodeConnection.get('color')]
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
         isEditable = $('#add').length isnt 0
-        
-        if(nodeConnection.constructor.name == "ConnectionModel")
-          connTarget = @model.getTargetOf nodeConnection
-          connSource = @model.getSourceOf nodeConnection
+
+        if nodeConnection.constructor.name == "ConnectionModel"
+          title = """
+          #{nodeConnection.source.get('name')}
+            &nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;
+          #{nodeConnection.get('name')}
+            &nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;
+          #{nodeConnection.target.get('name')}
+          """
+        else
+          title = nodeConnection.get 'name'
 
         @detailsModal = new Backbone.BootstrapModal(
-          content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes, isEditable:isEditable, source: connSource, target: connTarget})
+          content: _.template(detailsTemplate, {node:nodeConnection, spokes:workspaceSpokes, isEditable:isEditable})
           animate: false
           showFooter: false
-          title: nodeConnection.get("name")
+          title: title
         ).open()
 
       updateColor: (color) ->

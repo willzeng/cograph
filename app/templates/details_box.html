@@ -5,10 +5,10 @@
         <div class="detail-controls">
           <% if(isEditable) {%>
             <% if (node.constructor.name === "NodeModel") {%>
-              <button id="edit-node-button" class="btn btn-primary">Edit</button>
+              <button id="edit-node-button" class="btn btn-primary btn-sm">Edit</button>
             <% } else { %>
-              <button id="edit-connection-button" class="btn btn-default">Edit</button>
-              <button id="archive-connection-button" class="btn btn-warning">Hide</button>
+              <button id="edit-connection-button" class="btn btn-default btn-sm">Edit</button>
+              <button id="archive-connection-button" class="btn btn-warning btn-sm">Hide</button>
             <% } %>
           <% } %>
         </div>
@@ -30,13 +30,6 @@
               <% _.each(spokes, function(conn) { %>
                 <li class="list-group-item"><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
               <% }); %>
-            </ul>
-          <% } else { %>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <%= source.get('name') %> &nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=node.get('name') %>
-                &nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp; <%= target.get('name') %>   
-              </li>
             </ul>
           <% } %>
         </p>
