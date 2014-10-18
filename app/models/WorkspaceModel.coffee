@@ -46,6 +46,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket.on @url()+":delete", (objData) =>
           existingObj = @findWhere {_id:objData._id}
           if existingObj? then @trigger "remove:req", existingObj
+          @fetch() #update other undeleted nodes
 
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")

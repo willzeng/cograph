@@ -64,7 +64,7 @@ exports.destroy = (data, callback, socket) ->
   graphDb.getNodeById id, (err, node) ->
     node.delete () ->
       parsed = node._data.data
-      socket.emit '/nodes:delete', true
+      socket.emit '/nodes:delete', data
       socket.broadcast.to(parsed._docId).emit '/nodes:delete', parsed
       callback null, parsed
     , true
