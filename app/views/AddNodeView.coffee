@@ -127,16 +127,19 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           if @mentions.length is 0
             node.fixed = true
             [node.x, node.y] = @findUnoccupiedStage()
-          @model.putNode node
 
           node.set "tags", twttr.txt.extractHashtags attributes.description
 
+          @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
+          uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')
+          node.set "neighborCount", uniqMentions.length
+
+          @model.putNode node
+
           $.when(node.save()).then =>
             @model.trigger 'saved:node'
-            # Create connections to mentioned nodes
-            @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
-            uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')
 
+            # Create connections to mentioned nodes
             for targetNode in uniqMentions
               if targetNode?
                 connection = new @model.connections.model
@@ -144,7 +147,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                     target: targetNode.get('_id')
                     _docId: @model.documentModel.get('_id')
                     description: node.get('description')
-                connection.save()
+                $.when(connection.save()).then ->
+                  # update neighbor counts
+                  node.fetch()
+                  targetNode.fetch()
                 @model.putConnection connection
 
             @resetAdd()

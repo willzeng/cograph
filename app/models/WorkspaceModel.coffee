@@ -46,6 +46,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
         @socket.on @url()+":delete", (objData) =>
           existingObj = @findWhere {_id:objData._id}
           if existingObj? then @trigger "remove:req", existingObj
+          @fetch() #update other undeleted nodes
 
     class WorkspaceModel extends Backbone.Model
       socket: io.connect("")
@@ -77,10 +78,12 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
         @connections = new ConnectionCollection()
         @connections.on "create:req", (reqCreate) =>
-          # Fetch the source and target to update their new connection degrees
-          @getSourceOf(reqCreate).fetch()
-          @getTargetOf(reqCreate).fetch()
-          @putConnection reqCreate
+          # test to be sure connection is new
+          if gm.connections.where({source:reqCreate.get('source'), target:reqCreate.get('target')}).length is 0
+            # Fetch the source and target to update their new connection degrees
+            @getSourceOf(reqCreate).fetch()
+            @getTargetOf(reqCreate).fetch()
+            @putConnection reqCreate
 
         @filterModel = new FilterModel()
         @nodes.on "change:tags", @updateFilter, this
