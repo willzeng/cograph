@@ -22,6 +22,9 @@
   font-family: 'Gotham Light';
   padding-top: 20px;
 }
+#button-container {
+ margin-top: 60px; 
+}
 hr {
   border-top: 1px solid #ddd;
 }
@@ -251,18 +254,13 @@ body, h1, h2, h3, h4, h5, h6 {
 
 }
 
-.call-to-demo:hover {
-  background: inherit;
-  color: inherit;
-  border: 1px solid #333;
-}
-
 footer {
   background: #f2e244;
-  font-size: 20px;
+  font-size: 16px;
   margin: 3.5em 0 0;
   padding: 1.5em 0 0.8em;
   color: inherit;
+  font-weight: normal;
 }
 
 footer a {
@@ -273,6 +271,12 @@ footer a:hover {
   color: #222;
   text-decoration: none;
   border-bottom: 2px solid white;
+}
+
+.call-to-demo:hover {
+  background: inherit;
+  color: inherit;
+  border: 1px solid #333;
 }
 
 .header-titles {

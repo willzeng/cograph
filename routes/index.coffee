@@ -28,10 +28,20 @@ sendGraphDoc = (request, response) ->
     if request.isAuthenticated()
       prefetched.isAuthenticated = true
       prefetched.user = request.user
+      if prefetched.theDocument.createdBy
+        prefetched.isOwner = request.user.local.nameLower is (prefetched.theDocument.createdBy).toLowerCase()
+      else
+        prefetched.isOwner = false
     else
       prefetched.isAuthenticated = false
       prefetched.user = {}
-    response.render 'index.jade', prefetched
+      prefetched.isOwner = false
+    if prefetched.theDocument.publicEdit != 0 or prefetched.isOwner
+      response.render 'index.jade', prefetched
+    else if prefetched.theDocument.publicView != 0
+      response.render 'index-view-only.jade', prefetched
+    else
+      response.render 'errors/missingDocument.jade'
 
 router.get /^(?:\/(\w+)\/document)?\/(\d+)\/?(?:search\/(\w+))?\/?$/, (request, response) ->
   sendGraphDoc request, response
@@ -107,13 +117,13 @@ router.get /^\/(\w+)\/?$/, (req, res) ->
             shownDocs = usersDocs
             ownProfile = req.user.local.name is profiledUser.local.name
           else # otherwise show only their public documents
-            shownDocs = (d for d in usersDocs when d.public is true)
+            shownDocs = (d for d in usersDocs when d.publicView is 2)
             ownProfile = false
           res.render "profile.jade",
             ownProfile: ownProfile  # checks to see if you are looking at your own profile
             user: profiledUser      # get the user out of session and pass to template
-            docs: publicDocs        # prefetch the list of document names for opening
-            userDocs: shownDocs     # prefetch the users documents that should be displayed
-            isAuthenticated: req.isAuthenticated() #TODO THIS IS ALWAYS FALSE
+            docs: publicDocs        # prefetch the list of document names for opening (with public = 2)
+            userDocs: shownDocs     # prefetch the users private documents
+            isAuthenticated: req.isAuthenticated()
 
 module.exports = router

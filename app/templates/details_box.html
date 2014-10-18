@@ -3,11 +3,13 @@
     <div id="collapse-one" class="panel-collapse collapse in">
       <div class="panel-body">
         <div class="detail-controls">
-          <% if (node.constructor.name === "NodeModel") {%>
-            <button id="edit-node-button" class="btn btn-primary">Edit</button>
-          <% } else { %>
-            <button id="edit-connection-button" class="btn btn-default">Edit</button>
-            <button id="archive-connection-button" class="btn btn-warning">Archive</button>
+          <% if(isEditable) {%>
+            <% if (node.constructor.name === "NodeModel") {%>
+              <button id="edit-node-button" class="btn btn-primary">Edit</button>
+            <% } else { %>
+              <button id="edit-connection-button" class="btn btn-default">Edit</button>
+              <button id="archive-connection-button" class="btn btn-warning">Hide</button>
+            <% } %>
           <% } %>
         </div>
           <% if (node.attributes.description.length > 0) { %>

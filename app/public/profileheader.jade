@@ -16,7 +16,7 @@ nav.navbar.navbar-default(role='navigation')
               img(src="assets/images/newgraph.png" height="32px" style="margin-top:-9px;")
           li.dropdown
             a.dropdown-toggle(data-toggle='dropdown', href='')
-              | #{user.local.name}
+              | @#{user.local.name}
               i.caret
             ul.dropdown-menu
               li
@@ -25,3 +25,8 @@ nav.navbar.navbar-default(role='navigation')
                 a(href="/account") Account
               li
                 a(href="/logout") Logout
+    else
+      #gdocs-nav.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          li
+            a(href="/login") Login

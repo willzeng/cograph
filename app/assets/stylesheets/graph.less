@@ -4,7 +4,7 @@
 @node-color: white;
 @connection-color: black;
 @stroke-color: black;
-@selected-color: #74DDFC;
+@selected-color: rgb(44, 147, 255);
 @selected-nodetext-color: white;
 @fixed-color: orange;
 @text-color: #333;
@@ -17,6 +17,10 @@
 //
 // MIXINS
 //
+
+* {
+  -webkit-font-smoothing: antialiased;
+}
 
 .wordBreak { // sensible word/line breaking
   -ms-word-break: break-all;
@@ -348,7 +352,6 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .toolbar.left {
   left: 15px;
-  /*z-index: @controls-z-index + 1;*/
 }
 
 .toolbar.right {
@@ -388,6 +391,13 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   margin: 2px 0px;
 }
 
+#menu-title-dropdown i {
+  font-size: 16pt;
+}
+
+#menu-title {
+  width: 100%;
+}
 
 .search-title {
   display: block;
@@ -399,15 +409,31 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   color: #666;
 }
 
+.controls {
+  margin-bottom: 0px;
+}
+
+#search-form {
+  margin-right: 10px;
+}
+
 .modal-body {
   max-height: 600px; // #TODO make this relative to the window height.
   overflow-y: scroll;
 }
 
+// NAV
+
 .navbar-doc-title {
   position: absolute;
-  top: 10px;
-  left: ~"calc(50% - 120px)";
+  top: 13px;
+  left: ~"calc(50% - 50px)";
+}
+
+.public-button-view.selected, .public-button-edit.selected {
+  background: @selected-color;
+  color: white;
+  font-weight: bold;
 }
 
 .clickable {
@@ -415,7 +441,14 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #zoom-in-button, #zoom-out-button {
-  padding: 5px;
+  padding: 0px 5px;
+  height: 21px;
+
+  i {
+    font-size: 8px;
+    position: relative;
+    top: -1px;
+  }
 }
 
 .navbar-doc-title .public-button i {
@@ -615,6 +648,10 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 // end
+
+#menu-title-display {
+  margin: 0 0 0 10px;
+}
 
 .panel-heading, .panel-body {
   padding-left: 0;

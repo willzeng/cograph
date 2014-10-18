@@ -10,35 +10,52 @@ nav.navbar.navbar-default(role='navigation')
             img#brand-logo(src="/assets/images/logo-black.png")
           
         span.navbar-doc-title
-            span.form-group
-              a.public-button.clickable(title="who can see this graph")
-              input#menu-title(type="text" placeholder="Untitled Doc")
-              span.dropdown
-                a.dropdown-toggle(data-toggle='dropdown', href='')
-                  i.caret
-                  //- if owns else other stuff
-                ul.dropdown-menu
-                  li(role="presentation")
-                    a#workspaces-button(href="" data-toggle="modal") Open View
-                  li(role="presentation")
-                    a#save-workspace-button(href="" data-toggle="modal") Save View
-                  li(role="presentation")
-                    a#share-workspace-button(href="" data-toggle="modal") Share View
-                  li
-                    a#analytics-button(href="" data-toggle="modal" data-target="#analytics-modal") Stats
+          span.dropdown
+            if isOwner
+              a.public-button-display.clickable(title="who can see this graph") 
+            else 
+              span.public-button-display(title="who can see this graph") 
+            a.dropdown-toggle.clickable(data-toggle='dropdown' id="graph-title")
+              span#menu-title-display
+              i.caret
+            ul.dropdown-menu#menu-title-dropdown(aria-labelledby="graph-title")
+              li
+                a#workspaces-button(href="" data-toggle="modal")
+                  span Open View
+                  i.fa.fa-folder-open-o.pull-right
+              li
+                a#save-workspace-button(href="" data-toggle="modal")
+                  span Save View
+                  i.fa.fa-save.pull-right
+              if isOwner
+                li
+                  a#analytics-button(href="" data-toggle="modal")
+                    span Stats
+                    i.fa.fa-signal.pull-right
+                li 
+                  a#settings-button(href="" data-toggle="modal")
+                    span Settings
+                    i.fa.fa-cog.pull-right
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
+            li#phantom-share
             li
-              a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
-                | Embed Code
+              a.clickable#sharing-toggle(type="button")
+                | Share
+            if isOwner
+              li#maybe-publish-button
+            else
+              li
+                a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
+                  | Embed
             if isAuthenticated
               li#newgraph-icon
                 a(href="/new" target="_blank" title="new graph")
                   img(src="/assets/images/newgraph.png")
               li.dropdown
                 a.dropdown-toggle(data-toggle='dropdown', href='')
-                  | #{user.local.name}
+                  | @#{user.local.name}
                   i.caret
                 ul.dropdown-menu
                   li(role="presentation")
