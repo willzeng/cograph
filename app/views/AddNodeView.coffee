@@ -124,9 +124,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         if node.isValid()
           # stage the new node in the staging area
           # if it is not connected to anything
-          if @mentions.length is 0
-            node.fixed = true
-            [node.x, node.y] = @findUnoccupiedStage()
+          # if @mentions.length is 0
+          #   node.fixed = true
+          #   [node.x, node.y] = @findUnoccupiedStage()
 
           node.set "tags", twttr.txt.extractHashtags attributes.description
 
