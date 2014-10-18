@@ -381,6 +381,17 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @force.on "tick", () =>
           if @drawing and !(@gridViewOn) and !@cancelledDrag then tick()
 
+      addNodeGV: (node) ->
+        # add to dom
+        @updateDetails node
+        @resetPositions()
+        @gridView({duration: 0})
+
+      removeNodeGV: (node) ->
+        @updateDetails node
+        @resetPositions()
+        @gridView({duration: 0})
+
       gridView: (options) -> #trigger grid view
         if(!@gridViewOn)
           @gridViewOn = true  
@@ -390,6 +401,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           # ignore connection events
           @model.connections.off 'add remove', @updateForceGraph
           @model.connections.off 'change', @updateDetails
+          @model.nodes.off 'add remove', @updateForceGraph, this
+          @model.nodes.on 'add', @addNodeGV, this
+          @model.nodes.on 'remove', @removeNodeGV, this
 
           # Place nodes in a grid
           transitionDuration = if options.duration? then options.duration else 900
@@ -404,6 +418,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               pos = @placeInGrid d, i
               "translate(#{pos.x},#{pos.y})"
           @updateDetails()
+
       resetPositions: -> #reset back to graphView
         if @gridViewOn
           @grid.colYs.splice(0)
@@ -412,6 +427,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           # reinitialize listening to connections
           @model.connections.on 'add remove', @updateForceGraph, this
           @model.connections.on 'change', @updateDetails, this
+          @model.nodes.on 'add remove', @updateForceGraph, this
+          @model.nodes.off 'add', @addNodeGV, this
+          @model.nodes.off 'remove', @removeNodeGV, this
 
           theNodes = d3.select(".node-container").selectAll(".node")
           resetDuration = 900
@@ -438,7 +456,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         # calculate height of opened current node being positioned
         domEl = $('[data-nodeid="'+d.get('_id')+'"]').eq(0)
         domElHeight = Math.min(@maxInfoBoxHeight, domEl.find('.node-info-body').height()) + Math.min(@maxNodeBoxHeight, domEl.find('.node-title-body').height())
-        begin = @grid.colYs[columnNum] || 0
+        # node "0,0" is not the top left corner. but rather middle left of title box
+        begin = (@grid.colYs[columnNum] || 0) + Math.min(@maxNodeBoxHeight, domEl.find('.node-title-body').height())/2
         gridX = columnNum*(@nodeBoxWidth+@grid.spacing[0])+@grid.spacing[0]
         tempY = begin + @grid.spacing[1]
         @grid.colYs[columnNum] = tempY+domElHeight
