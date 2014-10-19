@@ -52,7 +52,6 @@ module.exports = function(passport) {
                         return done(err);
                     // check to see if theres already a user with that name
                     if (namedUser || _.contains(usernameBlacklist, profile.username)) {
-                        console.log(namedUser)
                         if(namedUser.twitter && namedUser.twitter.id == profile.id)
                             // all is well, return successful user
                             return done(null, user);
