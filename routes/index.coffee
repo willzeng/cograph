@@ -36,9 +36,9 @@ sendGraphDoc = (request, response) ->
       prefetched.isAuthenticated = false
       prefetched.user = {}
       prefetched.isOwner = false
-    if(prefetched.theDocument.publicEdit != 0 || prefetched.isOwner)
+    if prefetched.theDocument.publicEdit != 0 or prefetched.isOwner
       response.render 'index.jade', prefetched
-    else if(prefetched.theDocument.publicView != 0)
+    else if prefetched.theDocument.publicView != 0
       response.render 'index-view-only.jade', prefetched
     else
       response.render 'errors/missingDocument.jade'
@@ -124,6 +124,6 @@ router.get /^\/(\w+)\/?$/, (req, res) ->
             user: profiledUser      # get the user out of session and pass to template
             docs: publicDocs        # prefetch the list of document names for opening (with public = 2)
             userDocs: shownDocs     # prefetch the users private documents
-            isAuthenticated: req.isAuthenticated() #TODO THIS IS ALWAYS FALSE
+            isAuthenticated: req.isAuthenticated()
 
 module.exports = router

@@ -1,6 +1,6 @@
 <h6>Cograph Name</h6>
 <input id="menu-title" type="text" placeholder="Untitled Doc" value="<%=name%>" />
-<h6>Who can see it</h6>
+<h6>Who can view it</h6>
 <a class="public-button-view clickable" title="who can see this graph"></a>
 <div class="btn-group btn-group-justified">
   <div class="btn-group">
@@ -26,5 +26,8 @@
     <button type="button" data-type="0" class="btn <%=canPublicEdit == 0 ? 'selected' : ''%> btn-default public-button-edit">Only me</button>
   </div>
 </div>
+<h6>Embed Code</h6>
+<i>(Only works with Viewable by Anyone / Anyone with the link)</i>
+<textarea><%= embed %></textarea>
 <br/>
 <button id="save-graph-settings" class="btn btn-info pull-right">Save Changes</button>

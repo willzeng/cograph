@@ -9,8 +9,8 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       name: 'Untitled'
       _id: -1
       workspaces: []
-      publicView: 0 # 0: noone, 1: link only, 2: anyone
-      publicEdit: 0 # 0: noone, 1: link only, 2: anyone
+      publicView: 0 # 0: only owner, 1: link only, 2: anyone
+      publicEdit: 0 # 0: only owner, 1: link only, 2: anyone
       createdBy: ''
 
     initialize: ->

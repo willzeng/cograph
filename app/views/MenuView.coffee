@@ -21,17 +21,24 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #save-graph-settings': 'saveSettings'
         'click .public-button-view': 'publicViewChange'
         'click .public-button-edit': 'publicEditChange'
-        'click #save-workspace-button': 'saveWorkspace'
-        'click #publish-button': 'openSettingsModal'
-
+        'click #maybe-publish-button': 'openSettingsModal'
 
       initialize: ->
         @model.on "document:change", @render, this
         @model.getDocument().on 'change', @render, this
+        @model.getDocument().on 'change:public', @updatePublicButton, this
         @render()
 
       render: ->
         @updateTitle()
+        @updatePublicButton()
+        @updatePublishButton()
+
+      updatePublishButton: ->
+        if @model.getDocument().get("publicView") is 0 or @model.getDocument().get("publicView") is 1
+          $('#maybe-publish-button').html "<a class='clickable'>Publish</a>"
+        else
+          $('#maybe-publish-button').html ""
 
       newDocumentModal: ->
         @newDocModal = new Backbone.BootstrapModal(
@@ -66,7 +73,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           canPublicView = @model.getDocument().get("publicView")
           canPublicEdit = @model.getDocument().get("publicEdit")
           @openSettingsModal = new Backbone.BootstrapModal(
-            content: _.template(openSettingsTemplate, {name:name, canPublicView:canPublicView, canPublicEdit:canPublicEdit})
+            content: _.template(openSettingsTemplate, {name:name, canPublicView:canPublicView, canPublicEdit:canPublicEdit, embed:@getEmbed(window.location.href)})
             title: "Graph Settings"
             animate: true
             showFooter: false
@@ -90,33 +97,18 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         doc.save()
         @openSettingsModal.close()
         @updateTitle()
+        @updatePublicButton()
+        @updatePublishButton()
+
+      updatePublicButton: ->
+        if @model.getDocument().get('publicView') != 0
+          $('.public-button-display').html '<i class="fa fa-globe" title="public"></i>'
+        else
+          $('.public-button-display').html '<i class="fa fa-lock" title="private"></i>'
 
       updateTitle: ->
         $('#menu-title-display').text @model.getDocument().get('name')
         $('.navbar-doc-title').css('left', 'calc(50% - '+$(".navbar-doc-title").width()/2+'px')
-
-      saveWorkspace: ->
-        @saveDocModal = new Backbone.BootstrapModal(
-          content: _.template(saveDocTemplate, {})
-          title: "Save View"
-          animate: true
-          showFooter: false
-        ).open()
-
-        @saveDocModal.on "shown", () ->
-          $('#saveDocName').focus()
-
-        @model.set 'zoom', @graphView.zoom.scale()
-        @model.set 'translate', @graphView.zoom.translate()
-
-        $('#save-doc-form', @saveDocModal.$el).submit () =>
-          @model.sync "create", @model,
-            success: (savedModel) => 
-              @trigger "save:workspace", savedModel._id
-              @model.set 'name', $('#saveDocName').val()
-              @model.sync "update", @model
-          @saveDocModal.close()
-          false
 
       # NOTE: THIS IS CURRENTLY UNUSED
       openDocumentModal: ->
@@ -144,6 +136,15 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
             showFooter: false
           ).open()
         false # prevent navigation from appending '#'
+
+      getEmbed: (url) ->
+        """
+        <div style='min-width:420;max-width:700'>
+          <iframe src='#{url}' width='100%' height='100%'
+          scrolling='no' frameborder='0' allowfullscreen>
+          </iframe>
+        </div>
+        """
 
       openWorkspacesModal: ->
         docId = @model.getDocument().get("_id")
