@@ -32,12 +32,12 @@ html
       .row
         .col-md-6.col-md-offset-3.col-xs-12#login-form
           h3
-            strong Request Beta Key
+            strong Join Waiting List
           // show any messages that come back with authentication
           if message.length > 0 
             .alert.alert-success #{message}
 
-          form(action='/login', method='post').cf
+          form(action='/request-key', method='post').cf
             .form-group
               input.form-control.input-lg(type='text', name='email' placeholder="email")
             button.btn.btn-default.btn-lg.pull-right(type='submit') Submit

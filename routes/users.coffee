@@ -49,10 +49,10 @@ module.exports = (app, passport) ->
       message: req.flash("")
 
   app.post "/request-key", (req, res) ->
-    console.log(req)
-    console.log(res)
     x = new BetaUser()
+    x.email = req.body.email
     x.save()
+    res.redirect '/'
     return
 
   # =====================================
