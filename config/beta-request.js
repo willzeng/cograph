@@ -1,4 +1,7 @@
-var BetaRequest = require('../models/beta-requests.coffee');
 
-m = new BetaRequest;
-m.save();
+module.exports = function(betaRequestConnection) {
+	var BetaRequest = require('../models/beta-requests.coffee')(betaRequestConnection)
+
+	m = new BetaUser();
+	m.save();
+}

@@ -6,11 +6,11 @@ var TwitterStrategy = require('passport-twitter').Strategy;
 var _ = require(__dirname + '/../node_modules/underscore/underscore');
 
 // load up the user model
-var User = require('../models/user.coffee');
+User = require('../models/user.coffee');
 
 // reserved usernames
 // these cannot be used as usernames since they will interfere with other routes
-var usernameBlacklist = ['login', 'logout', 'document', 'signup', 'profile', 'landing', 'new', 'mobile', 'errors', 'forgot-password'];
+var usernameBlacklist = ['login', 'logout', 'document', 'signup', 'profile', 'landing', 'new', 'mobile', 'errors', 'forgot-password', 'request-key'];
 var userNameRegEx = /^(\w+)$/;
 
 // expose this function to our app using module.exports
@@ -52,20 +52,26 @@ module.exports = function(passport) {
                         return done(err);
                     // check to see if theres already a user with that name
                     if (namedUser || _.contains(usernameBlacklist, profile.username)) {
-                        if(namedUser.local.twitter.id == profile.id)
-                            // LOGIN
-                            console.log('login')
-                        else // username taken
-                            return done(err);
+                        console.log(namedUser)
+                        if(namedUser.twitter && namedUser.twitter.id == profile.id)
+                            // all is well, return successful user
+                            return done(null, user);
+                        else 
+                            // username taken
+                            // todo this should show a message to the user that appears
+                            return done(null, false, { message: 'Your twitter name is already taken. Sorry :/, Please log in normally'});
                     }
                     else {
                         // create the user
-                        var newUser            = new User();
+                        var newUser             = new User();
                         // set the user's local credentials
                         newUser.local.email     = profile.email;
                         newUser.local.name      = profile.username;
                         newUser.local.nameLower = profile.username.toLowerCase();
-                        newUser.local.twitter   = profile._json
+                        newUser.twitter = profile._json
+                        newUser.twitter.id = profile.id
+                        newUser.twitter.username = profile.username
+                        newUser.twitter.displayName = profile.displayName
                         // save the user
                         newUser.save(function(err) {
                           if (err)

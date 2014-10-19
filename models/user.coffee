@@ -6,13 +6,21 @@ bcrypt = require "bcrypt-nodejs"
 # define the schema for our user model
 userSchema = mongoose.Schema(
   local:
-    email: String
+    email: 
+      type: String
+      unique: true
     password: String
-    name: String
-    nameLower: String
-    twitter: Boolean
+    name: 
+      type: String
+      required: true
+      unique: true
+    nameLower:
+      type: String
+      required: true
+      unique: true
 
   twitter:
+    dump: String
     id: String
     token: String
     displayName: String

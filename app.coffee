@@ -13,15 +13,14 @@ favicon = require 'static-favicon'
 bodyParser = require 'body-parser'
 
 configDB = require './config/database.js'
-betaRequestDB = require './config/beta-request-database.js'
 
 app = express()
 
 # configuration ======================================================
 mongoose.connect configDB.url # connect to our user database
 
-betaRequestConnection = mongoose.createConnection betaRequestDB.url # connect to beta request db
 
+require('./models/beta-requests.coffee')
 require('./config/passport')(passport) # pass passport for configuration
 
 # set up express app =================================================
