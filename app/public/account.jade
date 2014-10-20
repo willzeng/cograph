@@ -20,10 +20,12 @@ head
         br
         h2
           |  Account
-        if message && message.length > 0 
-          .alert.alert-danger #{message}
-
-        form(action='/signup', method='post')
+        if message && message.length > 0
+          if messageType!=undefined && messageType==1
+            .alert.alert-success #{message}
+          else 
+            .alert.alert-danger #{message}
+        form(action='/account', method='post')
           .form-group
             label Email
             input.form-control(type='email', name='email' value='#{user.local.email}')
@@ -32,8 +34,8 @@ head
             input.form-control(type='text', name='name'  value='#{user.local.name}', disabled)
           .form-group
             label Old Password
-            input.form-control(type='password', name='password')
+            input.form-control(type='password', name='oldPassword')
           .form-group
             label New Password
-            input.form-control(type='password', name='password')
+            input.form-control(type='password', name='newPassword')
           button.btn.btn-info.pull-right.btn-lg(type='submit') Save
