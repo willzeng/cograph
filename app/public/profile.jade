@@ -49,4 +49,4 @@ head
                 a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank")
                   | #{doc.name}
                   a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
-    include footer
+    include footer-logged-in

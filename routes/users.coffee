@@ -1,8 +1,17 @@
 # routes/users.coffee
 documents = require "./documents"
 utils = require "./utils"
+async = require 'async'
+crypto = require 'crypto'
+User = require '../models/user.coffee'
+BetaUser = require '../models/beta-requests.coffee'
+flash = require 'express-flash'
+nodemailer = require 'nodemailer'
+bcrypt = require "bcrypt-nodejs"
 
 module.exports = (app, passport) ->
+
+  app.use(flash())
   
   # =====================================
   # HOME PAGE (with login links) ========
@@ -24,13 +33,86 @@ module.exports = (app, passport) ->
   app.post "/login", (req, res, next) ->
     passport.authenticate("local-login", (err, user, info) ->
       if err then next err
-      if not user then res.redirect '/signup'
+      if not user then res.redirect '/login'
       else
         req.logIn user, (err) ->
           if err then next err
           res.redirect '/'+user.local.nameLower
     )(req, res, next)
+
+  # =====================================
+  # REQUEST BETA KEY ====================
+  # =====================================
+
+  app.get "/request-key", (req, res) ->
+    res.render "request-key.jade"
+      message: req.flash("")
+
+  app.post "/request-key", (req, res) ->
+    x = new BetaUser()
+    x.email = req.body.email
+    x.save()
+    res.redirect '/'
+    return
+
+  # =====================================
+  # FORGOT PASSWORD =====================
+  # =====================================
   
+  app.get "/forgotten-password", (req, res) ->
+    res.render "forgotten-password.jade"
+      message: req.flash("forgotMessage") # TODO?
+
+  app.post "/forgotten-password", (req, res) ->
+    async.waterfall [
+      (done) ->
+        crypto.randomBytes 10, (err, buf) ->
+          token = buf.toString("hex")
+          done err, token
+          return
+
+      (token, done) ->
+        User.findOne({'local.email': req.body.email}, (err, user) ->
+          unless user
+            req.flash "error", "No account with that email address exists."
+            return res.redirect("/forgotten-password")
+          user.local.password = bcrypt.hashSync token, bcrypt.genSaltSync(8), null
+          user.save (err) ->
+            done err, token, user
+            return
+
+          return
+        )
+
+      (token, user, done) ->
+        smtpTransport = nodemailer.createTransport("SMTP",
+          service: "SendGrid"
+          auth:
+            user: "davidfurlong"
+            pass: "david4226"
+        )
+        mailOptions =
+          to: user.local.email
+          from: "passwordreset@cograph.co"
+          subject: "cograph password reset"
+          text: "You are receiving this because you (or someone else) has requested the reset of the password for your account. Your new password is "+token
+
+        smtpTransport.sendMail mailOptions, (err) ->
+          req.flash "info", "An e-mail has been sent to " + user.local.email + " with further instructions."
+          done err, "done"
+          return
+
+    ], (err) ->
+      console.log err
+      # the next two redirects are the same for security reasons
+      return res.redirect "/login" if err
+      res.redirect "/login"
+      return
+
+    return
+
+
+
   # =====================================
   # SIGNUP ==============================
   # =====================================

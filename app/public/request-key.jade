@@ -1,6 +1,6 @@
 html
   head
-    title Cograph | Login
+    title Cograph | Request Beta Key
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
     link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
@@ -32,30 +32,17 @@ html
       .row
         .col-md-6.col-md-offset-3.col-xs-12#login-form
           h3
-            strong Welcome Back!
-          br
-          p  
-            a(href="/auth/twitter")
-              img(src="assets/images/sign-in-with-twitter.png")
-          hr
+            strong Join Waiting List
           // show any messages that come back with authentication
           if message.length > 0 
-            .alert.alert-danger #{message}
+            .alert.alert-success #{message}
 
-          // LOGIN FORM 
-          form(action='/login', method='post')
+          form(action='/request-key', method='post').cf
             .form-group
-              label Email
-              input.form-control.input-lg(type='text', name='email')
-            .form-group
-              label Password
-              input.form-control.input-lg(type='password', name='password')
-            button.btn.btn-default.btn-lg.pull-right(type='submit') Login
-          p
-            a(href='/forgotten-password') Forgot your Password?
-          p
-            | Need an account? 
-            a(href='/request-key') Request Key
+              input.form-control.input-lg(type='text', name='email' placeholder="email")
+            button.btn.btn-default.btn-lg.pull-right(type='submit') Submit
+          p 
+            a(href="mailto:hello@cograph.co") Contact
     script(src="neural/js/vendor/Detector.js")
     script(src="neural/js/vendor/dat.gui.min.js")
     script(src="neural/js/vendor/stats.min.js")
