@@ -1,4 +1,4 @@
-extends layout
+extends graph
 
 block content
   #sidebar
@@ -7,6 +7,24 @@ block content
       .spinner
         .double-bounce1
         .double-bounce2
+    .toolbar.right.controls
+      .navbar-right.navbar-form
+        form#add-node-form.form-inline
+          #add.contracted
+            textarea#add-title(name="name", placeholder='New node', rows='1')
+            textarea#add-description(name="description", placeholder='Description - Use #tags @people +connect', rows='1')
+            #add-toolbar.cf
+              #add-toolbar-left
+                button#add-color.color-circle(type="button")
+                  i.fa.fa-circle(title="Change color")
+                div#add-color-container.hidden
+                button#add-image(type="button")
+                  i.fa.fa-image(title='Add image')
+                input#add-image-container.hidden(type="text", placeholder="image url")
+              #add-toolbar-right
+                button#add-submit(title='Create something')
+                  | Create
+
     .toolbar.bottom.right.controls#toolbar-bottom-right
       ul.nav.navbar-nav
         li

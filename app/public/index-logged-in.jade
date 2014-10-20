@@ -6,52 +6,24 @@ html(lang='en')
     meta(name='viewport', content='width=device-width,initial-scale=1.0')
     link(href='assets/libs/iconset/flaticon.css', rel='stylesheet', type='text/css')
     link(href='assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
-    link(href='assets/stylesheets/landing.css', rel='stylesheet')
-    link(href="neural/css/app.css", rel='stylesheet')
+    link(href='assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
+    link(href='assets/stylesheets/general.css', rel='stylesheet')
+    link(href='assets/stylesheets/index-logged-in.css', rel='stylesheet')
+    link(href='/assets/stylesheets/nav.css', rel='stylesheet')
+
   body
-    #canvas-container.jumbotron
-    script#vertexshader-axon(type='x-shader/x-vertex').
-      uniform float opacityMultiplier;
-      attribute float opacityAttr;
-      varying float opacityNew;
-      void main() {
-        opacityNew = opacityAttr * opacityMultiplier;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
-      }
-    script#fragmentshader-axon(type='x-shader/x-fragment').
-      uniform vec3 color;
-      varying float opacityNew;
-      void main() {
-        gl_FragColor = vec4(color, opacityNew);
-      }
-    
-    nav.navbar.navbar-default.navbar-inverse(role='navigation')
-      .container
-        .navbar-header
-          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-ex1-collapse')
-            span.icon-bar
-            span.icon-bar
-            span.icon-bar
-          a.navbar-brand.nav-link
-            img.brand-logo(src='assets/images/brand-w.png')
-
-        .collapse.navbar-collapse.navbar-ex1-collapse
-          ul.nav.navbar-nav.navbar-right
-            li
-              a(href='/login') Login
-            li
-              a(href='/request-key') Request Beta Key
-
-    #top.jumbotron
-      .container
-        h1 Make new connections
-        p#button-container
-          a#create.btn.btn-primary.btn-lg.call-to-action(href="/new") Make a Graph
-          a#open.btn.btn-default.btn-lg.call-to-action(href="/profile") Explore Graphs
-
+    include nav
     .container.main-content
       .row
         .col-md-12
+          h3 Published Cographs
+          br
+          .document-list
+            for doc in docs
+              a.list-group-item(href="/#{doc.createdBy}/document/#{doc.id}" target="_blank")
+                | #{doc.name}
+                a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
+          br
           h3 What are Cographs?
           h3.full-size
             strong Cographs are webs of ideas that you can create, explore and publish.
@@ -59,11 +31,6 @@ html(lang='en')
           h3 Why should I use graphs?
           h3.full-size
             strong Graphs are great for connected information.
-          br
-          h3 Here are some popular Cographs
-          h3.full-size
-            strong embed here
-          br
       hr
       h3.header-titles What can I do with Cograph?
       .row
@@ -131,14 +98,14 @@ html(lang='en')
           h3 
             strong Faster access
           p Browser extensions to make it faster to connect content
-    include footer
-    script(src="neural/js/vendor/Detector.js")
-    script(src="neural/js/vendor/dat.gui.min.js")
-    script(src="neural/js/vendor/stats.min.js")
-    script(src="neural/js/vendor/three.min.js")
-    script(src="neural/js/vendor/OrbitControls.js")
-    script(src="neural/js/vendor/OBJLoader.js")
-    script(src="neural/js/three-app.js")
+    include footer-logged-in
     script(src='assets/libs/jquery/dist/jquery.min.js')
     script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
+      ga('create', 'UA-38168348-4', 'auto');
+      ga('send', 'pageview');

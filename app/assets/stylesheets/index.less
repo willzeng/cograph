@@ -40,7 +40,7 @@ body {
   font-size: 14px;
 }
 body, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Gotham', 'Varela Round', helvetica, sans-serif;
+  font-family: 'Gotham', helvetica, sans-serif;
   font-weight: normal;
 }
 #top h1 {
@@ -75,6 +75,19 @@ body, h1, h2, h3, h4, h5, h6 {
   font-size: 30px;
   text-shadow: 0px 0px 2px #000;
   letter-spacing: -3px;
+}
+
+#index-dropdown {
+  margin-top: 5px;
+}
+
+#index-dropdown a {
+  color: black;
+  background: transparent !important;
+}
+
+#index-dropdown a:hover {
+  background: transparent;
 }
 
 .full-size {
@@ -205,7 +218,6 @@ body, h1, h2, h3, h4, h5, h6 {
   outline: none;
 }
 
-/* neural stuff */
 .dg.ac, #stats {
   display: none;
 }
@@ -227,8 +239,7 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 #canvas-container canvas {
-/*  pointer-events: none;
-*/  top: 0;
+  top: 0;
   position: relative;
   z-index: 1;
   height: 550px !important;
@@ -253,42 +264,22 @@ body, h1, h2, h3, h4, h5, h6 {
 
 .call-to-action.btn-default {
   color: white;
-/*  border: 2px solid #ffa73a;
-*/
 }
 
 footer {
-  background: #F0FFB3;
+  background: url('../images/footer-bg.png');
   font-size: 16px;
   margin: 3.5em 0 0;
   padding: 1.5em 0 0.8em;
-  color: inherit;
+  color: white;
 }
 
 footer a {
-  color: inherit;
+  color: white;
 }
 
 footer a:hover {
-  color: #222;
-  text-decoration: none;
-  border-bottom: 2px solid white;
-}
-
-footer {
-  font-size: 16px;
-  margin: 3.5em 0 0;
-  padding: 1.5em 0 0.8em;
-  color: inherit;
-  font-weight: normal;
-}
-
-footer a {
-  color: inherit;
-}
-
-footer a:hover {
-  color: #222;
+  color: white;
   text-decoration: none;
   border-bottom: 2px solid white;
 }
@@ -318,7 +309,6 @@ footer a:hover {
   text-transform: uppercase;
   font-family: 'Gotham Thin', sans-serif;
 }
-
 
 .brand-logo {
   position: relative;
