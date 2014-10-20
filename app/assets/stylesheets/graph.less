@@ -719,12 +719,24 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
     display: none;
   }
 
-  #add {
-    width: 100%;
-  }
-
   #menu-title {
     width: 90px;
+  }
+
+  #trash-bin {
+    height: 50px;
+    border-width: 1px;
+    padding: 5px;
+    width: 80px;
+    font-size: 14px !important;
+
+    #hide-all, #show-all {
+      font-size: 11px !important;
+    }
+  }
+
+  #brand-logo {
+    display: none;
   }
 
   .navbar-form {
@@ -733,5 +745,9 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
   .toolbar.right {
     right: 0px;
+  }
+
+  #toolbar-bottom-right .navbar-nav {
+    margin-right: 5px;
   }
 }

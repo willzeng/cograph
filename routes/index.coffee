@@ -37,9 +37,9 @@ sendGraphDoc = (request, response) ->
       prefetched.user = {}
       prefetched.isOwner = false
     if prefetched.theDocument.publicEdit != 0 or prefetched.isOwner
-      response.render 'index.jade', prefetched
+      response.render 'graph-content-edit.jade', prefetched
     else if prefetched.theDocument.publicView != 0
-      response.render 'index-view-only.jade', prefetched
+      response.render 'graph-content-view.jade', prefetched
     else
       response.render 'errors/missingDocument.jade'
 
@@ -56,18 +56,16 @@ router.get '/errors/missingDocument', (request, response)->
   response.render('errors/missingDocument.jade')
 
 router.get '/account', (req, res) ->
-  username = req.user.local.nameLower
-  User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
-    if err or not(profiledUser?) then res.redirect "/"
-    else
-      if req.isAuthenticated()
-        # show all the documents if this is the profile for the logged in user
-        ownProfile = req.user.local.name is profiledUser.local.name
-      else # otherwise show only their public documents
-        ownProfile = false
-      res.render "account.jade",
-        ownProfile: ownProfile  # checks to see if you are looking at your own profile
-        user: profiledUser      # get the user out of session and pass to template
+  if req.isAuthenticated()
+    username = req.user.local.nameLower
+    User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
+      if err or not(profiledUser?) then res.redirect "/"
+      else
+        res.render "account.jade",
+          user: profiledUser      # get the user out of session and pass to template
+          isAuthenticated: true
+  else 
+    res.redirect "/"
 
 # Documents
 router.post     '/document',           documents.create
@@ -110,20 +108,22 @@ router.get /^\/(\w+)\/?$/, (req, res) ->
   User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
     if err or not(profiledUser?) then res.redirect "/"
     else
-      documents.helper.getAll (publicDocs) ->
+      #this is inefficient
         documents.helper.getByIds profiledUser.documents, (usersDocs) ->
           if req.isAuthenticated() and username is req.user.local.nameLower
             # show all the documents if this is the profile for the logged in user
-            shownDocs = usersDocs
+            privateDocs = (d for d in usersDocs when d.publicView isnt 2)
+            publicDocs = (d for d in usersDocs when d.publicView is 2)
             ownProfile = req.user.local.name is profiledUser.local.name
           else # otherwise show only their public documents
-            shownDocs = (d for d in usersDocs when d.publicView is 2)
+            publicDocs = (d for d in usersDocs when d.publicView is 2)
+            privateDocs = []
             ownProfile = false
           res.render "profile.jade",
             ownProfile: ownProfile  # checks to see if you are looking at your own profile
             user: profiledUser      # get the user out of session and pass to template
-            docs: publicDocs        # prefetch the list of document names for opening (with public = 2)
-            userDocs: shownDocs     # prefetch the users private documents
+            publicDocs: publicDocs     # prefetch the users private documents
+            privateDocs: privateDocs
             isAuthenticated: req.isAuthenticated()
 
 module.exports = router

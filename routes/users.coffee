@@ -16,9 +16,16 @@ module.exports = (app, passport) ->
   # =====================================
   # HOME PAGE (with login links) ========
   # =====================================
-  app.get "/", utils.isNotLoggedIn, (req, res) ->
+  app.get "/", (req, res) ->
     documents.helper.getAll (docs) ->
-      res.render "user-index.jade", {docs:docs}
+      if req.isAuthenticated()
+        username = req.user.local.nameLower
+        User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
+          if err or not(profiledUser?) then res.render "index.jade", {docs:docs}
+          else
+            res.render "index-logged-in.jade", {docs:docs, user: profiledUser, isAuthenticated:true}
+      else 
+        res.render "index.jade", {docs:docs}
   
   # =====================================
   # LOGIN ===============================
@@ -26,8 +33,11 @@ module.exports = (app, passport) ->
   # show the login form
   app.get "/login", (req, res) ->
     # render the page and pass in any flash data if it exists
-    res.render "login.jade",
-      message: req.flash("loginMessage")
+    if req.isAuthenticated()
+      res.redirect "/"
+    else
+      res.render "login.jade",
+        message: req.flash("loginMessage")
   
   # process the login form
   app.post "/login", (req, res, next) ->
@@ -37,7 +47,7 @@ module.exports = (app, passport) ->
       else
         req.logIn user, (err) ->
           if err then next err
-          res.redirect '/'+user.local.nameLower
+          res.redirect '/'
     )(req, res, next)
 
   # =====================================
@@ -45,8 +55,11 @@ module.exports = (app, passport) ->
   # =====================================
 
   app.get "/request-key", (req, res) ->
-    res.render "request-key.jade"
-      message: req.flash("")
+    if req.isAuthenticated()
+      res.redirect "/"
+    else
+      res.render "request-key.jade"
+        message: req.flash("")
 
   app.post "/request-key", (req, res) ->
     x = new BetaUser()
@@ -60,8 +73,11 @@ module.exports = (app, passport) ->
   # =====================================
   
   app.get "/forgotten-password", (req, res) ->
-    res.render "forgotten-password.jade"
-      message: req.flash("forgotMessage") # TODO?
+    if req.isAuthenticated()
+      res.redirect "/"
+    else
+      res.render "forgotten-password.jade"
+        message: req.flash("forgotMessage") # TODO?
 
   app.post "/forgotten-password", (req, res) ->
     async.waterfall [
@@ -111,37 +127,18 @@ module.exports = (app, passport) ->
 
     return
 
-
-
   # =====================================
   # SIGNUP ==============================
   # =====================================
   # show the signup form
   app.get "/signup", (req, res) ->
-    # render the page and pass in any flash data if it exists
-    res.render "signup.jade",
-      message: req.flash("signupMessage")
+    if req.isAuthenticated()
+      res.redirect "/"
+    else
+      # render the page and pass in any flash data if it exists
+      res.render "signup.jade",
+        message: req.flash("signupMessage")
   
-
-  # // Redirect the user to Facebook for authentication.  When complete,
-  # // Facebook will redirect the user back to the application at
-  # //     /auth/facebook/callback
-  # app.get('/auth/facebook', passport.authenticate('facebook', {
-  #     scope: ['public_profile', 'email', 'user_friends']
-  #   }));
-
-  # // Facebook will redirect the user to this URL after approval.  Finish the
-  # // authentication process by attempting to obtain an access token.  If
-  # // access was granted, the user will be logged in.  Otherwise,
-  # // authentication has failed.
-  # app.get('/auth/facebook/callback', 
-  #   passport.authenticate('facebook', 
-  #     { 
-  #       successRedirect: '/',
-  #       failureRedirect: '/login' 
-  #     }
-  #   )
-  # )
 
   # // Redirect the user to Twitter for authentication.  When complete, Twitter
   # // will redirect the user back to the application at

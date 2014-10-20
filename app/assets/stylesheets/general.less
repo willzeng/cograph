@@ -1,8 +1,27 @@
 // ALL PAGES styles except for navigation
+@font-face {
+  font-family: 'Gotham Light';
+  src: url('../fonts/GothamSSm-Light.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/GothamSSm-Light.eot?#iefix') format('embedded-opentype'), 
+       url('../fonts/GothamSSm-Light.woff') format('woff'),
+       url('../fonts/GothamSSm-Light.ttf')  format('truetype');
+}
+@font-face {
+  font-family: 'Gotham';
+  src: url('../fonts/GothamSSm-Medium.eot'); /* IE9 Compat Modes */
+  src: url('../fonts/GothamSSm-Medium.eot?#iefix') format('embedded-opentype'), 
+       url('../fonts/GothamSSm-Medium.woff') format('woff'),
+       url('../fonts/GothamSSm-Medium.ttf')  format('truetype');
+}
+
+@font-face {
+  font-family: 'Gotham Thin';
+  src: url('../fonts/Gotham-Thin.otf') format('opentype'),
+       url('../fonts/Gotham-Thin.ttf')  format('truetype');
+}
 
 @import "colors";
-@import url(http://fonts.googleapis.com/css?family=Varela+Round);
-@font: 'Varela Round', Helvetica, sans-serif;
+@font: 'Gotham Light', Helvetica, sans-serif;
 
 body {
 	font-family: @font, sans-serif;
@@ -50,22 +69,26 @@ body {
   border-radius: 0 !important;
 }
 
+.document-list {
+  max-height: 100%;
+}
+
 // FOOTER
 
 footer {
-  background: #F0FFB3;
+  background: url('../images/footer-bg.png');
   font-size: 16px;
   margin: 3.5em 0 0;
   padding: 1.5em 0 0.8em;
-  color: inherit;
+  color: white;
 }
 
 footer a {
-  color: inherit;
+  color: white;
 }
 
 footer a:hover {
-  color: #222;
+  color: darken(white, 10%);
   text-decoration: none;
   border-bottom: 2px solid white;
 }

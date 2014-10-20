@@ -1,5 +1,5 @@
-nav.navbar.navbar-default(role='navigation')
-  .container-fluid
+nav.navbar.navbar-default#main-nav(role='navigation')
+  .container
     .navbar-header
       button.navbar-toggle(type='button' data-toggle='collapse' data-target='#gdocs-nav')
         span.sr-only Toggle navigation
@@ -7,7 +7,7 @@ nav.navbar.navbar-default(role='navigation')
         span.icon-bar
         span.icon-bar
       a.navbar-brand(href='/')
-        img#brand-logo(src="assets/images/logo-black.png")
+        img#brand-logo(src="assets/images/brand-b.png")
     if isAuthenticated 
       #gdocs-nav.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right
@@ -19,8 +19,10 @@ nav.navbar.navbar-default(role='navigation')
               | @#{user.local.name}
               i.caret
             ul.dropdown-menu
+              li 
+                a(href="/") Discover
               li
-                a(href="/#{user.local.username}") My Cographs
+                a(href="/#{user.local.nameLower}") My Cographs
               li(role="presentation")
                 a(href="/account") Account
               li
