@@ -104,8 +104,9 @@ module.exports = (app, passport) ->
 
     ], (err) ->
       console.log err
-      return next(err) if err
-      res.redirect "/forgotten-password"
+      # the next two redirects are the same for security reasons
+      return res.redirect "/login" if err
+      res.redirect "/login"
       return
 
     return
