@@ -304,7 +304,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
 
-        nodeInnerTextSpan
+        node.select('.node-title-span')
           .html((d) -> _.template(nodeTitle, d))
           
         node.select('.node-connector')
