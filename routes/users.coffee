@@ -131,14 +131,9 @@ module.exports = (app, passport) ->
   app.post '/account', (req, res) ->
     username = req.user.local.nameLower #if we used post username data this would be a security flaw
     User.findOne { 'local.nameLower' :  username }, (err, user) ->
-      # hashedCurrentPassword = user.generateHash(req.body.oldPassword)
-      # storedCurrentPassword = user.local.password
-      # console.log(storedCurrentPassword)
-      # console.log(hashedCurrentPassword)
-      # console.log(req.user.local.password)
       if(user.validPassword(req.body.oldPassword))
         user.local.email = req.body.email 
-        #todo user user model?
+        #todo user model?
         user.local.password = user.generateHash(req.body.newPassword)
         user.save (err) ->
           return
@@ -147,8 +142,7 @@ module.exports = (app, passport) ->
           isAuthenticated: true
           message: "Successfully changed"
           messageType: 1
-      else
-        # wrong password
+      else # wrong password
         res.render "account.jade"
           user: req.user
           isAuthenticated: true
