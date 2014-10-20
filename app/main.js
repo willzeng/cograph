@@ -26,6 +26,9 @@ requirejs.config({
     'feedback-bot': '/assets/libs/feedback-bot/dist/feedback.0.3.1'
   },
   shim: {
+    'underscore' : {
+      deps: ['jquery']
+    },
     'backbone': {
       deps: ['underscore', 'jquery'],
       exports: 'Backbone'

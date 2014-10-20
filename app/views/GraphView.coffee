@@ -196,9 +196,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'visible-line')
           .attr("marker-end", "url(#arrowhead)")
           .style("stroke", (d) => @getColor d)
-        text-group = connectionEnter.append("g")
+        textGroup = connectionEnter.append("g")
           .attr('class', 'connection-text')
-        text-group.append("text")
+        textGroup.append("text")
           .attr("text-anchor", "middle")
     
         # old and new elements
