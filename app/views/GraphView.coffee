@@ -334,7 +334,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .each (d) ->
             total = d.get 'neighborCount'
             view = that.model.connections.filter( (conn) =>
-              return (conn.source.id == d.id || conn.target.id == d.id)
+              if conn.source
+                conn.source.id == d.id || conn.target.id == d.id
+              else
+                false
             ).length
             diff = total-view
             $(this).text(diff)
