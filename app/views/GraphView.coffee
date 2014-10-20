@@ -386,6 +386,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @updateDetails node
         @resetPositions()
         @gridView({duration: 0})
+        @updateForceFlag = true
 
       removeNodeGV: (node) ->
         @updateDetails node
