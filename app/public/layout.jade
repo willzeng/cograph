@@ -7,19 +7,11 @@ html(lang="en")
     meta(name='viewport', content='width=device-width, initial-scale=1')
     meta(name="description" content="Cograph lets you build and explore graphs together")
     meta(property="fb:app_id" content="315770905267996")
-    link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
-    link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
-    link(href='/assets/libs/targeted-atwho/dist/css/jquery.atwho.min.css', rel='stylesheet')
-    link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
-    link(href='/assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
-    link(href='/assets/stylesheets/general.css', rel='stylesheet')  
-    link(href='/assets/stylesheets/nav.css', rel='stylesheet')  
-    link(href='/assets/stylesheets/graph.css', rel='stylesheet')  
-    link(href="/assets/libs/feedback-bot/src/feedback.css" rel='stylesheet')
-  
+    //link(href='/assets/stylesheets/main.css', rel='stylesheet')
     //script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
 
     // For production
+    link(href='/assets/stylesheets/main-built.css', rel='stylesheet')
     script(type='text/javascript', data-main="/main-built", src="/assets/libs/requirejs/require.js")
     script.
       window.prefetch = {};
