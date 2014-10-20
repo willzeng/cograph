@@ -131,6 +131,12 @@ module.exports = (app, passport) ->
   app.post '/account', (req, res) ->
     username = req.user.local.nameLower #if we used post username data this would be a security flaw
     User.findOne { 'local.nameLower' :  username }, (err, user) ->
+      if(req.body.newPassword != req.body.newPasswordRepeat)
+        res.render "account.jade"
+          user: user
+          isAuthenticated: true
+          message: "New Passwords don't match"
+          messageType: 0
       if(user.validPassword(req.body.oldPassword))
         user.local.email = req.body.email 
         #todo user model?
