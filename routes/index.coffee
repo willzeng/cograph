@@ -108,22 +108,21 @@ router.get /^\/(\w+)\/?$/, (req, res) ->
   User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
     if err or not(profiledUser?) then res.redirect "/"
     else
-      #this is inefficient
-        documents.helper.getByIds profiledUser.documents, (usersDocs) ->
-          if req.isAuthenticated() and username is req.user.local.nameLower
-            # show all the documents if this is the profile for the logged in user
-            privateDocs = (d for d in usersDocs when d.publicView isnt 2)
-            publicDocs = (d for d in usersDocs when d.publicView is 2)
-            ownProfile = req.user.local.name is profiledUser.local.name
-          else # otherwise show only their public documents
-            publicDocs = (d for d in usersDocs when d.publicView is 2)
-            privateDocs = []
-            ownProfile = false
-          res.render "profile.jade",
-            ownProfile: ownProfile  # checks to see if you are looking at your own profile
-            user: profiledUser      # get the user out of session and pass to template
-            publicDocs: publicDocs     # prefetch the users private documents
-            privateDocs: privateDocs
-            isAuthenticated: req.isAuthenticated()
+      documents.helper.getByIds profiledUser.documents, (usersDocs) ->
+        if req.isAuthenticated() and username is req.user.local.nameLower
+          # show all the documents if this is the profile for the logged in user
+          privateDocs = (d for d in usersDocs when d.publicView isnt 2)
+          publicDocs = (d for d in usersDocs when d.publicView is 2)
+          ownProfile = req.user.local.name is profiledUser.local.name
+        else # otherwise show only their public documents
+          publicDocs = (d for d in usersDocs when d.publicView is 2)
+          privateDocs = []
+          ownProfile = false
+        res.render "profile.jade",
+          ownProfile: ownProfile  # checks to see if you are looking at your own profile
+          user: profiledUser      # get the user out of session and pass to template
+          publicDocs: publicDocs     # prefetch the users private documents
+          privateDocs: privateDocs
+          isAuthenticated: req.isAuthenticated()
 
 module.exports = router
