@@ -19,6 +19,8 @@ app = express()
 # configuration ======================================================
 mongoose.connect configDB.url # connect to our user database
 
+
+require('./models/beta-requests.coffee')
 require('./config/passport')(passport) # pass passport for configuration
 
 # set up express app =================================================

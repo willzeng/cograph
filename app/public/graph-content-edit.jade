@@ -1,0 +1,61 @@
+extends graph
+
+block content
+  #sidebar
+  #graph
+    .loading-container
+      .spinner
+        .double-bounce1
+        .double-bounce2
+    .toolbar.right.controls
+      .navbar-right.navbar-form
+        form#add-node-form.form-inline
+          #add.contracted
+            textarea#add-title(name="name", placeholder='New node', rows='1')
+            textarea#add-description(name="description", placeholder='Description - Use #tags @people +connect', rows='1')
+            #add-toolbar.cf
+              #add-toolbar-left
+                button#add-color.color-circle(type="button")
+                  i.fa.fa-circle(title="Change color")
+                div#add-color-container.hidden
+                button#add-image(type="button")
+                  i.fa.fa-image(title='Add image')
+                input#add-image-container.hidden(type="text", placeholder="image url")
+              #add-toolbar-right
+                button#add-submit(title='Create something')
+                  | Create
+
+    .toolbar.bottom.right.controls#toolbar-bottom-right
+      ul.nav.navbar-nav
+        li
+          button#grid-view-button.btn.btn-default
+            img(src="/assets/images/grid.png" height="16px")
+            |  Grid
+        li  
+          button#graph-view-button.btn.btn-default
+            img(src="/assets/images/graph.png" height="16px")
+            |  Graph
+        li
+          button#filter-modal-toggle.btn.btn-default
+            img(src="/assets/images/filter.png" height="16px")
+            |  Filter
+        li
+          form#search-form.form-inline
+            .input-group
+              input#search-input.form-control(type="text", name='search-term' placeholder="Search")
+        li
+          .btn-group-vertical.controls
+            button#zoom-in-button.btn.btn-default(title="Zoom In")
+              i.glyphicon.glyphicon-plus
+            button#zoom-out-button.btn.btn-default(title="Zoom Out")
+              i.glyphicon.glyphicon-minus
+    #trash-bin.controls(title="Drag a node here to Hide it")
+      span#bring-all-nodes-to-view
+        i.fa.fa-eye-slash
+        span#number-hidden 0
+      span#dragging-message
+        | Drag here to Hide
+      span#hover-message
+        span#show-all Show all
+        span#hide-all Hide all
+  .data-tooltip-container

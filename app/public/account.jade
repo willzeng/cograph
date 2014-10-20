@@ -14,25 +14,40 @@ head
     window.prefetch =!{JSON.stringify(docs)};
 
   body
-    include profileheader
+    include nav
     .container.pad-top
       .col-sm-6.col-sm-offset-3
-        h1
+        br
+        h2
           |  Account
-        if message && message.length > 0 
-          .alert.alert-danger #{message}
+        if message && message.length > 0
+          if messageType!=undefined && messageType==1
+            .alert.alert-success #{message}
+          else 
+            .alert.alert-danger #{message}
 
-        form(action='/signup', method='post')
+        form(action='/account', method='post')
           .form-group
             label Email
             input.form-control(type='email', name='email' value='#{user.local.email}')
           .form-group
             label Username
-            input.form-control(type='text', name='name'  value='#{user.local.name}')
+            input.form-control(type='text', name='name'  value='#{user.local.name}', disabled)
           .form-group
             label Old Password
-            input.form-control(type='password', name='password')
+            input.form-control(type='password', name='oldPassword')
           .form-group
             label New Password
-            input.form-control(type='password', name='password')
-          button.btn.btn-warning.btn-lg(type='submit') Save Changes
+            input.form-control(type='password', name='newPassword')
+          .form-group
+            label New Password (repeat)
+            input.form-control(type='password', name='newPasswordRepeat')
+          button.btn.btn-info.pull-right.btn-lg(type='submit') Save
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-38168348-4', 'auto');
+      ga('send', 'pageview');

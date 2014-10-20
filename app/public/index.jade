@@ -1,61 +1,143 @@
-extends layout
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Cograph
+    meta(name='viewport', content='width=device-width,initial-scale=1.0')
+    link(href='assets/libs/iconset/flaticon.css', rel='stylesheet', type='text/css')
+    link(href='assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='assets/stylesheets/index.css', rel='stylesheet')
+    link(href="neural/css/app.css", rel='stylesheet')
+  body
+    #canvas-container.jumbotron
+    script#vertexshader-axon(type='x-shader/x-vertex').
+      uniform float opacityMultiplier;
+      attribute float opacityAttr;
+      varying float opacityNew;
+      void main() {
+        opacityNew = opacityAttr * opacityMultiplier;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
+      }
+    script#fragmentshader-axon(type='x-shader/x-fragment').
+      uniform vec3 color;
+      varying float opacityNew;
+      void main() {
+        gl_FragColor = vec4(color, opacityNew);
+      }
+    
+    nav.navbar.navbar-default.navbar-inverse(role='navigation')
+      .container
+        .navbar-header
+          button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-ex1-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand.nav-link
+            img.brand-logo(src='assets/images/brand-w.png')
 
-block content
-  #sidebar
-  #graph
-    .loading-container
-      .spinner
-        .double-bounce1
-        .double-bounce2
-    .toolbar.right.controls
-      .navbar-right.navbar-form
-        form#add-node-form.form-inline
-          #add.contracted
-            textarea#add-title(name="name", placeholder='New node', rows='1')
-            textarea#add-description(name="description", placeholder='Description - Use #tags @people +connect', rows='1')
-            #add-toolbar.cf
-              #add-toolbar-left
-                button#add-color.color-circle(type="button")
-                  i.fa.fa-circle(title="Change color")
-                div#add-color-container.hidden
-                button#add-image(type="button")
-                  i.fa.fa-image(title='Add image')
-                input#add-image-container.hidden(type="text", placeholder="image url")
-              #add-toolbar-right
-                button#add-submit(title='Create something')
-                  | Done
+        .collapse.navbar-collapse.navbar-ex1-collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              a(href='/login') Login
+            li
+              a(href='/request-key') Request Beta Key
 
-    .toolbar.bottom.right.controls#toolbar-bottom-right
-      ul.nav.navbar-nav
-        li
-          button#grid-view-button.btn.btn-default
-            img(src="/assets/images/grid.png" height="16px")
-            |  Grid
-        li  
-          button#graph-view-button.btn.btn-default
-            img(src="/assets/images/graph.png" height="16px")
-            |  Graph
-        li
-          button#filter-modal-toggle.btn.btn-default
-            img(src="/assets/images/filter.png" height="16px")
-            |  Filter
-        li
-          form#search-form.form-inline
-            .input-group
-              input#search-input.form-control(type="text", name='search-term' placeholder="Search")
-        li
-          .btn-group-vertical.controls
-            button#zoom-in-button.btn.btn-default(title="Zoom In")
-              i.glyphicon.glyphicon-plus
-            button#zoom-out-button.btn.btn-default(title="Zoom Out")
-              i.glyphicon.glyphicon-minus
-    #trash-bin.controls(title="Drag a node here to Hide it")
-      span#bring-all-nodes-to-view
-        i.fa.fa-eye-slash
-        span#number-hidden 0
-      span#dragging-message
-        | Drag here to Hide
-      span#hover-message
-        span#show-all Show all
-        span#hide-all Hide all
-  .data-tooltip-container
+    #top.jumbotron
+      .container
+        h1 Make new connections
+        p#button-container
+          a#create.btn.btn-primary.btn-lg.call-to-action(href="/new") Make a Graph
+          a#open.btn.btn-default.btn-lg.call-to-action(href="/profile") Explore Graphs
+
+    .container.main-content
+      .row
+        .col-md-12
+          h3 What are Cographs?
+          h3.full-size
+            strong Cographs are webs of ideas that you can create, explore and publish.
+          br
+          h3 Why should I use graphs?
+          h3.full-size
+            strong Graphs are great for connected information.
+          br
+          h3 Here are some popular Cographs
+          h3.full-size
+            strong embed here
+          br
+      hr
+      h3.header-titles What can I do with Cograph?
+      .row
+        .col-xs-12.col-md-4.benefit
+          .benefit-ball
+            i.flaticon-idea13
+          h3 
+            strong Add
+          p Create and connect information across the web
+
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-cell9
+          h3 
+            strong Connect
+          p Create connections between things and label connections
+
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-teamwork
+          h3 
+            strong Collaborate
+          p Edit graphs in real time with others.
+      .row
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-earth180
+          h3 
+            strong Explore
+          p Filter, search and tag your graphs or expand connections. 
+
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-rating
+          h3 
+            strong Share
+          p Share graphs to your favorite social media and decide who can contribute to them
+
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-code26
+          h3
+            strong Embed
+          p Add graphs to your website or blog posts
+
+      h3.header-titles We're in Beta. Our Next Features are
+      .row
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-rocket60
+          h3 
+            strong API
+          p Post and get data to cograph
+
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-cells1
+          h3 
+            strong Intergraph
+          p Connect between nodes across different graphs.
+
+        .col-md-4.col-xs-12.benefit
+          .benefit-ball
+            i.flaticon-circular152
+          h3 
+            strong Faster access
+          p Browser extensions to make it faster to connect content
+    include footer
+    script(src="neural/js/vendor/Detector.js")
+    script(src="neural/js/vendor/dat.gui.min.js")
+    script(src="neural/js/vendor/stats.min.js")
+    script(src="neural/js/vendor/three.min.js")
+    script(src="neural/js/vendor/OrbitControls.js")
+    script(src="neural/js/vendor/OBJLoader.js")
+    script(src="neural/js/three-app.js")
+    script(src='assets/libs/jquery/dist/jquery.min.js')
+    script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
