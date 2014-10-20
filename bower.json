@@ -35,7 +35,7 @@
     "new-bb-modal": "~0.9.1",
     "bootstrap-colorpalette": "~0.0.1",
     "share-button": "~0.4.1",
-    "backbone.iobind": "~0.4.7",
+    "backbone.iobind": "https://github.com/willzeng/backbone.iobind.git",
     "caret.js": "~0.1.0",
     "targeted-atwho": "~0.5.2",
     "twitter-text": "~1.9.4",
