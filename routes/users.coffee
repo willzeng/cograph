@@ -153,6 +153,7 @@ module.exports = (app, passport) ->
           user: req.user
           isAuthenticated: true
           message: "wrong password"
+          messageType: 0
       
 
   # =====================================
