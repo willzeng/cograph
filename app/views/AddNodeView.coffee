@@ -31,13 +31,19 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @colorInput.addClass('hidden')
 
         @colorArea.on 'click', (e) =>
-          @imageInput.addClass('hidden')
-          @colorInput.removeClass('hidden')
+          if !@colorInput.hasClass('hidden')
+            @colorInput.addClass('hidden')
+          else
+            @imageInput.addClass('hidden')
+            @colorInput.removeClass('hidden')
 
         @imageArea.on 'click', (e) =>
-          @colorInput.addClass('hidden')
-          @imageInput.toggleClass('hidden')
-          @imageInput.focus()
+          if !@imageInput.hasClass('hidden')
+            @imageInput.addClass('hidden')
+          else
+            @colorInput.addClass('hidden')
+            @imageInput.toggleClass('hidden')
+            @imageInput.focus()
          
         @titleArea.on 'focus', => @expandAdder()
                   
