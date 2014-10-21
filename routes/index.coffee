@@ -36,7 +36,7 @@ sendGraphDoc = (request, response) ->
       prefetched.isAuthenticated = false
       prefetched.user = {}
       prefetched.isOwner = false
-    if prefetched.theDocument.publicEdit != 0 or prefetched.isOwner
+    if (prefetched.theDocument.publicEdit != 0 or prefetched.isOwner) && prefetched.isAuthenticated
       response.render 'graph-content-edit.jade', prefetched
     else if prefetched.theDocument.publicView != 0
       response.render 'graph-content-view.jade', prefetched
