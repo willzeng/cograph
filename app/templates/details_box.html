@@ -12,10 +12,11 @@
             <% } %>
           <% } %>
         </div>
+          <% if (node.attributes.image.length > 0) { %>
+            <img src="<%= node.attributes.image %>" width="100%">
+          <% } %>
           <% if (node.attributes.description.length > 0) { %>
             <p class="lead"><%= node.attributes.description %></p>
-          <% } else { %>
-            <p>Click Edit to add information.</p>
           <% } %>
           <% if (node.attributes.url) { %>
               URL: <a href="<%= node.attributes.url %>"><%= node.attributes.url %></a><br/>
