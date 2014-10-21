@@ -44,7 +44,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             @model.newConnectionCreated newConn
 
       createDragLine: (e) ->
-        if($('#add-node-form').length > 0) #isEditable HACK
+        if($('#add-node-form').length > 0 and !(@graphView.gridViewOn)) #isEditable HACK
           connectId = parseInt $(e.currentTarget).attr("data-id")
           node = @model.nodes.findWhere {_id:connectId}
           @drag_line.classed('hidden', false)

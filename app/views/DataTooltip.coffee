@@ -17,9 +17,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
         @ignoreMouse = false
 
-        @graphView.on 'node:mouseenter', (e, node) =>
+        @graphView.on 'node:mouseenter', (e,node) =>
           @showToolTip(e)
-          if !(@ignoreMouse) then @highlight node
+          if !(@ignoreMouse) and (!@graphView.gridViewOn) then @highlight node
 
         @graphView.on 'node:drag', () =>
           @ignoreMouse = true
@@ -29,7 +29,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
 
         @expandArrayed = false
         @graphView.on 'node:mouseout node:right-click', (nc) =>
-          if !(@ignoreMouse)
+          if !(@ignoreMouse) and (!@graphView.gridViewOn)
             @model.dehighlight()
             @emptyTooltip()
           if @expandArrayed
@@ -47,7 +47,7 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
         @model.highlight(nodesToHL, connectionsToHL)
 
       showToolTip: (event) =>
-        if !(@ignoreMouse)
+        if !(@ignoreMouse) and (!@graphView.gridViewOn)
           @emptyTooltip()
           nodeContainer = $(event.currentTarget).closest('.node')
           p = nodeContainer.parent()
@@ -63,8 +63,9 @@ define ['jquery', 'd3',  'underscore', 'backbone', 'linkify'],
             @graphView.trigger 'tag:click', tag
 
       emptyTooltip: () ->
-        $('.node-title-body').removeClass('shown')
-        $('.node-info-body').removeClass('shown')
+        if (!@graphView.gridViewOn)
+          $('.node-title-body').removeClass('shown')
+          $('.node-info-body').removeClass('shown')
 
       archiveObj: (event) ->
         $('#trash-bin').addClass('selected')

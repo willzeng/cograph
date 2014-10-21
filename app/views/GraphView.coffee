@@ -1,12 +1,14 @@
 define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
-  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons',
-  'text!templates/data_tooltip.html', 'text!templates/node-title.html'],
-  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle) ->
+  'cs!views/ConnectionAdder', 'cs!views/TrashBin', 'cs!views/DataTooltip', 'cs!views/ZoomButtons', 
+  'text!templates/data_tooltip.html', 'text!templates/node-title.html', 'linkify'],
+  ($, _, Backbone, d3, svgDefs, ConnectionAdder, TrashBin, DataTooltip, ZoomButtons, popover, nodeTitle, linkify) ->
     class GraphView extends Backbone.View
       el: $ '#graph'
 
       events:
         "contextmenu": "rightClicked"
+        "click #grid-view-button": "gridView"
+        "click #graph-view-button": "resetPositions"
 
       # Parameters for display
       maxConnTextLength: 20
@@ -60,12 +62,11 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           that.translateLock = true
           that.currentZoom = that.zoom.translate()
         .on "drag", (d) ->
-          if !that.cancelledDrag
+          if !(@gridViewOn) || !that.cancelledDrag
             d3.select(this).classed("fixed", d.fixed = true)
             that.trigger "node:drag", d, d3.event
           else
             that.force.stop()
-
         .on "dragend", (node) =>
           if !that.cancelledDrag
             @trigger "node:dragend", node, d3.event
@@ -85,6 +86,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
         (new svgDefs).addDefs def, @model.defaultColors
+
+        # GridView parameters
+        @gridViewOn = false
+        @updateForceFlag = false
+        @grid = {}
+        @grid.spacing = [20,20] # Horizontal and Vertical node spacing
+        @grid.padding = [200,70] # Left and top padding of the grid as a whole respectively
+        @grid.colYs = [] #top margin
 
         @workspace = @svg.append("svg:g")
 
@@ -156,11 +165,15 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         , 10
 
       updateForceGraph: ->
-        @loadForce()
-        @updateDetails()
-        setTimeout () =>
-          @force.stop()
-        , 1500
+        if @gridViewOn
+          @updateForceFlag = true # this flag stores if we will later need to reupdate the force graph
+          @gridView {duration:0}
+        else
+          @loadForce()
+          @updateDetails()
+          setTimeout () =>
+            @force.stop()
+          , 1500
 
       updateDetails: (incoming) ->
         that = this
@@ -172,6 +185,8 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         that = this
         nodes = @model.nodes.models
         connections = @model.connections.models
+        if @gridViewOn then connections = []
+
         # old elements
         connection = d3.select(".connection-container")
           .selectAll(".connection")
@@ -235,9 +250,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         node = d3.select(".node-container")
           .selectAll(".node")
           .data(nodes, (node) -> node.cid)
-
         # new elements
         nodeEnter = node.enter().append("g")
+          .attr('data-nodeid', (d) -> d.get('_id'))
         nodeRectangle = nodeEnter.append('rect')
           .attr('x', '-80')
           .attr('y', '-15')
@@ -249,7 +264,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr("y", "5")
           .attr("height", @maxNodeBoxHeight) #max height overflow is cut off
           .attr("width", @nodeBoxWidth)
-          .attr("x", "-60")
+          .attr("x", -@nodeBoxWidth/2)
           .attr('class', 'node-title')
         nodeInnerText = nodeText.append('xhtml:body')
           .attr('class', 'node-title-body')
@@ -259,7 +274,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('class', 'node-title-span')
         nodeConnector = nodeEnter.append("circle")
           .attr('r', '5')
-          .attr('cx', '-70')
+          .attr('cx', -@nodeBoxWidth/2-10)
           .attr('cy', '0')
           .attr('class', 'node-connector clickable')
           .attr('fill', '#222') 
@@ -303,7 +318,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .classed('fixed', (d) -> d.fixed & 1) # d3 preserves only first bit of fixed
           .classed('image', (d) -> d.get('image'))
           .call(@force.drag)
-
         node.select('.node-title-span')
           .html((d) -> _.template(nodeTitle, d))
           
@@ -320,10 +334,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .each (d) ->
             total = d.get 'neighborCount'
             view = that.model.connections.filter( (conn) =>
-              return (conn.source.id == d.id || conn.target.id == d.id)
+              if conn.source
+                conn.source.id == d.id || conn.target.id == d.id
+              else
+                false
             ).length
             diff = total-view
             $(this).text(diff)
+
 
         # move the popover info to align with the left of the text
         # construct the node boxes
@@ -356,9 +374,101 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           node.attr("transform", (d) -> "translate(#{d.x},#{d.y})")
           @connectionAdder.tick
 
-        tick()
+        if @gridViewOn
+          $('.node-title-body').addClass('shown')
+          $('.node-info-body').addClass('hide-toolbar')
+          $('.node-info-body').addClass('shown').linkify()
+        else
+          $('.node-info-body').removeClass('hide-toolbar')
+          tick()
         @force.on "tick", () =>
-          if @drawing && !@cancelledDrag then tick()
+          if @drawing and !(@gridViewOn) and !@cancelledDrag then tick()
+
+      addNodeGV: (node) ->
+        # add to dom
+        @updateDetails node
+        @resetPositions()
+        @gridView({duration: 0})
+        @updateForceFlag = true
+
+      removeNodeGV: (node) ->
+        @updateDetails node
+        @resetPositions()
+        @gridView({duration: 0})
+
+      gridView: (options) -> #trigger grid view
+        if(!@gridViewOn)
+          @gridViewOn = true  
+          @model.dehighlight()
+          @force.stop()
+
+          # ignore connection events
+          @model.connections.off 'add remove', @updateForceGraph
+          @model.connections.off 'change', @updateDetails
+          @model.nodes.off 'add remove', @updateForceGraph, this
+          @model.nodes.on 'add', @addNodeGV, this
+          @model.nodes.on 'remove', @removeNodeGV, this
+
+          # Place nodes in a grid
+          transitionDuration = if options.duration? then options.duration else 900
+          columnNum = 1+Math.floor($(window).width()-@grid.padding[0])/(@nodeBoxWidth + @grid.spacing[0])
+          theNodes = d3.select(".node-container").selectAll(".node")
+          @zoom.scale(1).translate([@grid.padding[0],@grid.padding[1]])
+          @workspace.transition().ease("linear").attr "transform", "translate(#{[@grid.padding[0],@grid.padding[1]]}) scale(1)"
+
+          theNodes.transition()
+            .duration(transitionDuration)
+            .attr "transform", (d, i) =>
+              pos = @placeInGrid d, i
+              "translate(#{pos.x},#{pos.y})"
+          @updateDetails()
+
+      resetPositions: -> #reset back to graphView
+        if @gridViewOn
+          @grid.colYs.splice(0)
+          @gridViewOn = false
+
+          # reinitialize listening to connections
+          @model.connections.on 'add remove', @updateForceGraph, this
+          @model.connections.on 'change', @updateDetails, this
+          @model.nodes.on 'add remove', @updateForceGraph, this
+          @model.nodes.off 'add', @addNodeGV, this
+          @model.nodes.off 'remove', @removeNodeGV, this
+
+          theNodes = d3.select(".node-container").selectAll(".node")
+          resetDuration = 900
+          theNodes.transition()
+            .duration(resetDuration)
+            .attr "transform", (d, i) =>
+              @placeInGrid d, i
+              "translate(#{d.x},#{d.y})"
+          @grid.colYs.splice(0)
+          @dataTooltip.emptyTooltip()
+
+          # if we need to update the force graph then start the force
+          if @updateForceFlag then @force.start()
+          @updateForceFlag = false
+
+          setTimeout =>
+            @updateDetails()
+          , resetDuration
+
+      placeInGrid: (d, i) ->
+        columnTotal = 1 + Math.floor(($(window).width() - @grid.padding[0]) / (@nodeBoxWidth + @grid.spacing[0]))
+        columnNum = (i%columnTotal)
+
+        # calculate height of opened current node being positioned
+        domEl = $('[data-nodeid="'+d.get('_id')+'"]').eq(0)
+        domElHeight = Math.min(@maxInfoBoxHeight, domEl.find('.node-info-body').height()) + Math.min(@maxNodeBoxHeight, domEl.find('.node-title-body').height())
+        # node "0,0" is not the top left corner. but rather middle left of title box
+        begin = (@grid.colYs[columnNum] || 0) + Math.min(@maxNodeBoxHeight, domEl.find('.node-title-body').height())/2
+        gridX = columnNum*(@nodeBoxWidth+@grid.spacing[0])+@grid.spacing[0]
+        tempY = begin + @grid.spacing[1]
+        @grid.colYs[columnNum] = tempY+domElHeight
+        # if the node has no force graph pos then give it a grid pos
+        if !(d.x) then d.x = gridX
+        if !(d.y) then d.y = tempY
+        {x:gridX, y:tempY}
 
       rightClicked: (e) ->
         @connectionAdder.clearDragLine()
@@ -371,7 +481,13 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         (node.y || node.clientY) < element.offset().top + element.outerHeight()
 
       centerOn: (node) =>
-        translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
+        if @gridViewOn
+          sortedCIds = (n.cid for n in @model.nodes.models).sort()
+          i = sortedCIds.indexOf node.cid
+          pos = @placeInGrid node, i
+          translateParams = [$(window).width()/2-pos.x*@zoom.scale(),$(window).height()/2-pos.y*@zoom.scale()]
+        else
+          translateParams = [$(window).width()/2-node.x*@zoom.scale(),$(window).height()/2-node.y*@zoom.scale()]
         #update translate values
         @zoom.translate([translateParams[0], translateParams[1]])
         #translate workspace
@@ -383,3 +499,4 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
 
       getColor: (nc) ->
         @model.defaultColors[nc.get('color')]
+
