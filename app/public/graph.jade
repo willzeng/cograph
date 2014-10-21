@@ -9,12 +9,12 @@ html(lang="en")
     meta(property="fb:app_id" content="315770905267996")
     
     // For Development
-    link(href='/assets/stylesheets/main.css', rel='stylesheet')
-    script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
+    // link(href='/assets/stylesheets/main.css', rel='stylesheet')
+    // script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
 
     // For production
-    //- link(href='/assets/stylesheets/main-built.css', rel='stylesheet')
-    //- script(type='text/javascript', data-main="/main-built", src="/assets/libs/requirejs/require.js")
+    link(href='/assets/stylesheets/main-built.css', rel='stylesheet')
+    script(type='text/javascript', data-main="/main-built", src="/assets/libs/requirejs/require.js")
     
     script.
       window.prefetch = {};
