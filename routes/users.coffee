@@ -65,6 +65,30 @@ module.exports = (app, passport) ->
     x = new BetaUser()
     x.email = req.body.email
     x.save()
+    smtpTransport = nodemailer.createTransport("SMTP",
+      service: "SendGrid"
+      auth:
+        user: "davidfurlong"
+        pass: "david4226"
+    )
+    mailOptions =
+      to: req.body.email
+      from: "welcome@cograph.co"
+      subject: "Thanks for your interest in cograph"
+      text: """
+        Dear #{req.body.email},
+
+        Glad to see you're interested.  We'll be in touch soon to set you up with a beta-key.
+
+        - Will and David
+
+        http://cograph.co
+      """
+
+    smtpTransport.sendMail mailOptions, (err) ->
+      req.flash "info", "An e-mail has been sent to " + req.body.email + " with further instructions."
+      done err, "done"
+      return
     res.redirect '/'
     return
 
