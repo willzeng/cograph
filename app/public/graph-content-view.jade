@@ -10,8 +10,17 @@ block content
     .toolbar.bottom.right.controls#toolbar-bottom-right
       ul.nav.navbar-nav
         li
-          a#filter-modal-toggle(href="" data-toggle="modal" data-target="#filters_template")
-            i.fa.fa-filter(title="filter")
+          button#grid-view-button.btn.btn-default
+            img(src="/assets/images/grid.png" height="16px")
+            |  Grid
+        li  
+          button#graph-view-button.btn.btn-default
+            img(src="/assets/images/graph.png" height="16px")
+            |  Graph
+        li
+          button#filter-modal-toggle.btn.btn-default
+            img(src="/assets/images/filter.png" height="16px")
+            |  Filter
         li
           form#search-form.form-inline
             .input-group

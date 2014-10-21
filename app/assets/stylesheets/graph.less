@@ -98,6 +98,10 @@ svg {
   .wordBreak;
 }
 
+.node-info-body.hide-toolbar .node-toolbar {
+  display: none;
+}
+
 .node-info-body, .connection-info-body {
   background: white;
   display: none;
@@ -409,6 +413,10 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   color: #666;
 }
 
+#search-input {
+  height: 42px;
+}
+
 .controls {
   margin-bottom: 0px;
 }
@@ -564,6 +572,15 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   display: inline-block;
   float: none;
   vertical-align: bottom;
+}
+
+#toolbar-bottom-right .btn {
+  background: white;
+  opacity: 1;
+}
+
+#toolbar-bottom-right .btn img {
+  opacity: 0.8;
 }
 
 #toolbar-bottom-right > .navbar-nav {
