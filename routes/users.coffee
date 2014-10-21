@@ -72,7 +72,7 @@ module.exports = (app, passport) ->
         pass: "david4226"
     )
     mailOptions =
-      to: req.body.email
+      to: "#{req.body.email}, welcome@cograph.co"
       from: "welcome@cograph.co"
       subject: "Thanks for your interest in cograph"
       text: """
