@@ -1,3 +1,7 @@
+url = process.env.MONGOHQ_URL ||
+  'mongodb://wzeng:mongotester@kahana.mongohq.com:10078/app27380840';
+  // looks like mongodb://<user>:<pass>@mongo.onmodulus.net:27017/Mikha4ot
+
 module.exports = {
-  'url' : 'mongodb://wzeng:mongotester@linus.mongohq.com:10053/app27391670' // looks like mongodb://<user>:<pass>@mongo.onmodulus.net:27017/Mikha4ot
+  'url' :  url
 };
