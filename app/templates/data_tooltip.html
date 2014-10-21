@@ -1,12 +1,10 @@
 <div class="node-toolbar">
-  <% if(constructor.name === "NodeModel"){ %>
   <button type="button" title="Pin node position" class="node-fix" data-id=<%=attributes._id%>><i class="fa fa-thumb-tack"></i></button>
   <button type="button" title="Show archived neighboring nodes" class="node-expand" data-id=<%=attributes._id%>>
     <i class="fa fa-expand"></i>
     <span class="node-expand-count"></span>
   </button>
   <button type="button" title="Add connection from this node" class="node-connect" data-id=<%=attributes._id%>><i class="fa fa-link"></i></button>
-  <% } %>
   <button type="button" title="Hide" class="node-archive" data-id=<%=attributes._id%>><i class="fa fa-eye-slash"></i></button>
 </div>
 
