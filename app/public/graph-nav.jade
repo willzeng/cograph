@@ -10,13 +10,16 @@ nav.navbar.navbar-default(role='navigation')
             img#brand-logo(src="/assets/images/brand-b.png")
           
         span.navbar-doc-title
+          if !isOwner
+            a(href="/#{theDocument.createdBy}") @#{theDocument.createdBy}
+            span  :  
           span.dropdown
             if isOwner
               a.public-button-display.clickable(title="who can see this graph") 
-            else 
-              span.public-button-display(title="who can see this graph") 
+            //- else 
+            //-   span.public-button-display(title="who can see this graph") 
             a.dropdown-toggle.clickable(data-toggle='dropdown' id="graph-title")
-              span#menu-title-display
+              span#menu-title-display #{theDocument.name}
               i.caret
             ul.dropdown-menu#menu-title-dropdown(aria-labelledby="graph-title")
               li
@@ -45,10 +48,6 @@ nav.navbar.navbar-default(role='navigation')
                 | Share
             if isOwner
               li#maybe-publish-button
-            else
-              li
-                a.clickable#embed-button(type="button" data-toggle="popover" data-placement="bottom") 
-                  | Embed
             if isAuthenticated
               li#newgraph-icon
                 a(href="/new" target="_blank" title="new graph")

@@ -23,17 +23,19 @@ head
             | Hi @#{user.local.name}
           else
             | @#{user.local.name}
+        if ownProfile
+          h5
+            a(href="/new") + create new
+          
       if ownProfile
         .row
-          if privateDocs.length == 0 && publicDocs.length == 0
-            span
-              | You have no cographs. 
-              a(href="/new") Create a new cograph
           .col-sm-6
             h3 Your Private Cographs
             .document-list
               for doc in privateDocs
                 a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+              if privateDocs.length == 0
+                span None
           .col-sm-6
             h3 Your Published Cographs
             .document-list
@@ -41,6 +43,8 @@ head
                 a.list-group-item(href="/#{doc.createdBy}/document/#{doc.id}" target="_blank")
                   | #{doc.name}
                   a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
+              if publicDocs.length == 0
+                span None
       else
         .row
           .col-sm-12
@@ -49,6 +53,8 @@ head
                 a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank")
                   | #{doc.name}
                   a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
+            if publicDocs.length == 0
+              span None
     include footer-logged-in
     script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
