@@ -38,7 +38,7 @@ module.exports = function(passport) {
     passport.use(new TwitterStrategy({
         consumerKey: "iRnrLu6QrYHPlOF0wq2ns1MYl",
         consumerSecret: "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx",
-        callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+        callbackURL: "http://www.cograph.com/auth/twitter/callback"
       },
       function(token, tokenSecret, profile, done) {
         process.nextTick(function() {
