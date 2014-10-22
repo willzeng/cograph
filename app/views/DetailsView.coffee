@@ -32,7 +32,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         nodeConnection.on "change:color", (nc) => @updateColor @model.defaultColors[nodeConnection.get('color')]
         isEditable = $('#add').length isnt 0
 
-        if nodeConnection.constructor.name == "ConnectionModel"
+        if nodeConnection.isConnection
           title = """
           #{nodeConnection.source.get('name')}
             &nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;
@@ -74,11 +74,9 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
           $('#details-container .panel-body').empty().append(@nodeConnectionForm.el)
 
-          isNode = nodeConnection.constructor.name is 'NodeModel'
+          if nodeConnection.isNode then $('#details-container input[name=name]', @el).focus()
 
-          if isNode then $('#details-container input[name=name]', @el).focus()
-
-          colorOptions = colors:[(val for color, val of @model.defaultColors when !((color is 'grey') and isNode))]
+          colorOptions = colors:[(val for color, val of @model.defaultColors when !((color is 'grey') and nodeConnection.isNode))]
           $('.colorpalette').colorPalette(colorOptions).on 'selectColor', (e) =>
             colorValue = e.color
             nodeConnection.set 'color', _.invert(@model.defaultColors)[colorValue]
@@ -89,7 +87,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         @nodeConnectionForm.commit()
         @nodeConnectionForm.model.save()
 
-        if @nodeConnectionForm.model.constructor.name is "NodeModel"
+        if @nodeConnectionForm.model.isNode
           newConns = _.uniq @mentionedConns, (conn) ->
             conn.get 'target'
 
@@ -101,16 +99,16 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         false
 
       archiveObj: ->
-        if @currentNC.constructor.name is "NodeModel"
+        if @currentNC.isNode
           @model.removeNode @currentNC
-        else if @currentNC.constructor.name is "ConnectionModel"
+        else if @currentNC.isConnection
           @model.removeConnection @currentNC
         @closeDetail()
 
       deleteObj: ->
-        if @currentNC.constructor.name is "NodeModel"
+        if @currentNC.isNode
           @model.deleteNode @currentNC
-        else if @currentNC.constructor.name is "ConnectionModel"
+        else if @currentNC.isConnection
           @model.deleteConnection @currentNC
         @closeDetail()
 

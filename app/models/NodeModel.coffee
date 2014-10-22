@@ -5,6 +5,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/ObjectModel', 'b-iobind',
     ajaxURL: -> "/document/#{@get('_docId')}/nodes/"+@get('_id')
     noIoBind: false
     socket: io.connect('')
+    isNode: true
 
     defaults:
       name: ''
