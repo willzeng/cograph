@@ -12,7 +12,7 @@
             <% } %>
           <% } %>
         </div>
-          <% if (node.attributes.image.length > 0) { %>
+          <% if (node.attributes.image && node.attributes.image.length > 0) { %>
             <img src="<%= node.attributes.image %>" width="100%">
           <% } %>
           <% if (node.attributes.description.length > 0) { %>
