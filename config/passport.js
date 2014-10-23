@@ -58,7 +58,7 @@ module.exports = function(passport) {
                         else 
                             // username taken
                             // todo this should show a message to the user that appears
-                            return done(null, false, { message: 'Your twitter name is already taken. Sorry :/, Please log in normally'});
+                            return done(null, false, {message: 'Your twitter handle is taken. Please sign up using the form instead.'});
                     }
                     else {
                         // create the user

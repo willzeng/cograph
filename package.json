@@ -38,7 +38,8 @@
     "grunt-coffeelint": "0.0.10"
   },
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "produce" : "r.js.cmd -o app/build.js; r.js.cmd -o app/build-css.js; node ./bin/www"
   },
   "repository": {
     "type": "git",
