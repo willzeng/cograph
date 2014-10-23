@@ -4,6 +4,7 @@ define ['backbone', 'cs!models/ObjectModel', 'b-iobind', 'b-iosync', 'socket-io'
     urlRoot: -> "/connection"
     noIoBind: false
     socket: io.connect('')
+    isConnection: true
 
     defaults:
       name: ''
