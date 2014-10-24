@@ -11,8 +11,7 @@ cookieParser = require 'cookie-parser'
 session = require 'express-session'
 favicon = require 'static-favicon'
 bodyParser = require 'body-parser'
-RedisStore = require('connect-redis')(express)
-
+RedisStore = require('connect-redis')(session)
 
 configDB = require './config/database.js'
 
