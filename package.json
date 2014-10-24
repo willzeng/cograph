@@ -29,17 +29,18 @@
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.2",
     "static-favicon": "~1.0.2",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
   },
   "devDependencies": {
     "coffeelint": "~1.3.0",
     "grunt": "~0.4.4",
     "grunt-lesslint": "~1.1.2",
-    "grunt-coffeelint": "0.0.10"
+    "grunt-coffeelint": "0.0.10",
+    "requirejs": "~2.1.15"
   },
   "scripts": {
     "start": "node ./bin/www",
-    "produce" : "r.js.cmd -o app/build.js; r.js.cmd -o app/build-css.js; node ./bin/www"
+    "produce": "node_modules/requirejs/bin/r.js -o app/build.js; node_modules/requirejs/bin/r.js -o app/build-css.js; node ./bin/www"
   },
   "repository": {
     "type": "git",
