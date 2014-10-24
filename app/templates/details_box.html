@@ -4,7 +4,7 @@
       <div class="panel-body">
         <div class="detail-controls">
           <% if(isEditable) {%>
-            <% if (node.constructor.name === "NodeModel") {%>
+            <% if (node.isNode) {%>
               <button id="edit-node-button" class="btn btn-primary btn-sm">Edit</button>
             <% } else { %>
               <button id="edit-connection-button" class="btn btn-default btn-sm">Edit</button>
@@ -12,7 +12,7 @@
             <% } %>
           <% } %>
         </div>
-          <% if (node.attributes.image.length > 0) { %>
+          <% if (node.attributes.image && node.attributes.image.length > 0) { %>
             <img src="<%= node.attributes.image %>" width="100%">
           <% } %>
           <% if (node.attributes.description.length > 0) { %>
@@ -26,7 +26,7 @@
               <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
             <% }); %>
           </ul>
-          <% if (node.constructor.name === "NodeModel") {%>
+          <% if (node.isNode) {%>
             <ul class="list-group">
               <% _.each(spokes, function(conn) { %>
                 <li class="list-group-item"><%= conn.source.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.get('name')%>&nbsp;<i class="fa fa-long-arrow-right"></i>&nbsp;<%=conn.target.get('name')%></li>
