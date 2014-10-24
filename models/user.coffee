@@ -8,7 +8,6 @@ userSchema = mongoose.Schema(
   local:
     email: 
       type: String
-      unique: true
     password: String
     name: 
       type: String
