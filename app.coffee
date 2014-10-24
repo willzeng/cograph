@@ -11,6 +11,7 @@ cookieParser = require 'cookie-parser'
 session = require 'express-session'
 favicon = require 'static-favicon'
 bodyParser = require 'body-parser'
+RedisStore = require('connect-redis')(session)
 
 configDB = require './config/database.js'
 
@@ -34,7 +35,16 @@ app.use require('less-middleware')(path.join(__dirname, '/app/') )
 app.use bodyParser()
 
 # required for passport
-app.use session({ secret: 'gdocsisthebestgdocsisthebest' }) # session secret
+app.use session
+  secret: 'gdocsisthebestgdocsisthebest' # session secret
+  store : new RedisStore
+    host : 'pub-redis-14154.us-east-1-3.1.ec2.garantiadata.com'
+    port : 14154
+    user : 'app30882867'
+    pass : 'oadtPM2ikltqQurz'
+  cookie :
+    maxAge : 6048000 # ten weeks
+
 app.use passport.initialize()
 app.use passport.session() # persistent login sessions
 app.use flash() # use connect-flash for flash messages stored in session
