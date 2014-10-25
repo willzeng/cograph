@@ -15,7 +15,11 @@ exports.create = (req, resp) ->
     resp.send savedDocument
 
 exports.addBlank = (userName, callback) ->
-  newDocument = {name:"Untitled Document", createdBy: userName}
+  newDocument =
+    name:"Untitled Document"
+    createdBy: userName
+    publicView: 0
+    publicEdit: 0
   serverDocument.create newDocument, (savedDocument) ->
     callback savedDocument
 
