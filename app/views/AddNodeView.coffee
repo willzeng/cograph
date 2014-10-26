@@ -15,6 +15,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @imageArea = $('#add-image')
         @colorInput = $('#add-color-container')
         @imageInput = $('#add-image-container')
+        @nodeNames = window.prefetch.nodes
 
         @descriptionArea.autosize()
 
@@ -82,13 +83,16 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           # add at-who autocompletion
           @descriptionArea.atwho
-            at: "+"
-            data: @model.nodes.pluck('name')
-            target: "#add-node-form"
-          .atwho
             at: "#"
             data: @model.filterModel.getTags('node')
             target: "#add-node-form"
+
+          @model.getNodeNames (nodeNames) =>
+            @nodeNames = nodeNames
+            @descriptionArea.atwho
+              at: "+"
+              data: nodeNames
+              target: "#add-node-form"
 
           # setup inserted mentions store
           if @descriptionArea.val() is ""
@@ -96,8 +100,12 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @descriptionArea.on "inserted.atwho", (event, item) =>
             insertedText = item.attr 'data-value'
             if insertedText[0] is "+"
-              addedMention = @model.nodes.findWhere({name:insertedText.slice(1)})
-              if addedMention? then @mentions.push addedMention
+              addedMention = _.findWhere @nodeNames, {name:insertedText.slice(1)}
+              if addedMention?
+                mentionedNode = new NodeModel addedMention
+                @model.putNode mentionedNode
+                mentionedNode.fetch()
+                @mentions.push mentionedNode
 
       resetAdd: () ->
         @imageInput.addClass('hidden')
