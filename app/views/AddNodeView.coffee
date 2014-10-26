@@ -144,8 +144,11 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           node.set "tags", twttr.txt.extractHashtags attributes.description
 
-          @mentions = _.filter @mentions, (m) -> attributes.description.indexOf(m.get('name')) > 0
-          uniqMentions = _.uniq @mentions, null, (n) -> n.get('name')
+          plusRegex = new RegExp /(?:^|\s)\+(\w+)/g
+          parse = attributes.description.match plusRegex
+          if parse? then @mentions = (match.split('+')[1] for match in parse) else @mentions = []
+          uniqMentions = _.uniq @mentions
+
           node.set "neighborCount", uniqMentions.length
 
           @model.putNode node
@@ -154,17 +157,42 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
             @model.trigger 'saved:node'
 
             # Create connections to mentioned nodes
-            for targetNode in uniqMentions
-              if targetNode?
+            for n in uniqMentions
+              targetNode = _.findWhere @nodeNames, {name:n}
+              # if the node doesn't already exist
+              if not targetNode?
+                newNode = new NodeModel
+                  name: n
+                  neighborCount: 1
+                  _docId: @model.documentModel.get('_id')
+                details =
+                  name: n
+                  neighborCount: 1
+                  _docId: @model.documentModel.get('_id')
+                newNode.save details,
+                  success: (newNode) =>
+                    @model.putNode newNode
+                    connection = new @model.connections.model
+                      source: node.get('_id')
+                      target: newNode.get('_id')
+                      _docId: @model.documentModel.get('_id')
+                      description: node.get('description')
+                    $.when(connection.save()).then ->
+                      # update neighbor counts
+                      node.fetch()
+                      newNode.fetch()
+                    @model.putConnection connection
+              else
+                foundNode = @model.nodes.findWhere {name:targetNode.name}
                 connection = new @model.connections.model
                     source: node.get('_id')
-                    target: targetNode.get('_id')
+                    target: foundNode.get('_id')
                     _docId: @model.documentModel.get('_id')
                     description: node.get('description')
                 $.when(connection.save()).then ->
                   # update neighbor counts
                   node.fetch()
-                  targetNode.fetch()
+                  foundNode.fetch()
                 @model.putConnection connection
 
             @resetAdd()
