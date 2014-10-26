@@ -37,7 +37,9 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
       updatePublishButton: ->
         if @model.getDocument().get("publicView") is 0 or @model.getDocument().get("publicView") is 1
           $('#maybe-publish-button').html "<a class='clickable'>Publish</a>"
-        else
+        else if($('.public-button-display').hasClass('clickable')) #isOwner
+          $('#maybe-publish-button').html "<a class='clickable'>Settings</a>"
+        else 
           $('#maybe-publish-button').html ""
 
       newDocumentModal: ->
