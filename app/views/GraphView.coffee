@@ -325,8 +325,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .style("fill", (d) => @getColor d)
         node.select('.node-info-body')
           .html((d) -> _.template(popover, d))
-        node.select('.node-title-body')
-          .style("color", (d) => @getColor d)
         node.select('.node-image')
           .attr('xlink:href', (d) -> d.get('image'))
 
