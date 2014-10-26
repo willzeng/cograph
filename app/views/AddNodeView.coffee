@@ -165,11 +165,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                   name: n
                   neighborCount: 1
                   _docId: @model.documentModel.get('_id')
-                details =
-                  name: n
-                  neighborCount: 1
-                  _docId: @model.documentModel.get('_id')
-                newNode.save details,
+                newNode.save {},
                   success: (newNode) =>
                     @model.putNode newNode
                     connection = new @model.connections.model
