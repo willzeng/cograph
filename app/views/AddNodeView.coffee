@@ -49,7 +49,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                   
         $('body').on 'click', (e) => 
           if not $('#add').hasClass('contracted') then @resetAdd()
-        $('#add').on 'click', (e) => e.stopPropagation()
+        $('#add-node-form').on 'click', (e) => e.stopPropagation()
 
         @colorArea.on 'hover', (e) => $('#add-color-popover').show()
 
@@ -103,7 +103,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @imageInput.addClass('hidden')
         @colorInput.addClass('hidden')
         @descriptionArea.atwho 'destroy'
-        $('div[id=atwho-container]').remove()
+        $('#atwho-container').remove()
         @titleArea.val('')
         @imageInput.val('')
         @descriptionArea.val('') 
