@@ -29,7 +29,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             @creatingConnection = !@creatingConnection
 
         $('body').on 'keydown', (e) =>
-          if (e.which == 27)
+          if (e.which == 27) # ESCAPE KEY
             @clearDragLine()
 
       makeConnection: (node) =>
