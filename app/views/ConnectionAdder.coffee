@@ -28,6 +28,10 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
             @makeConnection node
             @creatingConnection = !@creatingConnection
 
+        $('body').on 'keydown', (e) =>
+          if (e.which == 27)
+            @clearDragLine()
+
       makeConnection: (node) =>
         @drag_line.classed('hidden', true)
         if node != @drag_line.datum()
