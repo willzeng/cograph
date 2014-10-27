@@ -50,6 +50,11 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           title: title
         ).open()
 
+        $('.tag-link').on "click", (e) =>
+          e.preventDefault()
+          tag = $(e.currentTarget).attr('data-tag')
+          @graphView.trigger 'tag:click', tag
+
       updateColor: (color) ->
         $('#details-container .panel-heading').css 'background', color
 
