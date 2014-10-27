@@ -16,16 +16,12 @@
             <img src="<%= node.attributes.image %>" width="100%">
           <% } %>
           <% if (node.attributes.description.length > 0) { %>
-            <p class="lead"><%= node.attributes.description %></p>
+            <% linkified = node.attributes.description.replace(/#(\S*)/g,'<a class="tag-link" data-tag=$1 href="">#$1</a>'); %>
+            <p class="lead"><%= linkified %></p>
           <% } %>
           <% if (node.attributes.url) { %>
               URL: <a href="<%= node.attributes.url %>"><%= node.attributes.url %></a><br/>
           <% }; %>
-          <ul class="list-group">
-            <% _.each(node.attributes.tags, function(tag) { %>
-              <li class="list-group-item"><i class="fa fa-tag"></i>&nbsp;&nbsp;<%= tag %></li>
-            <% }); %>
-          </ul>
           <% if (node.isNode) {%>
             <ul class="list-group">
               <% _.each(spokes, function(conn) { %>
