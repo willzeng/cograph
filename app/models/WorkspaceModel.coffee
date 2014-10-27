@@ -60,7 +60,7 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
 
       defaultColors:
           defaultHex: '#000' # not currently functional
-          white: '#aaa'
+          white: '#cdcdcd'
           red: '#E3A390'
           yellow: '#F2DB9D'
           green: '#B3E2B1'
