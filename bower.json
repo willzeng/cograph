@@ -43,7 +43,8 @@
     "underscore": "1.6.0",
     "feedback-bot": "0.3.1",
     "iconset": "https://github.com/davidfurlong/iconset.git",
-    "jquery-autosize": "~1.18.13"
+    "jquery-autosize": "~1.18.13",
+    "jquery": "~2.1.1"
   },
   "devDependencies": {
     "jasmine": "~2.0.0"
