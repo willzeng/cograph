@@ -38,8 +38,11 @@ exports.getAll = (req, resp) ->
     for node in results
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
-      parsedNodes.push utils.parseNodeToClient nodeData
-    resp.send parsedNodes
+      serverNode.getNeighbors nodeData._id, (neighbors) ->
+        nodeData.neighborCount = neighbors.length
+        if parsedNodes.length is results.length-1
+          parsedNodes.push utils.parseNodeToClient nodeData
+          resp.send parsedNodes
 
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}
