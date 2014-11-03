@@ -112,8 +112,14 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
 
       deleteObj: ->
         if @currentNC.isNode
+          window.prefetch.nodes = _.filter window.prefetch.nodes, (n) =>
+            @currentNC.get('_id') isnt n._id
+          window.prefetch.connections = _.filter window.prefetch.connections, (c) =>
+            @currentNC.get('_id') isnt c.source and @currentNC.get('_id') isnt c.target
           @model.deleteNode @currentNC
         else if @currentNC.isConnection
+          window.prefetch.connections = _.filter window.prefetch.connections, (n) =>
+            @currentNC.get('_id') isnt n._id
           @model.deleteConnection @currentNC
         @closeDetail()
 
