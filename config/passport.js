@@ -13,6 +13,8 @@ User = require('../models/user.coffee');
 var usernameBlacklist = ['login', 'logout', 'document', 'signup', 'profile', 'landing', 'new', 'mobile', 'errors', 'forgot-password', 'request-key'];
 var userNameRegEx = /^(\w+)$/;
 
+var Twit = require('twit');
+
 // expose this function to our app using module.exports
 module.exports = function(passport) {
 
@@ -36,9 +38,14 @@ module.exports = function(passport) {
 
     // Twitter Signup
     passport.use(new TwitterStrategy({
-        consumerKey: "iRnrLu6QrYHPlOF0wq2ns1MYl",
-        consumerSecret: "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx",
-        callbackURL: "http://www.cograph.co/auth/twitter/callback"
+        // remote
+        //consumerKey: "iRnrLu6QrYHPlOF0wq2ns1MYl",
+        //consumerSecret: "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx",
+        //callbackURL: "http://cograph.co/auth/twitter/callback"
+        // local
+        consumerKey: "4KN2VexuhVr7d3Ic7pHqZUVZD",
+        consumerSecret: "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP",
+        callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
       },
       function(token, tokenSecret, profile, done) {
         process.nextTick(function() {
@@ -61,16 +68,38 @@ module.exports = function(passport) {
                             return done(null, false, {message: 'Your twitter handle is taken. Please sign up using the form instead.'});
                     }
                     else {
+                        // get their tweets
+                        console.log(token);
+                        console.log(tokenSecret);
+                        // remote twitter
+                        // var twit = new twitter({
+                        //     consumer_key: 'iRnrLu6QrYHPlOF0wq2ns1MYl',
+                        //     consumer_secret: 'bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx',
+                        //     access_token_key: token,
+                        //     access_token_secret: tokenSecret
+                        // });
+                        // local twitter
+                        var twit = new Twit({
+                            consumer_key: "4KN2VexuhVr7d3Ic7pHqZUVZD",
+                            consumer_secret: "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP",
+                            access_token: token,
+                            access_token_secret: tokenSecret
+                        });
+
+                        twit.get('statuses/user_timeline', {count: 200, screen_name:profile.username, include_entities:false}, function(err, data, res) {
+                            console.log(data, res.statusCode);
+                        });
+
                         // create the user
                         var newUser             = new User();
                         // set the user's local credentials
                         newUser.local.email     = profile.email;
                         newUser.local.name      = profile.username;
                         newUser.local.nameLower = profile.username.toLowerCase();
-                        newUser.twitter = profile._json
-                        newUser.twitter.id = profile.id
-                        newUser.twitter.username = profile.username
-                        newUser.twitter.displayName = profile.displayName
+                        newUser.twitter = profile._json;
+                        newUser.twitter.id = profile.id;
+                        newUser.twitter.username = profile.username;
+                        newUser.twitter.displayName = profile.displayName;
                         // save the user
                         newUser.save(function(err) {
                           if (err)
