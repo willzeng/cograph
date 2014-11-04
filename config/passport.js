@@ -86,26 +86,26 @@ module.exports = function(passport) {
                             access_token_secret: tokenSecret
                         });
 
-                        twit.get('statuses/user_timeline', {count: 200, screen_name:profile.username, include_entities:false}, function(err, data, res) {
+                        twit.get('statuses/user_timeline', {count: 200, screen_name: profile.username, include_entities:false}, function(err, data, res) {
                             console.log(data, res.statusCode);
-                        });
-
-                        // create the user
-                        var newUser             = new User();
-                        // set the user's local credentials
-                        newUser.local.email     = profile.email;
-                        newUser.local.name      = profile.username;
-                        newUser.local.nameLower = profile.username.toLowerCase();
-                        newUser.twitter = profile._json;
-                        newUser.twitter.id = profile.id;
-                        newUser.twitter.username = profile.username;
-                        newUser.twitter.displayName = profile.displayName;
-                        // save the user
-                        newUser.save(function(err) {
-                          if (err)
-                              throw err;
-                          return done(null, newUser);
-                        });
+                            // create the user
+                            var newUser             = new User();
+                            // set the user's local credentials
+                            newUser.local.email     = profile.email;
+                            newUser.local.name      = profile.username;
+                            newUser.local.nameLower = profile.username.toLowerCase();
+                            newUser.twitter = profile._json;
+                            newUser.twitter.id = profile.id;
+                            newUser.twitter.username = profile.username;
+                            newUser.twitter.displayName = profile.displayName;
+                            newUser.twitter.tweets = data; // 200 tweets
+                            // save the user
+                            newUser.save(function(err) {
+                                if (err)
+                                    throw err;
+                                return done(null, newUser);
+                            });
+                        });        
                     }
                 });
             });
