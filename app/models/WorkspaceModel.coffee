@@ -140,9 +140,10 @@ define ['jquery', 'backbone', 'cs!models/NodeModel','cs!models/ConnectionModel',
       removeConnection: (model) ->
         @connections.remove model
 
-      deleteNode: (model) ->
+      deleteNode: (model, callback) ->
         @removeNode model
-        model.destroy()
+        model.destroy
+          success: callback
 
       deleteConnection: (model) ->
         @removeConnection model

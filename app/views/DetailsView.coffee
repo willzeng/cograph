@@ -110,13 +110,17 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           @model.removeConnection @currentNC
         @closeDetail()
 
+      # deletes the node or connections
+      # and also removes it from the cached window.prefetch
+      # that is used to quick load the whole cograph
       deleteObj: ->
         if @currentNC.isNode
           window.prefetch.nodes = _.filter window.prefetch.nodes, (n) =>
             @currentNC.get('_id') isnt n._id
           window.prefetch.connections = _.filter window.prefetch.connections, (c) =>
             @currentNC.get('_id') isnt c.source and @currentNC.get('_id') isnt c.target
-          @model.deleteNode @currentNC
+          @model.deleteNode @currentNC, =>
+            @model.nodes.map (n) -> n.fetch() #update NeighborCounts after deletion
         else if @currentNC.isConnection
           window.prefetch.connections = _.filter window.prefetch.connections, (n) =>
             @currentNC.get('_id') isnt n._id
