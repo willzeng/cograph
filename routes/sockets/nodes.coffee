@@ -43,9 +43,12 @@ exports.readCollection = (data, callback, socket) ->
     for node in results
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
-      parsedNodes.push utils.parseNodeToClient nodeData
-    socket.emit '/nodes:read', parsedNodes
-    callback null, parsedNodes
+      serverNode.getNeighbors nodeData._id, (neighbors) ->
+        nodeData.neighborCount = neighbors.length
+        if parsedNodes.length is results.length-1
+          parsedNodes.push utils.parseNodeToClient nodeData
+          socket.emit '/nodes:read', parsedNodes
+          callback null, parsedNodes  
 
 # UPDATE
 exports.update = (data, callback, socket) ->
