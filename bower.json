@@ -37,7 +37,7 @@
     "share-button": "~0.4.1",
     "backbone.iobind": "https://github.com/willzeng/backbone.iobind.git",
     "caret.js": "~0.1.0",
-    "targeted-atwho": "https://github.com/willzeng/At.js.git",
+    "targeted-atwho": "https://github.com/willzeng/mentioner.git",
     "twitter-text": "~1.9.4",
     "jQuery-linkify": "~1.1.7",
     "underscore": "1.6.0",
