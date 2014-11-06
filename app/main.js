@@ -52,7 +52,8 @@ requirejs.config({
       deps: ['jquery']
     },
     'atwho': {
-      deps: ['jquery', 'caret']
+      deps: ['jquery', 'caret'],
+      exports: 'atwho'
     },
     'twittertext': {
       deps: ['jquery']
