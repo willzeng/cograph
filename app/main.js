@@ -19,7 +19,7 @@ requirejs.config({
     'b-iosync': '/assets/libs/backbone.iobind/dist/backbone.iosync',
     'b-iobind': '/assets/libs/backbone.iobind/dist/backbone.iobind',
     'caret': '/assets/libs/caret.js/dist/jquery.caret.min',
-    'atwho': '/assets/libs/targeted-atwho/dist/js/jquery.atwho.min',
+    'atwho': '/assets/libs/targeted-atwho/dist/js/jquery.atwho',
     'twittertext': '/assets/libs/twitter-text/pkg/twitter-text-1.9.4.min',
     'linkify': '/assets/libs/jQuery-linkify/dist/jquery.linkify.min',
     'jquery-autosize': '/assets/libs/jquery-autosize/jquery.autosize',
