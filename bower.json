@@ -36,7 +36,7 @@
     "bootstrap-colorpalette": "~0.0.1",
     "share-button": "~0.4.1",
     "backbone.iobind": "https://github.com/willzeng/backbone.iobind.git",
-    "caret.js": "~0.1.0",
+    "caret.js": "~0.2.0",
     "targeted-atwho": "https://github.com/willzeng/mentioner.git",
     "twitter-text": "~1.9.4",
     "jQuery-linkify": "~1.1.7",
