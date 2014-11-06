@@ -80,6 +80,6 @@ requirejs.config({
   }]
 });
 
-require(['jquery','caret','atwho', 'cs!GraphDocs'], function($, caret, atwho, GraphDocs){
+require(['jquery','caret','atwho', 'bb-modal', 'cs!GraphDocs'], function($, caret, atwho, bbmodal, GraphDocs){
   GraphDocs.initialize()
 });
