@@ -80,6 +80,6 @@ requirejs.config({
   }]
 });
 
-require(['cs!GraphDocs'], function(GraphDocs){
+require(['jquery','caret','atwho', 'cs!GraphDocs'], function($, caret, atwho, GraphDocs){
   GraphDocs.initialize()
 });
