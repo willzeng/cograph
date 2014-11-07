@@ -41,7 +41,7 @@ module.exports = function(passport) {
         // remote
         consumerKey: "iRnrLu6QrYHPlOF0wq2ns1MYl",
         consumerSecret: "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx",
-        callbackURL: "http://cograph.co/auth/twitter/callback"
+        callbackURL: "http://www.cograph.co/auth/twitter/callback"
         // local
         // consumerKey: "4KN2VexuhVr7d3Ic7pHqZUVZD",
         // consumerSecret: "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP",
