@@ -69,8 +69,7 @@ module.exports = function(passport) {
                     }
                     else {
                         // get their tweets
-                        console.log(token);
-                        console.log(tokenSecret);
+
                         // remote twitter
                         var twit = new twitter({
                             consumer_key: 'iRnrLu6QrYHPlOF0wq2ns1MYl',
