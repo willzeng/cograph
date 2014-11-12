@@ -13,7 +13,7 @@ User = require('../models/user.coffee');
 var usernameBlacklist = ['login', 'logout', 'document', 'signup', 'profile', 'landing', 'new', 'mobile', 'errors', 'forgot-password', 'request-key'];
 var userNameRegEx = /^(\w+)$/;
 
-var Twit = require('twit');
+var Twit = require('twitter');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
