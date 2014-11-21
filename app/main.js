@@ -40,7 +40,8 @@ requirejs.config({
       deps: ['jquery']
     },
     'bb-modal': {
-      deps: ['underscore', 'jquery', 'backbone']
+      deps: ['underscore', 'jquery', 'backbone'],
+      exports: 'Backbone.BootstrapModal'
     },
     'b-iosync': {
       deps: ['underscore','backbone', 'socket-io']
