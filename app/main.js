@@ -82,5 +82,5 @@ requirejs.config({
 
 require(['jquery','caret','atwho', 'cs!GraphDocs', 'bb-modal', 'cs!routes/routes'],
   function($, caret, atwho, GraphDocs, bbModal, router){
-  GraphDocs.initialize();
+    GraphDocs.initialize();
 });
