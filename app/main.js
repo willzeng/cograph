@@ -40,8 +40,7 @@ requirejs.config({
       deps: ['jquery']
     },
     'bb-modal': {
-      deps: ['underscore', 'jquery', 'backbone'],
-      exports: 'Backbone.BootstrapModal'
+      deps: ['underscore', 'jquery', 'backbone']
     },
     'b-iosync': {
       deps: ['underscore','backbone', 'socket-io']
@@ -82,5 +81,5 @@ requirejs.config({
 });
 
 require(['jquery','caret','atwho', 'cs!GraphDocs'], function($, caret, atwho, GraphDocs){
-  GraphDocs.initialize();
+  GraphDocs.initialize()
 });
