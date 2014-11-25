@@ -1,8 +1,8 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
- 'bb-modal', 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
+ 'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
  'text!templates/analytics_modal.html', 'text!templates/workspaces_menu_modal.html',
  'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, bbModal, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate) ->
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
