@@ -3,7 +3,7 @@ requirejs.config({
   paths: {
     'jquery': '/assets/libs/jquery/dist/jquery.min',
     'underscore': '/assets/libs/underscore/underscore',
-    'backbone': '/assets/libs/backbone/backbone',
+    'backboneBase': '/assets/libs/backbone/backbone',
     'text': '/assets/libs/requirejs-text/text',
     'd3': '/assets/libs/d3/d3',
     'backbone-forms': '/assets/libs/backbone-forms/distribution.amd/backbone-forms.min',
@@ -12,7 +12,7 @@ requirejs.config({
     'typeahead': '/assets/libs/typeahead.js/dist/typeahead.jquery.min',
     'bloodhound': '/assets/libs/typeahead.js/dist/bloodhound.min',
     'bootstrap': '/assets/libs/bootstrap/dist/js/bootstrap.min',
-    'bb-modal': '/assets/libs/new-bb-modal/src/backbone.bootstrap-modal',
+    'backbone': '/assets/libs/new-bb-modal/src/backbone.bootstrap-modal',
     'bootstrap-color':'/assets/libs/bootstrap-colorpalette/js/bootstrap-colorpalette',
     'share-button': '/assets/libs/share-button/build/share.min',
     'socket-io': '/socket.io/socket.io',
@@ -26,10 +26,6 @@ requirejs.config({
     'feedback-bot': '/assets/libs/feedback-bot/dist/feedback.0.3.1'
   },
   shim: {
-    'backbone': {
-      deps: ['underscore', 'jquery'],
-      exports: 'Backbone'
-    },
     'typeahead': {
       deps: ['jquery']
     },
@@ -39,8 +35,13 @@ requirejs.config({
     'bootstrap': {
       deps: ['jquery']
     },
-    'bb-modal': {
-      deps: ['underscore', 'jquery', 'backbone']
+    'backboneBase': {
+      deps: ['underscore', 'jquery'],
+      exports: 'Backbone'
+    },
+    'backbone': {
+      deps: ['backboneBase'],
+      exports: 'Backbone'
     },
     'b-iosync': {
       deps: ['underscore','backbone', 'socket-io']

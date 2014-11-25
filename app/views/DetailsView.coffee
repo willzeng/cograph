@@ -1,7 +1,7 @@
-define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap', 'bb-modal',
+define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap',
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
  'bootstrap-color', 'atwho', 'twittertext', 'linkify', 'typeahead'],
-  ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho, linkify, typeahead) ->
+  ($, _, Backbone, bbf, list, bbfb, Bootstrap, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho, linkify, typeahead) ->
     class DetailsView extends Backbone.View
       el: $ 'body'
 
