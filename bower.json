@@ -32,7 +32,7 @@
     "d3": "~3.4.6",
     "backbone-forms": "~0.14.0",
     "typeahead.js": "~0.10.2",
-    "new-bb-modal": "https://github.com/powmedia/backbone.bootstrap-modal.git",
+    "new-bb-modal": "https://github.com/willzeng/backbone.bootstrap-modal.git",
     "bootstrap-colorpalette": "~0.0.1",
     "share-button": "~0.4.1",
     "backbone.iobind": "https://github.com/willzeng/backbone.iobind.git",
