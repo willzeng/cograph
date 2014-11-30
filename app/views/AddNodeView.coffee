@@ -159,7 +159,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                   targetNode.fetch()
                 @model.putConnection connection
 
-            @resetAdd()
+          @resetAdd()
         else
           $('input', @el).attr('placeholder', node.validate())
 
