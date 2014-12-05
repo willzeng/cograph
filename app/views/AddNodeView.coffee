@@ -124,7 +124,10 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         attributes.image = @imageInput.val()
         if(attributes['name'] == "" && attributes['description'] != "")
           attributes['name'] = attributes['description'].substring(0,25)
-        if(attributes['description'].length > 25)
+        else 
+          # todo: add sensible feedback to invalid action
+          return
+        if(attributes['name'].length > 25)
           attributes['name'] += "...";
         node = new NodeModel attributes
         if node.isValid()
