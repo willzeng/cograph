@@ -147,10 +147,10 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
               cb _.map matches, (match) -> {value: match.name, type: 'connection'}
 
         typeaheadConfig =
-              hint: false,
-              highlight: true,
-              minLength: 0,
-              autoselect: true
+          hint: false,
+          highlight: true,
+          minLength: 0,
+          autoselect: true
 
         Backbone.Form.editors.ConnDropdown = Backbone.Form.editors.Text.extend
           render: () ->
