@@ -59,10 +59,12 @@ define ['jquery', 'underscore', 'backbone', 'socket-io'],
       # This works quickly by loading the clientside prefetched nodes
       # right away and then updating them
       bringBackAll: ->
-        if window.prefetch.nodes then @model.nodes.set window.prefetch.nodes, {silent:true}
-        @model.nodes.fetch()
-        if window.prefetch.connections then @model.connections.set window.prefetch.connections, {silent:true}
-        @model.connections.fetch()
+        if window.prefetch.nodes
+          @model.nodes.set window.prefetch.nodes, {silent:true}
+        if window.prefetch.connections
+          @model.connections.set window.prefetch.connections, {silent:true}
+        $.when(@model.nodes.fetch()).then =>
+          @model.connections.fetch()
 
         @model.trigger "init"
 
