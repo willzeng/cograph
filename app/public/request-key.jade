@@ -34,7 +34,7 @@ html
           h3
             strong Join Waiting List
           // show any messages that come back with authentication
-          if message.length > 0 
+          if message && message.length > 0 
             .alert.alert-success #{message}
 
           form(action='/request-key', method='post').cf
