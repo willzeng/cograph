@@ -149,9 +149,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         else
           @force.nodes(nodes).links(connections).start()
 
-      backgroundRender: ->
+      # can pass an argument to set the number of nodes that need
+      # to be rendered
+      backgroundRender: (arg) ->
+        if arg? then size = arg else size = @model.nodes.length
         @loadForce()
-        n = @model.nodes.models.length*@model.nodes.models.length*@model.nodes.models.length+50
+        n = size*size*size+50
 
         @drawing = false
         for i in [0..n] by 1

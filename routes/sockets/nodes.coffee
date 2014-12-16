@@ -2,6 +2,7 @@ url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require '../../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require '../utils'
+async = require 'async'
 
 NodeHelper = require '../helpers/NodeHelper'
 serverNode = new NodeHelper(graphDb)
@@ -35,21 +36,20 @@ exports.read = (data, callback, socket) ->
 exports.readCollection = (data, callback, socket) ->
   console.log "readCollection of nodes in document #{data._docId}"
   docLabel = "_doc_#{data._docId || 0}"
-  # SUPER UNSAFE, allows for SQL injection but node-neo4j wasn't interpolating
+  # SUPER UNSAFE, allows for Cypher injection but node-neo4j wasn't interpolating
   cypherQuery = "match (n:#{docLabel}) return n, labels(n);"
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
     if err then throw err
-    parsedNodes = []
-    for node in results
+    updateNeighborCount = (node, cb) ->
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
       serverNode.getNeighbors nodeData._id, (neighbors) ->
         nodeData.neighborCount = neighbors.length
-        if parsedNodes.length is results.length-1
-          parsedNodes.push utils.parseNodeToClient nodeData
-          socket.emit '/nodes:read', parsedNodes
-          callback null, parsedNodes  
+        cb null, nodeData
+    async.map results, updateNeighborCount, (err, updated) ->
+      socket.emit '/nodes:read', updated
+      callback null, updated
 
 # UPDATE
 exports.update = (data, callback, socket) ->
