@@ -59,6 +59,7 @@ define ['jquery', 'underscore', 'backbone', 'socket-io'],
       # This works quickly by loading the clientside prefetched nodes
       # right away and then updating them
       bringBackAll: ->
+        oldNodeNum = @model.nodes.length
         if window.prefetch.nodes
           @model.nodes.set window.prefetch.nodes, {silent:true}
         if window.prefetch.connections
@@ -66,7 +67,7 @@ define ['jquery', 'underscore', 'backbone', 'socket-io'],
         $.when(@model.nodes.fetch()).then =>
           @model.connections.fetch()
 
-        @model.trigger "init"
+        @model.trigger "init", @model.nodes.length-oldNodeNum
 
         @trashBin.removeClass('hover')
         @enteredWhileDragging = true
