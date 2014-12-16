@@ -136,8 +136,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           return
         if(attributes['name'] == "" && attributes['description'] != "")
           attributes['name'] = attributes['description'].substring(0,25)
-        if(attributes['name'].length > 25)
-          attributes['name'] += "...";
+        if(attributes['name'].length >= 25)
+          attributes['name'] += "..."
 
         attributes['name'] = @stripUnwanted(attributes["name"])
 
