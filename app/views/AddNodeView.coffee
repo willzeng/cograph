@@ -61,6 +61,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           keyCode = e.keyCode || e.which
           # code for ENTER
           if keyCode == 13 and !@showingAtWho and !e.shiftKey
+            e.preventDefault()
             $.when(@addNode()).then =>
               @expandAdder()
               @titleArea.focus()
@@ -112,20 +113,34 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @titleArea.trigger('change')   
         $('#add').addClass('contracted')
 
+      #strips all new lines and leading spaces
+      stripUnwanted: (str) ->
+        str_ = str.replace('\n', '')
+        str_ = str_.replace('\r', '')
+        for ch, i in str
+          if(ch != " ")
+            return str_.substring(i)
+        return str_
+
       addNode: (e) ->
         if e? then e.preventDefault()
 
         attributes = {_docId: @model.nodes._docId}
         _.each $('#add-node-form').serializeArray(), (obj) ->
           attributes[obj.name] = obj.value
-
         attributes.selected = true
         attributes.color = @colorArea.data('color')
         attributes.image = @imageInput.val()
+        if(attributes['name'] == "" && attributes['description'] == "")
+          # todo: add sensible feedback to invalid action
+          return
         if(attributes['name'] == "" && attributes['description'] != "")
           attributes['name'] = attributes['description'].substring(0,25)
-        if(attributes['description'].length > 25)
-          attributes['name'] += "...";
+        if(attributes['name'].length >= 25)
+          attributes['name'] += "..."
+
+        attributes['name'] = @stripUnwanted(attributes["name"])
+
         node = new NodeModel attributes
         if node.isValid()
           # stage the new node in the staging area

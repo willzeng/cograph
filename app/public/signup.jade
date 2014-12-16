@@ -17,7 +17,7 @@ html
           br
           h2 Signup
           // show any messages that come back with authentication
-          if message.length > 0 
+          if message && message.length > 0 
             .alert.alert-danger #{message}
           label Beta Key*
           input.form-control(type="text", name="beta-key")

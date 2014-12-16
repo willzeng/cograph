@@ -11,22 +11,10 @@ nav.navbar.navbar-default#main-nav(role='navigation')
     if isAuthenticated 
       #gdocs-nav.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right
-          li(style="height:22px")
-            a(href="/new" target="_blank" title="new graph")
-              img(src="assets/images/newgraph.png" height="32px" style="margin-top:-9px;")
-          li.dropdown
-            a.dropdown-toggle(data-toggle='dropdown', href='')
-              | @#{user.local.name}
-              i.caret
-            ul.dropdown-menu
-              li 
-                a(href="/") Discover
-              li
-                a(href="/#{user.local.nameLower}") My Cographs
-              li(role="presentation")
-                a(href="/account") Account
-              li
-                a(href="/logout") Logout
+          li
+            a(href="/") Explore
+          li
+            a(href="/#{user.local.nameLower}") @#{user.local.name}
     else
       #gdocs-nav.collapse.navbar-collapse
         ul.nav.navbar-nav.navbar-right

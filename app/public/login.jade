@@ -32,14 +32,14 @@ html
       .row
         .col-md-6.col-md-offset-3.col-xs-12#login-form
           h3
-            strong Welcome Back!
+            strong Login
           br
           p  
             a(href="/auth/twitter")
               img(src="assets/images/sign-in-with-twitter.png")
           hr
           // show any messages that come back with authentication
-          if message.length > 0 
+          if message && message.length > 0 
             .alert.alert-danger #{message}
 
           // LOGIN FORM 
@@ -50,7 +50,7 @@ html
             .form-group
               label Password
               input.form-control.input-lg(type='password', name='password')
-            button.btn.btn-default.btn-lg.pull-right(type='submit') Login
+            button.btn.btn-success.btn-lg.pull-right(type='submit') Login
           p
             a(href='/forgotten-password') Forgot your Password?
           p
