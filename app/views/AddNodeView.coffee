@@ -47,7 +47,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
          
         @titleArea.on 'focus', => @expandAdder()
                   
-        $('body').on 'click', (e) => 
+        $('body').on 'click', (e) =>
+          if $(e.currentTarget).parents('#atwho-container') #clicked atwho
+            return
           if not $('#add').hasClass('contracted') then @resetAdd()
         $('#add-node-form').on 'click', (e) => e.stopPropagation()
 
