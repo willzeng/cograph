@@ -61,6 +61,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           keyCode = e.keyCode || e.which
           # code for ENTER
           if keyCode == 13 and !@showingAtWho and !e.shiftKey
+            e.preventDefault()
             $.when(@addNode()).then =>
               @expandAdder()
               @titleArea.focus()
