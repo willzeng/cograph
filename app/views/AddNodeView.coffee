@@ -116,6 +116,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
       #strips all new lines and leading spaces
       stripUnwanted: (str) ->
         str_ = str.replace('\n', '')
+        str_ = str_.replace('\r', '')
         for ch, i in str
           if(ch != " ")
             return str_.substring(i)
