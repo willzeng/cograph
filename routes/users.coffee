@@ -47,7 +47,7 @@ module.exports = (app, passport) ->
       else
         req.logIn user, (err) ->
           if err then next err
-          res.redirect '/'
+          res.redirect '/'+user.local.name
     )(req, res, next)
 
   # =====================================
