@@ -1,0 +1,51 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Cograph
+    meta(name='viewport', content='width=device-width,initial-scale=1.0')
+    link(href='assets/libs/iconset/flaticon.css', rel='stylesheet', type='text/css')
+    link(href='assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
+    link(href='assets/stylesheets/general.css', rel='stylesheet')
+    link(href='/assets/stylesheets/nav.css', rel='stylesheet')
+  body
+    include nav
+    .container.main-content
+      center
+        h4 The Team
+      br
+      br
+      .row
+        .col-md-6
+          center
+            img.img-circle(src='assets/images/david.png')
+            br
+            br
+            h2 David Furlong
+            hr
+            p David is a Computer Science and Philosophy student at Oxford who enjoys going to hackathons and all things web development. He focuses on the front end and enjoys the occasional dabble in design. 
+        .col-md-6(src='')
+          center
+            img.img-circle(src='assets/images/will.png')
+            br
+            br
+            h2 Will Zeng
+            hr
+            p Will is a doctoral student in Computer Science at Oxford where he is working on frameworks for quantum algorithms. He is a rower who probably reads too much and wonders with this quote from Musil: "A man who wants the truth becomes a scientist; a man who wants to give free play to his subjectivity may become a writer; but what should a man do who wants something in between?"
+            p
+              a(href='https://twitter.com/wjzeng') @wjzeng
+    if isAuthenticated
+      include footer-logged-in
+    else 
+      include footer
+    script(src='assets/libs/jquery/dist/jquery.min.js')
+    script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-38168348-4', 'auto');
+      ga('send', 'pageview');

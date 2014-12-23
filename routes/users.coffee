@@ -47,8 +47,34 @@ module.exports = (app, passport) ->
       else
         req.logIn user, (err) ->
           if err then next err
-          res.redirect '/'
+          res.redirect '/'+user.local.name
     )(req, res, next)
+
+  # =====================================
+  # EXPLORE =============================
+  # =====================================
+
+  app.get "/explore", (req, res) ->
+    documents.helper.getAll (docs) ->
+      if req.isAuthenticated()
+        username = req.user.local.nameLower
+        User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
+          res.render "explore.jade", {docs:docs, user:profiledUser, isAuthenticated:true}
+      else 
+        res.render "explore.jade", {docs:docs, isAuthenticated:false}
+
+  # =====================================
+  # ABOUT ===============================
+  # =====================================
+
+  app.get "/about", (req, res) ->
+    documents.helper.getAll (docs) ->
+      if req.isAuthenticated()
+        username = req.user.local.nameLower
+        User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
+          res.render "about.jade", {user:profiledUser, isAuthenticated:true}
+      else 
+        res.render "about.jade", {isAuthenticated:false}
 
   # =====================================
   # REQUEST BETA KEY ====================

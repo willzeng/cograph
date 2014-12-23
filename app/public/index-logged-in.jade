@@ -9,95 +9,20 @@ html(lang='en')
     link(href='assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
     link(href='assets/stylesheets/general.css', rel='stylesheet')
     link(href='assets/stylesheets/index-logged-in.css', rel='stylesheet')
-    link(href='/assets/stylesheets/nav.css', rel='stylesheet')
+    link(href='assets/stylesheets/nav.css', rel='stylesheet')
 
   body
     include nav
     .container.main-content
       .row
         .col-md-12
-          h3 Published Cographs
+          h4 Published Cographs
           br
           .document-list
             for doc in docs
               a.list-group-item(href="/#{doc.createdBy}/document/#{doc.id}" target="_blank")
                 | #{doc.name}
                 a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
-          br
-          h3 What are Cographs?
-          h3.full-size
-            strong Cographs are webs of ideas that you can create, explore and publish.
-          br
-          h3 Why should I use cographs?
-          h3.full-size
-            strong Cographs put information in context.
-      hr
-      h3.header-titles What can I do with Cograph?
-      .row
-        .col-xs-12.col-md-4.benefit
-          .benefit-ball
-            i.flaticon-idea13
-          h3 
-            strong Add
-          p Add information from across the web
-
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-cell9
-          h3 
-            strong Connect
-          p Create annotated connections between things
-
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-teamwork
-          h3 
-            strong Collaborate
-          p Edit cographs in real time with others.
-      .row
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-earth180
-          h3 
-            strong Explore
-          p Filter, search and tag your cographs or expand connections. 
-
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-rating
-          h3 
-            strong Share
-          p Share cographs to your favorite social media and decide who can contribute to them
-
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-code26
-          h3
-            strong Embed
-          p Add cographs to your website or blog posts
-
-      h3.header-titles We're in Beta. Our Next Features are
-      .row
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-rocket60
-          h3 
-            strong API
-          p Post/get data with cograph
-
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-cells1
-          h3 
-            strong Intergraph
-          p Connect between nodes across different cographs.
-
-        .col-md-4.col-xs-12.benefit
-          .benefit-ball
-            i.flaticon-circular152
-          h3 
-            strong Faster access
-          p Browser extensions to make it faster to connect content
     include footer-logged-in
     script(src='assets/libs/jquery/dist/jquery.min.js')
     script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
