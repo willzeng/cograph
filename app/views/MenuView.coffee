@@ -1,8 +1,8 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
  'text!templates/analytics_modal.html', 'text!templates/workspaces_menu_modal.html',
- 'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate) ->
+ 'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html','text!templates/description_box.html'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate, descriptionTemplate) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
@@ -22,6 +22,8 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click .public-button-view': 'publicViewChange'
         'click .public-button-edit': 'publicEditChange'
         'click #maybe-publish-button': 'openSettingsModal'
+        'blur #description': 'saveDescription'
+        'click #description-toggle': 'toggleDescription'
 
       initialize: ->
         @loadBBModal()
@@ -34,6 +36,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @updateTitle()
         @updatePublicButton()
         @updatePublishButton()
+        $('#description').html _.template(descriptionTemplate, {description:@model.getDocument().get('description')})
 
       updatePublishButton: ->
         if @model.getDocument().get("publicView") is 0 or @model.getDocument().get("publicView") is 1
@@ -102,6 +105,18 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @updateTitle()
         @updatePublicButton()
         @updatePublishButton()
+
+      saveDescription: ->
+        @model.getDocument().set 'description', $.trim($('#description').text())
+        @model.getDocument().save()
+
+      toggleDescription: ->
+        if $('#description > section').is(":visible")
+          $('#description-toggle').addClass('fa-rotate-180')
+          $('#description > section').hide()
+        else
+          $('#description-toggle').removeClass('fa-rotate-180')
+          $('#description > section').show()
 
       updatePublicButton: ->
         if @model.getDocument().get('publicView') != 0
