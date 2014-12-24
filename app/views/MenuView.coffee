@@ -36,7 +36,8 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @updateTitle()
         @updatePublicButton()
         @updatePublishButton()
-        $('#description').html _.template(descriptionTemplate, {description:@model.getDocument().get('description')})
+        editable = @model.getDocument().get('publicEdit') > 0 or _.contains(window.user.documents, @model.getDocument().get('_id'))
+        $('#description').html _.template(descriptionTemplate, {description:@model.getDocument().get('description'), editable:editable})
 
       updatePublishButton: ->
         if @model.getDocument().get("publicView") is 0 or @model.getDocument().get("publicView") is 1
