@@ -1,0 +1,10 @@
+<section id="editable" <% if(editable) { %> contenteditable="true" <% } %>>
+  <% if(description.length > 0) { %>
+    <%= description %>
+  <% } else { %>
+    Type a short description for your cograph here.
+  <% } %>
+</section>
+<div>
+  <i class="fa fa-caret-up pull-right" id="description-toggle"></i>
+</div>
