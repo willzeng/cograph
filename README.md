@@ -4,7 +4,7 @@ Live at: [cograph.co](http://cograph.co)
 
 
 Cograph is a free, open source platform for making and sharing webs of ideas.
-It was born of many ideas is maintained by [Will Zeng]((https://github.com/willzeng), [David Furlong](https://github.com/davidfurlong/) + contributors.
+It was born of many ideas is maintained by [Will Zeng](https://github.com/willzeng), [David Furlong](https://github.com/davidfurlong/) + contributors.
 
 Contributing
 ----------
