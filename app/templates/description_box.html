@@ -1,15 +1,10 @@
-<% if(description.length > 0 || editable) { %>
-	<div>
-		<span id="description-toggle" class="clickable">
-			<i class="fa fa-caret-up"></i>
-			<small>Description</small> 
-		</span> 
-	</div>
-	<section id="editable" <% if(editable) { %> contenteditable="true" <% } %>>
-	  <% if(description.length > 0) { %>
-	    <%= description %>
-	  <% } else { %>
-	    Type a short description for your cograph here.
-	  <% } %>
-	</section>
-<% } %>
+<section id="editable" <% if(editable) { %> contenteditable="true" <% } %>>
+  <% if(description.length > 0) { %>
+    <%= description %>
+  <% } else { %>
+    Type a short description for your cograph here.
+  <% } %>
+</section>
+<div>
+  <i class="fa fa-caret-up pull-right" id="description-toggle"></i>
+</div>
