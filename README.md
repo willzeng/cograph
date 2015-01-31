@@ -24,7 +24,7 @@ Then you should be able to run `./bin/www` to get the server running at `localho
 
 Testing
 -------
-#TODO
+TODO
 
 Copyright & License
 -------
