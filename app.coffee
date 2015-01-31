@@ -5,6 +5,7 @@ path = require 'path'
 mongoose = require 'mongoose'
 passport = require 'passport'
 flash = require 'connect-flash'
+compression = require 'compression'
 
 morgan = require 'morgan'
 cookieParser = require 'cookie-parser'
@@ -27,6 +28,8 @@ require('./config/passport')(passport) # pass passport for configuration
 # set up express app =================================================
 app.set 'views', __dirname + '/app/public'
 app.set 'view engine', 'jade'
+
+app.use compression() #uses expressjs/compression on all requests
 
 app.use morgan('dev')
 app.use cookieParser()
