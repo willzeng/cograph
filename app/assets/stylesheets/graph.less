@@ -495,6 +495,27 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   }
 }
 
+#description {
+  position:absolute;
+  width: 300px;
+  z-index: @controls-z-index;
+  padding: 12px 8px;
+  section {
+    outline: none;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.94);
+  }
+  #description-toggle:hover {
+    color: @selected-color;
+  }
+  #description-toggle {
+    background: rgba(255, 255, 255, 0.94);
+    small {
+      text-transform: uppercase;
+    }
+  }
+}
+
 
 // Bootstrap-colorpalette
 
