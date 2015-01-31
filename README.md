@@ -2,6 +2,7 @@ Cograph
 =====
 Live at: [cograph.co](http://cograph.co)
 
+![Cograph screenshot](http://www.wjzeng.net/shared/screenshot.png)
 
 Cograph is a free, open source platform for making and sharing webs of ideas.
 
