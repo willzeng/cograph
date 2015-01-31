@@ -1,36 +1,35 @@
-GraphDocs
+Cograph
 =====
+Live at: [cograph.co](http://cograph.co)
 
-How to Run
+
+Cograph is a free, open source platform for making and sharing webs of ideas.
+It was born of many ideas is maintained by [Will Zeng](https://github.com/willzeng), [David Furlong](https://github.com/davidfurlong/) + [contributors](https://github.com/willzeng/cograph/graphs/contributors).
+
+Contributing
+----------
+Anyone is welcome to report a bug, request a feature, or otherwise contribute to Cograph.  We'll be tracking all such things through this repo's [issue tracker](https://github.com/willzeng/cograph/issues) and you can some of the upcoming roadmap on the project's [homepage](http://cograph.co).
+
+API
+----------
+Some details of the Cograph server API can be found on the [wiki page](https://github.com/willzeng/cograph/wiki).
+
+How to Run Locally
 ----------
 
-## Neo4j Server 2.1.3 Required
-
-`npm install` should install your node modules in the `node_modules/` folder.
-
-`npm install -g bower` should install bower to your global path.
-
-`bower install` should install your front end models in the `assets/libs/` folder.
+- Neo4j Server >= 2.1.3 Required
+You can get the Community edition here: [Download](http://neo4j.com/download-4/?utm_expid=86168100-4.4jhtKky8TSanVw1z1BH-8A.3&utm_referrer=http%3A%2F%2Fneo4j.com%2F)
+- Clone this repo
+- `npm install` should install your node modules in the `node_modules/` folder.
+- `npm install -g bower` should install bower to your global path.
+- `bower install` should install your front end models in the `assets/libs/` folder.
 
 Then you should be able to run `./bin/www` to get the server running at `localhost:3000/`
 
 Testing
 -------
-Testing files are located in the `app/tests` folder. 
+TODO
 
-To run the tests you need to do two steps:
-
-1. Run `npm start` to get the server running. 
-2. Open [http://localhost:3000/tests/SpecRunner.html](http://localhost:3000/tests/SpecRunner.html) in your browser. The output should appear there. 
-
-
-Copyright GraphDocs Inc., William Zeng, David Furlong, Victor Pontis 2014
-
-
-Related Projects:
+Copyright & License
 -------
-https://www.moh.io/mohiomap/welcome.php
-
-http://www.graphcommons.com
-
-http://quid.com/
+Copyright (c) 2014-2015 GraphDocs Inc. - Released under [GPLv2](https://github.com/willzeng/cograph/blob/dev/LICENSE)
