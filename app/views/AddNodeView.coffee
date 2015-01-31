@@ -133,9 +133,6 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         attributes.selected = true
         attributes.color = @colorArea.data('color')
         attributes.image = @imageInput.val()
-        if(attributes['name'] == "" && attributes['description'] == "")
-          # todo: add sensible feedback to invalid action
-          return
         if(attributes['name'] == "" && attributes['description'] != "")
           attributes['name'] = attributes['description'].substring(0,25)
         if(attributes['name'].length >= 25)
@@ -183,6 +180,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           @resetAdd()
         else
+          alert 'Nodes need a name and/or description.'
           $('input', @el).attr('placeholder', node.validate())
 
       findUnoccupiedStage: ->
