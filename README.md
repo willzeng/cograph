@@ -4,11 +4,15 @@ Live at: [cograph.co](http://cograph.co)
 
 
 Cograph is a free, open source platform for making and sharing webs of ideas.
-It was born of many ideas is maintained by [Will Zeng](https://github.com/willzeng), [David Furlong](https://github.com/davidfurlong/) + contributors.
+It was born of many ideas is maintained by [Will Zeng](https://github.com/willzeng), [David Furlong](https://github.com/davidfurlong/) + [contributors](https://github.com/willzeng/cograph/graphs/contributors).
 
 Contributing
 ----------
 Anyone is welcome to report a bug, request a feature, or otherwise contribute to Cograph.  We'll be tracking all such things through this repo's [issue tracker](https://github.com/willzeng/cograph/issues) and you can some of the upcoming roadmap on the project's [homepage](http://cograph.co).
+
+API
+----------
+Some details of the Cograph server API can be found on the [wiki page](https://github.com/willzeng/cograph/wiki).
 
 How to Run Locally
 ----------
