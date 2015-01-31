@@ -7,23 +7,10 @@ html(lang='en')
     link(href='assets/libs/iconset/flaticon.css', rel='stylesheet', type='text/css')
     link(href='assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='assets/stylesheets/index.css', rel='stylesheet')
-    link(href="neural/css/app.css", rel='stylesheet')
   body
     #canvas-container.jumbotron
-    script#vertexshader-axon(type='x-shader/x-vertex').
-      uniform float opacityMultiplier;
-      attribute float opacityAttr;
-      varying float opacityNew;
-      void main() {
-        opacityNew = opacityAttr * opacityMultiplier;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
-      }
-    script#fragmentshader-axon(type='x-shader/x-fragment').
-      uniform vec3 color;
-      varying float opacityNew;
-      void main() {
-        gl_FragColor = vec4(color, opacityNew);
-      }
+      video(autoplay loop poster="assets/images/cograph-frame.jpeg")
+        source(src="assets/images/cograph.mp4" type="video/mp4")
     
     nav.navbar.navbar-default.navbar-inverse(role='navigation')
       .container
@@ -140,12 +127,5 @@ html(lang='en')
             strong Faster access
           p Browser extensions to make it faster to connect content
     include footer
-    script(src="neural/js/vendor/Detector.js")
-    script(src="neural/js/vendor/dat.gui.min.js")
-    script(src="neural/js/vendor/stats.min.js")
-    script(src="neural/js/vendor/three.min.js")
-    script(src="neural/js/vendor/OrbitControls.js")
-    script(src="neural/js/vendor/OBJLoader.js")
-    script(src="neural/js/three-app.js")
     script(src='assets/libs/jquery/dist/jquery.min.js')
     script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
