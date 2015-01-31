@@ -25,9 +25,15 @@ head
             | @#{user.local.name}
         if ownProfile
           h5#user-nav-actions
-            a(href="/new") new cograph
-            a(href="/account") account
-            a(href="/logout") logout
+            a(href="/new") 
+              i.fa.fa-plus-square-o
+              |  new cograph
+            a(href="/account") 
+              i.fa.fa-cogs
+              |  account
+            a(href="/logout") 
+              i.fa.fa-sign-out
+              |  logout
           
       if ownProfile
         .row
