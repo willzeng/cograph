@@ -108,16 +108,12 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @updatePublishButton()
 
       saveDescription: ->
-        @model.getDocument().set 'description', $.trim($('#description').text())
+        @model.getDocument().set 'description', $.trim($('#editable').text())
         @model.getDocument().save()
 
       toggleDescription: ->
-        if $('#description > section').is(":visible")
-          $('#description-toggle').addClass('fa-rotate-180')
-          $('#description > section').hide()
-        else
-          $('#description-toggle').removeClass('fa-rotate-180')
-          $('#description > section').show()
+        $('#description-toggle > i').toggleClass('fa-rotate-180')
+        $('#description > section').toggle()
 
       updatePublicButton: ->
         if @model.getDocument().get('publicView') != 0

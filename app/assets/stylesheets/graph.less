@@ -497,21 +497,22 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #description {
   position:absolute;
-  width:320px;
-  z-index: 1;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-top: none;
-  border-left: none;
-  background: rgba(255, 255, 255, 0.94);
+  width: 300px;
   z-index: @controls-z-index;
-  padding-right: 5px;
+  padding: 12px 8px;
   section {
-    margin-left: 55px;
-    padding: 8px;
+    outline: none;
     font-size: 12px;
+    background: rgba(255, 255, 255, 0.94);
   }
-  i:hover {
+  #description-toggle:hover {
     color: @selected-color;
+  }
+  #description-toggle {
+    background: rgba(255, 255, 255, 0.94);
+    small {
+      text-transform: uppercase;
+    }
   }
 }
 
