@@ -36,11 +36,18 @@ html(lang='en')
             img.brand-logo(src='assets/images/brand-w.png')
 
         .collapse.navbar-collapse.navbar-ex1-collapse
-          ul.nav.navbar-nav.navbar-right
-            li
-              a(href='/login') Login
-            li
-              a(href='/signup') Beta Signup
+          if isAuthenticated 
+            ul.nav.navbar-nav.navbar-right
+              li
+                a(href="/explore") Explore
+              li
+                a(href="/#{user.local.nameLower}") @#{user.local.name}
+          else
+            ul.nav.navbar-nav.navbar-right
+              li
+                a(href="/login") Login
+              li
+                a(href="/signup") Beta Signup
 
     #top.jumbotron
       .container

@@ -23,7 +23,7 @@ module.exports = (app, passport) ->
         User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
           if err or not(profiledUser?) then res.render "index.jade", {docs:docs}
           else
-            res.render "index-logged-in.jade", {docs:docs, user: profiledUser, isAuthenticated:true}
+            res.render "index.jade", {docs:docs, user: profiledUser, isAuthenticated: true}
       else 
         res.render "index.jade", {docs:docs}
   
