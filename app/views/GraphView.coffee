@@ -53,12 +53,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @cancelledDrag = false
         @force.drag()
         .on "dragstart", (d) ->
+          that.cancelledDrag = false
           if(d3.event.sourceEvent.target.className.baseVal == "node-info")
+            # ignore drags starting from the node info
             that.cancelledDrag = true
             that.force.stop()
-            return
-          else
-            that.cancelledDrag = false
+            return            
           that.translateLock = true
           that.currentZoom = that.zoom.translate()
         .on "drag", (d) ->
@@ -74,7 +74,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             @translateLock = false
           @force.stop()
 
-        $('body').on 'mousemove', (e) =>
+        $('body').on 'mousemove', (e) => # hide node on mouseout of node
           if($(e.target).is('svg') || $(e.target).is('foreignObject'))
             @trigger "node:mouseout", e, e
 
@@ -190,12 +190,12 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         connections = @model.connections.models
         if @gridViewOn then connections = []
 
-        # old elements
+        # update connections already on the page
         connection = d3.select(".connection-container")
           .selectAll(".connection")
           .data(connections, (conn) -> conn.cid)
 
-        # new elements
+        # add new connections to the page
         connectionEnter = connection.enter().append("g")
           .attr("class", "connection")
           .on "dragend", (e) =>
@@ -390,19 +390,19 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @force.on "tick", () =>
           if @drawing and !(@gridViewOn) and !@cancelledDrag then tick()
 
-      addNodeGV: (node) ->
+      addNodeGV: (node) -> # Add a node in Grid View
         # add to dom
         @updateDetails node
         @resetPositions()
         @gridView({duration: 0})
         @updateForceFlag = true
 
-      removeNodeGV: (node) ->
+      removeNodeGV: (node) -> # Remove a node in Grid View
         @updateDetails node
         @resetPositions()
         @gridView({duration: 0})
 
-      gridView: (options) -> #trigger grid view
+      gridView: (options) -> # trigger grid view
         if(!@gridViewOn)
           @gridViewOn = true  
           @model.dehighlight()
@@ -429,7 +429,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
               "translate(#{pos.x},#{pos.y})"
           @updateDetails()
 
-      resetPositions: -> #reset back to graphView
+      resetPositions: -> # Swap to graphView, restoring node positions
         if @gridViewOn
           @grid.colYs.splice(0)
           @gridViewOn = false
@@ -459,7 +459,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
             @updateDetails()
           , resetDuration
 
-      placeInGrid: (d, i) ->
+      placeInGrid: (d, i) -> # Calculations for Grid View Node positions
         columnTotal = 1 + Math.floor(($(window).width() - @grid.padding[0]) / (@nodeBoxWidth + @grid.spacing[0]))
         columnNum = (i%columnTotal)
 
@@ -480,13 +480,14 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @connectionAdder.clearDragLine()
         true
 
-      isContainedIn: (node, element) =>
+      isContainedIn: (node, element) => 
+        # is a node's center coordinate in a rectangle?
         (node.x || node.clientX) < element.offset().left + element.outerWidth() &&
         (node.x || node.clientX) > element.offset().left &&
         (node.y || node.clientY) > element.offset().top &&
         (node.y || node.clientY) < element.offset().top + element.outerHeight()
 
-      centerOn: (node) =>
+      centerOn: (node) => # center the graph on a node
         if @gridViewOn
           sortedCIds = (n.cid for n in @model.nodes.models).sort()
           i = sortedCIds.indexOf node.cid
@@ -499,7 +500,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         #translate workspace
         @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
-      translateTo: (translateParams) =>
+      translateTo: (translateParams) => # move the view
         @zoom.translate([translateParams[0], translateParams[1]])
         @workspace.transition().ease("linear").attr "transform", "translate(#{translateParams}) scale(#{@zoom.scale()})"
 
