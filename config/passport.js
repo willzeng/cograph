@@ -37,15 +37,21 @@ module.exports = function(passport) {
     });
 
     // Twitter Signup
+        //check if local
+        if (process.env.PORT){
+            var cK = "iRnrLu6QrYHPlOF0wq2ns1MYl";
+            var cS = "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx";
+            var cbURL = "http://www.cograph.co/auth/twitter/callback";
+        }
+        else{ //local setup
+            var cK = "4KN2VexuhVr7d3Ic7pHqZUVZD";
+            var cS = "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP";
+            var cbURL = "http://127.0.0.1:3000/auth/twitter/callback";
+        }
     passport.use(new TwitterStrategy({
-        // remote
-        consumerKey: "iRnrLu6QrYHPlOF0wq2ns1MYl",
-        consumerSecret: "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx",
-        callbackURL: "http://www.cograph.co/auth/twitter/callback"
-        // local
-        // consumerKey: "4KN2VexuhVr7d3Ic7pHqZUVZD",
-        // consumerSecret: "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP",
-        // callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+        consumerKey: cK,
+        consumerSecret: cS,
+        callbackURL: cbURL
       },
       function(token, tokenSecret, profile, done) {
         process.nextTick(function() {
@@ -71,19 +77,23 @@ module.exports = function(passport) {
                         // get their tweets
 
                         // remote twitter
-                        var twit = new twitter({
-                            consumer_key: 'iRnrLu6QrYHPlOF0wq2ns1MYl',
-                            consumer_secret: 'bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx',
-                            access_token_key: token,
-                            access_token_secret: tokenSecret
-                        });
-                        // local twitter
-                        // var twit = new Twit({
-                        //     consumer_key: "4KN2VexuhVr7d3Ic7pHqZUVZD",
-                        //     consumer_secret: "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP",
-                        //     access_token: token,
-                        //     access_token_secret: tokenSecret
-                        // });
+                        // check if local
+                        if (process.env.PORT){
+                            var twit = new twitter({
+                                consumer_key: 'iRnrLu6QrYHPlOF0wq2ns1MYl',
+                                consumer_secret: 'bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx',
+                                access_token_key: token,
+                                access_token_secret: tokenSecret
+                            });
+                        }
+                        else{// if local
+                            var twit = new Twit({
+                                consumer_key: "4KN2VexuhVr7d3Ic7pHqZUVZD",
+                                consumer_secret: "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP",
+                                access_token: token,
+                                access_token_secret: tokenSecret
+                            });
+                        }
 
                         twit.get('statuses/user_timeline', {count: 200, screen_name: profile.username, include_entities:false}, function(err, data, res) {
                             // console.log(data, res.statusCode);
