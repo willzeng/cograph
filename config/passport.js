@@ -79,7 +79,7 @@ module.exports = function(passport) {
                         // remote twitter
                         // check if local
                         if (process.env.PORT){
-                            var twit = new twitter({
+                            var twit = new Twit({
                                 consumer_key: 'iRnrLu6QrYHPlOF0wq2ns1MYl',
                                 consumer_secret: 'bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx',
                                 access_token_key: token,
