@@ -37,17 +37,17 @@ module.exports = function(passport) {
     });
 
     // Twitter Signup
-        //check if local
-        if (process.env.PORT){
-            var cK = "iRnrLu6QrYHPlOF0wq2ns1MYl";
-            var cS = "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx";
-            var cbURL = "http://www.cograph.co/auth/twitter/callback";
-        }
-        else{ //local setup
-            var cK = "4KN2VexuhVr7d3Ic7pHqZUVZD";
-            var cS = "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP";
-            var cbURL = "http://127.0.0.1:3000/auth/twitter/callback";
-        }
+    //check if local
+    if (process.env.PORT){
+        var cK = "iRnrLu6QrYHPlOF0wq2ns1MYl";
+        var cS = "bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx";
+        var cbURL = "http://www.cograph.co/auth/twitter/callback";
+    }
+    else{ //local setup
+        var cK = "4KN2VexuhVr7d3Ic7pHqZUVZD";
+        var cS = "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP";
+        var cbURL = "http://127.0.0.1:3000/auth/twitter/callback";
+    }
     passport.use(new TwitterStrategy({
         consumerKey: cK,
         consumerSecret: cS,
