@@ -78,32 +78,28 @@ module.exports = function(passport) {
 
                         // remote twitter
                         // check if local
-                        if (process.env.PORT){
-                            var twit = new Twit({
-                                consumer_key: 'iRnrLu6QrYHPlOF0wq2ns1MYl',
-                                consumer_secret: 'bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx',
-                                access_token_key: token,
-                                access_token_secret: tokenSecret
-                            });
-                        }
-                        else{// if local
-                            var twit = new Twit({
-                                consumer_key: "kARoAoD1OPeDMmsNrVajrDdCm",
-                                consumer_secret: "i027OrWxARTmn4UxRQPZJm1RXNGjnpw5hVSZnp39ULNFvjzkMc",
-                                access_token: token,
-                                access_token_secret: tokenSecret
-                            });
-                        }
-
-                        twit.get('statuses/user_timeline', {count: 200, screen_name: profile.username, include_entities:false}, function(err, data, res) {
-                            console.log(data, err);
+                        var OAuth = require('oauth');   
+                        var oauth = new OAuth.OAuth(
+                          'https://api.twitter.com/oauth/request_token',
+                          'https://api.twitter.com/oauth/access_token',
+                          cK,
+                          cS,
+                          '1.0A',
+                          null,
+                          'HMAC-SHA1'
+                        );
+                        oauth.get(
+                          'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count=200',
+                          token, //test user token
+                          tokenSecret, //test user secret            
+                          function (e, data, res){
+                            if (e) console.error(e);        
                             // create the user
                             var newUser             = new User();
                             // set the user's local credentials
                             newUser.local.email     = profile.email;
                             newUser.local.name      = profile.username;
                             newUser.local.nameLower = profile.username.toLowerCase();
-                            newUser.twitter = profile._json;
                             newUser.twitter.id = profile.id;
                             newUser.twitter.username = profile.username;
                             newUser.twitter.displayName = profile.displayName;
@@ -114,7 +110,7 @@ module.exports = function(passport) {
                                     throw err;
                                 return done(null, newUser);
                             });
-                        });        
+                        });     
                     }
                 });
             });

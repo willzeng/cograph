@@ -19,11 +19,11 @@ userSchema = mongoose.Schema(
       unique: true
 
   twitter:
-    dump: String
     id: String
     token: String
     displayName: String
     username: String
+    tweets: String
 
   documents: Array
 )
