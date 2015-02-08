@@ -9,6 +9,9 @@
  .twitter-typeahead .tt-dropdown-menu * {
   z-index:9999;
 }
+.twitter-typeahead pre {
+  margin: 0;
+}
 .has-warning .twitter-typeahead .tt-input,
 .has-warning .twitter-typeahead .tt-hint {
   border-color: #8a6d3b;

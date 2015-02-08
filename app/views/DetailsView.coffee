@@ -1,7 +1,7 @@
-define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap', 'bb-modal',
+define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-forms-bootstrap', 'bootstrap',
  'text!templates/details_box.html', 'text!templates/edit_form.html', 'cs!models/NodeModel', 'cs!models/ConnectionModel',
  'bootstrap-color', 'atwho', 'twittertext', 'linkify', 'typeahead'],
-  ($, _, Backbone, bbf, list, bbfb, Bootstrap, bbModal, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho, linkify, typeahead) ->
+  ($, _, Backbone, bbf, list, bbfb, Bootstrap, detailsTemplate, editFormTemplate, NodeModel, ConnectionModel, ColorPicker, atwho, linkify, typeahead) ->
     class DetailsView extends Backbone.View
       el: $ 'body'
 
@@ -17,6 +17,7 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
         'click #expand-node-button': 'expandNode'
 
       initialize: ->
+        @loadBBModal()
         @graphView = @attributes.graphView
 
         @model.on 'conn:dblclicked', @openDetails, this
@@ -110,10 +111,20 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
           @model.removeConnection @currentNC
         @closeDetail()
 
+      # deletes the node or connections
+      # and also removes it from the cached window.prefetch
+      # that is used to quick load the whole cograph
       deleteObj: ->
         if @currentNC.isNode
-          @model.deleteNode @currentNC
+          window.prefetch.nodes = _.filter window.prefetch.nodes, (n) =>
+            @currentNC.get('_id') isnt n._id
+          window.prefetch.connections = _.filter window.prefetch.connections, (c) =>
+            @currentNC.get('_id') isnt c.source and @currentNC.get('_id') isnt c.target
+          @model.deleteNode @currentNC, =>
+            @model.nodes.map (n) -> n.fetch() #update NeighborCounts after deletion
         else if @currentNC.isConnection
+          window.prefetch.connections = _.filter window.prefetch.connections, (n) =>
+            @currentNC.get('_id') isnt n._id
           @model.deleteConnection @currentNC
         @closeDetail()
 
@@ -136,10 +147,10 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
               cb _.map matches, (match) -> {value: match.name, type: 'connection'}
 
         typeaheadConfig =
-              hint: false,
-              highlight: true,
-              minLength: 0,
-              autoselect: true
+          hint: false,
+          highlight: true,
+          minLength: 0,
+          autoselect: true
 
         Backbone.Form.editors.ConnDropdown = Backbone.Form.editors.Text.extend
           render: () ->
@@ -210,3 +221,207 @@ define ['jquery', 'underscore', 'backbone', 'backbone-forms', 'list', 'backbone-
       findMatchingObjects: (query, allObjects) ->
         regex = new RegExp(query,'i')
         _.filter(allObjects, (object) -> regex.test(object.name))
+
+      loadBBModal: ->
+        ###*
+        Bootstrap Modal wrapper for use with Backbone.
+
+        Takes care of instantiation, manages multiple modals,
+        adds several options and removes the element from the DOM when closed
+
+        @author Charles Davison <charlie@powmedia.co.uk>
+
+        Events:
+        shown: Fired when the modal has finished animating in
+        hidden: Fired when the modal has finished animating out
+        cancel: The user dismissed the modal
+        ok: The user clicked OK
+        ###
+        (($, _, Backbone) ->
+          
+          #Set custom template settings
+          _interpolateBackup = _.templateSettings
+          _.templateSettings =
+            interpolate: /\{\{(.+?)\}\}/g
+            evaluate: /<%([\s\S]+?)%>/g
+
+          template = _.template("""
+            <div class=\"modal-dialog\">
+              <div class=\"modal-content\">
+                <% if (title) { %>
+                <div class=\"modal-header\">
+                  <% if (allowCancel) { %>
+                  <a class=\"close\">&times;</a>
+                  <% } %>
+                  <h4>{{title}}</h4>
+                </div>
+                <% } %>
+              <div class=\"modal-body\">{{content}}</div>
+              <% if (showFooter) { %>
+                <div class=\"modal-footer\">
+                  <% if (allowCancel) { %>
+                    <% if (cancelText) { %>
+                      <a href=\"#\" class=\"btn cancel\">{{cancelText}}</a>
+                    <% } %>
+                  <% } %>
+                  <a href=\"#\" class=\"btn ok btn-primary\">{{okText}}</a>
+                </div>
+              <% } %>
+              </div>
+            </div>
+            """)
+          
+          #Reset to users' template settings
+          _.templateSettings = _interpolateBackup
+          Modal = Backbone.View.extend(
+            className: "modal"
+            events:
+              "click .close": (event) ->
+                event.preventDefault()
+                @trigger "cancel"
+                @options.content.trigger "cancel", this  if @options.content and @options.content.trigger
+
+              "click .cancel": (event) ->
+                event.preventDefault()
+                @trigger "cancel"
+                @options.content.trigger "cancel", this  if @options.content and @options.content.trigger
+
+              "click .ok": (event) ->
+                event.preventDefault()
+                @trigger "ok"
+                @options.content.trigger "ok", this  if @options.content and @options.content.trigger
+                @close()  if @options.okCloses
+
+              keypress: (event) ->
+                if @options.enterTriggersOk and event.which is 13
+                  event.preventDefault()
+                  @trigger "ok"
+                  @options.content.trigger "ok", this  if @options.content and @options.content.trigger
+                  @close()  if @options.okCloses
+            
+            ###*
+            Creates an instance of a Bootstrap Modal
+            ###
+            initialize: (options) ->
+              @options = _.extend(
+                title: null
+                okText: "OK"
+                focusOk: true
+                okCloses: true
+                cancelText: "Cancel"
+                showFooter: true
+                allowCancel: true
+                escape: true
+                animate: false
+                template: template
+                enterTriggersOk: false
+              , options)
+            
+            ###*
+            Creates the DOM element
+            ###
+            render: ->
+              $el = @$el
+              options = @options
+              content = options.content
+              
+              #Create the modal container
+              $el.html options.template(options)
+              $content = @$content = $el.find(".modal-body")
+              
+              #Insert the main content if it's a view
+              if content and content.$el
+                content.render()
+                $el.find(".modal-body").html content.$el
+              $el.addClass "fade"  if options.animate
+              @isRendered = true
+              this
+
+            ###*
+            Renders and shows the modal            
+            @param {Function} [cb]     Optional callback that runs only when OK is pressed.
+            ###
+            open: (cb) ->
+              @render()  unless @isRendered
+              self = this
+              $el = @$el
+              
+              #Create it
+              $el.modal _.extend(
+                keyboard: @options.allowCancel
+                backdrop: (if @options.allowCancel then true else "static")
+              , @options.modalOptions)
+              
+              #Focus OK button
+              $el.one "shown.bs.modal", ->
+                $el.find(".btn.ok").focus()  if self.options.focusOk
+                self.options.content.trigger "shown", self  if self.options.content and self.options.content.trigger
+                self.trigger "shown"
+
+              #Adjust the modal and backdrop z-index; for dealing with multiple modals
+              numModals = Modal.count
+              $backdrop = $(".modal-backdrop:eq(" + numModals + ")")
+              backdropIndex = parseInt($backdrop.css("z-index"), 10)
+              elIndex = parseInt($backdrop.css("z-index"), 10)
+              $backdrop.css "z-index", backdropIndex + numModals
+              @$el.css "z-index", elIndex + numModals
+              if @options.allowCancel
+                $backdrop.one "click", ->
+                  self.options.content.trigger "cancel", self  if self.options.content and self.options.content.trigger
+                  self.trigger "cancel"
+
+                $(document).one "keyup.dismiss.modal", (e) ->
+                  e.which is 27 and self.trigger("cancel")
+                  e.which is 27 and self.options.content.trigger("shown", self)  if self.options.content and self.options.content.trigger
+
+              @on "cancel", ->
+                self.close()
+
+              Modal.count++
+              
+              #Run callback on OK if provided
+              self.on "ok", cb  if cb
+              this
+            
+            ###*
+            Closes the modal
+            ###
+            close: ->
+              self = this
+              $el = @$el
+              
+              #Check if the modal should stay open
+              if @_preventClose
+                @_preventClose = false
+                return
+              $el.one "hidden.bs.modal", onHidden = (e) ->
+                
+                # Ignore events propagated from interior objects, like bootstrap tooltips
+                return $el.one("hidden", onHidden)  if e.target isnt e.currentTarget
+                self.remove()
+                self.options.content.trigger "hidden", self  if self.options.content and self.options.content.trigger
+                self.trigger "hidden"
+                return
+
+              $el.modal "hide"
+              Modal.count--
+              return
+            
+            ###*
+            Stop the modal from closing.
+            Can be called from within a 'close' or 'ok' event listener.
+            ###
+            preventClose: ->
+              @_preventClose = true
+              return
+          ,
+            
+            #STATICS            
+            #The number of modals on display
+            count: 0
+          )
+          
+          #Regular; add to Backbone.Bootstrap.Modal
+          #else
+          Backbone.BootstrapModal = Modal
+        ) jQuery, _, Backbone

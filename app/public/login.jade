@@ -5,41 +5,22 @@ html
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css')
     link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
-    link(href="neural/css/app.css", rel='stylesheet')
     link(href='/assets/stylesheets/general.css', rel='stylesheet')
+    link(href='/assets/stylesheets/nav.css', rel='stylesheet') 
     link(href='/assets/stylesheets/login.css', rel='stylesheet')        
-
   body
-    #canvas-container.jumbotron
-    script#vertexshader-axon(type='x-shader/x-vertex').
-      uniform float opacityMultiplier;
-      attribute float opacityAttr;
-      varying float opacityNew;
-      void main() {
-        opacityNew = opacityAttr * opacityMultiplier;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
-      }
-    script#fragmentshader-axon(type='x-shader/x-fragment').
-      uniform vec3 color;
-      varying float opacityNew;
-      void main() {
-        gl_FragColor = vec4(color, opacityNew);
-      }
-    #brand-big
-      a(href="/")
-        img(src="/assets/images/logo.png")
+    include nav
     .container-fluid.pad-top
       .row
         .col-md-6.col-md-offset-3.col-xs-12#login-form
-          h3
-            strong Welcome Back!
+          h3 Login
           br
           p  
             a(href="/auth/twitter")
               img(src="assets/images/sign-in-with-twitter.png")
           hr
           // show any messages that come back with authentication
-          if message.length > 0 
+          if message && message.length > 0 
             .alert.alert-danger #{message}
 
           // LOGIN FORM 
@@ -50,19 +31,12 @@ html
             .form-group
               label Password
               input.form-control.input-lg(type='password', name='password')
-            button.btn.btn-default.btn-lg.pull-right(type='submit') Login
+            button.btn.btn-success.btn-lg.pull-right(type='submit') Login
           p
             a(href='/forgotten-password') Forgot your Password?
           p
             | Need an account? 
-            a(href='/request-key') Request Key
-    script(src="neural/js/vendor/Detector.js")
-    script(src="neural/js/vendor/dat.gui.min.js")
-    script(src="neural/js/vendor/stats.min.js")
-    script(src="neural/js/vendor/three.min.js")
-    script(src="neural/js/vendor/OrbitControls.js")
-    script(src="neural/js/vendor/OBJLoader.js")
-    script(src="neural/js/three-app.js")
+            a(href='/signup') Signup
     script.
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

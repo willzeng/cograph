@@ -2,6 +2,7 @@ url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
 neo4j = require __dirname + '/../node_modules/neo4j'
 graphDb = new neo4j.GraphDatabase url
 utils = require './utils'
+async = require 'async'
 
 NodeHelper = require __dirname + '/helpers/NodeHelper'
 serverNode = new NodeHelper(graphDb)
@@ -34,12 +35,15 @@ exports.getAll = (req, resp) ->
   params = {}
   graphDb.query cypherQuery, params, (err, results) ->
     if err then throw err
-    parsedNodes = []
-    for node in results
+    updateNeighborCount = (node, cb) ->
       nodeData = node.n._data.data
       nodeData.tags = node['labels(n)']
+      serverNode.getNeighbors nodeData._id, (neighbors) ->
+        nodeData.neighborCount = neighbors.length
+        cb null, nodeData
+    async.map results, updateNeighborCount, (err, updated) ->
       parsedNodes.push utils.parseNodeToClient nodeData
-    resp.send parsedNodes
+      resp.send parsedNodes
 
 exports.getNeighbors = (req, resp) ->
   params = {id: req.params.id}

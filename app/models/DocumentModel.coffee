@@ -12,6 +12,7 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       publicView: 0 # 0: only owner, 1: link only, 2: anyone
       publicEdit: 0 # 0: only owner, 1: link only, 2: anyone
       createdBy: ''
+      description: ''
 
     initialize: ->
       @socket.on @urlRoot+":update", (objData) =>
@@ -31,7 +32,12 @@ define ['backbone', 'b-iobind', 'b-iosync', 'socket-io'], (Backbone, iobind, ios
       @get(@idAttribute) < 0
 
     serialize: ->
-      {name:@get('name'), _id:@get('_id'), publicView: @get('publicView'), publicEdit: @get('publicEdit'), createdBy: @get('createdBy')}
+      name:@get('name')
+      _id:@get('_id')
+      publicView: @get('publicView')
+      publicEdit: @get('publicEdit')
+      createdBy: @get('createdBy')
+      description: @get('description')
 
     sync: (method, model, options) ->
       options = options || {}

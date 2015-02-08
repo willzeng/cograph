@@ -47,7 +47,9 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
          
         @titleArea.on 'focus', => @expandAdder()
                   
-        $('body').on 'click', (e) => 
+        $('body').on 'click', (e) =>
+          if $(e.currentTarget).parents('#atwho-container').length != 0 #clicked atwho
+            return
           if not $('#add').hasClass('contracted') then @resetAdd()
         $('#add-node-form').on 'click', (e) => e.stopPropagation()
 
@@ -61,6 +63,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           keyCode = e.keyCode || e.which
           # code for ENTER
           if keyCode == 13 and !@showingAtWho and !e.shiftKey
+            e.preventDefault()
             $.when(@addNode()).then =>
               @expandAdder()
               @titleArea.focus()
@@ -112,20 +115,31 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
         @titleArea.trigger('change')   
         $('#add').addClass('contracted')
 
+      #strips all new lines and leading spaces
+      stripUnwanted: (str) ->
+        str_ = str.replace('\n', '')
+        str_ = str_.replace('\r', '')
+        for ch, i in str
+          if(ch != " ")
+            return str_.substring(i)
+        return str_
+
       addNode: (e) ->
         if e? then e.preventDefault()
 
         attributes = {_docId: @model.nodes._docId}
         _.each $('#add-node-form').serializeArray(), (obj) ->
           attributes[obj.name] = obj.value
-
         attributes.selected = true
         attributes.color = @colorArea.data('color')
         attributes.image = @imageInput.val()
         if(attributes['name'] == "" && attributes['description'] != "")
           attributes['name'] = attributes['description'].substring(0,25)
-        if(attributes['description'].length > 25)
-          attributes['name'] += "...";
+        if(attributes['name'].length >= 25)
+          attributes['name'] += "..."
+
+        attributes['name'] = @stripUnwanted(attributes["name"])
+
         node = new NodeModel attributes
         if node.isValid()
           # stage the new node in the staging area
@@ -142,9 +156,8 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
 
           @model.putNode node
 
-          $.when(node.save()).then =>
+          saveSuccess = (model, response, options) =>
             @model.trigger 'saved:node'
-
             # Create connections to mentioned nodes
             for targetNode in uniqMentions
               if targetNode?
@@ -159,8 +172,15 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                   targetNode.fetch()
                 @model.putConnection connection
 
-            @resetAdd()
+          saveError = (model, response, options) =>
+            alert "Whoops, node couldn't be added check your connection and try again."
+            @model.removeNode node
+
+          node.save {success:saveSuccess, error: saveError}
+
+          @resetAdd()
         else
+          alert 'Nodes need a name and/or description.'
           $('input', @el).attr('placeholder', node.validate())
 
       findUnoccupiedStage: ->

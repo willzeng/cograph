@@ -13,6 +13,7 @@ class NodeHelper
     params = {props: props}
     cypherQuery = "CREATE (n#{tags} { props }) RETURN n;"
     @graphDb.query cypherQuery, params, (err, results) =>
+      console.log "graphDb CREATED node", utils.parseCypherResult(results[0], 'n')
       if (err) then throw err
       node = utils.parseCypherResult(results[0], 'n')
       utils.setProperty @graphDb, node.id, '_id', node.id, (savedNode) =>

@@ -1,0 +1,76 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    title Cograph
+    meta(name='viewport', content='width=device-width,initial-scale=1.0')
+    link(href='assets/libs/iconset/flaticon.css', rel='stylesheet', type='text/css')
+    link(href='assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
+    link(href='assets/stylesheets/general.css', rel='stylesheet')
+    link(href='assets/stylesheets/index-logged-in.css', rel='stylesheet')
+    link(href='assets/stylesheets/nav.css', rel='stylesheet')
+
+  body
+    include nav
+    .container.main-content
+      .row
+        .col-md-12
+          h3 Explore
+          hr
+          h4 Featured Cographs
+          br
+          .row
+            .col-md-4
+              .thumbnail
+                img(src='assets/images/owid.png')
+                .caption
+                  h3 Our World in Data
+                  p 
+                    | Cographs can give you a new way to share data visualizations. 
+                    a(href='http://www.cograph.co/max') @max 
+                    | has created a cograph with charts of economic trends from his site: 
+                    a(href='http://www.cograph.co/max') ourworldindata.org. 
+                    | Go ahead and explore his visualizations, connect your own comments and ideas, and share them.
+                  p
+                    a.btn.btn-default(href='http://www.cograph.co/max/document/113', role='button') Our World in Data
+            .col-md-4
+              .thumbnail
+                img(src='assets/images/wasteland.png')
+                .caption
+                  h3 The Wasteland
+                  p Use cographs to make annotations.  This example starts with the first part of 
+                    a(href='http://en.wikipedia.org/wiki/The_Waste_Land') The Wasteland 
+                    | and connects in some information from its footnotes.  You can add your reactions, notes, and comments to the poem to this cograph and share them with friends and classmates.
+                  p
+                    a.btn.btn-default(href='http://www.cograph.co/will/document/30', role='button') The Wasteland
+            .col-md-4
+              .thumbnail
+                img(src='assets/images/relatedprojects.png')
+                .caption
+                  h3 Projects related to Cograph
+                  p Cographs are great as collaborative suggestion boxes.  Use this cograph to let us know what other projects cograph reminds you of.  Don't forget to include information in the connection to explain the relationship.
+                  p
+                    a.btn.btn-default(href='http://www.cograph.co/will/document/198', role='button') Projects related to Cograph
+          hr
+          h4 All Published Cographs
+          br
+          .document-list
+            for doc in docs
+              a.list-group-item(href="/#{doc.createdBy}/document/#{doc.id}" target="_blank")
+                | #{doc.name}
+                a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
+    if isAuthenticated
+      include footer-logged-in
+    else 
+      include footer
+    script(src='assets/libs/jquery/dist/jquery.min.js')
+    script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-38168348-4', 'auto');
+      ga('send', 'pageview');

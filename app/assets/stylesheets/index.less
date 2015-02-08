@@ -1,7 +1,7 @@
 @import "font";
 
 .main-content {
-  font-family: 'Gotham Light';
+  font-family: 'Lato Light';
   padding-top: 20px;
 }
 .main-content h3:not(.full-size) {
@@ -9,10 +9,10 @@
   font-size: 16px;
 }
 .main-content strong {
-  color: #aaa;
+  color: #999;
 }
 #button-container {
- margin-top: 60px; 
+ margin-top: 40px; 
 }
 hr {
   border-top: 1px solid #ddd;
@@ -22,7 +22,7 @@ body {
   font-size: 14px;
 }
 body, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Gotham', helvetica, sans-serif;
+  font-family: 'Lato Light', helvetica, sans-serif;
   font-weight: normal;
 }
 #top h1 {
@@ -46,17 +46,22 @@ body, h1, h2, h3, h4, h5, h6 {
   padding: 0.3em 0;
   margin: 20px 0;
   border: 0;
-  font-family: 'Gotham','Varela Round', helvetica, sans-serif;
+  font-family: 'Lato','Varela Round', helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 .navbar .navbar-brand {
   color: #fff;
   font-weight: bold;
-  font-family: 'Gotham Light';
+  font-family: 'Lato Light';
   font-size: 30px;
   text-shadow: 0px 0px 2px #000;
   letter-spacing: -3px;
+}
+
+#github {
+  margin-left: 10px;
+  color: white;
 }
 
 #index-dropdown {
@@ -73,7 +78,7 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 .full-size {
-  font-family: 'Gotham Thin', 'Gotham Light';
+  color: #999;
 }
 
 .navbar-right {
@@ -93,7 +98,7 @@ body, h1, h2, h3, h4, h5, h6 {
 .jumbotron {
   background: url(../images/noisy_net.png);
   color: #fff;
-  padding: 2em 0 12em;
+  padding: 2em 0 10em;
   text-align: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -110,8 +115,6 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 .jumbotron .btn {
   box-shadow: 1px 1px 3px #000;
-  font-size: 1.2em;
-  font-weight: bold;
   padding: 0.3em 2.5em 0.5em;
 }
 .jumbotron .btn .glyphicon {
@@ -140,12 +143,12 @@ body, h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   font-size: 20px;
   color: #333;
-  font-family: 'Gotham Light', sans-serif;
+  font-family: 'Lato Light', sans-serif;
 }
 
 .benefit p, .sizable {
   font-size: 18px;
-  font-family: 'Gotham Light', sans-serif;
+  font-family: 'Lato Light', sans-serif;
 }
 
 .sizable a {
@@ -180,19 +183,27 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 #top {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 50px;
   background: transparent;
   color: white;
 }
 
 #canvas-container {
   overflow: hidden;
-  height: 550px;
+  height: 580px;
   width: 100%;
   position: absolute;
-  top: 0;
+  top: -150px;
   padding: 0;
   margin: 0;
   z-index: -1;
+  background: black;
+
+  video {
+    min-width: 100%;
+  }
 }
 
 #canvas-container canvas {
@@ -204,14 +215,14 @@ body, h1, h2, h3, h4, h5, h6 {
 }
 
 .call-to-action, .jumbotron .btn {
-  margin: 0 10px;
-  font-size: 16px;
-  text-transform: uppercase;
-  font-weight: 200;
-  background: rgba(0,0,0,0.4);
   border: 0;
   border-radius: 0px;
-  padding: 20px 60px;
+  padding: 14px 40px;
+  margin: 20px 10px;
+}
+
+.white, .white:hover, .white:active {
+  color: white;
 }
 
 #number-hidden {
@@ -264,7 +275,7 @@ footer a:hover {
   color: black;
   padding: 30px 80px;
   text-transform: uppercase;
-  font-family: 'Gotham Thin', sans-serif;
+  font-family: 'Lato', sans-serif;
 }
 
 .brand-logo {

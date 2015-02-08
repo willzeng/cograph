@@ -49,10 +49,12 @@ requirejs.config({
       deps: ['underscore','backbone', 'socket-io']
     },
     'caret': {
-      deps: ['jquery']
+      deps: ['jquery'],
+      exports: 'jQuery.fn.caret'
     },
     'atwho': {
-      deps: ['jquery', 'caret']
+      deps: ['jquery', 'caret'],
+      exports: 'jQuery.fn.atwho'
     },
     'twittertext': {
       deps: ['jquery']
@@ -78,6 +80,6 @@ requirejs.config({
   }]
 });
 
-require(['cs!GraphDocs'], function(GraphDocs){
+require(['jquery','caret','atwho', 'cs!GraphDocs'], function($, caret, atwho, GraphDocs){
   GraphDocs.initialize()
 });

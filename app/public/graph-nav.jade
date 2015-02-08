@@ -16,8 +16,6 @@ nav.navbar.navbar-default(role='navigation')
           span.dropdown
             if isOwner
               a.public-button-display.clickable(title="who can see this graph") 
-            //- else 
-            //-   span.public-button-display(title="who can see this graph") 
             a.dropdown-toggle.clickable(data-toggle='dropdown' id="graph-title")
               span#menu-title-display #{theDocument.name}
               i.caret
@@ -49,20 +47,10 @@ nav.navbar.navbar-default(role='navigation')
             if isOwner
               li#maybe-publish-button
             if isAuthenticated
-              li#newgraph-icon
-                a(href="/new" target="_blank" title="new graph")
-                  img(src="/assets/images/newgraph.png")
-              li.dropdown
-                a.dropdown-toggle(data-toggle='dropdown', href='')
-                  | @#{user.local.name}
-                  i.caret
-                ul.dropdown-menu
-                  li(role="presentation")
-                    a(href="/#{user.local.name}") My Cographs
-                  li(role="presentation")
-                    a(href="/account") Account
-                  li
-                    a(href="/logout") Logout
+              li
+                a(href="/") Explore
+              li
+                a(href="/#{user.local.nameLower}") @#{user.local.name}
             else
               li
                 a(href="/login") Login

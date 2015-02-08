@@ -11,7 +11,8 @@
 @data-tooltip-color: rgba(0,31,63,0.8);
 @controls-z-index: 1;
 @max-z: 99999999;
-@font: 'Gotham Light', Helvetica, sans-serif;
+
+@font: 'Lato Light', Helvetica, sans-serif;
 @bottom-margin: 60px;
 
 //
@@ -193,9 +194,7 @@ svg {
 
 .node-expand-count {
   box-sizing: border-box;
-  margin-left: -5px;
-  font-size: 9px;
-  vertical-align: bottom;
+  font-size: 10px;
 }
 
 .connection.selected line {
@@ -423,6 +422,12 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #search-form {
   margin-right: 10px;
+  background: white;
+
+  .tt-dropdown-menu {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
 }
 
 .modal-body {
@@ -488,6 +493,27 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
   .btn-danger{
     position: relative;
     bottom: 5px;
+  }
+}
+
+#description {
+  position:absolute;
+  width: 300px;
+  z-index: @controls-z-index;
+  padding: 12px 8px;
+  section {
+    outline: none;
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.94);
+  }
+  #description-toggle:hover {
+    color: @selected-color;
+  }
+  #description-toggle {
+    background: rgba(255, 255, 255, 0.94);
+    small {
+      text-transform: uppercase;
+    }
   }
 }
 
@@ -734,11 +760,25 @@ input[type="text"]:-ms-input-placeholder { /* Internet Explorer 10+ */
     display: none;
   }
 
+  #toolbar-bottom-right button img {
+    // make toolbar icons smaller
+    padding-right: 20px;
+  }
+  #toolbar-bottom-right button {
+    width: 45px;
+    padding-left: 15px;
+  }
+
+  #search-form {
+    width: 100px;
+  }
+
   #menu-title {
     width: 90px;
   }
 
   #trash-bin {
+    display: none;
     height: 50px;
     border-width: 1px;
     padding: 5px;

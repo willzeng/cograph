@@ -5,6 +5,7 @@ path = require 'path'
 mongoose = require 'mongoose'
 passport = require 'passport'
 flash = require 'connect-flash'
+compression = require 'compression'
 
 morgan = require 'morgan'
 cookieParser = require 'cookie-parser'
@@ -28,20 +29,26 @@ require('./config/passport')(passport) # pass passport for configuration
 app.set 'views', __dirname + '/app/public'
 app.set 'view engine', 'jade'
 
+app.use compression() #uses expressjs/compression on all requests
+
 app.use morgan('dev')
 app.use cookieParser()
 app.use favicon(path.join(__dirname, '/app/assets/images/favicon.ico'))
 app.use require('less-middleware')(path.join(__dirname, '/app/') )
 app.use bodyParser()
 
-# required for passport
+# setup redis for passport
+redis = require('redis')
+url = require('url')
+redisURL = url.parse(process.env.REDISCLOUD_URL || 'redis://rediscloud:oadtPM2ikltqQurz@pub-redis-14154.us-east-1-3.1.ec2.garantiadata.com:14154')
+clientRedis = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true})
+clientRedis.auth(redisURL.auth.split(":")[1]);
+
 app.use session
   secret: 'gdocsisthebestgdocsisthebest' # session secret
   store : new RedisStore
-    host : 'pub-redis-14154.us-east-1-3.1.ec2.garantiadata.com'
-    port : 14154
-    user : 'app30882867'
-    pass : 'oadtPM2ikltqQurz'
+    client: clientRedis
+    ttl: 6048000 # ten weeks
   cookie :
     maxAge : 6048000 # ten weeks
 

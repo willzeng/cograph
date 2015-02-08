@@ -7,23 +7,10 @@ html(lang='en')
     link(href='assets/libs/iconset/flaticon.css', rel='stylesheet', type='text/css')
     link(href='assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
     link(href='assets/stylesheets/index.css', rel='stylesheet')
-    link(href="neural/css/app.css", rel='stylesheet')
   body
     #canvas-container.jumbotron
-    script#vertexshader-axon(type='x-shader/x-vertex').
-      uniform float opacityMultiplier;
-      attribute float opacityAttr;
-      varying float opacityNew;
-      void main() {
-        opacityNew = opacityAttr * opacityMultiplier;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0 );
-      }
-    script#fragmentshader-axon(type='x-shader/x-fragment').
-      uniform vec3 color;
-      varying float opacityNew;
-      void main() {
-        gl_FragColor = vec4(color, opacityNew);
-      }
+      video(autoplay loop poster="assets/images/cograph.png")
+        source(src="assets/images/cograph.mp4" type="video/mp4")
     
     nav.navbar.navbar-default.navbar-inverse(role='navigation')
       .container
@@ -36,33 +23,41 @@ html(lang='en')
             img.brand-logo(src='assets/images/brand-w.png')
 
         .collapse.navbar-collapse.navbar-ex1-collapse
-          ul.nav.navbar-nav.navbar-right
-            li
-              a(href='/login') Login
-            li
-              a(href='/request-key') Request Beta Key
+          if isAuthenticated 
+            ul.nav.navbar-nav.navbar-right
+              li
+                a(href="/explore") Explore
+              li
+                a(href="/#{user.local.nameLower}") @#{user.local.name}
+          else
+            ul.nav.navbar-nav.navbar-right
+              li
+                a(href="/login") Login
+              li
+                a(href="/signup") Beta Signup
 
     #top.jumbotron
       .container
-        h1 Make new connections
+        h1 Connect your ideas
         p#button-container
-          a#create.btn.btn-primary.btn-lg.call-to-action(href="/request-key") Make a Cograph
-          a#open.btn.btn-default.btn-lg.call-to-action(href="/request-key") Explore Cographs
-
+          a#create.btn.btn-primary.btn-lg.call-to-action(href="/signup") Make a Cograph
+          a#open.btn.btn-info.btn-lg.call-to-action(href="/explore") Explore Cographs
+        p 
+          a(href="http://github.com/willzeng/cograph")
+            img(src="assets/images/GitHub-Mark-Light-32px.png") 
+            span(id="github") Contribute on Github
     .container.main-content
       .row
         .col-md-12
           h3 What are Cographs?
-          h3.full-size
-            strong Cographs are webs of ideas that you can create, explore and publish.
+          h3.full-size Cographs are webs of ideas that you can create, explore and publish.
           br
           h3 Why should I use cographs?
-          h3.full-size
-            strong Cographs put information in context.
+          h3.full-size Cographs put information in context.
           br
-          h3 Popular Cographs
-          h3.full-size
-            strong Coming soon.
+          br
+          center
+            a.btn.btn-primary.btn-lg.call-to-action(href="/will/document/0") See an Example
           br
       hr
       h3.header-titles What can I do with Cograph?
@@ -132,12 +127,13 @@ html(lang='en')
             strong Faster access
           p Browser extensions to make it faster to connect content
     include footer
-    script(src="neural/js/vendor/Detector.js")
-    script(src="neural/js/vendor/dat.gui.min.js")
-    script(src="neural/js/vendor/stats.min.js")
-    script(src="neural/js/vendor/three.min.js")
-    script(src="neural/js/vendor/OrbitControls.js")
-    script(src="neural/js/vendor/OBJLoader.js")
-    script(src="neural/js/three-app.js")
     script(src='assets/libs/jquery/dist/jquery.min.js')
     script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-38168348-4', 'auto');
+      ga('send', 'pageview');

@@ -17,17 +17,14 @@ html
           br
           h2 Signup
           // show any messages that come back with authentication
-          if message.length > 0 
+          if message && message.length > 0 
             .alert.alert-danger #{message}
-          label Beta Key*
-          input.form-control(type="text", name="beta-key")
-          hr
           p  
             a(href="/auth/twitter")
               img(src="assets/images/sign-in-with-twitter.png")
           u OR
           br 
-
+          br
           // SIGNUP FORM 
           form(action='/signup', method='post').cf
             .form-group
@@ -41,8 +38,6 @@ html
               input.form-control(type='password', name='password')
             button.btn.btn-info.pull-right.btn-lg(type='submit') Signup
           hr
-          p
-            a(href='/request-key') Request Beta Access
           p
             a(href='/login') Already have an account?
     script.
