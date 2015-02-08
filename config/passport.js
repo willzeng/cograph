@@ -44,8 +44,8 @@ module.exports = function(passport) {
         var cbURL = "http://www.cograph.co/auth/twitter/callback";
     }
     else{ //local setup
-        var cK = "4KN2VexuhVr7d3Ic7pHqZUVZD";
-        var cS = "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP";
+        var cK = "kARoAoD1OPeDMmsNrVajrDdCm";
+        var cS = "i027OrWxARTmn4UxRQPZJm1RXNGjnpw5hVSZnp39ULNFvjzkMc";
         var cbURL = "http://127.0.0.1:3000/auth/twitter/callback";
     }
     passport.use(new TwitterStrategy({
@@ -88,15 +88,15 @@ module.exports = function(passport) {
                         }
                         else{// if local
                             var twit = new Twit({
-                                consumer_key: "4KN2VexuhVr7d3Ic7pHqZUVZD",
-                                consumer_secret: "fy5P5cfeb6ediweO8XItI52Jlh7366bNex5tPjdyAPBq8Ix3mP",
+                                consumer_key: "kARoAoD1OPeDMmsNrVajrDdCm",
+                                consumer_secret: "i027OrWxARTmn4UxRQPZJm1RXNGjnpw5hVSZnp39ULNFvjzkMc",
                                 access_token: token,
                                 access_token_secret: tokenSecret
                             });
                         }
 
                         twit.get('statuses/user_timeline', {count: 200, screen_name: profile.username, include_entities:false}, function(err, data, res) {
-                            // console.log(data, res.statusCode);
+                            console.log(data, err);
                             // create the user
                             var newUser             = new User();
                             // set the user's local credentials
