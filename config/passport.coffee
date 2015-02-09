@@ -55,14 +55,17 @@ module.exports = (passport) ->
     User.findById id, (err, user) ->
       done err, user
 
-  # Twitter Signup
-  #check if local
+  # =========================================================================
+  # Twitter SIGNUP ==========================================================
+  # =========================================================================
+  #check if depolyed
   if process.env.PORT
-    cK = 'iRnrLu6QrYHPlOF0wq2ns1MYl'
-    cS = 'bdIQkb16hSVAvr64sTkq0YXhyysBoZ5dvMQSM9d3tdsCz3JdNx'
-    cbURL = 'http://www.cograph.co/auth/twitter/callback'
+    cK = process.env.TWITTER_CONSUMER_KEY
+    cS = process.env.TWITTER_CONSUMER_SECRET
+    cbURL = process.env.TWITTER_CB_URL
   else
-    #local setup
+    # local setup, these sandbox testers are provided
+    # be careful with them
     cK = 'kARoAoD1OPeDMmsNrVajrDdCm'
     cS = 'i027OrWxARTmn4UxRQPZJm1RXNGjnpw5hVSZnp39ULNFvjzkMc'
     cbURL = 'http://127.0.0.1:3000/auth/twitter/callback'
