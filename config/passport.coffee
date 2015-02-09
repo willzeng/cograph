@@ -29,6 +29,11 @@ usernameBlacklist = [
   'errors'
   'forgot-password'
   'request-key'
+  'forgotten-password'
+  'about'
+  'explore'
+  'account'
+  'auth'
 ]
 
 userNameRegEx = /^(\w+)$/
