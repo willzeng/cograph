@@ -89,7 +89,7 @@ module.exports = function(passport) {
                           'HMAC-SHA1'
                         );
                         oauth.get(
-                          'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count=200',
+                          'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count=5',
                           token, //test user token
                           tokenSecret, //test user secret            
                           function (e, data, res){

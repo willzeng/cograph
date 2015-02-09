@@ -9,6 +9,16 @@ flash = require 'express-flash'
 nodemailer = require 'nodemailer'
 bcrypt = require "bcrypt-nodejs"
 
+url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474'
+neo4j = require __dirname + '/../node_modules/neo4j'
+graphDb = new neo4j.GraphDatabase url
+
+DocumentHelper = require __dirname + '/helpers/DocumentHelper'
+serverDocument = new DocumentHelper graphDb
+
+NodeHelper = require __dirname + '/helpers/NodeHelper'
+serverNode = new NodeHelper(graphDb)
+
 module.exports = (app, passport) ->
 
   app.use(flash())
@@ -20,9 +30,30 @@ module.exports = (app, passport) ->
     documents.helper.getAll (docs) ->
       if req.isAuthenticated()
         username = req.user.local.nameLower
+        tweetData = JSON.parse(req.user.twitter.tweets)
+        tweetTexts = (t.text for t in tweetData)
         User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
           if err or not(profiledUser?) then res.render "index.jade", {docs:docs}
           else
+            twitterDoc =
+              name: 'Tweets Cograph'
+              createdBy: username
+              description: 'This is a Cograph of your imported tweets!'
+            serverDocument.create twitterDoc, (savedDocument) ->
+              # Add the imported tweets document to the users doc list
+              profiledUser.addDocument savedDocument._id
+              # Add the tweet nodes to the new document
+              for tweet in tweetTexts
+                name = tweet.substring(0,25)
+                if name .length >= 25
+                  name += "..."
+                tweetNode =
+                  name: name
+                  description: tweet
+                  _docId: savedDocument._id
+                docLabel = "_doc_#{savedDocument._id || 0}"
+                serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
+                  console.log 'created Node from tweet', savedNode.description
             res.render "index.jade", {docs:docs, user: profiledUser, isAuthenticated: true}
       else 
         res.render "index.jade", {docs:docs}
