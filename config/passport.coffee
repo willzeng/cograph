@@ -98,9 +98,10 @@ module.exports = (passport) ->
             # =========================================================================
             # Twitter SIGNUP ==========================================================
             # =========================================================================
-            # get the tweets
+            # get a TweetNumber number of tweets
+            TweetNumber = 200
             oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
-            oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count=5', token, tokenSecret, (e, data, res) ->
+            oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count='+TweetNumber, token, tokenSecret, (e, data, res) ->
               if e then console.error e
               # create the user
               newUser = new User
