@@ -90,8 +90,18 @@ module.exports = (passport) ->
           # if so log them in or notify that the username is taken
           if namedUser or _.contains(usernameBlacklist, profile.username)
             if namedUser.twitter and namedUser.twitter.id == profile.id
-              # log this user in
-              return done(null, user)
+              # update the tweet cograph with a certain number of tweets
+              TweetNumber = 5
+              oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
+              oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count='+TweetNumber, token, tokenSecret, (e, data, res) ->
+                if e then console.error e
+                # parse the tweet data
+                tweetData = JSON.parse data
+                tweets = ({text:t.text, id:t.id} for t in tweetData)
+                for twitterCograph in user.twitter.tweetCographIds
+                  serverDocument.updateTwitterCograph twitterCograph, tweets
+                # log this user in
+                return done(null, user)
             else
               return done(null, false, message: 'Your twitter handle is taken. Please sign up using the form instead.')
           else
@@ -99,7 +109,7 @@ module.exports = (passport) ->
             # Twitter SIGNUP ==========================================================
             # =========================================================================
             # get a TweetNumber number of tweets
-            TweetNumber = 200
+            TweetNumber = 3
             oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
             oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count='+TweetNumber, token, tokenSecret, (e, data, res) ->
               if e then console.error e
@@ -115,10 +125,11 @@ module.exports = (passport) ->
               newUser.twitter.tweets = data
               # parse the tweet data
               tweetData = JSON.parse(newUser.twitter.tweets)
-              tweetTexts = (t.text for tweet in tweetData)
+              tweets = ({text:t.text, id:t.id} for t in tweetData)
 
               # create the imported tweets document
-              serverDocument.createTwitterCograph profile.username, newUser, tweetTexts, (savedDocument) ->
+              serverDocument.createTwitterCograph profile.username, newUser, tweets, (savedDocument) ->
+                newUser.twitter.tweetCographIds.push savedDocument._id
                 # save the user
                 newUser.save (err) ->
                   if err then throw err

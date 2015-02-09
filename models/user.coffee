@@ -24,6 +24,7 @@ userSchema = mongoose.Schema(
     displayName: String
     username: String
     tweets: String
+    tweetCographIds: Array
 
   documents: Array
 )

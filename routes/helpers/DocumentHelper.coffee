@@ -24,7 +24,7 @@ class DocumentHelper
     @graphDb.query cypherQuery, params, (err, results) =>
       if err then throw err
       node = utils.parseCypherResult(results[0], 'n')
-      callback utils.parseNodeToClient node
+      if callback? then callback utils.parseNodeToClient node
 
   # Gets all the public documents
   getAll: (callback) ->
@@ -49,25 +49,46 @@ class DocumentHelper
         callback nodes
 
   # Makes a document for imported Tweets
-  createTwitterCograph: (username, profiledUser, tweetTexts, callback) ->
+  createTwitterCograph: (username, profiledUser, tweets, callback) ->
+    tweetIds_str = JSON.stringify (t.id for t in tweets)
     twitterDoc =
       name: 'Tweets Cograph for @'+username
       createdBy: username
       description: 'This is a Cograph of your imported tweets!'
+      tweetIds_str: tweetIds_str
     @create twitterDoc, (savedDocument) =>
       # once the document is created the callback is sent
       callback savedDocument
       # Add the tweet nodes to the new document
-      for tweet in tweetTexts
-        name = tweet.substring(0,25)
-        if name .length >= 25
-          name += "..."
-        tweetNode =
-          name: name
-          description: tweet
-          _docId: savedDocument._id
-        docLabel = "_doc_#{savedDocument._id || 0}"
-        @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
-          return null
+      for tweet in tweets
+        @makeTweetNode savedDocument._id, tweet
+
+  # Merges the twitter cograph with new tweets
+  updateTwitterCograph: (twitterCograph, tweets) ->
+    newTweetIds = (t.id for t in tweets)
+    @getByIds twitterCograph, (documents) =>
+      doc = documents[0] #twitterCograph is one id, so there's only one document
+      oldTweetIds = JSON.parse(doc.tweetIds_str)
+      newTweets = (t for t in tweets when not _.contains oldTweetIds, t.id)
+      for tweet in newTweets
+        @makeTweetNode doc._id, tweet
+      # update the unique twitter string ids
+      doc.tweetIds_str = JSON.stringify _.union(newTweetIds, oldTweetIds)
+      @update doc._id, doc
+
+  # Creates a new cograph node from a tweet objects in the
+  # specified document
+  makeTweetNode: (docId, tweet, callback) ->
+    tweetText = tweet.text
+    name = tweetText.substring(0,25)
+    if name.length >= 25
+      name += "..."
+      tweetNode =
+        name: name
+        description: tweetText
+        _docId: docId
+      docLabel = "_doc_#{docId || 0}"
+      @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
+        if callback? then callback savedNode
 
 module.exports = DocumentHelper
