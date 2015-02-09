@@ -11,6 +11,7 @@ neo4j = require(__dirname + '/../node_modules/neo4j')
 graphDb = new (neo4j.GraphDatabase)(url)
 DocumentHelper = require(__dirname + '/../routes/helpers/DocumentHelper')
 serverDocument = new DocumentHelper(graphDb)
+OAuth = require('oauth')
 
 # load up the user model
 User = require('../models/user.coffee')
@@ -56,7 +57,7 @@ module.exports = (passport) ->
       done err, user
 
   # =========================================================================
-  # Twitter SIGNUP ==========================================================
+  # Twitter AUTHENTICATION ==================================================
   # =========================================================================
   #check if depolyed
   if process.env.PORT
@@ -77,22 +78,27 @@ module.exports = (passport) ->
   }, (token, tokenSecret, profile, done) ->
     process.nextTick ->
       User.findOne { 'twitter.id': profile.id }, (err, user) ->
-        if err
-          return done(err)
+        if err then return done(err)
         # check to see if theres already a user with that name
         User.findOne { 'local.nameLower': profile.username.toLowerCase() }, (err, namedUser) ->
           # if there are any errors, return the error
-          if err
-            return done(err)
+          if err then return done(err)
+          # =========================================================================
+          # Twitter LOGIN ===========================================================
+          # =========================================================================
           # check to see if theres already a user with that name
+          # if so log them in or notify that the username is taken
           if namedUser or _.contains(usernameBlacklist, profile.username)
             if namedUser.twitter and namedUser.twitter.id == profile.id
+              # log this user in
               return done(null, user)
             else
               return done(null, false, message: 'Your twitter handle is taken. Please sign up using the form instead.')
           else
+            # =========================================================================
+            # Twitter SIGNUP ==========================================================
+            # =========================================================================
             # get the tweets
-            OAuth = require('oauth')
             oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
             oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count=5', token, tokenSecret, (e, data, res) ->
               if e then console.error e
