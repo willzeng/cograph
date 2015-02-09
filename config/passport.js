@@ -5,6 +5,14 @@ var LocalStrategy   = require('passport-local').Strategy;
 var TwitterStrategy = require('passport-twitter').Strategy;
 var _ = require(__dirname + '/../node_modules/underscore/underscore');
 
+// These are needed to import tweets into a new cograph
+var DocumentHelper, graphDb, neo4j, serverDocument, url;
+url = process.env['GRAPHENEDB_URL'] || 'http://localhost:7474';
+neo4j = require(__dirname + '/../node_modules/neo4j');
+graphDb = new neo4j.GraphDatabase(url);
+DocumentHelper = require(__dirname + '/../routes/helpers/DocumentHelper');
+serverDocument = new DocumentHelper(graphDb);
+
 // load up the user model
 User = require('../models/user.coffee');
 
@@ -104,11 +112,30 @@ module.exports = function(passport) {
                             newUser.twitter.username = profile.username;
                             newUser.twitter.displayName = profile.displayName;
                             newUser.twitter.tweets = data; // 200 tweets
-                            // save the user
-                            newUser.save(function(err) {
-                                if (err)
-                                    throw err;
-                                return done(null, newUser);
+
+                            // parse the tweet data
+                            var t, tweetData, tweetTexts;
+                            tweetData = JSON.parse(newUser.twitter.tweets);
+                            tweetTexts = (function() {
+                              var _i, _len, _results;
+                              _results = [];
+                              for (_i = 0, _len = tweetData.length; _i < _len; _i++) {
+                                t = tweetData[_i];
+                                _results.push(t.text);
+                              }
+                              return _results;
+                            })();
+
+                            // create the imported tweets document
+                            serverDocument.createTwitterCograph(profile.username, newUser, tweetTexts, function(savedDocument){
+                                // save the user
+                                newUser.save(function(err) {
+                                    if (err)
+                                        throw err;
+                                    // add the imported tweets document to the user
+                                    newUser.addDocument(savedDocument._id);
+                                    return done(null, newUser);
+                                });
                             });
                         });     
                     }
