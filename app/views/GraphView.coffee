@@ -293,7 +293,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           .attr('height', '50')
           .attr('width', '50')
           .attr('xlink:href', '')
-          .attr('x', '-105')
+          .attr('x', -@nodeBoxWidth/2-50)
           .attr('y', '-25')
           .attr('class', 'node-image')
           .attr('clip-path', 'url(#clipCircle)')
