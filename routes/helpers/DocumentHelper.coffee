@@ -78,21 +78,22 @@ class DocumentHelper
       async.parallel saveTweetPara, (err, savedNodes) =>
         if not err
           # Add the twitter handle nodes to the new document
-          @addTwitterHandles savedDocument._id, mentionedHandles, (err, savedHandles) ->
+          @addTwitterHandles savedDocument._id, mentionedHandles, (err, savedHandles) =>
             # Add connections between tweets and the nodes they are connected to
-            # for node in savedNodes
-            #   console.log "NODE: ", node
-            #   source = node.id
-            #   mentions = JSON.parse(node.mentions)
-            #   console.log "MENTIONS: ", mentions
-            #   for mention in mentions
-            #     console.log "SAVEDHANDLES", savedHandles
-            #     console.log "NAME", "@"+mention
-            #     target = _.findWhere(savedHandles, {name:"@"+mention})
-            #     console.log "TARGET", target
-            #     console.log "CREATE A CONNECTION FROM: ", source, " to ", target.id
-            # cypherQuery = "start n=node(#{source}), m=node(#{target}) create n-[r:connection]->m return n;"
-            # @graphDb.query cypherQuery, params, (err, results) ->
+            for node in savedNodes
+              source = node.id
+              mentions = JSON.parse(node.mentions)
+              for mention in mentions
+                target = _.findWhere(savedHandles, {name:"@"+mention}).id
+                newConn = 
+                  source: source
+                  target: target
+                  _docId: savedDocument._id
+                  name: "mentions"
+                params = {props:newConn}
+                cypherQuery = "start n=node(#{source}), m=node(#{target}) create n-[r:connection { props }]->m return r;"
+                @graphDb.query cypherQuery, params, (err, results) ->
+                  if err then throw err
 
   # Merges the twitter cograph with new tweets
   updateTwitterCograph: (twitterCograph, tweets) ->
@@ -128,6 +129,7 @@ class DocumentHelper
         description: tweetText
         _docId: docId
         mentions: mention_str
+        color: "blue"
       docLabel = "_doc_#{docId || 0}"
       @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
         if callback? then callback null, savedNode
@@ -152,6 +154,7 @@ class DocumentHelper
             description: "http://twitter.com/"+handle.sn
             _docId: docId
             url: ""
+            color: "red"
           @serverNode.create [], handleNode, docLabel, (savedNode) ->
             if savedNode
               callback null, savedNode
