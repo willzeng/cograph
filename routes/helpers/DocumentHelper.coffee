@@ -68,7 +68,7 @@ class DocumentHelper
     newTweetIds = (t.id for t in tweets)
     @getByIds twitterCograph, (documents) =>
       doc = documents[0] #twitterCograph is one id, so there's only one document
-      oldTweetIds = JSON.parse(doc.tweetIds_str)
+      oldTweetIds = if doc.tweetIds_str? then JSON.parse(doc.tweetIds_str) else []
       newTweets = (t for t in tweets when not _.contains oldTweetIds, t.id)
       for tweet in newTweets
         @makeTweetNode doc._id, tweet
