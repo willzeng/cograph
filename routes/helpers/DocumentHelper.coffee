@@ -109,6 +109,7 @@ class DocumentHelper
       name: name
       description: tweetText
       _docId: docId
+      image: tweet.image
     docLabel = "_doc_#{docId || 0}"
     @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
       if callback? then callback null, savedNode
