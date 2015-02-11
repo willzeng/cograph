@@ -51,10 +51,11 @@ nav.navbar.navbar-default(role='navigation')
                     i.fa.fa-save.pull-right    
             if isOwner
               li#maybe-publish-button
-              li
+              li.dropdown
                 a.dropdown-toggle.clickable(data-toggle='dropdown' id="import-title") 
-                  | Import 
-                  i.fa.fa-angle-down
+                  b
+                    | Import
+                    i.fa.fa-angle-down
                 ul.dropdown-menu#import-title-dropdown(aria-labelledby="import-title")
                   li
                     a#twitter-button(href="" data-toggle="modal") 
