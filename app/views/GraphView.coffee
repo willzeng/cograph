@@ -85,7 +85,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
                 .call(@zoom)
                 .on("dblclick.zoom", null)
         def = @svg.append('svg:defs')
-        (new svgDefs).addDefs def, @model.defaultColors
+        (new svgDefs).addDefs def, @model.defaultColors, @nodeBoxWidth
 
         # GridView parameters
         @gridViewOn = false
