@@ -63,6 +63,7 @@ class DocumentHelper
 
       # find the unique mentioned twitter handles
       mentionedHandles = []
+      tweet2Mentions = {}
       for tweet in tweets
         for mention in tweet.mentions
           mentionedHandles.push {name:mention.name, sn:mention.screen_name}
@@ -71,15 +72,26 @@ class DocumentHelper
       # Add the tweet nodes to the new document
       saveTweetPara = []
       for tweet in tweets
-        saveTweetPara.push (callback) =>
-          @makeTweetNode(savedDocument._id, tweet, callback)
+        saveTweetPara.push @makeTweetNode(savedDocument._id, tweet, callback)
+        # saveTweetPara.push (callback) =>
+        #   @makeTweetNode(savedDocument._id, tweet, callback)
       async.parallel saveTweetPara, (err, savedNodes) =>
         if not err
           # Add the twitter handle nodes to the new document
           @addTwitterHandles savedDocument._id, mentionedHandles, (err, savedHandles) ->
             # Add connections between tweets and the nodes they are connected to
-
-            # cypherQuery = "start n=node(#{}), m=node(#{}) create n-[r:connection]->m return n;"
+            # for node in savedNodes
+            #   console.log "NODE: ", node
+            #   source = node.id
+            #   mentions = JSON.parse(node.mentions)
+            #   console.log "MENTIONS: ", mentions
+            #   for mention in mentions
+            #     console.log "SAVEDHANDLES", savedHandles
+            #     console.log "NAME", "@"+mention
+            #     target = _.findWhere(savedHandles, {name:"@"+mention})
+            #     console.log "TARGET", target
+            #     console.log "CREATE A CONNECTION FROM: ", source, " to ", target.id
+            # cypherQuery = "start n=node(#{source}), m=node(#{target}) create n-[r:connection]->m return n;"
             # @graphDb.query cypherQuery, params, (err, results) ->
 
   # Merges the twitter cograph with new tweets
@@ -105,17 +117,20 @@ class DocumentHelper
   # Creates a new cograph node from a tweet object in the
   # specified document
   makeTweetNode: (docId, tweet, callback) ->
-    tweetText = tweet.text
-    name = tweetText.substring(0,25)
-    if name.length >= 25
-      name += "..."
-    tweetNode =
-      name: name
-      description: tweetText
-      _docId: docId
-    docLabel = "_doc_#{docId || 0}"
-    @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
-      if callback? then callback null, savedNode
+    (callback) =>
+      tweetText = tweet.text
+      name = tweetText.substring(0,25)
+      if name.length >= 25
+        name += "..."
+      mention_str = JSON.stringify (m.screen_name for m in tweet.mentions)
+      tweetNode =
+        name: name
+        description: tweetText
+        _docId: docId
+        mentions: mention_str
+      docLabel = "_doc_#{docId || 0}"
+      @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
+        if callback? then callback null, savedNode
 
   # Merges nodes that represent twitter handles into the cograph
   addTwitterHandles: (docId, handles, callback) ->
@@ -130,8 +145,8 @@ class DocumentHelper
 
       # Add the tweet nodes to the new document
       saveHandlePara = []
-      for handle in handles
-        saveHandlePara.push (callback) =>
+      handleFactory = (handle, callback) =>
+        (callback) =>
           handleNode =
             name: "@"+handle.sn
             description: "http://twitter.com/"+handle.sn
@@ -142,6 +157,9 @@ class DocumentHelper
               callback null, savedNode
             else
               callback true, null
+
+      for handle in handles
+        saveHandlePara.push handleFactory(handle)
 
       # Add the handle nodes to the document
       async.parallel saveHandlePara, (err, savedHandles) =>
