@@ -17,17 +17,9 @@ nav.navbar.navbar-default(role='navigation')
             if isOwner
               a.public-button-display.clickable(title="who can see this graph") 
             a.dropdown-toggle.clickable(data-toggle='dropdown' id="graph-title")
-              span#menu-title-display #{theDocument.name}
-              i.caret
+              span#menu-title-display #{theDocument.name} 
+              i.fa.fa-angle-down
             ul.dropdown-menu#menu-title-dropdown(aria-labelledby="graph-title")
-              li
-                a#workspaces-button(href="" data-toggle="modal")
-                  span Open View
-                  i.fa.fa-folder-open-o.pull-right
-              li
-                a#save-workspace-button(href="" data-toggle="modal")
-                  span Save View
-                  i.fa.fa-save.pull-right
               if isOwner
                 li
                   a#analytics-button(href="" data-toggle="modal")
@@ -35,8 +27,8 @@ nav.navbar.navbar-default(role='navigation')
                     i.fa.fa-signal.pull-right
                 li 
                   a#settings-button(href="" data-toggle="modal")
-                    span Rename Cograph
-                    i.fa.fa-cog.pull-right
+                    span Settings
+                    i.fa.fa-cogs.pull-right
 
         #gdocs-nav.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
@@ -44,11 +36,35 @@ nav.navbar.navbar-default(role='navigation')
             li
               a.clickable#sharing-toggle(type="button")
                 | Share
+            li
+              a.dropdown-toggle.clickable(data-toggle='dropdown' id="view-title") 
+                | Views 
+                i.fa.fa-angle-down
+              ul.dropdown-menu#import-title-dropdown(aria-labelledby="view-title")
+                li
+                  a#workspaces-button(href="" data-toggle="modal")
+                    span Open View
+                    i.fa.fa-folder-open-o.pull-right
+                li
+                  a#save-workspace-button(href="" data-toggle="modal")
+                    span Save View
+                    i.fa.fa-save.pull-right    
             if isOwner
               li#maybe-publish-button
-            if isAuthenticated
               li
-                a(href="/") Explore
+                a.dropdown-toggle.clickable(data-toggle='dropdown' id="import-title") 
+                  | Import 
+                  i.fa.fa-angle-down
+                ul.dropdown-menu#import-title-dropdown(aria-labelledby="import-title")
+                  li
+                    a#twitter-button(href="" data-toggle="modal") 
+                      span Twitter
+                      i.fa.fa-twitter.pull-right
+                  li
+                    a#evernote-button(href="" data-toggle="modal")
+                      span Evernote
+                      i.fa.fa-book.pull-right
+            if isAuthenticated
               li
                 a(href="/#{user.local.nameLower}") @#{user.local.name}
             else

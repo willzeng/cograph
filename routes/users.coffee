@@ -232,10 +232,11 @@ module.exports = (app, passport) ->
   app.get('/auth/twitter/callback', 
     passport.authenticate('twitter', 
       { 
-        successRedirect: '/',
         failureRedirect: '/login' 
       }
-    )
+    ),
+    (req, res) ->
+      res.redirect('/'+req.user.local.nameLower)
   )
   
   app.post "/signup", (req, res, next) ->
