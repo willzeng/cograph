@@ -16,7 +16,8 @@
             <img src="<%= node.attributes.image %>" width="100%">
           <% } %>
           <% if (node.attributes.description.length > 0) { %>
-            <% linkified = node.attributes.description.replace(/#(\S*)/g,'<a class="tag-link" data-tag=$1 href="">#$1</a>'); %>
+            <% linkified = node.attributes.description.replace(/#(\S*)/g,'<a class="tag-link" data-tag=$1 href="">#$1</a>').replace(/(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g, '<a class="url-link" href="$1">$1</a>');
+            %>
             <p class="lead"><%= linkified %></p>
           <% } %>
           <% if (node.attributes.url) { %>
