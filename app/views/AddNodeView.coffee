@@ -157,6 +157,7 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
           @model.putNode node
 
           saveSuccess = (model, response, options) =>
+            console.log "save success for node:", model
             @model.trigger 'saved:node'
             # Create connections to mentioned nodes
             for targetNode in uniqMentions
@@ -173,9 +174,11 @@ define ['jquery', 'underscore', 'backbone', 'cs!models/WorkspaceModel', 'cs!mode
                 @model.putConnection connection
 
           saveError = (model, response, options) =>
+            console.log "save error for", model
             alert "Whoops, node couldn't be added check your connection and try again."
             @model.removeNode node
 
+          console.log "calling save of", node
           node.save {success:saveSuccess, error: saveError}
 
           @resetAdd()
