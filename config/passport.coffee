@@ -97,7 +97,7 @@ module.exports = (passport) ->
                 if e then console.error e
                 # parse the tweet data
                 tweetData = JSON.parse data
-                tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions} for t in tweetData)
+                tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions, image: if (t.entities && t.entities.media && t.entities.media.media_url) then t.entities.media.media_url else ""} for t in tweetData)
                 for twitterCograph in user.twitter.tweetCographIds
                   serverDocument.updateTwitterCograph twitterCograph, tweets
                 # log this user in
@@ -125,7 +125,7 @@ module.exports = (passport) ->
               newUser.twitter.tweets = data
               # parse the tweet data
               tweetData = JSON.parse(newUser.twitter.tweets)
-              tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions} for t in tweetData)
+              tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions, image: if (t.entities && t.entities.media && t.entities.media != [] && t.entities.media[0].media_url) then t.entities.media[0].media_url else ""} for t in tweetData)
 
               # create the imported tweets document
               serverDocument.createTwitterCograph profile.username, newUser, tweets, (savedDocument) ->

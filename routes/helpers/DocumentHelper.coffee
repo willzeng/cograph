@@ -130,6 +130,7 @@ class DocumentHelper
         _docId: docId
         mentions: mention_str
         color: "blue"
+        image: tweet.image
       docLabel = "_doc_#{docId || 0}"
       @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
         if callback? then callback null, savedNode
