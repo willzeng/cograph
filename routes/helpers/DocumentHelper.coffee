@@ -63,20 +63,37 @@ class DocumentHelper
 
       # find the unique mentioned twitter handles
       mentionedHandles = []
+      tweet2Mentions = {}
       for tweet in tweets
         for mention in tweet.mentions
           mentionedHandles.push {name:mention.name, sn:mention.screen_name}
       mentionedHandles = _.uniq mentionedHandles, (t) -> t.sn
 
       # Add the tweet nodes to the new document
-      saveTweet = (tweet, callback) =>
-        @makeTweetNode savedDocument._id, tweet, callback
-      async.each tweets, saveTweet, (err) =>
+      saveTweetPara = []
+      for tweet in tweets
+        saveTweetPara.push @makeTweetNode(savedDocument._id, tweet, callback)
+        # saveTweetPara.push (callback) =>
+        #   @makeTweetNode(savedDocument._id, tweet, callback)
+      async.parallel saveTweetPara, (err, savedNodes) =>
         if not err
           # Add the twitter handle nodes to the new document
-          @addTwitterHandles savedDocument._id, mentionedHandles, () ->
-            console.log "add connections"
-            # Add connections HERE
+          @addTwitterHandles savedDocument._id, mentionedHandles, (err, savedHandles) =>
+            # Add connections between tweets and the nodes they are connected to
+            for node in savedNodes
+              source = node.id
+              mentions = JSON.parse(node.mentions)
+              for mention in mentions
+                target = _.findWhere(savedHandles, {name:"@"+mention}).id
+                newConn = 
+                  source: source
+                  target: target
+                  _docId: savedDocument._id
+                  name: "mentions"
+                params = {props:newConn}
+                cypherQuery = "start n=node(#{source}), m=node(#{target}) create n-[r:connection { props }]->m return r;"
+                @graphDb.query cypherQuery, params, (err, results) ->
+                  if err then throw err
 
   # Merges the twitter cograph with new tweets
   updateTwitterCograph: (twitterCograph, tweets) ->
@@ -101,18 +118,22 @@ class DocumentHelper
   # Creates a new cograph node from a tweet object in the
   # specified document
   makeTweetNode: (docId, tweet, callback) ->
-    tweetText = tweet.text
-    name = tweetText.substring(0,25)
-    if name.length >= 25
-      name += "..."
-    tweetNode =
-      name: name
-      description: tweetText
-      _docId: docId
-      image: tweet.image
-    docLabel = "_doc_#{docId || 0}"
-    @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
-      if callback? then callback null, savedNode
+    (callback) =>
+      tweetText = tweet.text
+      name = tweetText.substring(0,25)
+      if name.length >= 25
+        name += "..."
+      mention_str = JSON.stringify (m.screen_name for m in tweet.mentions)
+      tweetNode =
+        name: name
+        description: tweetText
+        _docId: docId
+        mentions: mention_str
+        color: "blue"
+        image: tweet.image
+      docLabel = "_doc_#{docId || 0}"
+      @serverNode.create ['tweet'], tweetNode, docLabel, (savedNode) ->
+        if callback? then callback null, savedNode
 
   # Merges nodes that represent twitter handles into the cograph
   addTwitterHandles: (docId, handles, callback) ->
@@ -125,21 +146,28 @@ class DocumentHelper
       handles = _.filter handles, (h) ->
         not _.contains(names, "@"+h.sn)
 
-      # Method to add the handle nodes
-      saveHandle = (handle, callback) =>
-        handleNode =
-          name: "@"+handle.sn
-          description: "http://twitter.com/"+handle.sn
-          _docId: docId
-          url: ""
-        @serverNode.create [], handleNode, docLabel, (savedNode) ->
-          if savedNode
-            callback null, savedNode
-          else
-            callback true, null
+      # Add the tweet nodes to the new document
+      saveHandlePara = []
+      handleFactory = (handle, callback) =>
+        (callback) =>
+          handleNode =
+            name: "@"+handle.sn
+            description: "http://twitter.com/"+handle.sn
+            _docId: docId
+            url: ""
+            color: "red"
+          @serverNode.create [], handleNode, docLabel, (savedNode) ->
+            if savedNode
+              callback null, savedNode
+            else
+              callback true, null
+
+      for handle in handles
+        saveHandlePara.push handleFactory(handle)
+
       # Add the handle nodes to the document
-      async.each handles, saveHandle, (err) =>
+      async.parallel saveHandlePara, (err, savedHandles) =>
         if not err
-          callback null
+          callback err, savedHandles
 
 module.exports = DocumentHelper
