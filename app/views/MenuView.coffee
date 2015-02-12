@@ -1,7 +1,7 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
  'text!templates/analytics_modal.html', 'text!templates/workspaces_menu_modal.html',
- 'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html','text!templates/description_box.html', 'test!templates/import_tweets_modal'],
+ 'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html','text!templates/description_box.html', 'text!templates/import_tweets_modal.html'],
   ($, _, Backbone, Bloodhound, typeahead, bootstrap, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate, descriptionTemplate, importTweetsTemplate) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
@@ -82,6 +82,11 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           animate: true
           showFooter: false
         ).open()
+
+        @importTweetsModal.on "shown", () ->
+          $('#twitterQueryInput').focus()
+          $('#twitter-query-form').submit (e) ->
+            false
 
       openSettingsModal: ->
         if($('.public-button-display').hasClass('clickable')) #isOwner
