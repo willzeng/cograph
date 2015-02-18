@@ -99,7 +99,7 @@ module.exports = (passport) ->
                 tweetData = JSON.parse data
                 tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions, image: if (t.entities && t.entities.media && t.entities.media.media_url) then t.entities.media.media_url else ""} for t in tweetData)
                 for twitterCograph in user.twitter.tweetCographIds
-                  serverDocument.updateTwitterCograph twitterCograph, tweets
+                  serverDocument.updateTwitterCograph twitterCograph, tweets,  () -> null
                 # log this user in
                 return done(null, user)
             else

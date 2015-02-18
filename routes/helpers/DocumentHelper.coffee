@@ -73,8 +73,6 @@ class DocumentHelper
       saveTweetPara = []
       for tweet in tweets
         saveTweetPara.push @makeTweetNode(savedDocument._id, tweet, callback)
-        # saveTweetPara.push (callback) =>
-        #   @makeTweetNode(savedDocument._id, tweet, callback)
       async.parallel saveTweetPara, (err, savedNodes) =>
         if not err
           # Add the twitter handle nodes to the new document
@@ -96,24 +94,48 @@ class DocumentHelper
                   if err then throw err
 
   # Merges the twitter cograph with new tweets
-  updateTwitterCograph: (twitterCograph, tweets) ->
+  updateTwitterCograph: (twitterCographId, tweets, callback) ->
     newTweetIds = (t.id for t in tweets)
-    @getByIds twitterCograph, (documents) =>
-      doc = documents[0] #twitterCograph is one id, so there's only one document
+    @getByIds twitterCographId, (documents) =>
+      doc = documents[0] #twitterCographId is one id, so there's only one document
       oldTweetIds = if doc.tweetIds_str? then JSON.parse(doc.tweetIds_str) else []
       newTweets = (t for t in tweets when not _.contains oldTweetIds, t.id)
+
+      # find the unique mentioned twitter handles
       mentionedHandles = []
+      tweet2Mentions = {}
       for tweet in newTweets
-        @makeTweetNode doc._id, tweet
         for mention in tweet.mentions
           mentionedHandles.push {name:mention.name, sn:mention.screen_name}
-      # find the unique mentioned twitter handles
       mentionedHandles = _.uniq mentionedHandles, (t) -> t.sn
-      # Add the twitter handle nodes to the new document
-      @addTwitterHandles(doc._id, mentionedHandles)        
-      # update the unique twitter string ids
-      doc.tweetIds_str = JSON.stringify _.union(newTweetIds, oldTweetIds)
-      @update doc._id, doc
+
+      # Add the tweet nodes to the new document
+      saveTweetPara = []
+      for tweet in newTweets
+        saveTweetPara.push @makeTweetNode(doc._id, tweet, callback)
+      async.parallel saveTweetPara, (err, savedNodes) =>
+        if not err
+          # update the unique twitter string ids
+          doc.tweetIds_str = JSON.stringify _.union(newTweetIds, oldTweetIds)
+          @update doc._id, doc
+
+          # Add the twitter handle nodes to the new document
+          @addTwitterHandles doc._id, mentionedHandles, (err, savedHandles) =>
+            # Add connections between tweets and the nodes they are connected to
+            for node in savedNodes
+              source = node.id
+              mentions = JSON.parse(node.mentions)
+              for mention in mentions
+                target = _.findWhere(savedHandles, {name:"@"+mention}).id
+                newConn =
+                  source: source
+                  target: target
+                  _docId: doc._id
+                  name: "mentions"
+                params = {props:newConn}
+                cypherQuery = "start n=node(#{source}), m=node(#{target}) create n-[r:connection { props }]->m return r;"
+                @graphDb.query cypherQuery, params, (err, results) ->
+                  if err then throw err
 
   # Creates a new cograph node from a tweet object in the
   # specified document
