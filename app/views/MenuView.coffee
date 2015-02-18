@@ -154,11 +154,14 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
 
       getEmbed: (url) ->
         """
-        <div style='min-width:420;max-width:700'>
-          <iframe src='#{url}' width='100%' height='100%'
-          scrolling='no' frameborder='0' allowfullscreen>
-          </iframe>
-        </div>
+          <div style="width: 100%;margin: 0px auto">
+            <div style='height: 0;width: 100%;padding-bottom: 57.5%;
+            overflow: hidden;position: relative;'>
+              <iframe src='#{url}' style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;"
+              scrolling='no' frameborder='0' allowfullscreen>
+              </iframe>
+            </div>
+          </div>
         """
 
       openWorkspacesModal: ->
