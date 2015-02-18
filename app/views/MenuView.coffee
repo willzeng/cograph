@@ -86,8 +86,14 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @importTweetsModal.on "shown", () ->
           $('#twitterQueryInput').focus()
           $('#twitter-query-form').submit (e) ->
-            false
+            @importTweets $('#twitterQueryInput').val() $('#twitterQuerySlider').val()
 
+      importTweets: (query, num) ->
+        # gets the tweets
+        # make a request to https://api.twitter.com/1.1/search/tweets.json
+        # q: query
+        # count: # max 100
+        false
       openSettingsModal: ->
         if($('.public-button-display').hasClass('clickable')) #isOwner
           name = @model.getDocument().get("name")
