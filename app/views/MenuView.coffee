@@ -96,7 +96,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
 
       saveSettings: ->
         doc = @model.getDocument()
-        doc.set 'name', $('#menu-title').val()
+        doc.set 'name', $('#settings-menu-title').val()
         newViewState = $('.public-button-view.selected').data('type')
         newEditState = $('.public-button-edit.selected').data('type')
         doc.set "publicView", newViewState
