@@ -1,0 +1,12 @@
+<form role="form" id="twitter-query-form" oninput="amount.value=twitterQuerySlider.value">
+  <div class="form-group">
+    <label for="twitterQueryInput">Search Query</label>
+    <input type="name" class="form-control" id="twitterQueryInput" placeholder="enter search query">
+  </div>
+  <div class="form-group">
+  	<label for="twitterQuerySlider"># of tweets to import</label>
+  	<input id="twitterQuerySlider" type="range" max="100" min="1" step="1" defaultValue="20">
+  	<output name="amount" for="twitterQuerySlider">20</output>
+  </div>
+  <button type="submit" class="btn btn-primary pull-right">Import tweets</button>
+</form>

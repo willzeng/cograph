@@ -229,15 +229,17 @@ module.exports = (app, passport) ->
   # // authentication process by attempting to obtain an access token.  If
   # // access was granted, the user will be logged in.  Otherwise,
   # // authentication has failed.
-  app.get('/auth/twitter/callback', 
-    passport.authenticate('twitter', 
-      { 
-        failureRedirect: '/login' 
-      }
-    ),
-    (req, res) ->
-      res.redirect('/'+req.user.local.nameLower)
-  )
+  app.get '/auth/twitter/callback', (req, res, next) ->
+    passport.authenticate('twitter', (err, user, info) ->
+      if err then next(err)
+      if not user
+        req.flash 'signupMessage', info.message
+        res.redirect '/signup'
+      else
+        req.logIn user, (err) ->
+          if err then return next(err)
+          res.redirect('/'+req.user.local.nameLower)
+    )(req, res, next)
   
   app.post "/signup", (req, res, next) ->
     passport.authenticate("local-signup", (err, user, info) ->
