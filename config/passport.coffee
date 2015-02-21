@@ -132,7 +132,6 @@ module.exports = (passport) ->
               newUser.twitter.id = profile.id
               newUser.twitter.username = profile.username
               newUser.twitter.displayName = profile.displayName
-              newUser.twitter.tweets = data
               # parse the tweet data
               tweetData = JSON.parse(newUser.twitter.tweets)
               tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions, image: if (t.entities && t.entities.media && t.entities.media != [] && t.entities.media[0].media_url) then t.entities.media[0].media_url else ""} for t in tweetData)
