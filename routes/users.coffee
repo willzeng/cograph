@@ -233,7 +233,6 @@ module.exports = (app, passport) ->
     passport.authenticate('twitter', (err, user, info) ->
       if err then next(err)
       if not user
-        console.log info
         req.flash 'signupMessage', info.message
         res.redirect '/signup'
       else

@@ -91,15 +91,25 @@ module.exports = (passport) ->
           if namedUser or _.contains(usernameBlacklist, profile.username)
             if namedUser.twitter and namedUser.twitter.id == profile.id
               # update the tweet cograph with a certain number of tweets
-              TweetNumber = 5
+              TweetNumber = 20
               oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
               oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count='+TweetNumber, token, tokenSecret, (e, data, res) ->
                 if e then console.error e
                 # parse the tweet data
                 tweetData = JSON.parse data
-                tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions, image: if (t.entities && t.entities.media && t.entities.media.media_url) then t.entities.media.media_url else ""} for t in tweetData)
-                for twitterCograph in user.twitter.tweetCographIds
-                  serverDocument.updateTwitterCograph twitterCograph, tweets,  () -> null
+                tweets = ({text:t.text, id:t.id, mentions:t.entities.user_mentions, image: if (t.entities && t.entities.media && t.entities.media != [] && t.entities.media[0].media_url) then t.entities.media[0].media_url else ""} for t in tweetData)
+                if user.twitter.tweetCographIds.length > 0
+                  for twitterCograph in user.twitter.tweetCographIds
+                    serverDocument.updateTwitterCograph twitterCograph, tweets,  () -> null
+                else
+                  # create the imported tweets document
+                  serverDocument.createTwitterCograph profile.username, user, tweets, (savedDocument) ->
+                    user.twitter.tweetCographIds.push savedDocument._id
+                    # save the user
+                    user.save (err) ->
+                      if err then throw err
+                      # add the imported tweets document to the user
+                      user.addDocument savedDocument._id
                 # log this user in
                 return done(null, user)
             else
@@ -109,7 +119,7 @@ module.exports = (passport) ->
             # Twitter SIGNUP ==========================================================
             # =========================================================================
             # get a TweetNumber number of tweets
-            TweetNumber = 3
+            TweetNumber = 40
             oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
             oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count='+TweetNumber, token, tokenSecret, (e, data, res) ->
               if e then console.error e
