@@ -86,7 +86,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         @importTweetsModal.on "shown", () ->
           $('#twitterQueryInput').focus()
           $('#twitter-query-form').submit (e) ->
-            @importTweets $('#twitterQueryInput').val() $('#twitterQuerySlider').val()
+            #@importTweets $('#twitterQueryInput').val() $('#twitterQuerySlider').val()
 
       importTweets: (query, num) ->
         # gets the tweets
