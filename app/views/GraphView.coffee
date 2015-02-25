@@ -24,8 +24,9 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         @model.on 'init:fixed', @loadForce, this
         @model.nodes.on 'add remove', @updateForceGraph, this
         @model.connections.on 'add remove', @updateForceGraph, this
-        @model.nodes.on 'change', @updateDetails, this
-        @model.connections.on 'change', @updateDetails, this
+        redrawTriggers = "change:name change:description change:color change:url change:image"
+        @model.nodes.on redrawTriggers, @updateDetails, this
+        @model.connections.on redrawTriggers, @updateDetails, this
 
         @model.on 'found:node', @centerOn, this
 
@@ -179,8 +180,6 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
           , 1500
 
       updateDetails: (incoming) ->
-        that = this
-
         if incoming?
           ignoredList = ['dim','id','_id']
           changedAttrs = (k for k,v of incoming.changed)
