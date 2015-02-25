@@ -1,8 +1,8 @@
 define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstrap',
  'text!templates/new_doc_modal.html', 'text!templates/open_doc_modal.html',
  'text!templates/analytics_modal.html', 'text!templates/workspaces_menu_modal.html',
- 'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html','text!templates/description_box.html'],
-  ($, _, Backbone, Bloodhound, typeahead, bootstrap, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate, descriptionTemplate) ->
+ 'cs!models/DocumentModel', 'socket-io', 'text!templates/graph_settings.html','text!templates/description_box.html', 'text!templates/import_tweets_modal.html'],
+  ($, _, Backbone, Bloodhound, typeahead, bootstrap, newDocTemplate, openDocTemplate, analyticsTemplate, workspacesMenuTemplate, DocumentModel, io, openSettingsTemplate, descriptionTemplate, importTweetsTemplate) ->
     class DocumentCollection extends Backbone.Collection
       model: DocumentModel
       url: 'documents'
@@ -24,6 +24,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
         'click #maybe-publish-button': 'openSettingsModal'
         'blur #description': 'saveDescription'
         'click #description-toggle': 'toggleDescription'
+        'click #import-tweets-button': 'openImportTweetsModal'
 
       initialize: ->
         @loadBBModal()
@@ -74,6 +75,25 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
           else
             window.open '/'+newDocument.get('_id'), "_blank"
 
+      openImportTweetsModal: ->
+        @importTweetsModal = new Backbone.BootstrapModal(
+          content: _.template(importTweetsTemplate, {})
+          title: "Import tweets"
+          animate: true
+          showFooter: false
+        ).open()
+
+        @importTweetsModal.on "shown", () ->
+          $('#twitterQueryInput').focus()
+          $('#twitter-query-form').submit (e) ->
+            @importTweets $('#twitterQueryInput').val() $('#twitterQuerySlider').val()
+
+      importTweets: (query, num) ->
+        # gets the tweets
+        # make a request to https://api.twitter.com/1.1/search/tweets.json
+        # q: query
+        # count: # max 100
+        false
       openSettingsModal: ->
         if($('.public-button-display').hasClass('clickable')) #isOwner
           name = @model.getDocument().get("name")
@@ -96,7 +116,7 @@ define ['jquery', 'underscore', 'backbone', 'bloodhound', 'typeahead', 'bootstra
 
       saveSettings: ->
         doc = @model.getDocument()
-        doc.set 'name', $('#menu-title').val()
+        doc.set 'name', $('#settings-menu-title').val()
         newViewState = $('.public-button-view.selected').data('type')
         newEditState = $('.public-button-edit.selected').data('type')
         doc.set "publicView", newViewState

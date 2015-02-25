@@ -1,7 +1,7 @@
 define [], () ->
   class svgDefs
 
-    addDefs: (def, defaultColors) ->
+    addDefs: (def, defaultColors, nodeWidth) ->
       # DragLine Arrowhead
       def
         .append('svg:marker')
@@ -47,14 +47,14 @@ define [], () ->
           .attr('id', 'clipCircle')
           .append('circle')
             .attr('r', '18')
-            .attr('cx', '-70')
+            .attr('cx', -nodeWidth/2-20)
             .attr('cy', '0')
       def
         .append('svg:clipPath')
           .attr('id', 'clipCircleFixed')
           .append('circle')
             .attr('r', '18')
-            .attr('cx', '-70')
+            .attr('cx', -nodeWidth/2-20)
             .attr('cy', '0')
             .attr('stroke', 'orange')
             .attr('stroke-width', '1px')
