@@ -91,7 +91,7 @@ module.exports = (passport) ->
           if namedUser or _.contains(usernameBlacklist, profile.username)
             if namedUser.twitter and namedUser.twitter.id == profile.id
               # update the tweet cograph with a certain number of tweets
-              TweetNumber = 20
+              TweetNumber = 30
               oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
               oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count='+TweetNumber, token, tokenSecret, (e, data, res) ->
                 if e then console.error e
@@ -119,7 +119,7 @@ module.exports = (passport) ->
             # Twitter SIGNUP ==========================================================
             # =========================================================================
             # get a TweetNumber number of tweets
-            TweetNumber = 40
+            TweetNumber = 60
             oauth = new (OAuth.OAuth)('https://api.twitter.com/oauth/request_token', 'https://api.twitter.com/oauth/access_token', cK, cS, '1.0A', null, 'HMAC-SHA1')
             oauth.get 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='+profile.id+'&count='+TweetNumber, token, tokenSecret, (e, data, res) ->
               if e then console.error e
