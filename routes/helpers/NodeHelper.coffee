@@ -12,9 +12,7 @@ class NodeHelper
     tags += ":#{docLabel}"
     params = {props: props}
     cypherQuery = "CREATE (n#{tags} { props }) RETURN n;"
-    console.log "attempt to CREATED", props
     @graphDb.query cypherQuery, params, (err, results) =>
-      console.log "graphDb CREATED node", utils.parseCypherResult(results[0], 'n')
       if (err)
         console.log "NodeCreationError", err
         throw err
