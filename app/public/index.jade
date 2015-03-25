@@ -34,44 +34,22 @@ html(lang='en')
               li
                 a(href="/login") Login
               li
-                a(href="/signup") Beta Signup
-
-    #top.jumbotron
-      .container
-        h1 Connect your ideas
-        p#button-container
-          a#create.btn.btn-primary.btn-lg.call-to-action(href="/signup") Make a Cograph
-          a#open.btn.btn-info.btn-lg.call-to-action(href="/explore") Explore Cographs
-        p 
-          a(href="http://github.com/willzeng/cograph")
-            img(src="assets/images/GitHub-Mark-Light-32px.png") 
-            span(id="github") Contribute on Github
+                a(href="/signup") Signup
     .container.main-content
-      .row
-        .col-md-12
+      .row 
+        .col-md-6
+          h1 Explore the graph of your tweets 
+          h3.white Annotate, Connect and build a landscape for your ideas
+        .col-md-6
           center
             iframe(width="560" height="315" src="https://www.youtube.com/embed/xUl9IdOwHDI" frameborder="0" allowfullscreen)
-      .row
-        .col-md-12
-          h3 What are Cographs?
-          h3.full-size Cographs are webs of ideas that you can create, explore and publish.
-          br
-          h3 Why should I use cographs?
-          h3.full-size Cographs put information in context.
-          br
-          br
-          center
-            a.btn.btn-primary.btn-lg.call-to-action(href="/will/document/0") See an Example
-          br
-      hr
-      h3.header-titles What can I do with Cograph?
       .row
         .col-xs-12.col-md-4.benefit
           .benefit-ball
             i.flaticon-idea13
           h3 
             strong Add
-          p Add information from across the web
+          p Add snippets from across the web
 
         .col-md-4.col-xs-12.benefit
           .benefit-ball
@@ -85,7 +63,7 @@ html(lang='en')
             i.flaticon-teamwork
           h3 
             strong Collaborate
-          p Edit cographs in real time with others.
+          p Edit in real time with others.
       .row
         .col-md-4.col-xs-12.benefit
           .benefit-ball
@@ -107,8 +85,21 @@ html(lang='en')
           h3
             strong Embed
           p Add cographs to your website or blog posts
-
-      h3.header-titles We're in Beta. Our Next Features are
+      hr
+      .row.links
+        .col-md-4
+          center
+            a(href="http://github.com/willzeng/cograph")
+              img(src="assets/images/GitHub-Mark-32px.png") 
+              span(id="github") Open Source
+        .col-md-4
+          center
+            a(href="/will/document/0") See an Example
+        .col-md-4
+          center
+            a(href="/signup") Signup
+      hr
+      h3.header-titles We are in Beta. Our Next Features are:
       .row
         .col-md-4.col-xs-12.benefit
           .benefit-ball
@@ -128,8 +119,8 @@ html(lang='en')
           .benefit-ball
             i.flaticon-circular152
           h3 
-            strong Faster access
-          p Browser extensions to make it faster to connect content
+            strong Integration
+          p Browser extensions to make it faster to connect content, evernote sync
     include footer
     script(src='assets/libs/jquery/dist/jquery.min.js')
     script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
