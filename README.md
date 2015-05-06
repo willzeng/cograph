@@ -21,7 +21,7 @@ How to Run Locally
 ----------
 
 - Neo4j Server >= 2.1.3 Required
-You can get the Community edition here: [Download](http://neo4j.com/download-4/?utm_expid=86168100-4.4jhtKky8TSanVw1z1BH-8A.3&utm_referrer=http%3A%2F%2Fneo4j.com%2F)
+You can get the Community edition here: [Download](http://neo4j.com/download/)
 - Clone this repo
 - `npm install` should install your node modules in the `node_modules/` folder.
 - `npm install -g bower` should install bower to your global path.
