@@ -23,9 +23,9 @@ How to Run Locally
 - Neo4j Server 2.1.3 <= Version <= 2.2.0 Required
 At time of writing 2.1.8 is most current and can be downloaded from: [Download](http://neo4j.com/download/other-releases/)
 - Clone this repo
-- `npm install` should:
-  - install your node modules in the `node_modules/` folder
-  - install your front end libraries in the `assets/libs/` folder, using bower
+- `npm install` should install your node modules in the `node_modules/` folder.
+- `npm install -g bower` should install bower to your global path.
+- `bower install` should install your front end models in the `assets/libs/` folder.
 
 Then you should be able to run `./bin/www` to get the server running at `localhost:3000/`
 
