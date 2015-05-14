@@ -44,6 +44,7 @@
     "requirejs": "~2.1.15"
   },
   "scripts": {
+    "postinstall": "rm -rf app/assets/libs && bower install",
     "start": "lessc -x app/assets/stylesheets/general.less > app/assets/stylesheets/general.css; lessc -x app/assets/stylesheets/graph.less > app/assets/stylesheets/graph.css; lessc -x app/assets/stylesheets/index-logged-in.less > app/assets/stylesheets/index-logged-in.css; lessc -x app/assets/stylesheets/index.less > app/assets/stylesheets/index.css; lessc -x app/assets/stylesheets/login.less > app/assets/stylesheets/login.css; lessc -x app/assets/stylesheets/mobile.less > app/assets/stylesheets/mobile.css; lessc -x app/assets/stylesheets/nav.less > app/assets/stylesheets/nav.css; lessc -x app/assets/stylesheets/profile.less > app/assets/stylesheets/profile.css; node_modules/requirejs/bin/r.js -o app/build.js; node_modules/requirejs/bin/r.js -o app/build-css.js; node ./bin/www"
   },
   "repository": {
