@@ -45,7 +45,7 @@
     "requirejs": "~2.1.15"
   },
   "scripts": {
-    "prestart": "rm -rf app/assets/libs && bower install && bin/compile",
+    "postinstall": "rm -rf app/assets/libs && bower install && bin/compile",
     "start": "node bin/www"
   },
   "repository": {
