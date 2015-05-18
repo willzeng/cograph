@@ -51,6 +51,8 @@ app.use session
     ttl: 6048000 # ten weeks
   cookie :
     maxAge : 6048000 # ten weeks
+  saveUninitialized: false
+  resave: true
 
 app.use passport.initialize()
 app.use passport.session() # persistent login sessions
