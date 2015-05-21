@@ -4,3 +4,4 @@ app/assets/libs/*
 **/Thumbs.db
 npm-debug.log
 *.sublime-project
+/.env

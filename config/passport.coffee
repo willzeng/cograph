@@ -59,17 +59,9 @@ module.exports = (passport) ->
   # =========================================================================
   # Twitter AUTHENTICATION ==================================================
   # =========================================================================
-  #check if depolyed
-  if process.env.PORT
-    cK = process.env.TWITTER_CONSUMER_KEY
-    cS = process.env.TWITTER_CONSUMER_SECRET
-    cbURL = process.env.TWITTER_CB_URL
-  else
-    # local setup, these sandbox testers are provided
-    # be careful with them
-    cK = 'kARoAoD1OPeDMmsNrVajrDdCm'
-    cS = 'i027OrWxARTmn4UxRQPZJm1RXNGjnpw5hVSZnp39ULNFvjzkMc'
-    cbURL = 'http://127.0.0.1:3000/auth/twitter/callback'
+  cK = process.env.TWITTER_CONSUMER_KEY or throw new Error "Please set environment variable TWITTER_CONSUMER_KEY"
+  cS = process.env.TWITTER_CONSUMER_SECRET or throw new Error "Please set environment variable TWITTER_CONSUMER_SECRET"
+  cbURL = process.env.TWITTER_CB_URL or throw new Error "Please set environment variable TWITTER_CB_URL"
 
   passport.use new TwitterStrategy({
     consumerKey: cK
