@@ -3,13 +3,13 @@ html(lang="en")
   head
     title Cograph | @#{user.local.name}
     meta(charset='utf-8')
-      // For Development
-      link(href='/assets/stylesheets/main.css', rel='stylesheet')
-      script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
+    // For Development
+    link(href='/assets/stylesheets/main.css', rel='stylesheet')
+    script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
 
-      // For production
-      //link(href='/assets/stylesheets/main-built.css', rel='stylesheet')
-      //script(type='text/javascript', data-main="/main-built", src="/assets/libs/requirejs/require.js")
+    // For production
+    //link(href='/assets/stylesheets/main-built.css', rel='stylesheet')
+    //script(type='text/javascript', data-main="/main-built", src="/assets/libs/requirejs/require.js")
     base(href="/")
     script.
       window.prefetch =!{JSON.stringify(docs)};
