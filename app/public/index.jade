@@ -126,7 +126,10 @@ html(lang='en')
           h3 
             strong Integration
           p Browser extensions to make it faster to connect content, evernote sync
-    include footer
+    if isAuthenticated
+      include footer-logged-in
+    else 
+      include footer
     script(src='assets/libs/jquery/dist/jquery.min.js')
     script(src='assets/libs/bootstrap/dist/js/bootstrap.min.js')
     script.
