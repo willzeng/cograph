@@ -12,5 +12,8 @@ node_modules/.bin/lessc -x app/assets/stylesheets/login.less > app/assets/styles
 node_modules/.bin/lessc -x app/assets/stylesheets/mobile.less > app/assets/stylesheets/mobile.css
 node_modules/.bin/lessc -x app/assets/stylesheets/nav.less > app/assets/stylesheets/nav.css
 node_modules/.bin/lessc -x app/assets/stylesheets/profile.less > app/assets/stylesheets/profile.css
+node_modules/.bin/lessc -x app/assets/stylesheets/team.less > app/assets/stylesheets/team.css
+
 node_modules/.bin/r.js -o app/build.js
 node_modules/.bin/r.js -o app/build-css.js
+node_modules/.bin/r.js -o app/build-graph-css.js
