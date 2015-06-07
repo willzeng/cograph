@@ -1,57 +1,42 @@
 @import "font";
 
-body {
-  -webkit-font-smoothing: antialiased;
-  font-size: 14px;
+#index h1 {
+  color: #f2e244;
+  font-weight: 100;
 }
 
-body, h1, h2, h3, h4, h5, h6 {
-  font-family: 'Lato', helvetica, sans-serif;
-  font-weight: normal;
-}
-
-hr {
-  border-top: 1px solid #ddd;
-}
-
-.main-content {
+#index .main-content {
   font-family: 'Lato';
   font-weight: 300;
   padding-top: 20px;
 }
 
-h1 {
-  color: #f2e244;
-  font-weight: 100;
-}
-
-.main-content h3:not(.full-size) {
+#index .main-content h3:not(.full-size) {
   text-transform: uppercase;
   font-size: 16px;
 }
 
-.main-content strong {
+#index .main-content strong {
   color: #333;
-
 }
 
-#top h1 {
+#index #top h1 {
   text-transform: uppercase;
   font-size: 40pt;
   color: white;
   opacity: 0.9;
 }
 
-.btn {
+#index .btn {
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 2px;
 }
 
-.brand-logo {
+#index .brand-logo {
   height: 50px;
 }
 
-.navbar {
+#index .navbar {
   background: transparent;
   padding: 0.3em 0;
   margin: 20px 0;
@@ -60,7 +45,7 @@ h1 {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.navbar .navbar-brand {
+#index .navbar .navbar-brand {
   color: #fff;
   font-weight: 300;
   font-size: 30px;
@@ -90,25 +75,25 @@ h1 {
   font-size: 16pt;
 }
 
-.full-size {
+#index .full-size {
   color: #999;
 }
 
-.navbar-right {
+#index .navbar-right {
   margin: 10px 0;
   font-size: 16px;
 }
 
-.navbar ul.nav li a {
+#index .navbar ul.nav li a {
   color: #fff;
   padding-left: 0;
   padding-right: 0;
   margin: 0 1.5em;
 }
-.navbar ul.nav li button {
+#index .navbar ul.nav li button {
   margin: 0.7em 0 0 1em;
 }
-.jumbotron {
+#index .jumbotron {
   background: url(../images/noisy_net.png);
   color: #fff;
   padding: 1em 0 7em;
@@ -116,12 +101,12 @@ h1 {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.sect-border {
+#index .sect-border {
   border-top: 1px dashed #d6d6d6;
   border-bottom: 1px dashed #f6f6f6;
   margin: 2em 8% 2.4em;
 }
-.subhead {
+#index .subhead {
   color: #000;
   font-size: 3em;
   font-weight: bold;
@@ -172,40 +157,13 @@ h1 {
   outline: none;
 }
 
-.dg.ac, #stats {
-  display: none;
-}
-
-#top {
+#index #top {
+#index #top {
   margin: 0;
   padding: 0;
   padding-bottom: 50px;
   background: transparent;
   color: white;
-}
-
-#canvas-container {
-  overflow: hidden;
-  height: 400px;
-  width: 100%;
-  position: absolute;
-  top: 0px;
-  padding: 0;
-  margin: 0;
-  z-index: -1;
-  background: black;
-
-  video {
-    min-width: 100%;
-  }
-}
-
-#canvas-container canvas {
-  top: 0;
-  position: relative;
-  z-index: 1;
-  height: 550px !important;
-  width: 100% !important;
 }
 
 .white, .white:hover, .white:active {
@@ -217,7 +175,7 @@ h1 {
   margin-right: 5px;
 }
 
-footer {
+#index footer {
   background: url('../images/footer-bg.png');
   font-size: 16px;
   margin: 3.5em 0 0;
@@ -225,63 +183,63 @@ footer {
   color: white;
 }
 
-footer a {
+#index footer a {
   color: white;
 }
 
-footer a:hover {
+#index footer a:hover {
   color: white;
   text-decoration: none;
   border-bottom: 2px solid white;
 }
 
-.header-titles {
+#index .header-titles {
   text-align: center;
   margin: 80px 0 40px 0;
 }
 
-.header-secondary {
+#index .header-secondary {
   text-align: center;
 }
 
-.brand-logo {
+#index .brand-logo {
   position: relative;
   top: -4px;
   margin-right: 10px;
 }
 
 @media screen and (max-width: 768px) {
-  .navbar ul.nav li {
+  #index .navbar ul.nav li {
     text-align: center;
   }
-  .navbar ul.nav li button {
+  #index .navbar ul.nav li button {
     margin: 1em 0;
   }
-  .jumbotron {
+  #index .jumbotron {
     font-size: 14px;
   }
-  .benefit {
+  #index .benefit {
     margin-bottom: 2em;
   }
-  #top h1 {
+  #index #top h1 {
     font-size: 20pt;
   }
-  #button-container a {
+  #index #button-container a {
     width: 100%;
     margin-left: 0;
   }
-  .brand-logo {
+  #index .brand-logo {
     top: -15px;
   }
 }
 @media screen and (max-width: 480px) {
-  body {
+  #index body {
     font-size: 12px;
   }
-  .jumbotron {
+  #index .jumbotron {
     font-size: 12px;
   }
-  footer .pull-right {
+  #index footer .pull-right {
     display: none;
   }
 

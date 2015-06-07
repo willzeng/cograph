@@ -6,7 +6,6 @@ rm -rf app/assets/libs
 bower install
 node_modules/.bin/lessc -x app/assets/stylesheets/general.less > app/assets/stylesheets/general.css
 node_modules/.bin/lessc -x app/assets/stylesheets/graph.less > app/assets/stylesheets/graph.css
-node_modules/.bin/lessc -x app/assets/stylesheets/index-logged-in.less > app/assets/stylesheets/index-logged-in.css
 node_modules/.bin/lessc -x app/assets/stylesheets/index.less > app/assets/stylesheets/index.css
 node_modules/.bin/lessc -x app/assets/stylesheets/login.less > app/assets/stylesheets/login.css
 node_modules/.bin/lessc -x app/assets/stylesheets/mobile.less > app/assets/stylesheets/mobile.css

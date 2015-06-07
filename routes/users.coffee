@@ -67,14 +67,14 @@ module.exports = (app, passport) ->
   # ABOUT ===============================
   # =====================================
 
-  app.get "/about", (req, res) ->
+  app.get "/team", (req, res) ->
     documents.helper.getAll (docs) ->
       if req.isAuthenticated()
         username = req.user.local.nameLower
         User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
-          res.render "about.jade", {user:profiledUser, isAuthenticated:true}
+          res.render "team.jade", {user:profiledUser, isAuthenticated:true}
       else
-        res.render "about.jade", {isAuthenticated:false}
+        res.render "team.jade", {isAuthenticated:false}
 
   # =====================================
   # REQUEST BETA KEY ====================
