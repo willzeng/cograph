@@ -16,3 +16,4 @@ node_modules/.bin/lessc -x app/assets/stylesheets/team.less > app/assets/stylesh
 node_modules/.bin/r.js -o app/build.js
 node_modules/.bin/r.js -o app/build-css.js
 node_modules/.bin/r.js -o app/build-graph-css.js
+node_modules/.bin/r.js -o app/build-mobile-css.js
