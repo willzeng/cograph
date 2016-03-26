@@ -51,6 +51,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!models/ConnectionModel'],
         if($('#add-node-form').length > 0 and !(@graphView.gridViewOn)) #isEditable HACK
           connectId = parseInt $(e.currentTarget).attr("data-id")
           node = @model.nodes.findWhere {_id:connectId}
+          # TODO catch error if node not found - not yet added
           @drag_line.classed('hidden', false)
             .datum(node)
             .attr("x1", (d) => node.x-@nodeBoxOffset)
