@@ -1,74 +1,74 @@
 doctype html
 html(lang="en")
-head
-  title Cograph | @#{user.local.name}
-  meta(charset='utf-8')
-  link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
-  link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
-  link(href='/assets/stylesheets/custom-bootstrap-theme.css', rel='stylesheet')
-  link(href='/assets/stylesheets/general.css', rel='stylesheet')  
-  link(href='/assets/stylesheets/nav.css', rel='stylesheet')
-  link(href='/assets/stylesheets/profile.css', rel='stylesheet')   
-  base(href="/")
-  script(type='text/javascript', data-main="landing", src="/assets/libs/requirejs/require.js") //loads landing.js
-  script.
-    window.prefetch =!{JSON.stringify(docs)};
+  head
+    title Cograph | @#{user.local.name}
+    meta(charset='utf-8')
+    // For Development
+    link(href='/assets/stylesheets/main.css', rel='stylesheet')
+    script(type='text/javascript', data-main="/main", src="/assets/libs/requirejs/require.js") //loads main.js
 
-  body
-    include nav
-    .container#profile-container
-      .page-header.text-center
-        h2
+    // For production
+    //link(href='/assets/stylesheets/main-built.css', rel='stylesheet')
+    //script(type='text/javascript', data-main="/main-built", src="/assets/libs/requirejs/require.js")
+    base(href="/")
+    script.
+      window.prefetch =!{JSON.stringify(docs)};
+
+    body#profile
+      include nav
+      .container#profile-container
+        .page-header.text-center
+          h2
+            if ownProfile
+              | Hi @#{user.local.name}
+            else
+              | @#{user.local.name}
           if ownProfile
-            | Hi @#{user.local.name}
-          else
-            | @#{user.local.name}
+            h5#user-nav-actions
+              a(href="/new") 
+                i.fa.fa-plus-square-o
+                |  new cograph
+              a(href="/account") 
+                i.fa.fa-cogs
+                |  account
+              a(href="/logout") 
+                i.fa.fa-sign-out
+                |  logout
+            
         if ownProfile
-          h5#user-nav-actions
-            a(href="/new") 
-              i.fa.fa-plus-square-o
-              |  new cograph
-            a(href="/account") 
-              i.fa.fa-cogs
-              |  account
-            a(href="/logout") 
-              i.fa.fa-sign-out
-              |  logout
-          
-      if ownProfile
-        .row
-          .col-sm-6
-            h3 Your Private Cographs
-            .document-list
-              for doc in privateDocs
-                a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
-              if privateDocs.length == 0
-                span None
-          .col-sm-6
-            h3 Your Published Cographs
-            .document-list
-              for doc in publicDocs
-                a.list-group-item(href="/#{doc.createdBy}/document/#{doc.id}" target="_blank")
-                  | #{doc.name}
-                  a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
+          .row
+            .col-sm-6
+              h3 Your Private Cographs
+              .document-list
+                for doc in privateDocs
+                  a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank") #{doc.name}
+                if privateDocs.length == 0
+                  span None
+            .col-sm-6
+              h3 Your Published Cographs
+              .document-list
+                for doc in publicDocs
+                  a.list-group-item(href="/#{doc.createdBy}/document/#{doc.id}" target="_blank")
+                    | #{doc.name}
+                    a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
+                if publicDocs.length == 0
+                  span None
+        else
+          .row
+            .col-sm-12
+              .document-list
+                for doc in publicDocs
+                  a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank")
+                    | #{doc.name}
+                    a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
               if publicDocs.length == 0
                 span None
-      else
-        .row
-          .col-sm-12
-            .document-list
-              for doc in publicDocs
-                a.list-group-item(href="/#{user.local.name}/document/#{doc.id}" target="_blank")
-                  | #{doc.name}
-                  a.pull-right.text-muted.link-badge(href="/#{doc.createdBy}") by @#{doc.createdBy}
-            if publicDocs.length == 0
-              span None
-    include footer-logged-in
-    script.
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      include footer-logged-in
+      script.
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-38168348-4', 'auto');
-      ga('send', 'pageview');
+        ga('create', 'UA-38168348-4', 'auto');
+        ga('send', 'pageview');

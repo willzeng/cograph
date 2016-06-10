@@ -12,7 +12,7 @@ bcrypt = require "bcrypt-nodejs"
 module.exports = (app, passport) ->
 
   app.use(flash())
-  
+
   # =====================================
   # HOME PAGE (with login links) ========
   # =====================================
@@ -24,9 +24,9 @@ module.exports = (app, passport) ->
           if err or not(profiledUser?) then res.render "index.jade", {docs:docs}
           else
             res.render "index.jade", {docs:docs, user: profiledUser, isAuthenticated: true}
-      else 
+      else
         res.render "index.jade", {docs:docs}
-  
+
   # =====================================
   # LOGIN ===============================
   # =====================================
@@ -38,7 +38,7 @@ module.exports = (app, passport) ->
     else
       res.render "login.jade",
         message: req.flash("loginMessage")
-  
+
   # process the login form
   app.post "/login", (req, res, next) ->
     passport.authenticate("local-login", (err, user, info) ->
@@ -60,21 +60,21 @@ module.exports = (app, passport) ->
         username = req.user.local.nameLower
         User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
           res.render "explore.jade", {docs:docs, user:profiledUser, isAuthenticated:true}
-      else 
+      else
         res.render "explore.jade", {docs:docs, isAuthenticated:false}
 
   # =====================================
   # ABOUT ===============================
   # =====================================
 
-  app.get "/about", (req, res) ->
+  app.get "/team", (req, res) ->
     documents.helper.getAll (docs) ->
       if req.isAuthenticated()
         username = req.user.local.nameLower
         User.findOne { 'local.nameLower' :  username }, (err, profiledUser) ->
-          res.render "about.jade", {user:profiledUser, isAuthenticated:true}
-      else 
-        res.render "about.jade", {isAuthenticated:false}
+          res.render "team.jade", {user:profiledUser, isAuthenticated:true}
+      else
+        res.render "team.jade", {isAuthenticated:false}
 
   # =====================================
   # REQUEST BETA KEY ====================
@@ -84,7 +84,7 @@ module.exports = (app, passport) ->
     if req.isAuthenticated()
       res.redirect "/"
     else
-      res.render "request-key.jade"
+      res.render "request-key.jade",
         message: req.flash("")
 
   app.post "/request-key", (req, res) ->
@@ -122,12 +122,12 @@ module.exports = (app, passport) ->
   # =====================================
   # FORGOT PASSWORD =====================
   # =====================================
-  
+
   app.get "/forgotten-password", (req, res) ->
     if req.isAuthenticated()
       res.redirect "/"
     else
-      res.render "forgotten-password.jade"
+      res.render "forgotten-password.jade",
         message: req.flash("forgotMessage") # TODO?
 
   app.post "/forgotten-password", (req, res) ->
@@ -183,29 +183,29 @@ module.exports = (app, passport) ->
     username = req.user.local.nameLower #if we used post username data this would be a security flaw
     User.findOne { 'local.nameLower' :  username }, (err, user) ->
       if(req.body.newPassword != req.body.newPasswordRepeat)
-        res.render "account.jade"
+        res.render "account.jade",
           user: user
           isAuthenticated: true
           message: "New Passwords don't match"
           messageType: 0
       if(user.validPassword(req.body.oldPassword))
-        user.local.email = req.body.email 
+        user.local.email = req.body.email
         #todo user model?
         user.local.password = user.generateHash(req.body.newPassword)
         user.save (err) ->
           return
-        res.render "account.jade"
+        res.render "account.jade",
           user: user
           isAuthenticated: true
           message: "Successfully changed"
           messageType: 1
       else # wrong password
-        res.render "account.jade"
+        res.render "account.jade",
           user: req.user
           isAuthenticated: true
           message: "wrong password"
           messageType: 0
-      
+
 
   # =====================================
   # SIGNUP ==============================
@@ -218,7 +218,7 @@ module.exports = (app, passport) ->
       # render the page and pass in any flash data if it exists
       res.render "signup.jade",
         message: req.flash("signupMessage")
-  
+
 
   # // Redirect the user to Twitter for authentication.  When complete, Twitter
   # // will redirect the user back to the application at
@@ -240,7 +240,7 @@ module.exports = (app, passport) ->
           if err then return next(err)
           res.redirect('/'+req.user.local.nameLower)
     )(req, res, next)
-  
+
   app.post "/signup", (req, res, next) ->
     passport.authenticate("local-signup", (err, user, info) ->
       if err then next err
@@ -263,7 +263,7 @@ module.exports = (app, passport) ->
   #         user: req.user # get the user out of session and pass to template
   #         docs: docs # prefetch the list of document names for opening
   #         userDocs: privateDocs # prefetch the users private documents
-  
+
   # =====================================
   # LOGOUT ==============================
   # =====================================

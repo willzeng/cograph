@@ -1,13 +1,22 @@
-// ALL PAGES styles except for navigation
+// Styles that apply to every page
 
 @import "font";
 
-@import "colors";
 @font: 'Lato', Helvetica, sans-serif;
 
 body {
 	font-family: @font;
   font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+}
+
+h1, h2, h3,h4, h5, h6 {
+  font-weight: normal;
+}
+
+hr {
+  border-top: 1px solid #ddd;
 }
 
 // CLEARFIX

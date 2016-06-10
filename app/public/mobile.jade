@@ -6,12 +6,14 @@ html(lang="en")
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     base(href='/')
-    link(href='/assets/libs/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
-    link(href='/assets/libs/fontawesome/css/font-awesome.min.css', rel='stylesheet')
-    link(href='/assets/stylesheets/mobile.css', rel='stylesheet')
-    link(href='/assets/stylesheets/typeahead.css', rel='stylesheet')
-    script(type='text/javascript', data-main="mobile", src="/assets/libs/requirejs/require.js") //loads mobile.js
+    // For Development
+    link(href='/assets/stylesheets/main-mobile.css', rel='stylesheet')
+    script(type='text/javascript', data-main="/main-mobile", src="/assets/libs/requirejs/require.js") //loads main.js
 
+    // For production
+    //link(href='/assets/stylesheets/main-mobile-built.css', rel='stylesheet')
+    //script(type='text/javascript', data-main="/main-mobile-built", src="/assets/libs/requirejs/require.js")
+    
   body
     .container#mobile-site
       .row

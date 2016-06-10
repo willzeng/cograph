@@ -480,7 +480,7 @@ define ['jquery', 'underscore', 'backbone', 'd3', 'cs!views/svgDefs'
         true
 
       isContainedIn: (node, element) => 
-        # is a node's center coordinate in a rectangle?
+        # returns true if nodes center coordinate is in rectangle of element
         (node.x || node.clientX) < element.offset().left + element.outerWidth() &&
         (node.x || node.clientX) > element.offset().left &&
         (node.y || node.clientY) > element.offset().top &&

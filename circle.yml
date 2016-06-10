@@ -1,0 +1,7 @@
+deployment:
+  production:
+    branch: production
+    commands:
+      - git config user.name 'Deploy Bot'
+      - git config user.email 'code+deploy+bot@example.com'
+      - bin/deploy
