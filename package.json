@@ -8,13 +8,14 @@
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.2.0",
     "bower": "~1.3.2",
-    "coffee-script": "1.2.0",
+    "coffee-script": "~1.9.2",
     "compression": "^1.3.0",
     "connect-flash": "^0.1.1",
     "connect-redis": "^2.1.0",
     "cookie-parser": "^1.3.3",
     "crypto": "0.0.3",
     "debug": "~0.8.0",
+    "dotenv": "^1.1.0",
     "express": "4.0.0",
     "express-flash": "0.0.2",
     "express-session": "^1.8.1",
@@ -39,12 +40,15 @@
   "devDependencies": {
     "coffeelint": "~1.3.0",
     "grunt": "~0.4.4",
-    "grunt-lesslint": "~1.1.2",
     "grunt-coffeelint": "0.0.10",
-    "requirejs": "~2.1.15"
+    "grunt-lesslint": "~1.1.2",
+    "less": "^2.5.0",
+    "requirejs": "~2.1.15",
+    "shelljs": "^0.4.0"
   },
   "scripts": {
-    "start": "lessc -x app/assets/stylesheets/general.less > app/assets/stylesheets/general.css; lessc -x app/assets/stylesheets/graph.less > app/assets/stylesheets/graph.css; lessc -x app/assets/stylesheets/index-logged-in.less > app/assets/stylesheets/index-logged-in.css; lessc -x app/assets/stylesheets/index.less > app/assets/stylesheets/index.css; lessc -x app/assets/stylesheets/login.less > app/assets/stylesheets/login.css; lessc -x app/assets/stylesheets/mobile.less > app/assets/stylesheets/mobile.css; lessc -x app/assets/stylesheets/nav.less > app/assets/stylesheets/nav.css; lessc -x app/assets/stylesheets/profile.less > app/assets/stylesheets/profile.css; node_modules/requirejs/bin/r.js -o app/build.js; node_modules/requirejs/bin/r.js -o app/build-css.js; node ./bin/www"
+    "deploy": "bin/deploy.coffee",
+    "start": "node bin/www"
   },
   "repository": {
     "type": "git",

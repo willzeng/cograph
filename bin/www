@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-require(__dirname + '/../node_modules/coffee-script/')
+require('coffee-script/register');
+require('dotenv').load();
 var debug = require('debug')('my-application');
 var app = require('../app');
 
