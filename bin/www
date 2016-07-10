@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-require(__dirname + '/../node_modules/coffee-script/')
+require('coffee-script/register');
 var debug = require('debug')('my-application');
 var app = require('../app');
 

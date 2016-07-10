@@ -3,3 +3,4 @@ app/assets/libs/*
 .ackrc
 **/Thumbs.db
 npm-debug.log
+*.sublime-project
